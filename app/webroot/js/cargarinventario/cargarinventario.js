@@ -1,0 +1,3 @@
+$( function() {
+    $('.numericPrice').number(true);
+});
