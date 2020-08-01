@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 
+/** controlador de abonos de facturas */
 class AbonofacturasController extends AppController {
     /** obtiene las cuentas de la empresa */
 	public $components = array('Paginator');
