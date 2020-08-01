@@ -2,7 +2,7 @@
 App::uses('AppController', 'Controller');
 
 class AbonofacturasController extends AppController {
-
+    /** obtiene las cuentas de la empresa */
 	public $components = array('Paginator');
         
         public function abonofactura(){
