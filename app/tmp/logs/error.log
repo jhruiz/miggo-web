@@ -12420,3 +12420,420 @@ Stack Trace:
 #4 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(ProductosController), Object(CakeRequest))
 #5 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #6 {main}
+2020-08-03 17:45:28 Error: [MissingActionException] Action AbonofacturasController::index() could not be found.
+Exception Attributes: array (
+  'controller' => 'AbonofacturasController',
+  'action' => 'index',
+)
+Request URL: /miggo/abonofacturas
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(AbonofacturasController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-03 17:45:37 Error: [MissingControllerException] Controller class AbonofacturaController could not be found.
+Exception Attributes: array (
+  'class' => 'AbonofacturaController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/abonofactura
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 17:45:59 Error: [MissingControllerException] Controller class Abonofactura.ctpController could not be found.
+Exception Attributes: array (
+  'class' => 'Abonofactura.ctpController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/abonofactura.ctp
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 19:46:24 Error: [MissingActionException] Action UsuariosController::undefinedcuentas() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsuariosController',
+  'action' => 'undefinedcuentas',
+)
+Request URL: /miggo/usuarios/undefinedcuentas/ajaxobtenervalorcaja
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(UsuariosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-03 20:08:45 Warning: Warning (2): number_format() expects parameter 1 to be float, string given in [C:\xampp\htdocs\miggo\app\View\Proveedores\view.ctp, line 53]
+Trace:
+ErrorHandler::handleError() - CORE\Cake\Error\ErrorHandler.php, line 230
+number_format - [internal], line ??
+include - APP\View\Proveedores\view.ctp, line 53
+View::_evaluate() - CORE\Cake\View\View.php, line 971
+View::_render() - CORE\Cake\View\View.php, line 933
+View::render() - CORE\Cake\View\View.php, line 473
+Controller::render() - CORE\Cake\Controller\Controller.php, line 963
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 200
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 167
+[main] - APP\webroot\index.php, line 118
+
+2020-08-03 20:09:10 Warning: Warning (2): number_format() expects parameter 1 to be float, string given in [C:\xampp\htdocs\miggo\app\View\Proveedores\view.ctp, line 53]
+Trace:
+ErrorHandler::handleError() - CORE\Cake\Error\ErrorHandler.php, line 230
+number_format - [internal], line ??
+include - APP\View\Proveedores\view.ctp, line 53
+View::_evaluate() - CORE\Cake\View\View.php, line 971
+View::_render() - CORE\Cake\View\View.php, line 933
+View::render() - CORE\Cake\View\View.php, line 473
+Controller::render() - CORE\Cake\Controller\Controller.php, line 963
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 200
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 167
+[main] - APP\webroot\index.php, line 118
+
+2020-08-03 20:36:08 Warning: Warning (2): number_format() expects parameter 1 to be float, string given in [C:\xampp\htdocs\miggo\app\View\Proveedores\view.ctp, line 53]
+Trace:
+ErrorHandler::handleError() - CORE\Cake\Error\ErrorHandler.php, line 230
+number_format - [internal], line ??
+include - APP\View\Proveedores\view.ctp, line 53
+View::_evaluate() - CORE\Cake\View\View.php, line 971
+View::_render() - CORE\Cake\View\View.php, line 933
+View::render() - CORE\Cake\View\View.php, line 473
+Controller::render() - CORE\Cake\Controller\Controller.php, line 963
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 200
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 167
+[main] - APP\webroot\index.php, line 118
+
+2020-08-03 20:38:08 Error: [NotFoundException] Invalid trasladoinventario
+Request URL: /miggo/trasladoinventarios/edit/
+Stack Trace:
+#0 [internal function]: TrasladoinventariosController->edit()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(TrasladoinventariosController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(TrasladoinventariosController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 20:38:09 Error: [NotFoundException] Invalid trasladoinventario
+Request URL: /miggo/trasladoinventarios/edit/1
+Stack Trace:
+#0 [internal function]: TrasladoinventariosController->edit('1')
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(TrasladoinventariosController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(TrasladoinventariosController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 20:46:25 Error: [PDOException] SQLSTATE[HY000]: General error: 1267 Illegal mix of collations (utf8_general_ci,IMPLICIT) and (utf8mb4_general_ci,COERCIBLE) for operation 'like'
+Request URL: /miggo/depositos/index/nombre:Ay%C3%BAdanos%20a%20mejorar/ciudad:1/encargado:74/Depositos%5Bmenuvert%5D:15
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Model\Datasource\DboSource.php(472): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\miggo\lib\Cake\Model\Datasource\DboSource.php(438): DboSource->_execute('SELECT `Deposit...', Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Model\Datasource\DboSource.php(675): DboSource->execute('SELECT `Deposit...', Array, Array)
+#3 C:\xampp\htdocs\miggo\lib\Cake\Model\Datasource\DboSource.php(1186): DboSource->fetchAll('SELECT `Deposit...', Array)
+#4 C:\xampp\htdocs\miggo\lib\Cake\Model\Model.php(3040): DboSource->read(Object(Deposito), Array)
+#5 C:\xampp\htdocs\miggo\lib\Cake\Model\Model.php(3012): Model->_readDataSource('all', Array)
+#6 C:\xampp\htdocs\miggo\lib\Cake\Controller\Component\PaginatorComponent.php(212): Model->find('all', Array)
+#7 C:\xampp\htdocs\miggo\app\Controller\DepositosController.php(55): PaginatorComponent->paginate(Object(Deposito), Array)
+#8 [internal function]: DepositosController->index()
+#9 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(DepositosController), Array)
+#10 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#11 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(DepositosController), Object(CakeRequest))
+#12 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#13 {main}
+2020-08-03 21:26:38 Error: [NotFoundException] Not Found
+Request URL: /miggo/
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(971): include()
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#3 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render('home', NULL)
+#4 C:\xampp\htdocs\miggo\app\Controller\PagesController.php(70): Controller->render('home')
+#5 [internal function]: PagesController->display('home')
+#6 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2020-08-03 21:26:52 Error: [NotFoundException] Not Found
+Request URL: /miggo/
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(971): include()
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#3 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render('home', NULL)
+#4 C:\xampp\htdocs\miggo\app\Controller\PagesController.php(70): Controller->render('home')
+#5 [internal function]: PagesController->display('home')
+#6 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2020-08-03 21:29:54 Error: [NotFoundException] Invalid cuentaspendiente
+Request URL: /miggo/cuentaspendientes/view/1
+Stack Trace:
+#0 [internal function]: CuentaspendientesController->view('1')
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(CuentaspendientesController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(CuentaspendientesController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 21:29:58 Error: [NotFoundException] Invalid cuentaspendiente
+Request URL: /miggo/cuentaspendientes/view
+Stack Trace:
+#0 [internal function]: CuentaspendientesController->view()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(CuentaspendientesController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(CuentaspendientesController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 21:30:03 Error: [NotFoundException] Not Found
+Request URL: /miggo/
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(971): include()
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#3 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render('home', NULL)
+#4 C:\xampp\htdocs\miggo\app\Controller\PagesController.php(70): Controller->render('home')
+#5 [internal function]: PagesController->display('home')
+#6 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2020-08-03 21:44:09 Error: [NotFoundException] Not Found
+Request URL: /miggo/
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(971): include()
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#3 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render('home', NULL)
+#4 C:\xampp\htdocs\miggo\app\Controller\PagesController.php(70): Controller->render('home')
+#5 [internal function]: PagesController->display('home')
+#6 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(PagesController), Array)
+#7 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(PagesController), Object(CakeRequest))
+#9 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2020-08-03 22:45:52 Error: [NotFoundException] La empresa no existe.
+Request URL: /miggo/empresas/view/
+Stack Trace:
+#0 [internal function]: EmpresasController->view()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(EmpresasController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EmpresasController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 22:45:52 Error: [NotFoundException] La empresa no existe.
+Request URL: /miggo/empresas/view/
+Stack Trace:
+#0 [internal function]: EmpresasController->view()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(EmpresasController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EmpresasController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 22:46:54 Error: [NotFoundException] La empresa no existe.
+Request URL: /miggo/empresas/view/
+Stack Trace:
+#0 [internal function]: EmpresasController->view()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(EmpresasController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EmpresasController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 22:47:51 Error: [NotFoundException] La empresa no existe.
+Request URL: /miggo/empresas/view/
+Stack Trace:
+#0 [internal function]: EmpresasController->view()
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(EmpresasController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EmpresasController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 22:47:54 Error: [NotFoundException] La empresa no existe.
+Request URL: /miggo/empresas/view/27
+Stack Trace:
+#0 [internal function]: EmpresasController->view('27')
+#1 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(491): ReflectionMethod->invokeArgs(Object(EmpresasController), Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EmpresasController), Object(CakeRequest))
+#4 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2020-08-03 22:50:37 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:00:36 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:01:08 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:04:49 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:05:57 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:06:13 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:16:38 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:38:44 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:41:13 Error: [MissingControllerException] Controller class ImagenesCloudController could not be found.
+Exception Attributes: array (
+  'class' => 'ImagenesCloudController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/imagenesCloud/imgEmpresa/27/imgEmp_901159384-5.png
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-03 23:46:47 Error: [MissingActionException] Action UsuariosController::undefinedcuentas() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsuariosController',
+  'action' => 'undefinedcuentas',
+)
+Request URL: /miggo/usuarios/undefinedcuentas/ajaxobtenervalorcaja
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(UsuariosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-04 07:00:09 Error: [MissingActionException] Action UsuariosController::undefinedcuentas() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsuariosController',
+  'action' => 'undefinedcuentas',
+)
+Request URL: /miggo/usuarios/undefinedcuentas/ajaxobtenervalorcaja
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(UsuariosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-04 15:44:10 Error: [MissingActionException] Action UsuariosController::undefinedcuentas() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsuariosController',
+  'action' => 'undefinedcuentas',
+)
+Request URL: /miggo/usuarios/undefinedcuentas/ajaxobtenervalorcaja
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(UsuariosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-04 16:35:01 Error: [MissingActionException] Action EventosController::add() could not be found.
+Exception Attributes: array (
+  'controller' => 'EventosController',
+  'action' => 'add',
+)
+Request URL: /miggo/eventos/add
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(EventosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-04 19:49:12 Error: [MissingActionException] Action UsuariosController::undefinedcuentas() could not be found.
+Exception Attributes: array (
+  'controller' => 'UsuariosController',
+  'action' => 'undefinedcuentas',
+)
+Request URL: /miggo/usuarios/undefinedcuentas/ajaxobtenervalorcaja
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(UsuariosController), Object(CakeRequest))
+#2 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2020-08-04 19:52:36 Error: [ParseError] syntax error, unexpected ')', expecting ';' or ','
+Request URL: /miggo/clientes/edit/1522
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render(NULL, NULL)
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(200): Controller->render()
+#4 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(ClientesController), Object(CakeRequest))
+#5 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#6 {main}
+2020-08-04 19:52:55 Error: [ParseError] syntax error, unexpected ')', expecting ';' or ','
+Request URL: /miggo/clientes/edit/1523
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render(NULL, NULL)
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(200): Controller->render()
+#4 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(ClientesController), Object(CakeRequest))
+#5 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#6 {main}
+2020-08-04 19:53:10 Error: [ParseError] syntax error, unexpected ')', expecting ';' or ','
+Request URL: /miggo/clientes/edit/1523
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(933): View->_evaluate('C:\\xampp\\htdocs...', Array)
+#1 C:\xampp\htdocs\miggo\lib\Cake\View\View.php(473): View->_render('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\miggo\lib\Cake\Controller\Controller.php(963): View->render(NULL, NULL)
+#3 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(200): Controller->render()
+#4 C:\xampp\htdocs\miggo\lib\Cake\Routing\Dispatcher.php(167): Dispatcher->_invoke(Object(ClientesController), Object(CakeRequest))
+#5 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#6 {main}
+2020-08-04 20:03:19 Error: [MissingControllerException] Controller class CssController could not be found.
+Exception Attributes: array (
+  'class' => 'CssController',
+  'plugin' => NULL,
+)
+Request URL: /miggo/css/template/css/bootstrap.min.css.map
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\app\webroot\index.php(118): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2020-08-04 21:06:10 Error: Fatal Error (1): Maximum execution time of 120 seconds exceeded in [C:\xampp\htdocs\miggo\lib\Cake\Log\Engine\FileLog.php, line 142]
+2020-08-04 21:06:11 Error: [InternalErrorException] Internal Server Error
+Request URL: /miggo/clientes/edit/1526
+Stack Trace:
+#0 C:\xampp\htdocs\miggo\lib\Cake\Error\ErrorHandler.php(212): ErrorHandler::handleFatalError(1, 'Maximum executi...', 'C:\\xampp\\htdocs...', 142)
+#1 C:\xampp\htdocs\miggo\lib\Cake\Core\App.php(970): ErrorHandler::handleError(1, 'Maximum executi...', 'C:\\xampp\\htdocs...', 142, Array)
+#2 C:\xampp\htdocs\miggo\lib\Cake\Core\App.php(943): App::_checkFatalError()
+#3 [internal function]: App::shutdown()
+#4 {main}

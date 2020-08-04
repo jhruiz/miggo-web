@@ -1,4 +1,4 @@
-<?php $this->layout='inicio'; ?>
+<?php $this->layout = 'inicio';?>
 <div class="cargueinventarios view">
 <legend><h2><?php echo __('Retefuente - Reteica'); ?></h2></legend>
 	<dl>
@@ -21,13 +21,6 @@
 		<dd>
 			<?php echo h($reteicaretefuentes['Reteicaretefuente']['created']); ?>
 			&nbsp;
-		</dd>		
+		</dd>
 	</dl>
-</div>
-<div class="actions">
-	<legend><h3><?php echo __('Acciones'); ?></h3></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Editar Retefuente - Reteica'), array('action' => 'edit', $reteicaretefuentes['Reteicaretefuente']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Retefuente - Reteica'), array('action' => 'index')); ?> </li>
-	</ul>
 </div>

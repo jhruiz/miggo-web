@@ -15,11 +15,3 @@
 		</dd>
 	</dl>
 </div>
-<div class="actions">
-	<legend><h2><b><?php echo __('Acciones'); ?></b></h3></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Editar Cliente - Depósito'), array('action' => 'edit', $depositosCliente['DepositosCliente']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Clientes - Depósitos'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Cliente - Depósito'), array('action' => 'add')); ?> </li>
-	</ul>
-</div>

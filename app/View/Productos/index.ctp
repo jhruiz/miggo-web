@@ -33,13 +33,16 @@
 
         </form><br>
 
-		<!-- Enlaces de acción -->
-			<button type="button" class="btn btn-primary">
-				<?php echo $this->Html->link(__('Nuevo Producto'), array('action' => 'add')); ?>
-			</button>
 
         <legend><h2><b><?php echo __('Productos'); ?></b></h2></legend>
 
+		<!--Enlaces de acción -->
+		<div class="actions">
+		<button type="button" class="btn btn-primary">
+			  	<?php echo $this->Html->link(__('Nuevo Producto'), array('action' => 'add'), ["style" => "color:white;"]); ?>
+		</button>
+		</div>
+		
         <div class="table-responsive">
             <div class="container">
             <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
@@ -93,5 +96,4 @@ echo $this->Paginator->counter(array(
 	<?php echo $this->Paginator->numbers(array('separator' => ' || ')); ?>
 	<?php echo $this->Paginator->next(__(' Siguiente') . ' >', array(), null, array('class' => 'next disabled')); ?>
 	</div>
-</div><br>
-
+</div>

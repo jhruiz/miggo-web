@@ -2,18 +2,18 @@
 <?php echo $this->Form->create('Cuentaspendiente'); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Cuentaspendiente'); ?></legend>
-		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '29', 'id' => 'menuvert'))?>
+		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '29', 'id' => 'menuvert')) ?>
 	<?php
-		echo $this->Form->input('id');
-		echo $this->Form->input('documento_id');
-		echo $this->Form->input('producto_id');
-		echo $this->Form->input('deposito_id');
-		echo $this->Form->input('costoproducto');
-		echo $this->Form->input('cantidad');
-		echo $this->Form->input('proveedore_id');
-		echo $this->Form->input('numerofactura');
-		echo $this->Form->input('usuario_id');
-	?>
+echo $this->Form->input('id');
+echo $this->Form->input('documento_id');
+echo $this->Form->input('producto_id');
+echo $this->Form->input('deposito_id');
+echo $this->Form->input('costoproducto');
+echo $this->Form->input('cantidad');
+echo $this->Form->input('proveedore_id');
+echo $this->Form->input('numerofactura');
+echo $this->Form->input('usuario_id');
+?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>

@@ -10,10 +10,4 @@
                 </div>
 	</fieldset><br>
 <?php echo $this->Form->submit('Guardar',array('class'=>'btn btn-primary'));?>
-</div><br>
-<div class="actions">
-	<legend><h2><b><?php echo __('Acciones'); ?></b></h2></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Lista Tipos de Vehículo'), array('action' => 'index')); ?></li>
-	</ul>
 </div>

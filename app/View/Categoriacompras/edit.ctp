@@ -16,10 +16,3 @@
 	</fieldset>
 <?php echo $this->Form->submit('Guardar',array('class'=>'btn btn-primary'));?>
 </div>
-<div class="actions">
-	<legend><h3><?php echo __('Acciones'); ?></h3></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Lista de Categorías de Compras'), array('action' => 'index')); ?></li>
-
-	</ul>
-</div>
