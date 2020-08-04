@@ -32,10 +32,11 @@ App::uses('Security', 'Utility');
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
  *
- * @package		app.Controller
- * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
+ * @package        app.Controller
+ * @link        http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller {
+class AppController extends Controller
+{
 
     public $components = array(
         'Session',
@@ -50,25 +51,27 @@ class AppController extends Controller {
                     'userModel' => 'Usuario',
                     'fields' => array(
                         'username' => 'username',
-                        'password' => 'password'
+                        'password' => 'password',
                     ),
                 ),
                 'Form' => array(
                     'userModel' => 'Usuario',
                     'fields' => array(
                         'username' => 'username',
-                        'password' => 'password'
+                        'password' => 'password',
                     ),
-                )
-            ))
+                ),
+            )),
     );
-    
-    public function isAuthorized($user) {
+
+    public function isAuthorized($user)
+    {
 
         return true;
     }
 
-    public function beforeFilter() {
+    public function beforeFilter()
+    {
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Cargueinventario');
         $this->loadModel('Cuenta');
@@ -76,7 +79,7 @@ class AppController extends Controller {
         $this->loadModel('Evento');
         $this->loadModel('Cuentascliente');
         $this->loadModel('Cuentaspendiente');
-        
+
         $empresaId = $this->Auth->user('empresa_id');
         $ordenTrabajos = $this->Ordentrabajo->obtenerEstadistacasOrdenes($empresaId);
         $productosBajos = $this->Cargueinventario->obtenerBajoStock($empresaId);
@@ -84,17 +87,17 @@ class AppController extends Controller {
 
         //alertas pendientes por gestionar
         $filtros = array(
-            'EA.final = 0', 
-            'EA.empresa_id' => $empresaId, 
-            'Alertaordene.fecha_alerta < ' => date('Y-m-d')
-        );        
+            'EA.final = 0',
+            'EA.empresa_id' => $empresaId,
+            'Alertaordene.fecha_alerta < ' => date('Y-m-d'),
+        );
         //obtienen todas las alertas pendientes
-        $arlerts = count($this->Alertaordene->obtenerInfoAlertaOrden($filtros)); 
+        $arlerts = count($this->Alertaordene->obtenerInfoAlertaOrden($filtros));
 
         //obtiene todos los eventos previos a una fecha y que no se hayan finalizado aun
         $eventos = $this->Evento->obtenerEventosVencidos($empresaId, date('Y-m-d 23:59:59'));
 
-        //cuentas por cobrar        
+        //cuentas por cobrar
         $ctasXCobrar = $this->Cuentascliente->obtenerCuentasVencidas($empresaId, date('Y-m-d 23:59:59'));
 
         //cuentas por pagar
@@ -115,20 +118,20 @@ class AppController extends Controller {
         $this->set('ctasXCobrar', $ctasXCobrar);
         $this->set('ctasXPagar', $ctasXPagar);
 
-    }    
+    }
 
-
-    public function contador($items, $count){
+    public function contador($items, $count)
+    {
         $countTtal = $items + $count;
-        
+
         $rows = 6;
 
         do {
-            $rows += 6;         
+            $rows += 6;
         } while ($rows < $countTtal);
 
         return $rows - $countTtal;
 
     }
-    
+
 }
