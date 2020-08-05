@@ -1,4 +1,4 @@
-<?php $this->layout='inicio'; ?>
+<?php $this->layout = 'inicio';?>
 <div class="plantaservicios view">
 <legend><h2><b><?php echo __('Planta de servicio'); ?></b></h2></legend>
 	<dl>
@@ -8,10 +8,4 @@
 			&nbsp;
 		</dd><br>
 	</dl>
-</div>
-<div class="actions">
-	<legend><h2><b><?php echo __('Acciones'); ?></b></h3></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Editar Planta Servicio'), array('action' => 'edit', $plantaservicio['Plantaservicio']['id'])); ?> </li>
-	</ul>
 </div>

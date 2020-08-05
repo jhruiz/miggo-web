@@ -1,45 +1,45 @@
-<?php echo ($this->Html->script('bandeja/gestionBandejas'));  ?>
-<?php echo ($this->Html->script('gastos/gasto_edit'));  ?>
-<?php $this->layout='inicio'; ?>
+<?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
+<?php echo ($this->Html->script('gastos/gasto_edit')); ?>
+<?php $this->layout = 'inicio';?>
 
     <fieldset>
             <legend><h2><b><?php echo __('Editar Gasto'); ?></b></h2></legend>
-           
-            <input type="hidden" id="usuarioregistra_id" value="<?php echo($usuario_id);?>">
-            <input type="hidden" id="id" value="<?php echo($gasto['Gasto']['id']);?>">   
-            <input type="hidden" id="cuenta_id" value="<?php echo($gasto['Gasto']['cuenta_id']);?>">   
-            
-            
+
+            <input type="hidden" id="usuarioregistra_id" value="<?php echo ($usuario_id); ?>">
+            <input type="hidden" id="id" value="<?php echo ($gasto['Gasto']['id']); ?>">
+            <input type="hidden" id="cuenta_id" value="<?php echo ($gasto['Gasto']['cuenta_id']); ?>">
+
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                       <label>Descripción:</label>
-                      <textarea class="form-control" rows="5" id="descripcion" disabled="true"><?php echo $gasto['Gasto']['descripcion'];?></textarea>
-                    </div>              
+                      <textarea class="form-control" rows="5" id="descripcion" disabled="true"><?php echo $gasto['Gasto']['descripcion']; ?></textarea>
+                    </div>
                 </div>
-                <div class="col-md-6">&nbsp;</div>                
+                <div class="col-md-6">&nbsp;</div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Cuenta</label>
-                        <input type="text" class="form-control" value="<?php echo($cuenta['Cuenta']['descripcion']);?>" disabled="true">
+                        <input type="text" class="form-control" value="<?php echo ($cuenta['Cuenta']['descripcion']); ?>" disabled="true">
                     </div>
                 </div>
-                <div class="col-md-6">&nbsp;</div>                
+                <div class="col-md-6">&nbsp;</div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Valor Actual</label>
-                        <input type="text" class="form-control" id="val_actual" value="<?php echo(number_format($gasto['Gasto']['valor'],0));?>" disabled="true">
+                        <input type="text" class="form-control" id="val_actual" value="<?php echo (number_format($gasto['Gasto']['valor'], 0)); ?>" disabled="true">
                     </div>
                 </div>
-                <div class="col-md-6">&nbsp;</div>                
+                <div class="col-md-6">&nbsp;</div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -47,7 +47,7 @@
                         <input type="text" class="form-control numericPrice" id="val_nuevo" value="" placeholder="Nuevo valor del gasto">
                     </div>
                 </div>
-                <div class="col-md-6">&nbsp;</div>                
+                <div class="col-md-6">&nbsp;</div>
             </div>
     </fieldset>
 
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-body">
                 <label>Descripción:</label>
-                <textarea class="form-control" rows="5" id="new_descripcion"></textarea>        
+                <textarea class="form-control" rows="5" id="new_descripcion"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

@@ -1,7 +1,7 @@
-<?php $this->layout='inicio'; ?>
+<?php $this->layout = 'inicio';?>
 <div class="proveedores view">
 <legend><h2><b><?php echo __('Proveedores'); ?></b></h2></legend>
-<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '27', 'id' => 'menuvert'))?>
+<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '27', 'id' => 'menuvert')) ?>
 	<dl>
 		<dt class="text-info"><?php echo __('Nit'); ?></dt>
 		<dd>
@@ -50,7 +50,7 @@
 		</dd><br>
 		<dt class="text-info"><?php echo __('Límite Crédito'); ?></dt>
 		<dd>
-			$ <?php echo h(number_format($proveedore['Proveedore']['limitecredito'],2)); ?>
+			$ <?php echo h(number_format($proveedore['Proveedore']['limitecredito'], 2)); ?>
 			&nbsp;
 		</dd><br>
 		<dt class="text-info"><?php echo __('Observaciones'); ?></dt>
@@ -74,16 +74,4 @@
 			&nbsp;
 		</dd><br>
 	</dl>
-</div>
-<div class="actions">
-	<legend><h2><b><?php echo __('Acciones'); ?></b></h3></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Editar Proveedor'), array('action' => 'edit', $proveedore['Proveedore']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Proveedores'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Proveedor'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Ciudades'), array('controller' => 'ciudades', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nueva Ciudade'), array('controller' => 'ciudades', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Usuarios'), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-	</ul>
 </div>
