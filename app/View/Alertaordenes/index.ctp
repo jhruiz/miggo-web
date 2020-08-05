@@ -143,20 +143,6 @@ echo $color;
                 </div>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="nuevo">
-            <div class="container-fluid">
-                <div class="row"><br>
-                    hola tab # 2
-                </div>
-            </div>
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="ventarapida">
-            <div class="container-fluid">
-                <div class="row"><br>
-                    hola tab # 3
-                </div>
-            </div>
         </div>
     </div>
 
