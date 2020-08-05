@@ -1,11 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
 
-class AlertaordenesController extends AppController {
+class AlertaordenesController extends AppController
+{
 
     public $components = array('Paginator');
 
-    public function gestionalertas($ordenTrabajoId){
+    public function gestionalertas($ordenTrabajoId)
+    {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
         $this->loadModel('Estadoalerta');
@@ -28,22 +30,24 @@ class AlertaordenesController extends AppController {
         //se obtiene la información de la orden de trabajo y del vehiculo
         $filter['Ordentrabajo.id'] = $ordenTrabajoId;
         $infoOrdenCliV = $this->Ordentrabajo->obtenerOrdenesTrabajo($filter);
-        
+
         $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'infoOrdenCliV'));
     }
 
-    public function guardaralertas() {
+    public function guardaralertas()
+    {
         $this->loadModel('Alertaordene');
         $this->autoRender = false;
         $postData = $this->request->data;
-        
+
         $resp = $this->Alertaordene->guardaralerta($postData);
         echo json_encode(array('resp' => $resp));
 
     }
 
-    public function index() {        
+    public function index()
+    {
         $this->loadModel('Alertaordene');
         $this->loadModel('Estadoalerta');
 
@@ -55,26 +59,28 @@ class AlertaordenesController extends AppController {
 
         //se obtienen las alertas y las ordenes de trabajo
         $filtros = array(
-            'EA.final' => '0', 
-            'EA.empresa_id' => $empresa_id, 
-            'Alertaordene.fecha_alerta <= ' => $fechaAct
+            'EA.final' => '0',
+            'EA.empresa_id' => $empresa_id,
+            'Alertaordene.fecha_alerta <= ' => $fechaAct,
         );
-        
-        if(!empty($this->passedArgs['estadoalerta'])){
+
+        if (!empty($this->passedArgs['estadoalerta'])) {
             $filtros['EA.id'] = $this->passedArgs['estadoalerta'];
         }
-        
+
         //se obtiene el listado de estado alertas
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
-
+        $estadoAlertasTabs = $this->Estadoalerta->find('all');
+        //print($estadoAlertasTabs);
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
 
         $alertaDocumentos = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
 
-        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'alertaDocumentos', 'estadoAlertas'));
+        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas'));
     }
-    
-    public function search() {
+
+    public function search()
+    {
         $url = array();
         $url['action'] = 'index';
 
@@ -84,9 +90,10 @@ class AlertaordenesController extends AppController {
 
         // redirect the user to the url
         $this->redirect($url, null, true);
-    }   
-        
-    public function edit($id = null) {
+    }
+
+    public function edit($id = null)
+    {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
         $this->loadModel('Estadoalerta');
@@ -97,7 +104,7 @@ class AlertaordenesController extends AppController {
 
         //se obtiene el listado de alertas
         $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-        
+
         //Se obtienen las unidades de medida
         $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
 
@@ -105,9 +112,9 @@ class AlertaordenesController extends AppController {
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
 
         //se obtiene la información de la orden de trabajo y del vehiculo
-        $filtros = array( 
-            'Alertaordene.id' => $id
-        );     
+        $filtros = array(
+            'Alertaordene.id' => $id,
+        );
 
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
 
@@ -115,8 +122,8 @@ class AlertaordenesController extends AppController {
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'alertasOrdenes'));
     }
 
-
-    public function editdocs($id = null) {
+    public function editdocs($id = null)
+    {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
         $this->loadModel('Estadoalerta');
@@ -127,7 +134,7 @@ class AlertaordenesController extends AppController {
 
         //se obtiene el listado de alertas
         $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-        
+
         //Se obtienen las unidades de medida
         $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
 
@@ -135,17 +142,18 @@ class AlertaordenesController extends AppController {
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
 
         //se obtiene la información de la orden de trabajo y del vehiculo
-        $filtros = array( 
-            'Alertaordene.id' => $id
-        );     
-                
+        $filtros = array(
+            'Alertaordene.id' => $id,
+        );
+
         $alertasOrdenes = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
 
         $this->set(compact('alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'alertasOrdenes'));
-    }    
+    }
 
-    public function actualizarllamadas(){
+    public function actualizarllamadas()
+    {
         $this->autoRender = false;
 
         $postData = $this->request->data;
@@ -153,8 +161,8 @@ class AlertaordenesController extends AppController {
         //se obtiene la información de la alerta
         $alertaInfo = $this->Alertaordene->obtenerInfoAlerta($postData['alerta_id']);
 
-        $cantLlamadas = !empty($alertaInfo['Alertaordene']['cant_llamadas']) 
-                        ? $alertaInfo['Alertaordene']['cant_llamadas'] + 1 : 1;
+        $cantLlamadas = !empty($alertaInfo['Alertaordene']['cant_llamadas'])
+        ? $alertaInfo['Alertaordene']['cant_llamadas'] + 1 : 1;
 
         $data['id'] = $postData['alerta_id'];
         $data['cant_llamadas'] = $cantLlamadas;
@@ -165,7 +173,8 @@ class AlertaordenesController extends AppController {
         echo json_encode(array('resp' => $resp, 'cant' => $cantLlamadas, 'fecha' => $data['fecha_ultima_llamada']));
     }
 
-    public function actualizarestado() {
+    public function actualizarestado()
+    {
         $this->autoRender = false;
 
         $postData = $this->request->data;
@@ -178,7 +187,8 @@ class AlertaordenesController extends AppController {
         echo json_encode(array('resp' => $resp));
     }
 
-    public function actualizarobservaciones() {
+    public function actualizarobservaciones()
+    {
         $this->autoRender = false;
 
         $postData = $this->request->data;
@@ -191,7 +201,8 @@ class AlertaordenesController extends AppController {
         echo json_encode(array('resp' => $resp));
     }
 
-    public function generaralertasoat() {
+    public function generaralertasoat()
+    {
         $this->autoRender = false;
 
         $this->loadModel('Alerta');
@@ -215,17 +226,15 @@ class AlertaordenesController extends AppController {
         $data['cliente_id'] = $postData['clienteId'];
         $data['vehiculo_id'] = $postData['vehiculoId'];
 
-        
         //se valida si ya existe una alerta para el vehiculo y el soat actual
-        $validSoat = $this->Alertaordene->obtenerAlertaOrdenSoat(   $postData['clienteId'], 
-                                                                    $postData['vehiculoId'],
-                                                                    $postData['soat'],
-                                                                    $estadoAlertas['Estadoalerta']['id'],
-                                                                    $alertaInfo['Alerta']['id']
-                                                                );
-        
-        
-        if(empty($validSoat)){
+        $validSoat = $this->Alertaordene->obtenerAlertaOrdenSoat($postData['clienteId'],
+            $postData['vehiculoId'],
+            $postData['soat'],
+            $estadoAlertas['Estadoalerta']['id'],
+            $alertaInfo['Alerta']['id']
+        );
+
+        if (empty($validSoat)) {
             $resp = $this->Alertaordene->actualizarAlerta($data);
         } else {
             $resp = '2';
@@ -233,10 +242,10 @@ class AlertaordenesController extends AppController {
 
         echo json_encode(array('resp' => $resp));
 
-
     }
 
-    public function generaralertatecno() {
+    public function generaralertatecno()
+    {
         $this->autoRender = false;
 
         $this->loadModel('Alerta');
@@ -260,17 +269,15 @@ class AlertaordenesController extends AppController {
         $data['cliente_id'] = $postData['clienteId'];
         $data['vehiculo_id'] = $postData['vehiculoId'];
 
-        
         //se valida si ya existe una alerta para el vehiculo y el soat actual
-        $validTecno = $this->Alertaordene->obtenerAlertaOrdenSoat(   $postData['clienteId'], 
-                                                                    $postData['vehiculoId'],
-                                                                    $postData['tecnomecanica'],
-                                                                    $estadoAlertas['Estadoalerta']['id'],
-                                                                    $alertaInfo['Alerta']['id']
-                                                                );
-        
-        
-        if(empty($validTecno)){
+        $validTecno = $this->Alertaordene->obtenerAlertaOrdenSoat($postData['clienteId'],
+            $postData['vehiculoId'],
+            $postData['tecnomecanica'],
+            $estadoAlertas['Estadoalerta']['id'],
+            $alertaInfo['Alerta']['id']
+        );
+
+        if (empty($validTecno)) {
             $resp = $this->Alertaordene->actualizarAlerta($data);
         } else {
             $resp = '2';
@@ -279,13 +286,15 @@ class AlertaordenesController extends AppController {
         echo json_encode(array('resp' => $resp));
     }
 
-    public function restarDiasFecha($fecha, $dias) {
+    public function restarDiasFecha($fecha, $dias)
+    {
         $fechaBase = date($fecha);
         $fechaResult = date("Y-m-d", strtotime($fechaBase . " - " . $dias . " days"));
-        return $fechaResult; 
+        return $fechaResult;
     }
 
-    public function indexfinalizadas() {        
+    public function indexfinalizadas()
+    {
         $this->loadModel('Alertaordene');
 
         //id de la empresa
@@ -296,8 +305,8 @@ class AlertaordenesController extends AppController {
 
         //se obtienen las alertas y las ordenes de trabajo
         $filtros = array(
-            'EA.final' => '1', 
-            'EA.empresa_id' => $empresa_id
+            'EA.final' => '1',
+            'EA.empresa_id' => $empresa_id,
         );
 
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
@@ -305,11 +314,11 @@ class AlertaordenesController extends AppController {
         $alertaDocumentos = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
 
         $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'alertaDocumentos'));
-    } 
-    
+    }
 
     /////////////////////////////// INFORMACION PARA LAS ESTADISTICAS ///////////////////////////////
-    public function estadisticasfinalizadas(){
+    public function estadisticasfinalizadas()
+    {
         $this->autoRender = false;
 
         $tortas = [];
@@ -319,33 +328,35 @@ class AlertaordenesController extends AppController {
         echo json_encode(array('resp' => $tortas));
     }
 
-    public function obtenerAlertasFinalizadas() {
+    public function obtenerAlertasFinalizadas()
+    {
         $this->loadModel('Alertaordene');
-        
+
         $alertasOrdenes = $this->Alertaordene->obtieneEstadoAlertaTortas($this->Auth->user('empresa_id'));
 
         $arrTitulos = [];
         $seriesData = [];
 
-        foreach($alertasOrdenes as $ao){
+        foreach ($alertasOrdenes as $ao) {
             $arrTitulos[] = $ao['EA']['descripcion'];
 
             $seriesData[] = [
                 'value' => $ao['0']['contador'],
-                'name' => $ao['EA']['descripcion']
+                'name' => $ao['EA']['descripcion'],
             ];
         }
 
         $alertas = [
             'titulo' => 'Alertas Finalizadas',
             'legend_data' => $arrTitulos,
-            'series_data' => $seriesData
+            'series_data' => $seriesData,
         ];
 
         return $alertas;
     }
 
-    public function viewf($id = null) {
+    public function viewf($id = null)
+    {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
         $this->loadModel('Estadoalerta');
@@ -356,7 +367,7 @@ class AlertaordenesController extends AppController {
 
         //se obtiene el listado de alertas
         $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-        
+
         //Se obtienen las unidades de medida
         $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
 
@@ -364,17 +375,18 @@ class AlertaordenesController extends AppController {
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
 
         //se obtiene la información de la orden de trabajo y del vehiculo
-        $filtros = array( 
-            'Alertaordene.id' => $id
-        );     
+        $filtros = array(
+            'Alertaordene.id' => $id,
+        );
 
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
 
         $this->set(compact('alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'alertasOrdenes'));
-    }   
-    
-    public function viewfd($id = null) {
+    }
+
+    public function viewfd($id = null)
+    {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
         $this->loadModel('Estadoalerta');
@@ -385,7 +397,7 @@ class AlertaordenesController extends AppController {
 
         //se obtiene el listado de alertas
         $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-        
+
         //Se obtienen las unidades de medida
         $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
 
@@ -393,13 +405,13 @@ class AlertaordenesController extends AppController {
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
 
         //se obtiene la información de la orden de trabajo y del vehiculo
-        $filtros = array( 
-            'Alertaordene.id' => $id
-        );     
-                
+        $filtros = array(
+            'Alertaordene.id' => $id,
+        );
+
         $alertasOrdenes = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
 
         $this->set(compact('alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'alertasOrdenes'));
-    }      
+    }
 }
