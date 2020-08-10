@@ -1,4 +1,4 @@
-<?php $this->layout='inicio'; ?>
+<?php $this->layout = 'inicio';?>
 <div class="container body">
 <div class="main_container">
 
@@ -31,20 +31,27 @@
                                 <td><?php echo h($prefactura['CL']['nombre']); ?>&nbsp;</td>
                                 <td><?php echo h($prefactura['VH']['placa']); ?>&nbsp;</td>
                                 <td><?php echo h($prefactura['Prefactura']['created']); ?>&nbsp;</td>
-                                <td><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id'])  
-                                        ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?>&nbsp;</td>
-                                <td><?php echo h($prefactura['Prefactura']['observacion']);?>&nbsp;</td>
+                                <td><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id'])
+    ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?>&nbsp;</td>
+                                <td><?php echo h($prefactura['Prefactura']['observacion']); ?>&nbsp;</td>
                                 <td class="actions">
                                 <?php echo $this->Html->link($this->Html->tag('i', '', array('class' => 'fa fa-eye fa-lg', 'title' => 'Ver Prefactura')), array('controller' => 'prefacturas', 'action' => 'view', $prefactura['Prefactura']['id']), array('escape' => false)) ?>
                                 </td>
                             </tr>
-                            <?php endforeach; ?>
+                            <?php endforeach;?>
                         </tbody>
                     </table>
+
+                    <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarPreFacturas')); ?>
+                    <fieldset>
+             <?php echo $this->Form->submit('Descargar Prefacturas', array('class' => 'btn btn-primary')); ?>
+    </fieldset>
+</form>
+
                 </div>
             </div>
         </div>
-        <!--Finaliza PREFACTUAS-->                
+        <!--Finaliza PREFACTUAS-->
 
         <!--Inicia ORDENES DE TRABAJO-->
         <div role="tabpanel" class="tab-pane" id="nuevo"><br>
@@ -77,16 +84,23 @@
                                 <?php echo $this->Html->link($this->Html->tag('i', '', array('class' => 'fa fa-eye fa-lg', 'title' => 'Ver Orden')), array('action' => 'edit', $ot['Ordentrabajo']['id']), array('escape' => false)) ?>
                                 </td>
                             </tr>
-                            <?php endforeach; ?>
+                            <?php endforeach;?>
                         </tbody>
                     </table>
+
+                    <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarOrdenesTrabajo')); ?>
+    <fieldset>
+        <?php echo $this->Form->submit('Descargar Orden trabajo', array('class' => 'btn btn-primary')); ?>
+    </fieldset>
+</form>
                 </div>
-                <p>                
+                <p>
             </div>
         </div>
-        <!--Finaliza ORDENES DE TRABAJO-->            
-        
-    </div>  
- 
+        <!--Finaliza ORDENES DE TRABAJO-->
+        <br><br>
+<br>
+    </div>
+
 </div>
 </div>
