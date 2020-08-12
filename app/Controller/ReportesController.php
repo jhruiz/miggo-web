@@ -590,24 +590,54 @@ class ReportesController extends AppController
      */
     public function descargarPreFacturas()
     {
+        // $this->loadModel('Prefactura');
+        // $this->loadModel('Estadosprefactura');
+        // $empresaId = $this->Auth->user('empresa_id');
+        // $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        // $estados = $this->Estadosprefactura->obtenerListaEstados();
+        // $texto_tit = "Prefacturas";
+        // $this->set(compact('prefacturas'));
+        // $this->set('texto_tit', $texto_tit);
+        // $this->set('rows', $prefacturas);
+
+        // $arr_titulos = array(
+        //     'Cliente',
+        //     'Veh&iacute;culo',
+        //     'Fecha',
+        //     'Estado',
+        //     'Observaci&oacute;n',
+        // );
+
+        // $this->set('titulos', $arr_titulos, );
+        // $this->render('export_xls', 'export_xls');
+
         $this->loadModel('Prefactura');
         $this->loadModel('Estadosprefactura');
         $empresaId = $this->Auth->user('empresa_id');
-        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
-        $estados = $this->Estadosprefactura->obtenerListaEstados();
+        $infoprefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        $prefacturas = [];
+        if (!empty($infoprefacturas)) {
+            foreach ($infoprefacturas as $prefactura) {
+                $prefacturas[] = [
+                    'nombre' => $prefactura['CL']['nombre'],
+                    'placa' => $prefactura['VH']['placa'],
+                    'created' => $prefactura['Prefactura']['created'],
+                    'estado' => $prefactura['Prefactura']['estadoprefactura_id'],
+                    'observacion' => $prefacturas['Prefactura']['observacion'],
+                ];
+            }
+        }
         $texto_tit = "Prefacturas";
         $this->set(compact('prefacturas'));
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $prefacturas);
-
         $arr_titulos = array(
-            'Cliente',
-            'Veh&iacute;culo',
-            'Fecha',
-            'Estado',
-            'Observaci&oacute;n',
+            0 => __('Nombre'),
+            1 => __('Placa'),
+            2 => __('Fecha'),
+            3 => __('Estado'),
+            4 => __('Observacion'),
         );
-
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
     }
@@ -633,6 +663,105 @@ class ReportesController extends AppController
             'Estado',
             'Observaci&oacute;n Mec&aacute;nico',
             'Observaci&oacute;n Cliente',
+        );
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de Ordenes de trabajo
+     */
+    public function descargarFacturaCuentaValores()
+    {
+        // $this->loadModel('Cuenta');
+        // $this->loadModel('Tipopago');
+
+        // $empresaId = $this->Auth->user('empresa_id');
+
+        // if (!empty($this->passedArgs['codigoDian'])) {
+        //     $filter = null;
+        //     $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
+        // }
+        // if (!empty($this->passedArgs['numeroFactura'])) {
+        //     $filter = null;
+        //     $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
+        // }
+        // if (!empty($this->passedArgs['tipocuentas'])) {
+        //     $filter['FacturaCuentaValore.cuenta_id'] = $this->passedArgs['tipocuentas'];
+        // }
+
+        // if (!empty($this->passedArgs['tipopagos'])) {
+        //     $filter['FacturaCuentaValore.tipopago_id'] = $this->passedArgs['tipopagos'];
+        // }
+
+        // if (!empty($this->passedArgs['fechaInicio']) && !empty($this->passedArgs['fechaFin'])) {
+        //     $filter['F.created BETWEEN ? AND ?'] = array($this->passedArgs['fechaInicio'] . ' 00:00:01', $this->passedArgs['fechaFin'] . ' 23:23:59');
+        // } else {
+        //     //$filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
+        // }
+
+        // $filter['F.empresa_id'] = $empresaId;
+
+        // //se obtiene el listado de cuentas
+        // $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+
+        // //se obtiene el listado de tipos de pago
+        // $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+
+        //se obtienen los metodos de pago usados para cancelar las facturas
+        // $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
+
+        $this->loadModel('Cuenta');
+        $this->loadModel('Tipopago');
+        $empresaId = $this->Auth->user('empresa_id');
+
+        // if (!empty($_POST['codigoDian'])) {
+        //     $filter = null;
+        //     $filter['F.consecutivodian'] = $_POST['codigoDian'];
+        // }
+        // if (!empty($_POST['numeroFactura'])) {
+        //     $filter = null;
+        //     $filter['F.codigo'] = $_POST['numeroFactura'];
+        // }
+        // if (!empty($_POST['tipocuentas'])) {
+        //     $filter['FacturaCuentaValore.cuenta_id'] = $_POST['tipocuentas'];
+        // }
+
+        // if (!empty($_POST['tipopagos'])) {
+        //     $filter['FacturaCuentaValore.tipopago_id'] = $_POST['tipopagos'];
+        // }
+
+        // if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
+        //     $filter['F.created BETWEEN ? AND ?'] = array($_POST['fechaInicio'] . ' 00:00:01', $_POST['fechaFin'] . ' 23:23:59');
+        // }
+
+        $codigoDian = "";
+        if (!empty($_POST['codigoDian'])) {
+            $filter = null;
+            $codigoDian = $_POST['codigoDian'];
+            $filter['F.consecutivodian'] = $_POST['codigoDian'];
+        }
+        $filter['F.empresa_id'] = $empresaId;
+
+        $this->set(compact('codigoDian'));
+
+        //se obtiene el listado de cuentas
+        // $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+
+        // //se obtiene el listado de tipos de pago
+        // $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+
+        // $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
+
+        $texto_tit = "Factura cuenta valor";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', );
+        $arr_titulos = array(
+            'Factura',
+            'Fecha',
+            'Valor Factura',
+            'Cuenta',
+            'Tipo pago',
+            'Valor',
         );
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');

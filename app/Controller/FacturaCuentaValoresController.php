@@ -127,6 +127,7 @@ class FacturaCuentaValoresController extends AppController
 
         foreach ($this->data as $kk => $vv) {
             $url[$kk] = $vv;
+
         }
 
         // redirect the user to the url
