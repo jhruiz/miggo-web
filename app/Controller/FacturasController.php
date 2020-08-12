@@ -1469,6 +1469,12 @@ class FacturasController extends AppController
 
         $filtros = [];
 
+        $nitCliente = $this->passedArgs['nitCliente'];
+        $placa = $this->passedArgs['placa'];
+        $fechaInicio = $this->passedArgs['fecha_inicio'];
+        $fechaFin = $this->passedArgs['fecha_fin'];
+        $mecanico = $this->passedArgs['usuario'];
+
         if (!empty($this->passedArgs['usuario'])) {
             $filtros['O.usuario_id'] = $this->passedArgs['usuario'];
         }
@@ -1508,7 +1514,7 @@ class FacturasController extends AppController
             $totalValor += $factClientes[$i]['0']['valor'];
             $totalFactura += $factClientes[$i]['0']['conteo'];
         }
-        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura'));
+        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura', 'nitCliente', 'placa', 'fechaInicio', 'fechaFin', 'mecanico'));
 
     }
 

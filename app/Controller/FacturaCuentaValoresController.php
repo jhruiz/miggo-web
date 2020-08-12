@@ -80,6 +80,14 @@ class FacturaCuentaValoresController extends AppController
 
         $empresaId = $this->Auth->user('empresa_id');
 
+        $codigoDian = $this->passedArgs['codigoDian'];
+        $numeroFactura = $this->passedArgs['numeroFactura'];
+        $tipocuentas = $this->passedArgs['tipocuentas'];
+        $fechaInicio = $this->passedArgs['fechaInicio'];
+        $fechaFin = $this->passedArgs['fechaFin'];
+        $tipocuentas = $this->passedArgs['tipocuentas'];
+        $tipopagos = $this->passedArgs['tipopagos'];
+
         if (!empty($this->passedArgs['codigoDian'])) {
             $filter = null;
             $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
@@ -118,7 +126,7 @@ class FacturaCuentaValoresController extends AppController
         for ($i = 0; $i < count($pagosFacturas); $i++) {
             $totalValor += $pagosFacturas[$i]['FacturaCuentaValore']['valor'];
         }
-        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor'));}
+        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor', 'numeroFactura', 'codigoDian', 'fechaInicio', 'fechaFin', 'numeroFactura', 'tipocuentas', 'tipopagos'));}
 
     public function search()
     {

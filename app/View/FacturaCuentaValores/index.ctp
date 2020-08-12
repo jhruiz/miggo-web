@@ -2,32 +2,34 @@
 <?php echo ($this->Html->script('bandeja/gestionBandejas.js')); ?>
 <div class="facturas-cuentas-valores index">
 
+
+
     <?php echo $this->Form->create('FacturaCuentaValore', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
     <legend><h2><b><?php echo __('Buscar de pagos por factura'); ?></b></h2></legend>
     <div class="row">
     <div class="col-md-1">
             <div class="form-group">
                 <label>Código Dian</label><br>
-                <input name="data[codigoDian]" id="codigoDian" autocomplete="off" class="form-control" placeholder="Código Dian" type="text">
+                <input name="data[codigoDian]" id="codigoDian" autocomplete="off" value="<?php echo ($codigoDian); ?>" class="form-control" placeholder="Código Dian" type="text">
             </div>
         </div>
     <div class="col-md-2">
             <div class="form-group">
                 <label># Facturas</label><br>
-                <input name="data[numeroFactura]" id="numeroFactura" autocomplete="off" class="form-control" placeholder="Número de factura" type="text">
+                <input name="data[numeroFactura]" id="numeroFactura" value="<?php echo ($numeroFactura); ?>" autocomplete="off" class="form-control" placeholder="Número de factura" type="text">
             </div>
         </div>
         <div class="col-md-1">
             <div class="form-group">
                 <label>Fecha Inicial</label><br>
-                <input name="data[fechaInicio]" id="fechaInicio" autocomplete="off" class="date form-control" placeholder="Fecha Inicio" type="text">
+                <input name="data[fechaInicio]" id="fechaInicio" value="<?php echo ($fechaInicio); ?>"  autocomplete="off" class="date form-control" placeholder="Fecha Inicio" type="text">
             </div>
         </div>
 
         <div class="col-md-2">
             <div class="form-group">
                 <label>Fecha Final</label><br>
-                <input name="data[fechaFin]" id="fechaFin" autocomplete="off" class="date form-control" placeholder="Fecha Fin" type="text">
+                <input name="data[fechaFin]" id="fechaFin" value="<?php echo ($fechaFin); ?>" autocomplete="off" class="date form-control" placeholder="Fecha Fin" type="text">
             </div>
         </div>
 
@@ -42,6 +44,7 @@ echo $this->Form->input("tipocuentas",
         'options' => $tipoCuentas,
         'empty' => 'Seleccione Uno',
         'class' => 'form-control',
+        'value' => $tipocuentas,
     )
 );
 ?>
@@ -57,6 +60,7 @@ echo $this->Form->input("tipopagos",
         'options' => $tipoPago,
         'empty' => 'Seleccione Uno',
         'class' => 'form-control',
+        'value' => $tipopagos,
     )
 );
 ?>
@@ -64,6 +68,24 @@ echo $this->Form->input("tipopagos",
     </div><br>
     <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary')); ?>
     </form><br><br>
+
+    <!-- Inicio zona descargue reporte excel-->
+    <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarFacturaCuentaValores')); ?>
+    <fieldset>
+        <?php echo $this->Form->input('codigoDian', array('type' => 'hidden', 'name' => 'codigoDian', 'value' => $codigoDian)) ?>
+        <?php echo $this->Form->input('numeroFactura', array('type' => 'hidden', 'name' => 'numeroFactura', 'value' => $numeroFactura)) ?>
+        <?php echo $this->Form->input('fechaInicio', array('type' => 'hidden', 'name' => 'fechaInicio', 'value' => $fechaInicio)) ?>
+        <?php echo $this->Form->input('fechaFin', array('type' => 'hidden', 'name' => 'fechaFin', 'value' => $fechaFin)) ?>
+        <?php echo $this->Form->input('tipocuentas', array('type' => 'hidden', 'name' => 'tipocuentas', 'value' => $tipocuentas)) ?>
+        <?php echo $this->Form->input('tipopagos', array('type' => 'hidden', 'name' => 'tipopagos', 'value' => $tipopagos)) ?>
+
+
+
+        <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
+    </fieldset>
+    </form><br><br>
+    <!-- Fin zona descargue reporte excel -->
+
 
 
 	<legend><h2><b><?php echo __('Métodos de Pago por Factura'); ?></b></h2></legend>

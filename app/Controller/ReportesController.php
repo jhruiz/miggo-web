@@ -668,93 +668,54 @@ class ReportesController extends AppController
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de Ordenes de trabajo
+     * Se genera el reporte de Factura Cuenta Valores
      */
     public function descargarFacturaCuentaValores()
     {
-        // $this->loadModel('Cuenta');
-        // $this->loadModel('Tipopago');
-
-        // $empresaId = $this->Auth->user('empresa_id');
-
-        // if (!empty($this->passedArgs['codigoDian'])) {
-        //     $filter = null;
-        //     $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
-        // }
-        // if (!empty($this->passedArgs['numeroFactura'])) {
-        //     $filter = null;
-        //     $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
-        // }
-        // if (!empty($this->passedArgs['tipocuentas'])) {
-        //     $filter['FacturaCuentaValore.cuenta_id'] = $this->passedArgs['tipocuentas'];
-        // }
-
-        // if (!empty($this->passedArgs['tipopagos'])) {
-        //     $filter['FacturaCuentaValore.tipopago_id'] = $this->passedArgs['tipopagos'];
-        // }
-
-        // if (!empty($this->passedArgs['fechaInicio']) && !empty($this->passedArgs['fechaFin'])) {
-        //     $filter['F.created BETWEEN ? AND ?'] = array($this->passedArgs['fechaInicio'] . ' 00:00:01', $this->passedArgs['fechaFin'] . ' 23:23:59');
-        // } else {
-        //     //$filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
-        // }
-
-        // $filter['F.empresa_id'] = $empresaId;
-
-        // //se obtiene el listado de cuentas
-        // $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
-
-        // //se obtiene el listado de tipos de pago
-        // $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
-
-        //se obtienen los metodos de pago usados para cancelar las facturas
-        // $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
-
         $this->loadModel('Cuenta');
         $this->loadModel('Tipopago');
+        $this->loadModel('FacturaCuentaValore');
         $empresaId = $this->Auth->user('empresa_id');
 
-        // if (!empty($_POST['codigoDian'])) {
-        //     $filter = null;
-        //     $filter['F.consecutivodian'] = $_POST['codigoDian'];
-        // }
-        // if (!empty($_POST['numeroFactura'])) {
-        //     $filter = null;
-        //     $filter['F.codigo'] = $_POST['numeroFactura'];
-        // }
-        // if (!empty($_POST['tipocuentas'])) {
-        //     $filter['FacturaCuentaValore.cuenta_id'] = $_POST['tipocuentas'];
-        // }
-
-        // if (!empty($_POST['tipopagos'])) {
-        //     $filter['FacturaCuentaValore.tipopago_id'] = $_POST['tipopagos'];
-        // }
-
-        // if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
-        //     $filter['F.created BETWEEN ? AND ?'] = array($_POST['fechaInicio'] . ' 00:00:01', $_POST['fechaFin'] . ' 23:23:59');
-        // }
-
-        $codigoDian = "";
         if (!empty($_POST['codigoDian'])) {
             $filter = null;
             $codigoDian = $_POST['codigoDian'];
             $filter['F.consecutivodian'] = $_POST['codigoDian'];
         }
-        $filter['F.empresa_id'] = $empresaId;
 
+        if (!empty($_POST['numeroFactura'])) {
+            $filter = null;
+            $numeroFactura = $_POST['numeroFactura'];
+            $filter['F.codigo'] = $_POST['numeroFactura'];
+        }
+
+        if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
+            $fechaInicio = $_POST['fechaInicio'];
+            $fechaFin = $_POST['fechaFin'];
+            $filter['F.created BETWEEN ? AND ?'] = array($_POST['fechaInicio'] . ' 00:00:01', $_POST['fechaFin'] . ' 23:23:59');
+        }
+
+        if (!empty($_POST['tipocuentas'])) {
+            $filter = null;
+            $tipocuentas = $_POST['tipocuentas'];
+            $filter['FacturaCuentaValore.cuenta_id'] = $_POST['tipocuentas'];
+        }
+        if (!empty($_POST['tipopagos'])) {
+            $filter = null;
+            $tipopagos = $_POST['tipopagos'];
+            $filter['FacturaCuentaValore.tipopago_id'] = $_POST['tipopagos'];
+        }
+
+        $filter['F.empresa_id'] = $empresaId;
         $this->set(compact('codigoDian'));
 
-        //se obtiene el listado de cuentas
-        // $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
-
-        // //se obtiene el listado de tipos de pago
-        // $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
-
-        // $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
-
+        $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+        $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+        $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
+        // var_dump($pagosFacturas);
         $texto_tit = "Factura cuenta valor";
         $this->set('texto_tit', $texto_tit);
-        $this->set('rows', );
+        $this->set('rows', $pagosFacturas);
         $arr_titulos = array(
             'Factura',
             'Fecha',
@@ -766,59 +727,64 @@ class ReportesController extends AppController
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
     }
-
-    public function descargarCuentasClientes()
+    /**
+     * Se genera el reporte de Factura reporte facturas clientes
+     */
+    public function descargarReporteFacturasClientes()
     {
-        $this->loadModel('Ventarapida');
-        $this->loadModel('Cuentascliente');
-        $cuentasclientesController = new CuentasclientesController();
-        $empresaId = $this->Auth->user('empresa_id');
-        $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($empresaId);
+        $this->loadModel('Usuario');
+        $filtros = [];
 
-        $fechaActual = date('Y-m-d');
-        for ($i = 0; $i < count($cuentasclientes); $i++) {
-            if ($cuentasclientes[$i]['Cuentascliente']['cliente_id'] != "") {
-                $diasCredito = !empty($cuentasclientes[$i]['CL']['diascredito']) ? $cuentasclientes[$i]['CL']['diascredito'] : 30;
-                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = $cuentasclientesController->sumarDiasFecha($cuentasclientes[$i]['Cuentascliente']['created'], $diasCredito);
-            } else {
-                $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($cuentasclientes[$i]['Factura']['id']);
-
-                if (count($infoVentaRapida) > 0) {
-                    $cuentasclientes[$i]['Cliente']['nombre'] = $infoVentaRapida['Ventarapida']['cliente'];
-                } else {
-                    $cuentasclientes[$i]['Cliente']['nombre'] = "";
-                }
-                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = "";
-            }
-
-            $diff = $cuentasclientesController->diffFechas($fechaActual, $cuentasclientes[$i]['Cuentascliente']['fechalimitepago']);
-
-            if ((explode("+", $diff)) > 1) {
-                $diff = str_replace("+", "", $diff) . "+";
-            }
-
-            if ($diff <= '0') {
-                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
-            } else {
-                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
-            }
+        if (!empty($_POST['mecanico'])) {
+            $filtros['O.usuario_id'] = $_POST['mecanico'];
         }
 
-        $texto_tit = "Cuentas por Cobrar";
-        $this->set(compact('cuentasclientes'));
-        $this->set('texto_tit', $texto_tit);
-        $this->set('rows', $cuentasclientes);
-        $arr_titulos = array(
-            'Cliente',
-            'Total Obligacion',
-            'Fecha',
-            'Dias Credito',
-            'Fecha Limite',
-            'Dias Vencido',
-            'Usuario',
-        );
-        $this->set('titulos', $arr_titulos);
-        $this->render('export_xls', 'export_xls');
+        if (!empty($_POST['fecha_inicio']) && empty($_POST['fecha_fin'])) {
+            $filtros['Factura.created BETWEEN ? AND ?'] = array(
+                $_POST['fecha_inicio'] . ' 00:00:00',
+                date('Y-m-d') . ' 23:59:59');
+        }
+
+        if (empty($_POST['fecha_inicio']) && !empty($_POST['fecha_fin'])) {
+            $filtros['Factura.created BETWEEN ? AND ?'] = array(
+                date('Y-01-01' . ' 00:00:01'),
+                $_POST['fecha_fin'] . ' 23:59:59');
+        }
+
+        if (!empty($_POST['fecha_inicio']) && !empty($_POST['fecha_fin'])) {
+            $filtros['Factura.created BETWEEN ? AND ?'] = array(
+                $_POST['fecha_inicio'] . ' 00:00:01',
+                $_POST['fecha_fin'] . ' 23:59:59');
+        }
+        if (!empty($_POST['nitCliente'])) {
+            $filtros['C.nit'] = $_POST['nitCliente'];
+        }
+        if (!empty($_POST['placa'])) {
+            $filtros['V.placa'] = $_POST['placa'];
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+        // $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
+
+        debug($filtros);
+        //Zona de generación de excel
+        // $texto_tit = "Servicios por cliente";
+        // $this->set('texto_tit', $texto_tit);
+        // $this->set('rows', );
+        // $arr_titulos = array(
+        //     'Cliente',
+        //     'Identificaci&oacute;n Cliente',
+        //     'Celular Cliente',
+        //     'Placa Veh&iacute;culo',
+        //     'T&eacute;cnico',
+        //     'C&oacute;digo Factura',
+        //     'Fecha Factura',
+        //     'Cantidad Facturas',
+        //     'Valor total Facturas',
+        // );
+        // $this->set('titulos', $arr_titulos, );
+        // $this->render('export_xls', 'export_xls');
     }
 
     public function descargarListaCierreDiario()
