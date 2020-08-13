@@ -590,56 +590,27 @@ class ReportesController extends AppController
      */
     public function descargarPreFacturas()
     {
-        // $this->loadModel('Prefactura');
-        // $this->loadModel('Estadosprefactura');
-        // $empresaId = $this->Auth->user('empresa_id');
-        // $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
-        // $estados = $this->Estadosprefactura->obtenerListaEstados();
-        // $texto_tit = "Prefacturas";
-        // $this->set(compact('prefacturas'));
-        // $this->set('texto_tit', $texto_tit);
-        // $this->set('rows', $prefacturas);
-
-        // $arr_titulos = array(
-        //     'Cliente',
-        //     'Veh&iacute;culo',
-        //     'Fecha',
-        //     'Estado',
-        //     'Observaci&oacute;n',
-        // );
-
-        // $this->set('titulos', $arr_titulos, );
-        // $this->render('export_xls', 'export_xls');
-
         $this->loadModel('Prefactura');
         $this->loadModel('Estadosprefactura');
         $empresaId = $this->Auth->user('empresa_id');
-        $infoprefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
-        $prefacturas = [];
-        if (!empty($infoprefacturas)) {
-            foreach ($infoprefacturas as $prefactura) {
-                $prefacturas[] = [
-                    'nombre' => $prefactura['CL']['nombre'],
-                    'placa' => $prefactura['VH']['placa'],
-                    'created' => $prefactura['Prefactura']['created'],
-                    'estado' => $prefactura['Prefactura']['estadoprefactura_id'],
-                    'observacion' => $prefacturas['Prefactura']['observacion'],
-                ];
-            }
-        }
+        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        $estados = $this->Estadosprefactura->obtenerListaEstados();
         $texto_tit = "Prefacturas";
         $this->set(compact('prefacturas'));
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $prefacturas);
+
         $arr_titulos = array(
-            0 => __('Nombre'),
-            1 => __('Placa'),
-            2 => __('Fecha'),
-            3 => __('Estado'),
-            4 => __('Observacion'),
+            'Cliente',
+            'Veh&iacute;culo',
+            'Fecha',
+            'Estado',
+            'Observaci&oacute;n',
         );
+
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
+
     }
 
     /**
@@ -712,7 +683,6 @@ class ReportesController extends AppController
         $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
         $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
         $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
-        // var_dump($pagosFacturas);
         $texto_tit = "Factura cuenta valor";
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $pagosFacturas);
@@ -733,6 +703,7 @@ class ReportesController extends AppController
     public function descargarReporteFacturasClientes()
     {
         $this->loadModel('Usuario');
+        $this->loadModel('Factura');
         $filtros = [];
 
         if (!empty($_POST['mecanico'])) {
@@ -765,26 +736,26 @@ class ReportesController extends AppController
 
         $empresaId = $this->Auth->user('empresa_id');
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
-        // $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
 
-        debug($filtros);
-        //Zona de generación de excel
-        // $texto_tit = "Servicios por cliente";
-        // $this->set('texto_tit', $texto_tit);
-        // $this->set('rows', );
-        // $arr_titulos = array(
-        //     'Cliente',
-        //     'Identificaci&oacute;n Cliente',
-        //     'Celular Cliente',
-        //     'Placa Veh&iacute;culo',
-        //     'T&eacute;cnico',
-        //     'C&oacute;digo Factura',
-        //     'Fecha Factura',
-        //     'Cantidad Facturas',
-        //     'Valor total Facturas',
-        // );
-        // $this->set('titulos', $arr_titulos, );
-        // $this->render('export_xls', 'export_xls');
+        $facturaClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
+
+        $texto_tit = "Servicios por cliente";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $facturaClientes);
+        $arr_titulos = array(
+            'Cliente',
+            'Identificaci&oacute;n Cliente',
+            'Celular Cliente',
+            'Placa Veh&iacute;culo',
+            'T&eacute;cnico',
+            'C&oacute;digo Factura',
+            'Fecha Factura',
+            'Cantidad Facturas',
+            'Valor total Facturas',
+        );
+        $this->set(compact('facturaClientes'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
     }
 
     public function descargarListaCierreDiario()

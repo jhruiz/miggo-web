@@ -273,17 +273,17 @@ endforeach;
         $total -= $cd['Cierrecaja']['traslados_gas'];
         $total += $cd['Cierrecaja']['abonos'];
         ?>
-																																																																    <tr>
-																																																																        <td class="tableTdContent" ><?php echo h($listCuentas[$cd['Cierrecaja']['caja_id']]); ?>&nbsp;</td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['saldo_inicial']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['ventas']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['gastos']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_ing']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_gas']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['abonos']); ?></td>
-																																																																        <td class="tableTdContent" ><?php echo h($total); ?></td>
-																																																																    </tr>
-																																																																    <?php
+			<tr>
+				<td class="tableTdContent" ><?php echo h($listCuentas[$cd['Cierrecaja']['caja_id']]); ?>&nbsp;</td>
+			    <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['saldo_inicial']); ?></td>
+				<td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['ventas']); ?></td>
+				<td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['gastos']); ?></td>
+				<td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_ing']); ?></td>
+				<td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_gas']); ?></td>
+				<td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['abonos']); ?></td>
+				<td class="tableTdContent" ><?php echo h($total); ?></td>
+			</tr>
+	<?php
 endforeach;
 }?>
 </table>
@@ -457,6 +457,25 @@ $saldoInicial = 0;
             <td class="tableTdContent" ><?php echo h(!empty($ot['OE']['descripcion']) ? $ot['OE']['descripcion'] : ""); ?>&nbsp;</td>
             <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_usuario']) ? $ot['Ordentrabajo']['observaciones_usuario'] : ""); ?>&nbsp;</td>
             <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_cliente']) ? $ot['Ordentrabajo']['observaciones_cliente'] : ""); ?>&nbsp;</td>
+        </tr>
+
+    <?php endforeach;?>
+    <?php }?>
+
+    <!-- Zona descarga /ordentrabajos/ordenesPrefacturas (Ordenes trabajo)-->
+    <?php if (isset($facturaClientes)) {?>
+    <?php foreach ($facturaClientes as $fc): ?>
+
+        <tr>
+                                <td><?php echo h($fc['C']['nombre']); ?></td>
+                                <td><?php echo h($fc['C']['nit']); ?></td>
+                                <td><?php echo h($fc['C']['celular']); ?></td>
+                                <td><?php echo h($fc['V']['placa']); ?></td>
+                                <td><?php echo h($fc['U']['nombre']); ?></td>
+                                <td><?php echo h($fc['Factura']['codigo']); ?></td>
+                                <td><?php echo h($fc['Factura']['created']); ?></td>
+                                <td><?php echo h($fc['0']['conteo']); ?></td>
+                                <td><?php echo h(number_format($fc['0']['valor'], 2, ',', '.')); ?></td>
         </tr>
 
     <?php endforeach;?>
