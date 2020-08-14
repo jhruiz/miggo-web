@@ -80,22 +80,6 @@ class FacturaCuentaValoresController extends AppController
 
         $empresaId = $this->Auth->user('empresa_id');
 
-        $codigoDian = $this->passedArgs['codigoDian'];
-        $numeroFactura = $this->passedArgs['numeroFactura'];
-        $tipocuentas = $this->passedArgs['tipocuentas'];
-        $fechaInicio = $this->passedArgs['fechaInicio'];
-        $fechaFin = $this->passedArgs['fechaFin'];
-        $tipocuentas = $this->passedArgs['tipocuentas'];
-        $tipopagos = $this->passedArgs['tipopagos'];
-
-        if (!empty($this->passedArgs['codigoDian'])) {
-            $filter = null;
-            $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
-        }
-        if (!empty($this->passedArgs['numeroFactura'])) {
-            $filter = null;
-            $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
-        }
         if (!empty($this->passedArgs['tipocuentas'])) {
             $filter['FacturaCuentaValore.cuenta_id'] = $this->passedArgs['tipocuentas'];
         }
@@ -106,8 +90,20 @@ class FacturaCuentaValoresController extends AppController
 
         if (!empty($this->passedArgs['fechaInicio']) && !empty($this->passedArgs['fechaFin'])) {
             $filter['F.created BETWEEN ? AND ?'] = array($this->passedArgs['fechaInicio'] . ' 00:00:01', $this->passedArgs['fechaFin'] . ' 23:23:59');
-        } else {
-            //$filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
+        }
+
+        if (!empty($this->passedArgs['codigoDian'])) {
+            $filter = null;
+            $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
+        }
+        
+        if (!empty($this->passedArgs['numeroFactura'])) {
+            $filter = null;
+            $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
+        }
+        
+        if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])) {
+            $filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
         }
 
         $filter['F.empresa_id'] = $empresaId;
