@@ -95,7 +95,6 @@ echo $this->Form->input("tipopagos",
                 <tr>
                                 <th><?php echo $this->Paginator->sort('factura_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('created', 'Fecha'); ?></th>
-                                <th><?php echo $this->Paginator->sort('valorFactura', 'Valor Factura'); ?></th>
                                 <th><?php echo $this->Paginator->sort('cuenta_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('tipopago_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('valor'); ?></th>
@@ -105,7 +104,6 @@ echo $this->Form->input("tipopagos",
                         <tr>
                             <td><?php echo !empty($pagofact['F']['consecutivodian']) ? h($pagofact['F']['consecutivodian']) : $pagofact['F']['codigo']; ?>&nbsp;</td>
                             <td><?php echo h($pagofact['F']['created']); ?>&nbsp;</td>
-                            <td><?php echo h("$" . number_format($pagofact['F']['pagocontado'], 2)); ?>&nbsp;</td>
                             <td><?php echo h($pagofact['C']['descripcion']); ?>&nbsp;</td>
                             <td><?php echo h($pagofact['T']['descripcion']); ?>&nbsp;</td>
                             <td><?php echo h("$" . number_format($pagofact['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;</td>

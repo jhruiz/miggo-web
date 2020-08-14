@@ -19,18 +19,18 @@
                     <div class="col-md-3">
                         <label>Lista Mecánicos</label>
                         <?php
-echo $this->Form->input("usuario_id",
-    array(
-        'name' => "usuario",
-        'label' => "",
-        'type' => 'select',
-        'options' => $usuarios,
-        'empty' => 'Seleccione Uno',
-        'class' => 'form-control',
-        'value' => $mecanico,
-    )
-);
-?>
+                        echo $this->Form->input("usuario_id",
+                            array(
+                                'name' => "usuario",
+                                'label' => "",
+                                'type' => 'select',
+                                'options' => $usuarios,
+                                'empty' => 'Seleccione Uno',
+                                'class' => 'form-control',
+                                'value' => $mecanico,
+                            )
+                        );
+                        ?>
                     </div>
                     <div class="col-md-2">
                         <label>Fecha Inicial</label><br>

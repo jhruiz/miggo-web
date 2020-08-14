@@ -171,7 +171,7 @@ endforeach;
         </tr>
     <?php
 endforeach;
-} else if ($arrRotation) {
+} else if (isset($arrRotation)) {
     foreach ($arrRotation as $rotation) {
         ?>
         <tr>
@@ -245,7 +245,39 @@ endforeach;
         </tr>
     <?php
 endforeach;
-} else if (isset($gastos)) {
+} else if(isset($pagosFacturas)){
+    foreach ($pagosFacturas as $pagosFact):
+        ?>
+            <tr>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['codigo']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['consecutivodian']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['created']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['C']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['T']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['FacturaCuentaValore']['valor']); ?></td>
+            </tr>
+        <?php
+    endforeach;
+}else if(isset($facturaClientes)){
+
+        foreach ($facturaClientes as $fc): ?>
+    
+            <tr>
+                <td class="tableTdContent"><?php echo h($fc['C']['nombre']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['C']['nit']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['C']['celular']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['V']['placa']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['U']['nombre']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['Factura']['codigo']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['Factura']['created']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['0']['conteo']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['0']['valor']); ?></td>
+            </tr>
+    
+        <?php 
+        endforeach;
+
+}else if (isset($gastos)) {
     foreach ($gastos as $gasto):
     ?>
         <tr>
@@ -457,25 +489,6 @@ $saldoInicial = 0;
             <td class="tableTdContent" ><?php echo h(!empty($ot['OE']['descripcion']) ? $ot['OE']['descripcion'] : ""); ?>&nbsp;</td>
             <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_usuario']) ? $ot['Ordentrabajo']['observaciones_usuario'] : ""); ?>&nbsp;</td>
             <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_cliente']) ? $ot['Ordentrabajo']['observaciones_cliente'] : ""); ?>&nbsp;</td>
-        </tr>
-
-    <?php endforeach;?>
-    <?php }?>
-
-    <!-- Zona descarga /ordentrabajos/ordenesPrefacturas (Ordenes trabajo)-->
-    <?php if (isset($facturaClientes)) {?>
-    <?php foreach ($facturaClientes as $fc): ?>
-
-        <tr>
-                                <td><?php echo h($fc['C']['nombre']); ?></td>
-                                <td><?php echo h($fc['C']['nit']); ?></td>
-                                <td><?php echo h($fc['C']['celular']); ?></td>
-                                <td><?php echo h($fc['V']['placa']); ?></td>
-                                <td><?php echo h($fc['U']['nombre']); ?></td>
-                                <td><?php echo h($fc['Factura']['codigo']); ?></td>
-                                <td><?php echo h($fc['Factura']['created']); ?></td>
-                                <td><?php echo h($fc['0']['conteo']); ?></td>
-                                <td><?php echo h(number_format($fc['0']['valor'], 2, ',', '.')); ?></td>
         </tr>
 
     <?php endforeach;?>

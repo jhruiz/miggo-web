@@ -678,24 +678,23 @@ class ReportesController extends AppController
         }
 
         $filter['F.empresa_id'] = $empresaId;
-        $this->set(compact('codigoDian'));
 
-        $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
-        $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
         $pagosFacturas = $this->FacturaCuentaValore->obtenerMetodosPagosFacturas($filter);
+
         $texto_tit = "Factura cuenta valor";
+        $this->set(compact('pagosFacturas'));
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $pagosFacturas);
         $arr_titulos = array(
-            'Factura',
+            'Consecutivo factura',
+            'Consecutivo Dian',
             'Fecha',
-            'Valor Factura',
             'Cuenta',
             'Tipo pago',
-            'Valor',
+            'Valor pago',
         );
         $this->set('titulos', $arr_titulos, );
-        $this->render('export_xls', 'export_xls');
+        $this->render('export_xls', 'export_xls');       
     }
     /**
      * Se genera el reporte de Factura reporte facturas clientes
@@ -735,7 +734,6 @@ class ReportesController extends AppController
         }
 
         $empresaId = $this->Auth->user('empresa_id');
-        $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
 
         $facturaClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
 
@@ -744,11 +742,11 @@ class ReportesController extends AppController
         $this->set('rows', $facturaClientes);
         $arr_titulos = array(
             'Cliente',
-            'Identificaci&oacute;n Cliente',
+            'Identificacion Cliente',
             'Celular Cliente',
-            'Placa Veh&iacute;culo',
-            'T&eacute;cnico',
-            'C&oacute;digo Factura',
+            'Placa Vehiculo',
+            'Tecnico',
+            'Codigo Factura',
             'Fecha Factura',
             'Cantidad Facturas',
             'Valor total Facturas',
