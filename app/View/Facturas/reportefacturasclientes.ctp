@@ -6,7 +6,17 @@
             <legend><h2><b><?php echo __('Buscar Servicios por Cliente'); ?></b></h2></legend>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-4">
+
+                <div class="col-md-2">
+                        <label>Nit cliente</label><br>
+                        <input name="nitCliente" class="form-control" autocomplete="off" placeholder="Nit cliente" type="text" id="nitCliente">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Placa</label><br>
+                        <input name="placa" class="form-control" autocomplete="off" placeholder="Placa" type="text" id="placa">
+                    </div>
+
+                    <div class="col-md-3">
                         <label>Lista Mecánicos</label>
                         <?php
 echo $this->Form->input("usuario_id",
@@ -21,11 +31,11 @@ echo $this->Form->input("usuario_id",
 );
 ?>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>Fecha Inicial</label><br>
                         <input name="fecha_inicio" class="date form-control" autocomplete="off" placeholder="Fecha Inicio" type="text" id="fecha_inicio">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>Fecha Final</label><br>
                         <input name="fecha_fin" class="date form-control" autocomplete="off" placeholder="Fecha Fin" type="text" id="fecha_fin">
                     </div>
@@ -83,5 +93,23 @@ echo $this->Form->input("usuario_id",
                 </table>
             </div>
         </div>
+        <div class="row">
+                    <div class="col-md-8">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt class="text-left text-success"><?php echo h("Valor Total: "); ?></dt>
+                            <dt class="text-left text-success"><?php echo h("Total # Facturas: "); ?></dt>
+                        </dl>
+                    </div>
+                    <div class="col-md-2">
+                        <dl>
+                            <dt class="text-right text-success"><?php echo h("$" . number_format($totalValor, 2)) ?></dt>
+                            <dt class="text-right text-success"><?php echo h(number_format($totalFactura)) ?></dt>
+
+                        </dl>
+                    </div>
+                </div>
 </div>
 
