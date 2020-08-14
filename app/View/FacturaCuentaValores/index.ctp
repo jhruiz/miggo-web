@@ -5,26 +5,47 @@
     <?php echo $this->Form->create('FacturaCuentaValore', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
     <legend><h2><b><?php echo __('Buscar de pagos por factura'); ?></b></h2></legend>
     <div class="row">
-    <div class="col-md-1">
+        <div class="col-md-3"> 
             <div class="form-group">
                 <label>Código Dian</label><br>
                 <input name="data[codigoDian]" id="codigoDian" autocomplete="off" class="form-control" placeholder="Código Dian" type="text">
             </div>
         </div>
-    <div class="col-md-2">
+
+        <div class="col-md-3">
             <div class="form-group">
-                <label># Facturas</label><br>
-                <input name="data[numeroFactura]" id="numeroFactura" autocomplete="off" class="form-control" placeholder="Número de factura" type="text">
+                <label>Código Factura</label><br>
+                <input name="data[numeroFactura]" id="numeroFactura" autocomplete="off" class="form-control" placeholder="Código de factura" type="text">
             </div>
         </div>
-        <div class="col-md-1">
+
+        <div class="col-md-3">
+            <label>Cuentas</label>
+            <?php
+                echo $this->Form->input("tipocuentas",
+                    array(
+                        'name' => "tipocuentas",
+                        'label' => "",
+                        'type' => 'select',
+                        'options' => $tipoCuentas,
+                        'empty' => 'Seleccione Uno',
+                        'class' => 'form-control',
+                    )
+                );
+            ?>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:20px;">        
+
+        <div class="col-md-3">
             <div class="form-group">
                 <label>Fecha Inicial</label><br>
                 <input name="data[fechaInicio]" id="fechaInicio" autocomplete="off" class="date form-control" placeholder="Fecha Inicio" type="text">
             </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="form-group">
                 <label>Fecha Final</label><br>
                 <input name="data[fechaFin]" id="fechaFin" autocomplete="off" class="date form-control" placeholder="Fecha Fin" type="text">
@@ -32,34 +53,19 @@
         </div>
 
         <div class="col-md-3">
-                <label>Cuentas</label>
-                <?php
-echo $this->Form->input("tipocuentas",
-    array(
-        'name' => "tipocuentas",
-        'label' => "",
-        'type' => 'select',
-        'options' => $tipoCuentas,
-        'empty' => 'Seleccione Uno',
-        'class' => 'form-control',
-    )
-);
-?>
-        </div>
-        <div class="col-md-3">
-                <label>Tipos de Pago</label>
-                <?php
-echo $this->Form->input("tipopagos",
-    array(
-        'name' => "tipopagos",
-        'label' => "",
-        'type' => 'select',
-        'options' => $tipoPago,
-        'empty' => 'Seleccione Uno',
-        'class' => 'form-control',
-    )
-);
-?>
+            <label>Tipos de Pago</label>
+            <?php
+            echo $this->Form->input("tipopagos",
+                array(
+                    'name' => "tipopagos",
+                    'label' => "",
+                    'type' => 'select',
+                    'options' => $tipoPago,
+                    'empty' => 'Seleccione Uno',
+                    'class' => 'form-control',
+                )
+            );
+            ?>
         </div>
     </div><br>
     <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary')); ?>
