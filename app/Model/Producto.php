@@ -242,14 +242,6 @@ class Producto extends AppModel {
         }
         public function obtenerProductosReporte($empresaId, $filtros)
         {
-            // array_push($arr_join, array(
-            //     'table' => 'productos',
-            //     'alias' => 'Producto',
-            //     'type' => 'LEFT',
-            //     'conditions' => array(
-            //         'Producto.empresa_id' => $empresaId,
-            //     ),
-            // ));
             $arr_join = array();
             array_push($arr_join, array(
                 'table' => 'categorias',
