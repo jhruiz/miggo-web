@@ -378,6 +378,24 @@ else if (isset($proovedoresReporte)) {
     <?php
 endforeach;
 }
+// Tabla excel vista /prefacturas/index
+else if (isset($prefacturasReporte)) {
+    foreach ($prefacturasReporte as $prefactura):
+    ?>
+    <tr>
+        <th class="tableTdContent"><?php echo h($prefactura['CL']['nombre']) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['VH']['placa']) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['Prefactura']['created']) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['ES']['descripcion']) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['Prefactura']['observacion']) ?></th>
+        <?php $costo = number_format($prefactura['PD']['costoventa'],2); ?>
+        <th class="tableTdContent"><?php echo h($costo) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['PR']['codigo'] ) ?></th>
+        <th class="tableTdContent"><?php echo h($prefactura['PR']['descripcion'] ) ?></th>
+    </tr>
+    <?php
+endforeach;
+}
 
 
 else if(isset($cierrediario)){

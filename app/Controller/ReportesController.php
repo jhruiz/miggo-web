@@ -1140,10 +1140,7 @@ class ReportesController extends AppController {
         }            
 
         
-         $depositosReporte = $this->Deposito->obtenerDepositosReporte($empresaId, $filtros);
-        // echo('<pre>');
-        // var_dump($depositosReporte);
-        // echo('</pre>');
+        $depositosReporte = $this->Deposito->obtenerDepositosReporte($empresaId, $filtros);
         $texto_tit = "Depositos";
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $depositosReporte );
@@ -1160,7 +1157,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /depositos/index
+     * Se genera el reporte de productos de la vista /clientes/index
      */
     public function descargarReporteClientes()
     {
@@ -1176,8 +1173,6 @@ class ReportesController extends AppController {
             $filtros['LOWER(Cliente.nombre) LIKE'] = '%' . strtolower($_POST['nombre']) . '%';
         }
        
-        // var_dump($filtros);
-        
         $clientesReporte = $this->Cliente->obtenerClientesReporte($empresaId, $filtros);
         $texto_tit = "Clientes";
         $this->set('texto_tit', $texto_tit);
@@ -1195,6 +1190,41 @@ class ReportesController extends AppController {
             'Clasificaci&oacute;n',
                 );
         $this->set(compact('clientesReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de productos de la vista /prefacturas//index
+     */
+    public function descargarReportePrefacuras()
+    {   
+        $this->loadModel('Estadosprefactura');
+        $this->loadModel('Prefacturasdetalle');
+        $this->loadModel('Prefactura');
+        $this->loadModel('Vehiculo');
+        
+        $cliente = $_POST['cliente'];
+        $placa = $_POST['vehiculo'];
+        
+        $usuarioAct = $this->Auth->user('id');
+       
+        
+        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente);
+   
+        $texto_tit = "Prefacturas";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $prefacturasReporte );
+        $arr_titulos = array(
+            'Cliente',
+            'Veh&iacute;culo',
+            'Fecha',
+            'Estado',
+            'Observaci&oacute;n',
+            'Precio venta',
+            'Producto c&oacute;digo',
+            'Producto descripci&oacute;n',
+                );
+        $this->set(compact('prefacturasReporte'));
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
     }

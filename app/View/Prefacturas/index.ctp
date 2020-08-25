@@ -15,15 +15,13 @@
 
                     <div class="col-md-3">
                         <div class="form-group ">
-                            <label>Cliente</label><br>
-                            <input name="cliente" class="form-control" placeholder="Nombre del Cliente" type="text">
-                        </div>
+                            <?php echo $this->Form->input('cliente', array('label' => 'Cliente', 'name' => 'cliente', 'placeholder' => 'Nombre del Cliente', 'type' => 'text','class' => 'form-control' , 'value' => $cliente)); ?>
+                        </div> 
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group ">
-                            <label>Vehículo</label><br>
-                            <input name="vehiculo" class="form-control" placeholder="Placa del Vehículo" type="text">
+                            <?php echo $this->Form->input('vehiculo', array('label' => 'Vehículo', 'name' => 'vehiculo', 'placeholder' => 'Placa del Vehículo', 'type' => 'text','class' => 'form-control' , 'value' => $vehiculo)); ?>
                         </div>
                     </div>
 
@@ -110,6 +108,24 @@ echo $this->Form->postLink(
                 </div><!-- Termina panel x-->
             </div><!--Termina col-->
         </div>
+
+        <div class="row justify-content-md-center">
+        <div class="col col-lg-2">
+           <!-- Inicio zona descargue reporte excel-->
+           <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarReportePrefacuras')); ?>
+            <fieldset>
+                <?php echo $this->Form->input('cliente', array('type' => 'hidden', 'name' => 'cliente', 'value' => $cliente)) ?>
+                <?php echo $this->Form->input('vehiculo', array('type' => 'hidden', 'name' => 'vehiculo', 'value' => $vehiculo)) ?>
+                <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
+            </fieldset>
+            </form>
+            <!-- Fin zona descargue reporte excel -->
+        </div>
+    </div>
+
+
+
+
     </div>
 </div>
 </div>
