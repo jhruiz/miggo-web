@@ -46,8 +46,13 @@ class ProveedoresController extends AppController {
             $ciudades = $this->Ciudade->obtenerListaCiudades();
             
             $paginate['Proveedore.empresa_id'] = $empresaId;
-            $this->Proveedore->recursive = 0;            
-            $this->set('proveedores', $this->Paginator->paginate('Proveedore',$paginate));
+			$this->Proveedore->recursive = 0;  
+			
+			$nombre = $this->passedArgs['nombre'];
+			$nit = $this->passedArgs['nit'];
+			$ciudad = $this->passedArgs['ciudad'];
+			$this->set(compact('nombre','nit', 'ciudad'));
+			$this->set('proveedores', $this->Paginator->paginate('Proveedore',$paginate));
             $this->set(compact('ciudades'));
 	}
 
