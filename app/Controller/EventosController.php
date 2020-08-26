@@ -26,10 +26,9 @@ public function index() {
 
     $tipoEventos = $this->Tipoevento->obtenerTipoEventos();
     $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId); 
-    $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);   
-
-    $this->set('eventos', $this->Paginator->paginate());
-    $this->set(compact('tipoEventos', 'usuarios', 'estados')); 
+    $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);  
+    $eventosIndex = $this->Paginator->paginate('Evento');
+    $this->set(compact('tipoEventos', 'usuarios', 'estados' ,'eventosIndex')); 
 }
 
 /**

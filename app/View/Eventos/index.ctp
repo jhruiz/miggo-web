@@ -15,7 +15,7 @@
                                 <th><?php echo h('Descripción'); ?></th>
                                 <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
-                <?php foreach ($eventos as $evento): ?>
+                <?php foreach ($eventosIndex as $evento): ?>
                 <tr>
                         <td><?php echo h($tipoEventos[$evento['Evento']['tipoevento_id']]); ?>&nbsp;</td>
                         <td><?php echo h($usuarios[$evento['Evento']['usuario_id']]); ?>&nbsp;</td>
