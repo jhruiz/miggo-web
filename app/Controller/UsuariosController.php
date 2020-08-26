@@ -23,6 +23,9 @@ class UsuariosController extends AppController {
      * @return void
      */
     public function index() {
+        
+        $nombre = "";
+        $identificacion = ""; 
         /*se registra la actividad del usuario en la aplicacion*/
         $usuarioId = $this->Auth->user('id'); 
         $this->registraractividad($usuarioId);
@@ -30,10 +33,12 @@ class UsuariosController extends AppController {
         $paginate = array();
         if (isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != "") {
             $paginate['LOWER(Usuario.nombre) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . "%";
+            $nombre = $this->passedArgs['nombre'];
         }
 
         if (isset($this->passedArgs['identificacion']) && ($this->passedArgs['identificacion'] != "")) {
             $paginate['Usuario.identificacion LIKE'] = '%' . $this->passedArgs['identificacion'] . "%";
+            $identificacion = $this->passedArgs['identificacion'];
         }        
         
         
@@ -56,7 +61,7 @@ class UsuariosController extends AppController {
         
         $listPerfile = $this->Usuario->Perfile->find('list');
         
-        $this->set(compact('listPerfile', 'listOficina'));
+        $this->set(compact('listPerfile', 'listOficina', 'nombre', 'identificacion'));
         
     }
 

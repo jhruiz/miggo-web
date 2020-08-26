@@ -396,6 +396,20 @@ else if (isset($prefacturasReporte)) {
     <?php
 endforeach;
 }
+// Tabla excel vista /usuarios/index
+else if (isset($usuariosReporte)) {
+    foreach ($usuariosReporte as $usuario):
+    ?>
+    <tr>
+        <th class="tableTdContent"><?php echo h($usuario['Usuario']['nombre']) ?></th>
+        <th class="tableTdContent"><?php echo h($usuario['Usuario']['identificacion']) ?></th>
+        <th class="tableTdContent"><?php echo h($usuario['Usuario']['username']) ?></th>
+        <th class="tableTdContent"><?php echo h($usuario['P']['descripcion']) ?></th>
+        <th class="tableTdContent"><?php echo h($usuario['E']['descripcion']) ?></th>
+    </tr>
+    <?php
+endforeach;
+}
 
 
 else if(isset($cierrediario)){

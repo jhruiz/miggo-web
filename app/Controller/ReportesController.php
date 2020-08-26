@@ -1047,7 +1047,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /categorias/index/
+     * Se genera el reporte de categorias de la vista /categorias/index/
      */
     public function descargarReporteCategorias()
     {
@@ -1077,7 +1077,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /proveedores/index
+     * Se genera el reporte de proveedores de la vista /proveedores/index
      */
     public function descargarReporteProveedores()
     {
@@ -1120,7 +1120,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /depositos/index
+     * Se genera el reporte depositos de la vista /depositos/index
      */
     public function descargarReporteDepositos()
     {
@@ -1157,7 +1157,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /clientes/index
+     * Se genera el reporte de clientes de la vista /clientes/index
      */
     public function descargarReporteClientes()
     {
@@ -1194,7 +1194,7 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');
     }
     /**
-     * Se genera el reporte de productos de la vista /prefacturas//index
+     * Se genera el reporte de prefacturas de la vista /prefacturas//index
      */
     public function descargarReportePrefacuras()
     {   
@@ -1225,6 +1225,36 @@ class ReportesController extends AppController {
             'Producto descripci&oacute;n',
                 );
         $this->set(compact('prefacturasReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de usuarios de la vista /usuarios/index
+     */
+    public function descargarReporteUsuarios()
+    {   
+        $empresaId = $this->Auth->user('empresa_id');
+        $this->loadModel('Usuario');
+        if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
+            $filtros['LOWER(Usuario.nombre) LIKE'] = '%' . strtolower($_POST['nombre']) . "%";
+        }
+
+        if (isset($_POST['identificacion']) && ($_POST['identificacion'] != "")) {
+            $filtros['Usuario.identificacion LIKE'] = '%' . $_POST['identificacion'] . "%";
+        }        
+       
+        $usuariosReporte = $this->Usuario->obtenerUsuariosReporte($empresaId, $filtros); 
+        $texto_tit = "Usuarios";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows',$usuariosReporte );
+        $arr_titulos = array(
+            'Nombre',
+            'Identificaci&oacute;n',
+            'Username',
+            'Perfil',
+            'Estado',
+                );
+        $this->set(compact('usuariosReporte'));
         $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
     }
