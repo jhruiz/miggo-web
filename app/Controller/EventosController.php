@@ -16,6 +16,7 @@ class EventosController extends AppController {
  * @return void
  */
 public function index() {
+
     $this->loadModel('Tipoevento');
     $this->loadModel('Usuario');
     $this->loadModel('Estadoalerta');
@@ -26,9 +27,11 @@ public function index() {
 
     $tipoEventos = $this->Tipoevento->obtenerTipoEventos();
     $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId); 
-    $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);  
-    $eventosIndex = $this->Paginator->paginate('Evento');
-    $this->set(compact('tipoEventos', 'usuarios', 'estados' ,'eventosIndex')); 
+    $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);   
+    $idEstado = $this->passedArgs['estadoalerta'];
+    $estadosTab = $this->Estadoalerta->obtenerListaEstadoTest($empresaId);
+    $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId,$idEstado); 
+    $this->set(compact('eventosIndex','tipoEventos', 'usuarios', 'estados','estadosTab')); 
 }
 
 /**

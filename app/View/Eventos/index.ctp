@@ -1,6 +1,28 @@
 <?php $this->layout='inicio'; ?>
 <div class="eventos index">
-	<legend><h2><b><?php echo __('Eventos'); ?></b></h2></legend>
+    <legend><h2><b><?php echo __('Eventos'); ?></b></h2></legend>
+    
+  <!-- Enlace tabs-->
+  <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+
+        <!--
+        <//?php foreach ($estadoAlertas as $estadoAlertas): ?>
+            <li role="presentation" class="active"><a href="/alertaordenes/index/estadoalerta:<//?php echo h($estadoAlertas->$id); ?>" aria-controls="registrado" data-toggle="tab" role="tab"><//?php echo h($estadoAlertas); ?></a></li>
+
+        <//?php endforeach;?>
+        -->
+        <?php foreach ($estadosTab as $estadoAlertasTabs): ?>
+            <li role="presentation" class="active"> <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'eventos', 'action' => '/index/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?></li>
+
+            <?php endforeach;?>
+
+
+       </ul>
+    </div>
+
+    <br>
+
         <div class="table-responsive">
             <div class="container">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">

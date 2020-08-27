@@ -78,10 +78,34 @@ class Evento extends AppModel {
             'conditions' => array(
                 'Evento.empresa_id' => $empresaId,
                 'Evento.fecha < ' => $fecha,
-                'EA.final' => '0'
                 ), 
             'recursive' => '-1'));
         return $eventos;          
-
     }
+
+
+    public function obtenerEventosIndex($empresaId,$idEstado){
+
+        $arr_join = array();
+        array_push($arr_join, array(
+            'table' => 'estadoalertas', 
+            'alias' => 'EA', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.estadoalerta_id=EA.id'
+                )                
+        ));         
+                   
+        $eventos = $this->find('all', array(
+            'joins' => $arr_join,
+            'conditions' => array(
+                'Evento.empresa_id' => $empresaId,
+                'Evento.estadoalerta_id' => $idEstado
+                
+                ), 
+            'recursive' => '-1'));
+        return $eventos; 
+
+
+    } 
 }
