@@ -228,7 +228,7 @@ class Alertaordene extends AppModel {
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',
-                'order' => 'Alertaordene.id DESC' 
+                'order' => 'Alertaordene.fecha_alerta DESC' 
                 ));            
             
             return $alertasOrdenes;             

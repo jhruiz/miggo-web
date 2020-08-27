@@ -84,7 +84,7 @@ class Evento extends AppModel {
     }
 
 
-    public function obtenerEventosIndex($empresaId,$idEstado){
+    public function obtenerEventosIndexBusqueda($empresaId,$idEstado){
 
         $arr_join = array();
         array_push($arr_join, array(
@@ -103,7 +103,36 @@ class Evento extends AppModel {
                 'Evento.estadoalerta_id' => $idEstado
                 
                 ), 
-            'recursive' => '-1'));
+            'recursive' => '-1',
+            'order' => 'fecha desc',
+        ));
+        return $eventos; 
+
+
+    } 
+    public function obtenerEventosIndex($empresaId){
+
+        $arr_join = array();
+        array_push($arr_join, array(
+            'table' => 'estadoalertas', 
+            'alias' => 'EA', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.estadoalerta_id=EA.id'
+                )                
+        ));         
+                   
+        $eventos = $this->find('all', array(
+            'joins' => $arr_join,
+            'conditions' => array(
+                'Evento.empresa_id' => $empresaId,
+                
+                ), 
+            'recursive' => '-1',
+            'order' => 'fecha desc',
+        
+        
+        ));
         return $eventos; 
 
 

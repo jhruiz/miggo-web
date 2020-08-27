@@ -29,8 +29,21 @@ public function index() {
     $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId); 
     $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);   
     $idEstado = $this->passedArgs['estadoalerta'];
+    if ($idEstado){
+        $eventosIndex = $this->Evento->obtenerEventosIndexBusqueda($empresaId,$idEstado); 
+    }
+    else{
+        $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId); 
+     
+    }
     $estadosTab = $this->Estadoalerta->obtenerListaEstadoTest($empresaId);
-    $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId,$idEstado); 
+    // $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId,$idEstado); 
+               
+    
+    if (isset($_POST['tipoEvento']) && $_POST['tipoEvento'] != "") {
+        $test= 'Factura';
+   }
+    // var_dump($test);
     $this->set(compact('eventosIndex','tipoEventos', 'usuarios', 'estados','estadosTab')); 
 }
 
