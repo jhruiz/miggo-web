@@ -45,7 +45,9 @@ public function index() {
 
     // Se valida si se envía estado alerta, se pasa el id de la alerta para realizar la consulta correspondiente a los tabs. 
     $idEstado = $this->passedArgs['estadoalerta'];
+    
     if ($idEstado){
+        
         $eventosIndex = $this->Evento->obtenerEventosIndexBusqueda($empresaId,$idEstado, $filtros); 
     }
     else{
