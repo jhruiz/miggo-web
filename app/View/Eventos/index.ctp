@@ -33,7 +33,7 @@
     <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
-                <?=$this->Html->link(("TODOS"), ['controller' => 'eventos', 'action' => '/index' ])?></li>
+                <?=$this->Html->link(("TODOS"), ['controller' => 'eventos', 'action' => '/index/'. 'responsable:'.$responsable. '/tipoEvento:'.$tipoEvento ])?></li>
             <?php foreach ($estadosTab as $estadoAlertasTabs): ?>
             <li role="presentation" class="active">
                 <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'eventos', 'action' => '/index/'. 'responsable:'.$responsable. '/tipoEvento:'.$tipoEvento.'/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?>

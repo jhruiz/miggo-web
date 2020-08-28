@@ -45,8 +45,7 @@ public function index() {
 
     // Se valida si se envía estado alerta, se pasa el id de la alerta para realizar la consulta correspondiente a los tabs. 
     $idEstado = $this->passedArgs['estadoalerta'];
-   
-             
+            
     if ($idEstado){
         $filtros['LOWER(U.nombre) LIKE'] = '%' . strtolower($this->passedArgs['responsable']) . '%';
         $filtros['LOWER(Evento.tipoevento_id) LIKE'] = '%' . strtolower($this->passedArgs['tipoEvento']) . '%';
