@@ -54,7 +54,6 @@
                     <th><?php echo h('Responsable'); ?></th>
                     <th><?php echo h('Fecha Evento'); ?></th>
                     <th><?php echo h('Cliente'); ?></th>
-                    <th><?php echo h('Estado'); ?></th>
                     <th><?php echo h('Teléfono'); ?></th>
                     <th><?php echo h('Placa'); ?></th>
                     <th><?php echo h('Descripción'); ?></th>
@@ -82,7 +81,6 @@ echo $color;
                     <td><?php echo h($usuarios[$evento['Evento']['usuario_id']]); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['fecha']); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['cliente']); ?>&nbsp;</td>
-                    <td><?php echo h($estados[$evento['Evento']['estadoalerta_id']]); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['telefono']); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['placa']); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['descripcion']); ?>&nbsp;</td>
