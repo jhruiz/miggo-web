@@ -95,7 +95,14 @@ class Evento extends AppModel {
                 'Evento.estadoalerta_id=EA.id'
                 )                
         ));         
-                   
+        array_push($arr_join, array(
+            'table' => 'usuarios', 
+            'alias' => 'U', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.usuario_id = U.id'
+                )                
+        ));      
         $eventos = $this->find('all', array(
             'joins' => $arr_join,
             'conditions' => array(
