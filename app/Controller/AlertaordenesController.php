@@ -51,7 +51,7 @@ class AlertaordenesController extends AppController
         $this->loadModel('Alertaordene');
         $this->loadModel('Estadoalerta');
         $this->loadModel('Alerta');
-        // $this->loadModel('Usuario');
+        $this->loadModel('Usuario');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
@@ -62,6 +62,7 @@ class AlertaordenesController extends AppController
         $cliente= '';
         $placa='';
         $tecnico= '';
+        $tecnicoSelect= '';
         $idEstado= '';
 
         $filtros = array(); 
@@ -90,6 +91,12 @@ class AlertaordenesController extends AppController
             // 'LOWER(US.nombre) LIKE' => '%' .strtolower($tecnico) .  '%',            
             // ));
         }
+        if (isset($this->passedArgs['tecnicoSelect']) && $this->passedArgs['tecnicoSelect'] != "") {
+            $tecnicoSelect=  $this->passedArgs['tecnicoSelect'];
+            array_push($filtros, array(
+            'US.id' => $tecnicoSelect,            
+            ));
+        }
         if (isset($this->passedArgs['estadoalerta']) && $this->passedArgs['estadoalerta'] != "") {
             $idEstado=  $this->passedArgs['estadoalerta'];
             array_push($filtros, array(
@@ -105,7 +112,7 @@ class AlertaordenesController extends AppController
 
     
         // echo('<pre>');
-        // var_dump($filtros);
+        // var_dump($tecnicoSelect);
         // echo('</pre>');
 
         //se obtiene el listado de estado alertas
@@ -113,10 +120,10 @@ class AlertaordenesController extends AppController
         $estadoAlertasTabs = $this->Estadoalerta->find('all');
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
         $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-        
+        $tecnicosSelect = $this->Usuario->obtenerUsuarioEmpresa($empresa_id);
         $alertaDocumentos = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
        
-        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas','tipoAlerta','cliente','placa','tecnico','alertas'));
+        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas','tipoAlerta','cliente','placa','tecnico','alertas','tecnicosSelect','tecnicoSelect'));
     }
 
     public function search()

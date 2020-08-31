@@ -8,10 +8,15 @@
 
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group ">
-            <label for="cars">Tipo Alerta</label>
-            <?php echo $this->Form->input('""', array( 'name' => 'tipoAlerta', 'empty' => 'Seleccione uno', 'options' => $alertas, 'class' => 'form-control' ,  'value' => $tipoAlerta)); ?>
+            <?php echo $this->Form->input('Tipo Alerta', array( 'name' => 'tipoAlerta', 'empty' => 'Seleccione uno', 'options' => $alertas, 'class' => 'form-control' ,  'value' => $tipoAlerta)); ?>
+        </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group ">
+            <!-- <label for="cars">Tipo Alerta</label> -->
+            <?php echo $this->Form->input('Técnico', array( 'name' => 'tecnicoSelect', 'empty' => 'Seleccione uno', 'options' => $tecnicosSelect, 'class' => 'form-control' ,  'value' => $tecnicoSelect)); ?>
         </div>
         </div>
         <div class="col-md-2">
@@ -46,10 +51,10 @@
         <ul class="nav nav-tabs" role="tablist">
 
         <li role="presentation" class="active">
-                <?=$this->Html->link(("TODOS"), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico])?></li>
+                <?=$this->Html->link(("TODOS"), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico . '/tecnicoSelect:'.$tecnicoSelect])?></li>
             <?php foreach ($estadoAlertasTabs as $estadoAlertasTabs): ?>
             <li role="presentation" class="active">
-                <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico .'/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?>
+                <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico . '/tecnicoSelect:'.$tecnicoSelect.'/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?>
             </li>
             <?php endforeach;?>
 
