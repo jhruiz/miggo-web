@@ -93,9 +93,9 @@ class AlertaordenesController extends AppController
         }
         if (isset($this->passedArgs['tecnicoSelect']) && $this->passedArgs['tecnicoSelect'] != "") {
             $tecnicoSelect=  $this->passedArgs['tecnicoSelect'];
-            array_push($filtros, array(
-            'US.id' => $tecnicoSelect,            
-            ));
+            // array_push($filtros, array(
+            // 'US.id' => $tecnicoSelect,            
+            // ));
         }
         if (isset($this->passedArgs['estadoalerta']) && $this->passedArgs['estadoalerta'] != "") {
             $idEstado=  $this->passedArgs['estadoalerta'];
