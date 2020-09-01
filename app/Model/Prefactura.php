@@ -131,7 +131,9 @@ class Prefactura extends AppModel {
         public function obtenerPrefacturas($usuarioId, $placa, $cliente){
             
             $filters = [];
-            
+            // Si la prefactura esta en estado eliminar 0 se muestra el registro 
+            $filters['Prefactura.eliminar'] = 0;
+
             if(!empty($usuarioId)){
                 $filters['Prefactura.usuario_id'] = $usuarioId;                
             }
@@ -357,6 +359,27 @@ class Prefactura extends AppModel {
             $data['id'] = $prefactId;
             $data['estadoprefactura_id'] = $estadoId;
             
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }     
+
+        /**
+         * Actualiza el estado de la prefactura de una especifica
+         * @param type $prefactId
+         * @param type $estadoId
+         * @return int
+         */
+        public function actualizarEstadoPrefacturaEliminar($id){
+            $data = array();
+            
+            $prefactura = new Prefactura();
+            
+            $data['id'] = $id;
+            $data['eliminar'] = 1;
+           
             if($prefactura->save($data)){
                 return '1';
             }else{
