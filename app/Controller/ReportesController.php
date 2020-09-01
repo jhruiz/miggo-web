@@ -471,7 +471,7 @@ class ReportesController extends AppController {
      * Se descargan las facturas
      */
     public function descargarFacturas(){
-        
+
         $this->loadModel('Factura');
         
 
@@ -509,25 +509,50 @@ class ReportesController extends AppController {
         $paginate['Factura.empresa_id'] = $empresaId;
 
         $facturas = $this->Factura->obtenerFacturas($paginate); 
+
+        $arrFacts = array();
+        foreach ($facturas as $f){ 
+
+            $valorBase = 0;
+            $iva = 0;
+            if($f['FD']['impuesto'] > 0){
+                $valorBase = ceil($f['FD']['costototal'] / (($f['FD']['impuesto']/100)+1));
+                $iva = $f['FD']['costototal'] - $valorBase;
+            } else {
+                $valorBase = $f['FD']['costototal'];
+            }
+
+            $arrFacts[] = [
+                'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
+                'fecha' => $f['Factura']['created'],
+                'nombreCliente' => $f['CL']['nombre'],
+                'identificacion' => $f['CL']['nit'],
+                'telefono' => $f['CL']['celular'],
+                'cantidad' => $f['FD']['cantidad'],
+                'producto' => $f['PR']['descripcion'],
+                'valor' => $valorBase,
+                'descuento' => $f['PR']['descuento'],
+                'iva' => $iva
+            ];
+        }
                 
         $texto_tit = "Facturas";
-        $this->set(compact('facturas'));
+        $this->set(compact('arrFacts'));
         $this->set('texto_tit', $texto_tit);
-        $this->set('rows', $facturas);
+        $this->set('rows', $arrFacts);
         $arr_titulos = array(
-            'Codigo',
             'Consecutivo',
-            'Tipo',
-            'Cliente',
+            'Fecha',
+            'Nombre Cliente',
             'Identificacion',
-            'Fecha factura',  
-            'Deposito',          
-            'Producto',     
-            'Codigo producto',     
-            'Cantidad',     
-            'Costo venta',     
-            'Costo total'     
+            'Teléfono',
+            'Cantidad',
+            'Descripcion',
+            'Valor',
+            'Descuento',
+            'IVA'   
             );
+
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');       
         
