@@ -311,7 +311,7 @@
                 <div class="col-md-6">
                     <?php if(!empty($cliTel)){?>        
                     <div class="row">
-                        <a href="https://wa.me/57<?php echo $cliTel; ?>?text=Somos%20el%20%23equipotorque%2c%20adjuntamos%20información%20de%20su%20interés" target="_blank">
+                        <a href="https://wa.me/57<?php echo $cliTel; ?>?text=adjuntamos%20información%20de%20su%20interés" target="_blank">
                             <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
                         </a>
                     </div>
