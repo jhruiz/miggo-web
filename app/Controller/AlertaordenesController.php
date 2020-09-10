@@ -669,9 +669,6 @@ class AlertaordenesController extends AppController
         //se obtiene la información de la orden de trabajo y del vehiculo
         $filter['Factura.id'] = $facturaId;
         $infoFacturaCli = $this->Factura->obtenerInfoAlertaFacturaGenerate($filter);
-//  echo('<pre>');
-//         print_r($infoFacturaCli);
-//         echo('</pre>');
         $id_factura = "";
         $id_factura = $facturaId;
         // var_dump($id_factura);
@@ -700,45 +697,13 @@ class AlertaordenesController extends AppController
 
         $fechaActual = date('Y-m-d');
 
-        //se obtiene la información de la orden de trabajo y del vehiculo
         $filter['Prefactura.id'] = $facturaId;
         $id_pre_factura= "";
         $id_pre_factura= $facturaId;
         $infoFacturaCli = $this->Prefactura->obtenerInfoAlertaFacturaGenerate($filter);
-//  echo('<pre>');
-//         var_dump($infoFacturaCli);
-//         echo('</pre>');
-        // var_dump($id_factura);
         $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'id_pre_factura','infoFacturaCli','id_factura'));
     }
-    // public function gestionalertasfac($ordenTrabajoId)
-    // {
-    //     $this->loadModel('Alerta');
-    //     $this->loadModel('Unidadesmedida');
-    //     $this->loadModel('Estadoalerta');
-    //     $this->loadModel('Ordentrabajo');
-
-    //     //id de la empresa
-    //     $empresa_id = $this->Auth->user('empresa_id');
-
-    //     //se obtiene el listado de alertas
-    //     $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
-
-    //     //Se obtienen las unidades de medida
-    //     $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
-
-    //     //se obtiene el listado de alertas
-    //     $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
-
-    //     $fechaActual = date('Y-m-d');
-
-    //     //se obtiene la información de la orden de trabajo y del vehiculo
-    //     $filter['Ordentrabajo.id'] = $ordenTrabajoId;
-    //     $infoOrdenCliV = $this->Ordentrabajo->obtenerOrdenesTrabajo($filter);
-
-    //     $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
-    //     $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'infoOrdenCliV'));
-    // }
+   
 
 }

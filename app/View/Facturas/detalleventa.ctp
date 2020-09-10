@@ -230,12 +230,4 @@
 </div>
 
 
-<div class="col-md-3">
-                                <a href="#" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" id="btn_alerta">Generar Alerta</a>
-                            </div>
-<div class="actions">
-	<legend><h2><b><?php echo __('Acciones'); ?></b></h2></legend>
-	<ul>
-		<li><?php echo $this->Html->link(__('Lista Facturas'), array('action' => 'index')); ?> </li>
-	</ul>
 </div>
