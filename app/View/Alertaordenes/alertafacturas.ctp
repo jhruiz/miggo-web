@@ -5,8 +5,7 @@
 
 	<legend><h2><b><?php echo __('Listado de Alertas'); ?></b></h2></legend>
    
-    <?=$this->Html->link(("Crear alerta"), ['controller' => 'alertaordenes', 'action' => '/gestionalertasfacturas/1'])?>
-           
+       
     <?php echo $this->Form->create('Alertaordenes', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
             <legend><h2><b><?php echo __('Buscar Alertas'); ?></b></h2></legend>
 
@@ -38,7 +37,7 @@
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
                                 <th>&nbsp;</th>
-                                <th><?php echo ('ID ALERTAORDES'); ?></th>
+                               
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
                                 <th><?php echo ('Fecha de cumpleaños'); ?></th>
@@ -70,7 +69,7 @@ echo $color;
                         </div>
                     </center>
                 </td>
-                        <td><?php echo h($alertOrd['Alertaordene']['id']); ?></td>
+                        
                         <td><?php echo h($alertOrd['AL']['descripcion']); ?></td>
                         <td><?php echo h($alertOrd['CL']['nombre']); ?></td>
                         <td><?php echo h($alertOrd['CL']['cumpleanios']); ?></td>
@@ -97,7 +96,6 @@ echo $color;
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
                                 <th>&nbsp;</th>
-                                <th><?php echo ('ID ALERTAORDES'); ?></th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
                                 <th><?php echo ('Fecha de cumpleaños'); ?></th>
@@ -129,7 +127,7 @@ echo $color;
                         </div>
                     </center>
                 </td>
-                        <td><?php echo h($alertOrd['Alertaordene']['id']); ?></td>
+                       
                         <td><?php echo h($alertOrd['AL']['descripcion']); ?></td>
                         <td><?php echo h($alertOrd['CL']['nombre']); ?></td>
                         <td><?php echo h($alertOrd['CL']['cumpleanios']); ?></td>
