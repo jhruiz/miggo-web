@@ -3,7 +3,6 @@
 
             <?php echo $this->Form->create('Alertaordenes', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
             <legend><h2><b><?php echo __('Buscar Alertas'); ?></b></h2></legend>
-            <?=$this->Html->link(("Alerta (pre Factura y Factura)"), ['controller' => 'alertaordenes', 'action' => '/alertafacturas'])?>
             
             <!-- Inicio zona Tabs Estados alerta-->
 <div class="x_panel">

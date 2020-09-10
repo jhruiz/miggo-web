@@ -48,7 +48,12 @@ function obtenerParametros (){
     params.kmxDia = $('#OrdentrabajoKmxdia').val();
     params.kmProxMantto = $('#OrdentrabajoKmproxmant').val();
     params.observaciones = $('#OrdentrabajoObservacionesCliente').val();
-
+  // campos formulario alerta factura vista gestionalertasfac
+  params.clienteId = $('#cliente_idadd').val();
+  params.facturaId = $('#factura_idadd').val();
+  // campos formulario alerta prefactura vista gestionalertasprefac
+  params.prefacturaId = $('#prefacturaId').val(); 
+  
     return params;
 }
 
@@ -82,6 +87,35 @@ var guardaralerta = function(){
 
 }
 
+var guardaralertafactura = function(){
+
+    var mensaje = validarFormulario();
+    console.log(mensaje);
+
+    if(mensaje == ''){
+        var params = obtenerParametros();
+    
+        $.ajax({
+            url: $('#url-proyecto').val() + 'alertaordenes/guardaralertafactura',
+            data: params,
+            type: "POST",
+            success: function(data) {
+                var resp = JSON.parse(data);
+    
+                if(resp.resp){
+                    bootbox.alert('La alerta se ha generado con éxito.', function(){
+                        window.close();
+                    });
+                }else{
+                    bootbox.alert('No fué posible generar la alerta. Por favor, inténtelo de nuevo.')
+                }
+            }
+        });      
+    }else{
+        bootbox.alert(mensaje);
+    }
+
+}
 var datePicker = function(){
     $(".date").datepicker({dateFormat: 'yy-mm-dd'});
     $(".date").datepicker("option", "showAnim", "slideDown");    

@@ -141,6 +141,7 @@ class PrefacturasController extends AppController {
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
+            
             $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados'));
             $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP')); 
 	}

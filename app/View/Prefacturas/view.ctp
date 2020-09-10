@@ -6,6 +6,7 @@
 <?php echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
 <?php echo ($this->Html->script('prefacturas/view.js'));  ?>
 <?php echo $this->Form->create('Prefactura'); ?>
+<input type="hidden" id="prefacturaId" value="<?php echo $prefactura['Prefactura']['id'];?>">
 <div class="container body">
 <div class="main_container">
 <div class="col-md-12">
@@ -25,7 +26,8 @@
 
 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '30', 'id' => 'menuvert'))?>
 <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => $ttalAbonos))?>
-            <div role="tabpanel">
+            
+<div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#registrado" aria-controls="registrado" data-toggle="tab" role="tab">Cliente Registrado</a></li>
                     <li role="presentation"><a href="#nuevo" aria-controls="nuevo" data-toggle="tab" role="tab">Cliente Nuevo</a></li>
@@ -371,6 +373,7 @@
                             <textarea id="obs_fact" name="data[Factura][observacion]" class="md-textarea form-control" rows="3"><?php echo($prefactura['Prefactura']['observacion'])?></textarea>                              
                             <?php echo $this->Form->input('empresaRelacionada', array('label' => '', 'name' => 'data[Factura][empresaRelacionada]', 'class' => 'form-control', 'type' => 'hidden'));?>
                         </div>
+                        
                     </div>             
                     </form>
        
@@ -384,6 +387,9 @@
                     <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
                 </a>
             </div>
+            <div class="col-md-3">
+                                <a href="#" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" id="btn_alerta">Generar Alerta</a>
+                            </div>
                   </div>
            
         </div>  

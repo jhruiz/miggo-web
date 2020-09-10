@@ -9,4 +9,11 @@ class Unidadesmedida extends AppModel {
         $unidades = $this->find('list');
         return $unidades;
     }  
+    public function listaUnidadesMedidaDias(){
+        $unidades = $this->find('list', array(                                             
+            'conditions' => 'Unidadesmedida.id = 1',
+            'recursive' => '-1',
+            ));    
+        return $unidades;
+    }  
 }
