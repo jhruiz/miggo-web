@@ -66,9 +66,11 @@
                                 <div class="form-group ">  
                                     <label>Producto</label><br>  
                                     <div class="input-group"> 
-                                        <?php echo $this->Form->input('producto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto')); ?>
-                                        <div id="datosProducto" style="position:absolute; z-index:1;"></div>
+                                        <?php echo $this->Form->input('producto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto')); ?>                                        
                                         <a href="#" class="btn btn-default btn-sm input-group-addon" id="add_product"><span class="far fa-plus"></span></a>
+                                    </div>
+                                    <div>
+                                        <div id="datosProducto" style="position:absolute; z-index:1;"></div>
                                     </div>
                                 </div>  
                             </div>
@@ -260,23 +262,25 @@
                     <legend>&nbsp;</legend>            
                     <div class="container-fluid">                        
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId));?>
                             </div>                                                               
-                            <div class="col-md-2">
-                            <label>Placa</label><br>
-                            <div class="input-group">                                                            
-                                <?php echo $this->Form->input('placa', 
-                                    array(
-                                        'label' => '',
-                                        'class' => 'form-control', 
-                                        'placeholder' => 'Placa Vehículo'
-                                        )
-                                    ); 
-                                ?> 
-                                <a href="#" class="btn btn-default btn-sm input-group-addon" id="ver_vehiculo"><span class="far fa-eye"></span></a>                                                                
-                            </div>
-                            <div id="datosVehiculo" style="position:absolute; z-index:1;"></div> 
+                            <div class="col-md-6">
+                                <label>Placa</label><br>
+                                <div class="input-group">                                                            
+                                    <?php echo $this->Form->input('placa', 
+                                        array(
+                                            'label' => '',
+                                            'class' => 'form-control', 
+                                            'placeholder' => 'Placa Vehículo',
+                                            'autocomplete' => 'off',                                            
+                                            'style' => 'z-index:3; position: relative'
+                                            )
+                                        ); 
+                                    ?>
+                                    <a href="#" class="btn btn-default btn-sm input-group-addon" id="ver_vehiculo"><span class="far fa-eye"></span></a>                                                                
+                                </div>
+                                <div id="datosVehiculo" style="position:absolute; z-index:3;"></div> 
                             </div>                                                               
                         </div><br>             
                     
