@@ -107,10 +107,11 @@
         
         <div class="col-md-12" style="margin-bottom: 20px;">   
             <div class="form-group"> 
-                <label for="">Placa</label>
+                <label for="">Número Motor</label>
                 <?php echo $this->Form->input('placa', array(
                     'label' => '', 
                     'class' => 'form-control',
+                    'placeholder' => 'Número Motor del Vehículo',
                     'autocomplete' => 'off',
                     'style' => 'width:300px;'
                     )); ?>                   
