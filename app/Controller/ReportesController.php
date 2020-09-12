@@ -513,14 +513,28 @@ class ReportesController extends AppController {
         $arrFacts = array();
         foreach ($facturas as $f){ 
 
-            $valorBase = 0;
-            $iva = 0;
-            if($f['FD']['impuesto'] > 0){
-                $valorBase = ceil($f['FD']['costototal'] / (($f['FD']['impuesto']/100)+1));
-                $iva = $f['FD']['costototal'] - $valorBase;
-            } else {
-                $valorBase = $f['FD']['costototal'];
+            if($f['Factura']['factura']){
+                $valorBase = 0;
+                $descuento = 0;
+
+                if (!empty($f['FD']['impuesto'])){
+                    $valorBase = ceil($f['FD']['costoventa'] / (($f['FD']['impuesto'] / 100) +1));
+                } else {
+                    $valorBase = ceil($f['FD']['costoventa']);
+                }
+
+                if (!empty($f['FD']['porcentaje'])){
+                    $descuento = ceil(($valorBase * ($f['FD']['porcentaje'])/100) * $f['FD']['cantidad']);
+                }
+
+                $valorXCantidad = $valorBase * $f['FD']['cantidad'];
+                $iva = ceil(($valorXCantidad - $descuento) * ($f['FD']['impuesto']/100));
+            }else{
+                $valorBase = $f['FD']['costoventa'];
+                $valorXCantidad = ceil($valorBase * $f['FD']['cantidad']);
+                $descuento = $valorXCantidad * ($f['FD']['porcentaje']/100);
             }
+
 
             $arrFacts[] = [
                 'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
@@ -531,7 +545,7 @@ class ReportesController extends AppController {
                 'cantidad' => $f['FD']['cantidad'],
                 'producto' => $f['PR']['descripcion'],
                 'valor' => $valorBase,
-                'descuento' => $f['PR']['descuento'],
+                'descuento' => $descuento,
                 'iva' => $iva
             ];
         }
