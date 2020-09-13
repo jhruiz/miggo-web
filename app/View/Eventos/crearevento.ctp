@@ -62,7 +62,7 @@ echo $this->Html->script('eventos/crearevento.js');
 
 <div class="col-md-12" style="margin-bottom: 20px;">
     <div class="col-md-12">
-        <label>Número Motor</label><br>   
+        <label>Placa/Número Motor</label><br>   
         <input class="form-control" autocomplete="off" type="text" id="placa">           
     </div>
 </div>  

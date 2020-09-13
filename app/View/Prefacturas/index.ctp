@@ -23,7 +23,7 @@
                     <div class="col-md-3">
                         <div class="form-group ">
                             <label>Vehículo</label><br>
-                            <input name="vehiculo" class="form-control" placeholder="Número Motor del Vehículo" type="text">
+                            <input name="vehiculo" class="form-control" placeholder="Placa/Número Motor del Vehículo" type="text">
                         </div>
                     </div>
 

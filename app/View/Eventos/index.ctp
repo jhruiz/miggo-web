@@ -11,7 +11,7 @@
                                 <th><?php echo h('Cliente'); ?></th>
                                 <th><?php echo h('Estado'); ?></th>
                                 <th><?php echo h('Teléfono'); ?></th>
-                                <th><?php echo h('Número Motor'); ?></th>
+                                <th><?php echo h('Placa/Número Motor'); ?></th>
                                 <th><?php echo h('Descripción'); ?></th>
                                 <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>

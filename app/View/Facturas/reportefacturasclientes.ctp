@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-md-2">
                         <label>Vehículo</label><br>
-                        <input name="placa" class="form-control" autocomplete="off" placeholder="Número Motor Vehículo" type="text" id="placa">
+                        <input name="placa" class="form-control" autocomplete="off" placeholder="Placa/Número Motor Vehículo" type="text" id="placa">
                     </div>
 
                     <div class="col-md-3">

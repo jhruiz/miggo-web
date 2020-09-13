@@ -55,7 +55,7 @@
                 <div class="row">
 
                     <div class="col-md-2">
-                        <label style="margin-bottom:10px;">Número Motor</label><br>
+                        <label style="margin-bottom:10px;">Placa/Número Motor</label><br>
                         <?php echo($infoOrdenCliV['0']['VH']['placa']); ?>
                     </div>
 

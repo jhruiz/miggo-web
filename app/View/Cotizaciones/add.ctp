@@ -264,13 +264,13 @@
                                 <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId));?>
                             </div>                                                               
                             <div class="col-md-2">
-                            <label>Número Motor</label><br>
+                            <label>Placa/Número Motor</label><br>
                             <div class="input-group">                                                            
                                 <?php echo $this->Form->input('placa', 
                                     array(
                                         'label' => '',
                                         'class' => 'form-control', 
-                                        'placeholder' => 'Número Motor del Vehículo'
+                                        'placeholder' => 'Placa/Número Motor del Vehículo'
                                         )
                                     ); 
                                 ?> 

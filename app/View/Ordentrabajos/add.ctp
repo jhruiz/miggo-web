@@ -46,13 +46,13 @@
                     </div>                    
                     <div class="col-md-4">           
                            
-                        <label>Número motor</label><br>
+                        <label>Placa/Número motor</label><br>
                         <div class="input-group">                                                       
                             <?php echo $this->Form->input('placa', 
                                     array(
                                         'label' => '',
                                         'class' => 'form-control', 
-                                        'placeholder' => 'Número motor vehículo'
+                                        'placeholder' => 'Placa/Número motor vehículo'
                                         )
                                     ); 
                             ?> 

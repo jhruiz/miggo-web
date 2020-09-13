@@ -15,7 +15,7 @@
 					&nbsp;
 				</dd><br>
 
-				<dt class="text-info"><?php echo __('Número Motor del Vehículo'); ?></dt>
+				<dt class="text-info"><?php echo __('Placa/Número Motor del Vehículo'); ?></dt>
 				<dd>
 					<?php echo h($vehiculo['Vehiculo']['placa']); ?>
 					&nbsp;
