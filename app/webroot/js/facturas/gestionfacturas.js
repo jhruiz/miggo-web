@@ -3,6 +3,7 @@
  * @returns {undefined}
  */
 function imprimirTicket() {
+    var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
     var mywindow = window.open('', 'PRINT', 'height=400, width=600');
     mywindow.document.write('<html><head>');
     mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 12px; } } </style>');
