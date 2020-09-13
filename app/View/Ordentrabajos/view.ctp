@@ -36,12 +36,12 @@
                         ?>                                    
                     </div>
                     <div class="col-md-4">
-                        <label>Placa</label>
+                        <label>Placa/Número Motor</label>
                         <?php echo $this->Form->input('placa', 
                                 array(
                                     'label' => '',
                                     'class' => 'form-control', 
-                                    'placeholder' => 'Placa Vehículo',
+                                    'placeholder' => 'Placa/Número Motor Vehículo',
                                     'value' => !empty($arrOrdenT['0']['VH']['placa']) ? $arrOrdenT['0']['VH']['placa'] : "",
                                     'disabled' => true
                                     )

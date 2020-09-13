@@ -266,21 +266,21 @@
                                 <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId));?>
                             </div>                                                               
                             <div class="col-md-6">
-                                <label>Placa</label><br>
-                                <div class="input-group">                                                            
-                                    <?php echo $this->Form->input('placa', 
-                                        array(
+                            <label>Placa/Número Motor</label><br>
+                            <div class="input-group">                                                            
+                                <?php echo $this->Form->input('placa', 
+                                         array(
                                             'label' => '',
                                             'class' => 'form-control', 
                                             'placeholder' => 'Placa Vehículo',
                                             'autocomplete' => 'off',                                            
                                             'style' => 'z-index:3; position: relative'
                                             )
-                                        ); 
-                                    ?>
-                                    <a href="#" class="btn btn-default btn-sm input-group-addon" id="ver_vehiculo"><span class="far fa-eye"></span></a>                                                                
-                                </div>
-                                <div id="datosVehiculo" style="position:absolute; z-index:3;"></div> 
+                                    ); 
+                                ?> 
+                                <a href="#" class="btn btn-default btn-sm input-group-addon" id="ver_vehiculo"><span class="far fa-eye"></span></a>                                                                
+                            </div>
+                            <div id="datosVehiculo" style="position:absolute; z-index:1;"></div> 
                             </div>                                                               
                         </div><br>             
                     

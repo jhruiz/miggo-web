@@ -281,13 +281,13 @@
                                 <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $arrCotiza['0']['Cotizacione']['usuario_id']));?>
                             </div>     
                             <div class="col-md-6">
-                            <label>Placa</label><br>
+                            <label>Placa/Número Motor</label><br>
                             <div class="input-group">                                                            
                                 <?php echo $this->Form->input('placa', 
                                     array(
                                         'label' => '',
                                         'class' => 'form-control', 
-                                        'placeholder' => 'Placa Vehículo',
+                                        'placeholder' => 'Placa/Número Motor del Vehículo',
                                         'value' => !empty($arrVehiculo['Vehiculo']['placa']) ? $arrVehiculo['Vehiculo']['placa'] : ""
                                         )
                                     ); 
