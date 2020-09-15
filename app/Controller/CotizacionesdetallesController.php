@@ -21,7 +21,7 @@ class CotizacionesdetallesController extends AppController {
         
         $catizacionId = $posData['catizacionId'];
         $nomProduct = $posData['nomProduct'];
-        
+        $idProd = $posData['idProd'];
         
         $data = array();
         
@@ -32,10 +32,15 @@ class CotizacionesdetallesController extends AppController {
         $data['nombreproducto'] = $nomProduct;
         
         $resp = $this->Cotizacionesdetalle->crearDetalleCotizacion($data);
-         
+        $prod = [];
+
+        if(!empty($idProd)){
+            $prod = $this->Cargueinventario->obtenerInventarioId($idProd);
+        }
+
         if($resp){
             //se obtiene la informacion del producto
-            echo json_encode(array('valid' => '1', 'resp' => $resp));        
+            echo json_encode(array('valid' => '1', 'resp' => $resp, 'prod' => $prod));        
         }else{
             echo json_encode(array('valid' => '0'));        
         }        
