@@ -332,8 +332,10 @@ var eliminarPrdCot = function(data) {
  */
 var seleccionarProductoCotizacion = function(data) {
     var nomProduct = "";
+    var idProd = "";
     if (typeof(data.name) != "undefined") {
         nomProduct = data.text;
+        idProd = data.name;
     } else {
         nomProduct = $('#CotizacioneProducto').val();
     }
@@ -343,17 +345,20 @@ var seleccionarProductoCotizacion = function(data) {
         //se guarda el registro del producto para la cotizacion
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxGuardarDetalleCotiza',
-            data: { catizacionId: cotizacionId, nomProduct: nomProduct },
+            data: { catizacionId: cotizacionId, nomProduct: nomProduct, idProd: idProd },
             type: "POST",
             success: function(response) {
                 var resp = JSON.parse(response);
                 var inf = "";
                 if (resp.valid == '1') {
+                    console.log('tamaño del array', resp.prod.length);
+                    var valProd = resp.prod.length == 0 ? '0' : resp.prod.Cargueinventario.precioventa;
+
                     inf += "<tr id='tr_" + resp.resp + "'>";
                     inf += "<td>" + nomProduct + "</td>";
                     inf += '<td><input type="text" id="cant_' + resp.resp + '" class="form-control ttales" value="1" onblur="actCantPrdCot(this)">&nbsp;</td>';
-                    inf += '<td><input type="text" id="vUnit_' + resp.resp + '" class="form-control ttales" value="0" onblur="actValUnitPrdCot(this)">&nbsp;</td>';
-                    inf += '<td><input type="text" id="vTtal_' + resp.resp + '" class="form-control ttales tfinal" value="0" readonly>&nbsp;</td>';
+                    inf += '<td><input type="text" id="vUnit_' + resp.resp + '" class="form-control ttales" value="' + valProd + '" onblur="actValUnitPrdCot(this)">&nbsp;</td>';
+                    inf += '<td><input type="text" id="vTtal_' + resp.resp + '" class="form-control ttales tfinal" value="' + valProd + '" readonly>&nbsp;</td>';
                     inf += '<td><input type="button" class="btn btn-primary btn-sm" value="Eliminar" id="' + resp.resp + '"onclick="eliminarPrdCot(this)"></td>';
                     inf += "</tr>";
                     $('#dvTCot').append(inf);
