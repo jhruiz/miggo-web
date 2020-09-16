@@ -545,7 +545,9 @@ class ReportesController extends AppController {
                 'cantidad' => $f['FD']['cantidad'],
                 'producto' => $f['PR']['descripcion'],
                 'valor' => $valorBase,
+                'valor_ttal' => $valorBase * $f['FD']['cantidad'],
                 'descuento' => $descuento,
+                'subtotal', => ($valorBase * $f['FD']['cantidad']) - $descuento,
                 'iva' => $iva
             ];
         }
@@ -562,8 +564,10 @@ class ReportesController extends AppController {
             'Teléfono',
             'Cantidad',
             'Descripcion',
-            'Valor',
+            'Valor Unitario',
+            'Valor Total',
             'Descuento',
+            'Subtotal',
             'IVA'   
             );
 
