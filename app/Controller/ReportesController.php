@@ -547,7 +547,7 @@ class ReportesController extends AppController {
                 'valor' => $valorBase,
                 'valor_ttal' => $valorBase * $f['FD']['cantidad'],
                 'descuento' => $descuento,
-                'subtotal', => ($valorBase * $f['FD']['cantidad']) - $descuento,
+                'subtotal' => ($valorBase * $f['FD']['cantidad']) - $descuento,
                 'iva' => $iva
             ];
         }
