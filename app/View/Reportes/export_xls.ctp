@@ -144,7 +144,9 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['producto']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['valor']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['valor_ttal']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['descuento']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['subtotal']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
         </tr>
     <?php
