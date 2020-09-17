@@ -42,13 +42,14 @@ class UtilidadesController extends AppController {
             /*se recorre el registro de las utilidades*/
             $utilidades = $this->Utilidade->obtenerUtilidadesPorEmpresa($fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59', $empresaId);
 
-	    $totalVenta = 0;
-	    $utilidadBruta = 0;
+            $totalVenta = 0;
+            $utilidadBruta = 0;
             for($i = 0; $i < count($utilidades); $i++){
                 $totalVenta += $utilidades[$i]['Utilidade']['costo_producto'] * $utilidades[$i]['Utilidade']['cantidad'];
                 $utilidadBruta += $utilidades[$i]['Utilidade']['precioventa'] * $utilidades[$i]['Utilidade']['cantidad'];
                 
             }
+            
             $this->set(compact('utilidades','totalVenta','utilidadBruta','fechaInicio','fechaFin'));
 	}
 

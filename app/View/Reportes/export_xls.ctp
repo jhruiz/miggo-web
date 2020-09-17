@@ -156,6 +156,7 @@ if (isset($ciudades)) {
         ?>
         <tr>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['descripcion']); ?></td>
+            <td class="tableTdContent" ><?php echo h($utilidade['P']['referencia']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['DP']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['PV']['nombre']); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>
