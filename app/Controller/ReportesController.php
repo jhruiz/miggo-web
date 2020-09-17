@@ -601,6 +601,7 @@ class ReportesController extends AppController {
         $this->set('rows', $utilidades);
         $arr_titulos = array(
             'Producto',
+            'Referencia',
             'Deposito',
             'Proveedor',
             'Costo del Producto',
