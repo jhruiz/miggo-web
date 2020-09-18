@@ -25,18 +25,18 @@ class CotizacionesdetallesController extends AppController {
         
         $data = array();
         
-        $data['cantidad'] = '1';
-        $data['costoventa'] = '0';        
-        $data['cotizacione_id'] = $catizacionId;
-        $data['costototal'] = '0';
-        $data['nombreproducto'] = $nomProduct;
-        
-        $resp = $this->Cotizacionesdetalle->crearDetalleCotizacion($data);
         $prod = [];
-
         if(!empty($idProd)){
             $prod = $this->Cargueinventario->obtenerInventarioId($idProd);
         }
+
+        $data['cantidad'] = '1';
+        $data['costoventa'] = !empty($prod['Cargueinventario']) ? $prod['Cargueinventario']['precioventa'] : '0';        
+        $data['cotizacione_id'] = $catizacionId;
+        $data['costototal'] = !empty($prod['Cargueinventario']) ? $prod['Cargueinventario']['precioventa'] : '0';
+        $data['nombreproducto'] = $nomProduct;
+        
+        $resp = $this->Cotizacionesdetalle->crearDetalleCotizacion($data);        
 
         if($resp){
             //se obtiene la informacion del producto
