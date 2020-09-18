@@ -715,11 +715,14 @@ class CargueinventariosController extends AppController {
                     //Lo recorremos
                     while (($datos = fgetcsv($archivo, ",")) == true) 
                     {
-                        
                         if($linea == 0){
                             $linea++;
                             continue;
                         }
+
+                        if(count($datos) == 1 ) {
+                            $datos = explode(';', $datos['0']);                            
+                        }                        
                         
                         //se obtiene un producto por referencia
                         $producto = $this->Producto->obtenerProductoPorReferencia($datos['0']);
