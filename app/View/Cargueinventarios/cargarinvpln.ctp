@@ -13,6 +13,17 @@ echo ($this->Html->script('cargarinventario/cargarinvplano.js'));
             </button>
         </div>
         <div class="col-md-12">
+            
+            <div class="alert alert-info alert-dismissable">
+                <strong><h2>INSTRUCCIONES</h2></strong>
+                <h5>1. Por favor, valide que el documento no tenga separadores de miles en los campos de pesos.</h5>
+                <h5>2. Si los valores en pesos tienen decimales separados por comas (,), por favor, cambielos por punto (.).</h5>
+                <h5>3. Por favor, Valide que en cada columna, el registro no tenga espacios al principio o al final del texto.</h5>
+                <h5>4. Si el producto cuenta con impuesto, agregue el código del mismo, de lo contrario, deben ir las letras "na".</h5>
+            </div>
+        
+        </div>
+        <div class="col-md-12">
             <div class="x_panel">
                 <div class="col-md-6">
                     <b>DESCARGAR PLANTILLA</b>
@@ -25,7 +36,7 @@ echo ($this->Html->script('cargarinventario/cargarinvplano.js'));
             </div>
 
             <?php if (!empty($mensaje)) {?>
-                <div class="alert alert-info alert-dismissable">
+                <div class="alert <?php if (empty($errorCsv)){ echo "alert-info"; }else{ echo "alert-warning"; } ?> alert-dismissable">
                   <button type="button" class="close" data-dismiss="alert">&times;</button>
                   <strong><h2><?php echo base64_decode($mensaje); ?>
                   <?php if (!empty($errorCsv)) {?> <button type="button" class="btn btn-warning" onclick="downloadCsvError('<?php echo $errorCsv; ?>')"><i class="fa fa-download"></i> Descargar</button> <?php }?> </h2></strong>
