@@ -1042,4 +1042,55 @@ class ReportesController extends AppController {
         $this->render('export_xls', 'export_xls');         
         
     }
+
+    /**
+     * Se genera el reporte de productos de la vista /productos/index
+     */
+    public function descargarReporteProductos()
+    {
+        
+        $usuarioAct = $this->Auth->user('id');
+        $empresaId = $this->Auth->user('empresa_id');
+        $codigo = $_POST['codigo'];
+        $referencia = $_POST['referencia'];
+        $nombre = $_POST['codigo'];
+        $categoria = $_POST['categorias'];
+        
+        $this->loadModel('Categoria');
+        $this->loadModel('Producto');
+
+        if (isset($_POST['codigo']) && $_POST['codigo'] != "") {
+            $filtros['LOWER(Producto.codigo) LIKE'] = '%' . strtolower($_POST['codigo']) . '%';
+        }
+
+        if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
+            $filtros['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($_POST['nombre'] . '%');
+        }
+
+        if (isset($_POST['categorias']) && $_POST['categorias'] != "") {
+            $filtros['Producto.categoria_id'] = $_POST['categorias'];
+        }
+
+        if (isset($_POST['referencia']) && $_POST['referencia'] != "") {
+            $filtros['LOWER(Producto.referencia) LIKE'] = '%' . strtolower($_POST['referencia']) . '%';
+        }
+        $productos = $this->Producto->obtenerProductosReporte($empresaId, $filtros);
+        
+        $texto_tit = "Productos";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $productos);
+        $arr_titulos = array(
+            'C&oacute;digo',
+            'Referencia',
+            'Nombre',
+            'Categor&iacute;a',
+            'Marca',
+            'Existencia M&iacute;nima',
+            'Existencia M&aacute;xima',
+        );
+        $this->set(compact('productos'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+
 }

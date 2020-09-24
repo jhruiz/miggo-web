@@ -263,7 +263,29 @@ if (isset($ciudades)) {
         </tr>
     <?php
     endforeach;
-}else if(isset($cierrediario)){
+}
+
+
+// Si vienen los productos se visualiza la tabla
+else if (isset($productos)) {
+    foreach ($productos as $producto):
+    ?>
+        <tr>
+        <td class="tableTdContent"><?php echo h($producto['Producto']['codigo']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['Producto']['referencia']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['Producto']['descripcion']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['C']['descripcion']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['Producto']['marca']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['Producto']['existenciaminima']); ?></td>
+		<td class="tableTdContent" ><?php echo h($producto['Producto']['existenciamaxima']); ?></td>
+        </tr>
+    <?php
+endforeach;
+}
+
+
+
+else if(isset($cierrediario)){
     
     foreach ($cierrediario as $cd):
     $total = 0;
