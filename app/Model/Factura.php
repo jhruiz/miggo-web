@@ -373,12 +373,8 @@ class Factura extends AppModel {
         $facturas = $this->find('all', array(
             'joins' => $arr_join,
             'fields' => array(
-                'FD.cantidad',
-                'FD.costoventa',
-                'FD.costototal',
-                'CL.id',
-                'CL.nombre',
-                'CL.nit',
+                'FD.*',
+                'CL.*',
                 'PR.id',
                 'PR.codigo',
                 'PR.descripcion',

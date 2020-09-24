@@ -471,7 +471,7 @@ class ReportesController extends AppController {
      * Se descargan las facturas
      */
     public function descargarFacturas(){
-        
+
         $this->loadModel('Factura');
         
 
@@ -509,25 +509,68 @@ class ReportesController extends AppController {
         $paginate['Factura.empresa_id'] = $empresaId;
 
         $facturas = $this->Factura->obtenerFacturas($paginate); 
+
+        $arrFacts = array();
+        foreach ($facturas as $f){ 
+
+            if($f['Factura']['factura']){
+                $valorBase = 0;
+                $descuento = 0;
+
+                if (!empty($f['FD']['impuesto'])){
+                    $valorBase = ceil($f['FD']['costoventa'] / (($f['FD']['impuesto'] / 100) +1));
+                } else {
+                    $valorBase = ceil($f['FD']['costoventa']);
+                }
+
+                if (!empty($f['FD']['porcentaje'])){
+                    $descuento = ceil(($valorBase * ($f['FD']['porcentaje'])/100) * $f['FD']['cantidad']);
+                }
+
+                $valorXCantidad = $valorBase * $f['FD']['cantidad'];
+                $iva = ceil(($valorXCantidad - $descuento) * ($f['FD']['impuesto']/100));
+            }else{
+                $valorBase = $f['FD']['costoventa'];
+                $valorXCantidad = ceil($valorBase * $f['FD']['cantidad']);
+                $descuento = $valorXCantidad * ($f['FD']['porcentaje']/100);
+            }
+
+
+            $arrFacts[] = [
+                'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
+                'fecha' => $f['Factura']['created'],
+                'nombreCliente' => $f['CL']['nombre'],
+                'identificacion' => $f['CL']['nit'],
+                'telefono' => $f['CL']['celular'],
+                'cantidad' => $f['FD']['cantidad'],
+                'producto' => $f['PR']['descripcion'],
+                'valor' => $valorBase,
+                'valor_ttal' => $valorBase * $f['FD']['cantidad'],
+                'descuento' => $descuento,
+                'subtotal' => ($valorBase * $f['FD']['cantidad']) - $descuento,
+                'iva' => $iva
+            ];
+        }
                 
         $texto_tit = "Facturas";
-        $this->set(compact('facturas'));
+        $this->set(compact('arrFacts'));
         $this->set('texto_tit', $texto_tit);
-        $this->set('rows', $facturas);
+        $this->set('rows', $arrFacts);
         $arr_titulos = array(
-            'Codigo',
             'Consecutivo',
-            'Tipo',
-            'Cliente',
+            'Fecha',
+            'Nombre Cliente',
             'Identificacion',
-            'Fecha factura',  
-            'Deposito',          
-            'Producto',     
-            'Codigo producto',     
-            'Cantidad',     
-            'Costo venta',     
-            'Costo total'     
+            'Teléfono',
+            'Cantidad',
+            'Descripcion',
+            'Valor Unitario',
+            'Valor Total',
+            'Descuento',
+            'Subtotal',
+            'IVA'   
             );
+
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');       
         
@@ -558,6 +601,7 @@ class ReportesController extends AppController {
         $this->set('rows', $utilidades);
         $arr_titulos = array(
             'Producto',
+            'Referencia',
             'Deposito',
             'Proveedor',
             'Costo del Producto',

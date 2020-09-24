@@ -132,22 +132,22 @@ if (isset($ciudades)) {
         </tr>
     <?php
     endforeach;
-}else if(isset($facturas)){
-    foreach ($facturas as $fact):
+}else if(isset($arrFacts)){
+    foreach ($arrFacts as $fact):
         ?>
         <tr>
-            <td class="tableTdContent" ><?php echo h($fact['Factura']['codigo']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['Factura']['consecutivodian']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['Factura']['factura'] ? "F" : "R"); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['CL']['nombre']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['CL']['nit']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['Factura']['created']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['DP']['descripcion']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['PR']['descripcion']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['PR']['codigo']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['FD']['cantidad']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['FD']['costoventa']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['FD']['costototal']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['consecutivo']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['fecha']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['nombreCliente']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['identificacion']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['telefono']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['producto']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['valor']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['valor_ttal']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['descuento']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['subtotal']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
         </tr>
     <?php
     endforeach;
@@ -156,6 +156,7 @@ if (isset($ciudades)) {
         ?>
         <tr>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['descripcion']); ?></td>
+            <td class="tableTdContent" ><?php echo h($utilidade['P']['referencia']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['DP']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['PV']['nombre']); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>

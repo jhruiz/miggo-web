@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="vehiculo">Vehículo</label><br>
-                            <input name="vehiculo" id="vehiculo" autocomplete="off" class="form-control" placeholder="Placa vehículo" type="text">
+                            <input name="vehiculo" id="vehiculo" autocomplete="off" class="form-control" placeholder="Placa/Número Motor del vehículo" type="text">
                         </div>
                     </div>
 
