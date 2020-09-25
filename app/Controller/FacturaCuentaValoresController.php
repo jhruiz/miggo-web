@@ -102,7 +102,8 @@ class FacturaCuentaValoresController extends AppController
             $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
         }
         
-        if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])) {
+        if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])
+            && empty($this->passedArgs['fechaInicio']) && empty($this->passedArgs['fechaFin'])) {
             $filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
         }
 

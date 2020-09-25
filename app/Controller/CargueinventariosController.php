@@ -690,7 +690,7 @@ class CargueinventariosController extends AppController {
                 }
                 
                 //se valida que el archivo sea csv
-                $arrName = split('\.', $posData['Cargueplano']['cargarInventario']['name']);
+                $arrName = explode('.', $posData['Cargueplano']['cargarInventario']['name']);
 
                 if($arrName['1'] != 'csv'){
                     $mensaje = 'Debe seleccionar un archivo con extensión CSV';
@@ -715,28 +715,31 @@ class CargueinventariosController extends AppController {
                     //Lo recorremos
                     while (($datos = fgetcsv($archivo, ",")) == true) 
                     {
-                        
                         if($linea == 0){
                             $linea++;
                             continue;
                         }
+
+                        if(count($datos) == 1 ) {
+                            $datos = explode(';', $datos['0']);                            
+                        }                        
                         
                         //se obtiene un producto por referencia
-                        $producto = $this->Producto->obtenerProductoPorReferencia($datos['0']);
-                        
+                        $producto = $this->Producto->obtenerProductoPorCodigo($datos['0']);
+
                         if(!empty($producto) && $this->validarCargue($datos)){
                             //se despeja el id de la bodega
-                            $arrBodega = split('-', $datos['2']);
+                            $arrBodega = explode('-', $datos['2']);
                             
                             //se valida si existe impuesto y se despeja de ser asi
                             $imp = '';
                             if($datos['3'] != 'na') {
-                                $arrImp = split('-', $datos['3']);
+                                $arrImp = explode('-', $datos['3']);
                                 $imp = $arrImp['1'];
                             }
                             
                             //se despeja el id del proveedor
-                            $arrProv = split('-', $datos['8']);
+                            $arrProv = explode('-', $datos['8']);
                             
                             $prod['producto_id'] = $producto['Producto']['id'];
                             $prod['cantidad'] = $datos['1'];
