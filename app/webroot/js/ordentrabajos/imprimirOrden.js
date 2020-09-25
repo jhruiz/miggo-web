@@ -233,7 +233,7 @@ var imprimirOrdenEntrada = function() {
                                 apl = "SI";
                             }
                             mywindow.document.write('<tr>');
-                            mywindow.document.write('<td align="left">' + (val.PV.descripcion).toUpperCase() + '</td>');
+                            mywindow.document.write('<td align="left">' + (val.PV.descripcion) + '</td>');
                             mywindow.document.write('<td align="left">' + apl + '</td>');
                             mywindow.document.write('</tr>');
                         }
