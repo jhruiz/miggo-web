@@ -227,7 +227,7 @@ var imprimirOrdenEntrada = function() {
                 if (dataRem.resp.length > 0) {
                     mywindow.document.write('<tbody>');
                     $.each(dataRem.resp, function(k, val) {
-                        if (typeof(val.PV.descripcion) != 'undefined' && val.PV.descripcion != '') {
+                        if (typeof(val.PV.descripcion) != 'undefined' && val.PV.descripcion != '' && val.PV.descripcion != 'null' && val.PV.descripcion != null) {
                             var apl = "NO";
                             if (val.EP.descripcion != "NO APLICA") {
                                 apl = "SI";
