@@ -113,7 +113,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'partevehiculos', 
             'alias' => 'PV', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'PV.id = OrdentrabajosPartevehiculo.partevehiculo_id',
                 'PV.extra = 1'
@@ -123,7 +123,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'estadopartes', 
             'alias' => 'EP', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'EP.id = OrdentrabajosPartevehiculo.estadoparte_id'
                 )                
@@ -132,7 +132,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'ordentrabajos', 
             'alias' => 'OT', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'OT.id = OrdentrabajosPartevehiculo.ordentrabajo_id'
                 )                
@@ -141,7 +141,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'clientes', 
             'alias' => 'C', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'C.id = OT.cliente_id'
                 )                
@@ -150,7 +150,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'vehiculos', 
             'alias' => 'V', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'V.id = OT.vehiculo_id'
                 )                
@@ -159,7 +159,7 @@ class OrdentrabajosPartevehiculo extends AppModel {
         array_push($arr_join, array(
             'table' => 'marcavehiculos', 
             'alias' => 'MV', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'MV.id = V.marcavehiculo_id'
                 )                
