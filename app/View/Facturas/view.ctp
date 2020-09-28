@@ -129,7 +129,7 @@
                 <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
                 <?php } ?>
@@ -450,7 +450,7 @@
                 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
             </div>
@@ -670,7 +670,7 @@
                 <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
                 <?php } ?>
