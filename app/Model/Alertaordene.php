@@ -133,7 +133,7 @@ class Alertaordene extends AppModel {
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',
-                'order' => 'Alertaordene.id DESC' 
+                'order' => 'Alertaordene.fecha_alerta ASC' 
                 ));            
             
             return $alertasOrdenes;            
@@ -147,13 +147,6 @@ class Alertaordene extends AppModel {
                 'type' => 'LEFT',
                 'conditions' => array('F.id=Alertaordene.factura_id')                
             ));
-
-            // array_push($arr_join, array(
-            //     'table' => 'vehiculos', 
-            //     'alias' => 'VH', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('O.vehiculo_id=VH.id')                
-            // ));
 
             array_push($arr_join, array(
                 'table' => 'usuarios', 
@@ -207,7 +200,7 @@ class Alertaordene extends AppModel {
             $alertasFacturas = $this->find('all', array(                
                 'joins' => $arr_join, 
                 'fields' => array(
-                    // 'O.id',
+                   // 'O.id',
                     // 'O.kilometraje',
                     // 'O.fecha_ingreso',
                     // 'O.fecha_salida',
@@ -228,8 +221,8 @@ class Alertaordene extends AppModel {
                     // 'VH.placa',
                     // 'VH.linea',
                     // 'VH.modelo',
-                    'US.id',
-                    'US.nombre',
+                    // 'US.id',
+                    // 'US.nombre',
                     'CL.id',
                     'CL.nit',
                     'CL.nombre',
@@ -258,12 +251,7 @@ class Alertaordene extends AppModel {
                 'conditions' => array('F.id=Alertaordene.prefactura_id')                
             ));
 
-            // array_push($arr_join, array(
-            //     'table' => 'vehiculos', 
-            //     'alias' => 'VH', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('O.vehiculo_id=VH.id')                
-            // ));
+           
 
             array_push($arr_join, array(
                 'table' => 'usuarios', 
@@ -338,8 +326,8 @@ class Alertaordene extends AppModel {
                     // 'VH.placa',
                     // 'VH.linea',
                     // 'VH.modelo',
-                    'US.id',
-                    'US.nombre',
+                    // 'US.id',
+                    // 'US.nombre',
                     'CL.id',
                     'CL.nit',
                     'CL.nombre',
@@ -943,4 +931,109 @@ class Alertaordene extends AppModel {
             return $alertasOrdenes;            
         }
 
+        public function obtenerInfoAlertaGeneral($filtros){
+
+            $arr_join = array(); 
+            // array_push($arr_join, array(
+            //     'table' => 'prefacturas', 
+            //     'alias' => 'F', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('F.id=Alertaordene.prefactura_id')                
+            // ));
+
+           
+
+            // array_push($arr_join, array(
+            //     'table' => 'usuarios', 
+            //     'alias' => 'US', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('F.usuario_id=US.id')                
+            // ));
+
+            // array_push($arr_join, array(
+            //     'table' => 'clientes', 
+            //     'alias' => 'CL', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('F.cliente_id=CL.id')                
+            // ));
+            
+            array_push($arr_join, array(
+                'table' => 'estadoalertas', 
+                'alias' => 'EA', 
+                'type' => 'INNER',
+                'conditions' => array('EA.id=Alertaordene.estadoalerta_id')                
+            ));
+            
+            array_push($arr_join, array(
+                'table' => 'unidadesmedidas', 
+                'alias' => 'UM', 
+                'type' => 'LEFT',
+                'conditions' => array('Alertaordene.unidadesmedida_id=UM.id')                
+            ));
+            
+            array_push($arr_join, array(
+                'table' => 'alertas', 
+                'alias' => 'AL', 
+                'type' => 'INNER',
+                'conditions' => array('Alertaordene.alerta_id=AL.id')                
+            ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'plantaservicios', 
+            //     'alias' => 'PS', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.plantaservicio_id=PS.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'ordenestados', 
+            //     'alias' => 'OE', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.ordenestado_id=OE.id')                
+            // ));
+            
+            $alertasGeneral = $this->find('all', array(                
+                'joins' => $arr_join, 
+                'fields' => array(
+                    // 'O.id',
+                    // 'O.kilometraje',
+                    // 'O.fecha_ingreso',
+                    // 'O.fecha_salida',
+                    // 'O.soat',
+                    // 'O.tecnomecanica',
+                    'EA.id',
+                    'EA.descripcion',
+                    'Alertaordene.*',
+                    // 'Alertaordene.created',
+                    // 'Alertaordene.fecha_alerta',
+                    // 'Alertaordene.fecha_mantenimiento',
+                    // 'Alertaordene.fecha_ultima_llamada',
+                    // 'Alertaordene.cant_llamadas',
+                    // 'Alertaordene.observaciones',
+                    // 'Alertaordene.prefactura_id',
+                    // 'Alertaordene.factura_id',
+                    // 'VH.id',
+                    // 'VH.placa',
+                    // 'VH.linea',
+                    // 'VH.modelo',
+                    // 'US.id',
+                    // 'US.nombre',
+                    // 'CL.id',
+                    // 'CL.nit',
+                    // 'CL.nombre',
+                    // 'CL.direccion',
+                    // 'CL.celular',
+                    // 'CL.cumpleanios',
+                    'UM.*',
+                    'AL.*',
+                    // 'PS.*',
+                    // 'OE.*'
+                ),                             
+                'conditions' => $filtros,
+                'recursive' => '-1',
+                'order' => 'Alertaordene.id DESC' 
+                ));            
+            
+            return $alertasGeneral;            
+        }
 }

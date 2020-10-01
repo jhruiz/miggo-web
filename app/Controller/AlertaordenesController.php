@@ -77,9 +77,16 @@ class AlertaordenesController extends AppController
             'Alertaordene.prefactura_id = ' => Null,
         );
 
+    
+
+
         if (!empty($this->passedArgs['estadoalerta'])) {
             $filtros['EA.id'] = $this->passedArgs['estadoalerta'];
         }
+
+    //     echo('<pre>');
+    // print_r($filtros);
+    // echo('</pre>');
 
         //se obtiene el listado de estado alertas
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
@@ -524,15 +531,18 @@ class AlertaordenesController extends AppController
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
         $estadoAlertasTabs = $this->Estadoalerta->find('all');
         // print_r($filtros);
-        $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaFactura($filtros);
-        $alertasFacturas = $this->Alertaordene->obtenerInfoAlertaPreFactura($filtrosPrefactura);
+        $alertasFacturas = $this->Alertaordene->obtenerInfoAlertaFactura($filtros);
+        $alertasPreFacturas = $this->Alertaordene->obtenerInfoAlertaPreFactura($filtrosPrefactura);
 
         $alertaDocumentos = $this->Alertaordene->obtnerAlertasFacturaRenovacionDocs($filtros);
 
 //         echo('<pre>');
-// print_r($alertasFacturas);
+// print_r($filtros);
 // echo('</pre>');
-        $this->set(compact('empresa_id', 'fechaAct','alertasFacturas', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas'));
+//         echo('<pre>');
+// print_r($alertasPreFacturas);
+// echo('</pre>');
+        $this->set(compact('empresa_id', 'fechaAct','alertasFacturas', 'alertasPreFacturas', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas'));
         $this->set(compact('alertafactura'));
        
     }
@@ -575,6 +585,44 @@ class AlertaordenesController extends AppController
     }
 
     public function editprefacturas($id = null)
+    {
+        $this->loadModel('Alerta');
+        $this->loadModel('Unidadesmedida');
+        $this->loadModel('Estadoalerta');
+        $this->loadModel('Ordentrabajo');
+        $this->loadModel('Factura');
+        $this->loadModel('Alertaordene');
+
+       
+        //id de la empresa
+        $empresa_id = $this->Auth->user('empresa_id');
+
+        //se obtiene el listado de alertas
+        $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
+
+        //Se obtienen las unidades de medida
+        $unidadesMed = $this->Unidadesmedida->listaUnidadesMedida();
+
+        //se obtiene el listado de alertas
+        $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
+
+        //se obtiene la información de la orden de trabajo y del vehiculo
+        $filtros = array(
+            'Alertaordene.prefactura_id' => $id,
+        );
+//  echo('<pre>');
+//         print_r($filtros);
+//         echo('</pre>');
+        $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaPreFacturaEdit($filtros);
+        // echo('<pre>');
+        // print_r($alertasOrdenes );
+        // echo('</pre>');
+        $this->set(compact('alertas'));
+        $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'alertasOrdenes'));
+    }
+
+
+    public function editgeneral($id = null)
     {
         $this->loadModel('Alerta');
         $this->loadModel('Unidadesmedida');
@@ -704,6 +752,192 @@ class AlertaordenesController extends AppController
         $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'id_pre_factura','infoFacturaCli','id_factura'));
     }
-   
+    public function gestionalertasgeneral()
+    {
+        $this->loadModel('Alerta');
+        $this->loadModel('Unidadesmedida');
+        $this->loadModel('Estadoalerta');
+        $this->loadModel('Ordentrabajo');
+        $this->loadModel('Prefactura');
+
+        //id de la empresa
+        $empresa_id = $this->Auth->user('empresa_id');
+
+        //se obtiene el listado de alertas
+        $alertas = $this->Alerta->obtenerListaAlertasSinCumpleanos($empresa_id);
+
+        //Se obtienen las unidades de medida
+        $unidadesMed =  $this->Unidadesmedida->listaUnidadesMedidaDias();
+
+        //se obtiene el listado de alertas
+        $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
+
+        $fechaActual = date('Y-m-d');
+
+        $filter['Prefactura.id'] = $facturaId;
+        $id_pre_factura= "";
+        $id_pre_factura= $facturaId;
+        $infoFacturaCli = $this->Prefactura->obtenerInfoAlertaFacturaGenerate($filter);
+        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
+        $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'id_pre_factura','infoFacturaCli','id_factura'));
+    }
+  
+    public function alertas()
+    {
+        $this->loadModel('Alertaordene');
+        $this->loadModel('Estadoalerta');
+        $this->loadModel('Cliente');
+
+        //id de la empresa
+        $empresa_id = $this->Auth->user('empresa_id');
+
+        //fecha actual
+        $fechaAct = date('Y-m-d');
+
+        //se obtienen las alertas y las ordenes de trabajo
+        $filtrosOrdenes = array(
+            'EA.final' => '0',
+            'EA.empresa_id' => $empresa_id,
+            'Alertaordene.fecha_alerta <= ' => $fechaAct,
+            'Alertaordene.factura_id = ' => Null,
+            'Alertaordene.prefactura_id = ' => Null,
+        );
+      
+        //se obtienen las alertas por factura
+        $filtrosFactura = array(
+            'EA.final' => '0',
+            'EA.empresa_id' => $empresa_id,
+            // 'Alertaordene.fecha_alerta <= ' => $fechaAct,
+
+            // variables para ajustar el filtro para solo facturas y prefacturas de la tabla alertaordenes
+            'Alertaordene.km_prom_dia = ' => NULL,
+            'Alertaordene.km_mantenimiento = ' => NULL,
+            'Alertaordene.vehiculo_id = ' => NULL,
+            // 'Alertaordene.prefactura_id = ' => NULL,
+            'Alertaordene.factura_id != ' => NULL,
+            // 'Alertaordene.prefactura_id != ' => NULL,
+            // 'Alertaordene.factura_id > ' => 0,
+            // 'Alertaordene.unidadesmedida_id = ' => 1,
+        );
+
+        //se obtienen las alertas por prefactura
+        
+        $filtrosPrefactura = array(
+            'EA.final' => '0',
+            'EA.empresa_id' => $empresa_id,
+            // 'Alertaordene.fecha_alerta <= ' => $fechaAct,
+
+            // variables para ajustar el filtro para solo facturas y prefacturas de la tabla alertaordenes
+            'Alertaordene.km_prom_dia = ' => NULL,
+            'Alertaordene.km_mantenimiento = ' => NULL,
+            'Alertaordene.vehiculo_id = ' => NULL,
+            // 'Alertaordene.prefactura_id = ' => NULL,
+            'Alertaordene.factura_id = ' => NULL,
+            'Alertaordene.prefactura_id != ' => NULL,
+            // 'Alertaordene.factura_id > ' => 0,
+            // 'Alertaordene.unidadesmedida_id = ' => 1,
+        );
+
+        $filtrosGeneral = array(
+            'EA.final' => '0',
+            'EA.empresa_id' => $empresa_id,
+            // 'Alertaordene.fecha_alerta <= ' => $fechaAct,
+
+            // variables para ajustar el filtro para solo facturas y prefacturas de la tabla alertaordenes
+            'Alertaordene.km_prom_dia = ' => NULL,
+            'Alertaordene.km_mantenimiento = ' => NULL,
+            'Alertaordene.vehiculo_id = ' => NULL,
+            'Alertaordene.ordentrabajo_id = ' => NULL,
+            // 'Alertaordene.prefactura_id = ' => NULL,
+            'Alertaordene.factura_id = ' => NULL,
+            'Alertaordene.prefactura_id = ' => NULL,
+            // 'Alertaordene.factura_id > ' => 0,
+            // 'Alertaordene.unidadesmedida_id = ' => 1,
+        );
+
+
+        // Filtro para los tabs, se filtra por el id del estado de la alerta en todos los filtros de las tablas 
+        if (!empty($this->passedArgs['estadoalerta'])) {
+            $filtrosOrdenes['EA.id'] = $this->passedArgs['estadoalerta'];
+            $filtrosFactura['EA.id'] = $this->passedArgs['estadoalerta'];
+            $filtrosPrefactura['EA.id'] = $this->passedArgs['estadoalerta'];
+        }
+
+        //se obtiene el listado de estado alertas
+        $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
+        $estadoAlertasTabs = $this->Estadoalerta->find('all');
+     
+        //se obtiene el listado de alertas por orden de trabajo
+        $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtrosOrdenes);
+        //se obtiene el listado de alertas por factura
+        $alertasFacturas = $this->Alertaordene->obtenerInfoAlertaFactura($filtrosFactura);
+        //se obtiene el listado de alertas por Pre factura
+        $alertasPreFacturas = $this->Alertaordene->obtenerInfoAlertaPreFactura($filtrosPrefactura);
+       
+        $alertasGeneral = $this->Alertaordene->obtenerInfoAlertaGeneral($filtrosGeneral );
+
+//         echo('<pre>');
+// print_r($alertasGeneral);
+// echo('</pre>');
+        $this->set(compact('estadoAlertas','alertasOrdenes','alertasFacturas','alertasGeneral','alertasPreFacturas', 'estadoAlertasTabs'));
+    }
 
 }
+
+
+
+
+// //se obtienen las alertas y las ordenes de trabajo
+// $filtros = array(
+//     'EA.final' => '0',
+//     'EA.empresa_id' => $empresa_id,
+//     // 'Alertaordene.fecha_alerta <= ' => $fechaAct,
+
+//     // variables para ajustar el filtro para solo facturas y prefacturas de la tabla alertaordenes
+//     'Alertaordene.km_prom_dia = ' => NULL,
+//     'Alertaordene.km_mantenimiento = ' => NULL,
+//     'Alertaordene.vehiculo_id = ' => NULL,
+//     // 'Alertaordene.prefactura_id = ' => NULL,
+//     'Alertaordene.factura_id != ' => NULL,
+//     // 'Alertaordene.prefactura_id != ' => NULL,
+//     // 'Alertaordene.factura_id > ' => 0,
+//     // 'Alertaordene.unidadesmedida_id = ' => 1,
+// );
+// $filtrosPrefactura = array(
+//     'EA.final' => '0',
+//     'EA.empresa_id' => $empresa_id,
+//     // 'Alertaordene.fecha_alerta <= ' => $fechaAct,
+
+//     // variables para ajustar el filtro para solo facturas y prefacturas de la tabla alertaordenes
+//     'Alertaordene.km_prom_dia = ' => NULL,
+//     'Alertaordene.km_mantenimiento = ' => NULL,
+//     'Alertaordene.vehiculo_id = ' => NULL,
+//     // 'Alertaordene.prefactura_id = ' => NULL,
+//     'Alertaordene.factura_id = ' => NULL,
+//     'Alertaordene.prefactura_id != ' => NULL,
+//     // 'Alertaordene.factura_id > ' => 0,
+//     // 'Alertaordene.unidadesmedida_id = ' => 1,
+// );
+
+// if (!empty($this->passedArgs['estadoalerta'])) {
+//     $filtros['EA.id'] = $this->passedArgs['estadoalerta'];
+//     $filtrosPrefactura['EA.id'] = $this->passedArgs['estadoalerta'];
+// }
+
+// //se obtiene el listado de estado alertas
+// $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
+// $estadoAlertasTabs = $this->Estadoalerta->find('all');
+// // print_r($filtros);
+// $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaFactura($filtros);
+// $alertasFacturas = $this->Alertaordene->obtenerInfoAlertaPreFactura($filtrosPrefactura);
+
+// $alertaDocumentos = $this->Alertaordene->obtnerAlertasFacturaRenovacionDocs($filtros);
+
+// //         echo('<pre>');
+// // print_r($filtros);
+// // echo('</pre>');
+// //         echo('<pre>');
+// // print_r($alertasOrdenes);
+// // echo('</pre>');
+// $this->set(compact('empresa_id', 'fechaAct','alertasFacturas', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas'));
+// $this->set(compact('alertafactura'));

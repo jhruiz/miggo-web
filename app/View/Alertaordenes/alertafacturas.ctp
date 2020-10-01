@@ -36,8 +36,10 @@
             <div class="container">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
+                <th><?php echo ('id'); ?></th>
                                 <th>&nbsp;</th>
                                
+                                
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
                                 <th><?php echo ('Fecha de cumpleaños'); ?></th>
@@ -49,7 +51,7 @@
                                 <th><?php echo ('Cantidad llamadas'); ?></th>
                                 <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
-                <?php foreach ($alertasOrdenes as $alertOrd): ?>
+                <?php foreach ($alertasFacturas as $alertOrd): ?>
 
                 <?php
 
@@ -61,6 +63,8 @@ $color = $days < 0 ? 'f23c3c' : '00ff44';
 ?>
 
                 <tr>
+                <td><?php echo h($alertOrd['Alertaordene']['id']); ?></td>
+                        
                 <td>
                     <center>
                         <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
@@ -95,6 +99,7 @@ echo $color;
             <div class="container">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
+                <th><?php echo ('Id'); ?></th>
                                 <th>&nbsp;</th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
@@ -107,18 +112,19 @@ echo $color;
                                 <th><?php echo ('Cantidad llamadas'); ?></th>
                                 <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
-                <?php foreach ($alertasFacturas as $alertOrd): ?>
+                <?php foreach ($alertasPreFacturas as $alertPreFac): ?>
 
                 <?php
 
 $dateAct = new DateTime($fechaAct);
-$dateAlert = new DateTime($alertOrd['Alertaordene']['fecha_alerta']);
+$dateAlert = new DateTime($alertPreFac['Alertaordene']['fecha_alerta']);
 $diff = $dateAct->diff($dateAlert);
 $days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
 $color = $days < 0 ? 'f23c3c' : '00ff44';
 ?>
 
                 <tr>
+                <td><?php echo h($alertPreFac['Alertaordene']['id']); ?></td>
                 <td>
                     <center>
                         <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
@@ -128,19 +134,19 @@ echo $color;
                     </center>
                 </td>
                        
-                        <td><?php echo h($alertOrd['AL']['descripcion']); ?></td>
-                        <td><?php echo h($alertOrd['CL']['nombre']); ?></td>
-                        <td><?php echo h($alertOrd['CL']['cumpleanios']); ?></td>
+                        <td><?php echo h($alertPreFac['AL']['descripcion']); ?></td>
+                        <td><?php echo h($alertPreFac['CL']['nombre']); ?></td>
+                        <td><?php echo h($alertPreFac['CL']['cumpleanios']); ?></td>
                         <!-- <td><//?php echo h($alertOrd['VH']['placa'] . ' - ' . $alertOrd['VH']['linea']); ?></td> -->
                         <!-- <td><//?php echo h($alertOrd['US']['nombre']); ?></td> -->
-                        <td><?php echo h($alertOrd['Alertaordene']['fecha_alerta']); ?></td>
+                        <td><?php echo h($alertPreFac['Alertaordene']['fecha_alerta']); ?></td>
                         <!-- <td><//?php echo h($alertOrd['Alertaordene']['fecha_mantenimiento']); ?></td> -->
-                        <td><?php echo h($alertOrd['EA']['descripcion']); ?></td>
-                        <td><?php echo h($alertOrd['Alertaordene']['fecha_ultima_llamada']); ?></td>
-                        <td><?php echo h($alertOrd['Alertaordene']['cant_llamadas']); ?></td>
+                        <td><?php echo h($alertPreFac['EA']['descripcion']); ?></td>
+                        <td><?php echo h($alertPreFac['Alertaordene']['fecha_ultima_llamada']); ?></td>
+                        <td><?php echo h($alertPreFac['Alertaordene']['cant_llamadas']); ?></td>
 
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editprefacturas', $alertOrd['Alertaordene']['prefactura_id']))); ?>
+                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editprefacturas',$alertPreFac['Alertaordene']['prefactura_id']))); ?>
                         </td>
                 </tr>
                 <?php endforeach;?>

@@ -37,6 +37,8 @@
             <div class="container">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
+                                
+                    <th><?php echo ('Id'); ?></th>
                                 <th>&nbsp;</th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
@@ -61,6 +63,9 @@ $color = $days < 0 ? 'ff0000' : '00ff44';
 ?>
 
                 <tr>
+
+                <td><?php echo h($alertOrd['Alertaordene']['id']); ?></td>
+
                 <td>
                     <center>
                         <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
