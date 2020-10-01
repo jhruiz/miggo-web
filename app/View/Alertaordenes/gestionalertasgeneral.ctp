@@ -21,67 +21,13 @@ cursor: default;
 <?php echo $id_pre_factura;?>
 <?php  
 $fechaActual =  date('Y-m-d'); 
-$yfechaalertamasuno =  date('Y',strtotime($fechaActual ." + 1 year"));
-$yfechaActual =  date('Y');
-$mdfechaactual= date('m-d',strtotime($fechaActual));
-$fechaCumple = $infoFacturaCli['0']['CL']['cumpleanios']; 
-$mdfechaalerta = date('m-d',strtotime($fechaCumple));
 
-    if ($mdfechaactual > $mdfechaalerta){
-        $fechaAlerta = $yfechaalertamasuno . "-" . $mdfechaalerta ;
-    }
-    else if ($mdfechaactual < $mdfechaalerta){
-        $fechaAlerta = $yfechaActual . "-" . $mdfechaalerta ;
-    }
-
-    if ($fechaCumple == NULL){
-    $classBtn= "disabled";
-    ;
-    }
 ?>
 <?php echo $this->Form->input('fecha_cumple', array('type' => ' hidden', 'value' => $fechaAlerta, 'id' => 'fechacumple'));?>
 
 <div  class="col-md-12">
  <br>
-    <div class="x_panel">
-        <div class="x_title">
-           <h2><?php echo __('Cliente'); ?></h2>
-           <ul class="nav navbar-right panel_toolbox"></ul>
-       </div>          
-        <div class="container-fluid" style="margin-bottom: 10px;">
-            <div class="row">
-
-                <div class="col-md-2">
-                    <label>Nombre</label><br>
-                    <?php echo($infoFacturaCli['0']['CL']['nombre']); ?>
-                </div>
-
-                <div class="col-md-2">
-                    <label>Nit</label><br>   
-                    <?php echo($infoFacturaCli['0']['CL']['nit']); ?>                                                     
-                </div>                    
-
-                <div class="col-md-2">                                      
-                    <label>Teléfono</label><br>  
-                    <?php echo($infoFacturaCli['0']['CL']['celular']); ?>                      
-                </div>
-
-                <div class="col-md-2">                                      
-                    <label>Dirección</label><br>
-                    <?php echo($infoFacturaCli['0']['CL']['direccion']); ?>                        
-                </div>
-                <div class="col-md-2">                                      
-                    <label>Cumpleaños</label><br>
-                    <a class="<?php echo $classBtn ?>" href="#"  title="Crear alerta por cumpleaños" class="btn btn-default btn-sm" id="alerta_cumple"><span class="far fa-eye"></span></a>                     
-                    <?php echo($infoFacturaCli['0']['CL']['cumpleanios']); ?>  
-                                      
-                </div>
-            </div>
-        </div>  
-
-    </div><!-- Termina COL -->                 
-                 
-
+   
     <div class="x_panel">
         <div class="x_title">
            <h2><?php echo __('Gestión Alerta'); ?></h2>

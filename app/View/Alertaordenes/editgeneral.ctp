@@ -47,51 +47,7 @@ $mdfechaalerta = date('m-d',strtotime($fechaCumple));
 <?php echo $this->Form->input('fecha_cumple', array('type' => ' hidden', 'value' => $fechaAlerta, 'id' => 'fechacumple'));?>
 <div class="col-md-12">
 <br>
-    <div class="x_panel">
-   
-        <div class="x_title">
-       
-           <h2><?php echo __('Cliente'); ?></h2>
-           <ul class="nav navbar-right panel_toolbox"></ul>
-       </div>          
-        <div class="container-fluid" style="margin-bottom: 10px;">
-            <div class="row">
-
-                <div class="col-md-2">
-                    <label>Nombre</label><br>
-                    <?php echo($alertasOrdenes['0']['CL']['nombre']); ?>
-                </div>
-
-                <div class="col-md-2">
-                    <label>Nit</label><br>   
-                    <?php echo($alertasOrdenes['0']['CL']['nit']); ?>                                                     
-                </div>                    
-
-                <div class="col-md-2">                                      
-                    <label>Teléfono</label><br>  
-                    <?php echo($alertasOrdenes['0']['CL']['celular']); ?>                      
-                </div>
-
-                <div class="col-md-2">                                      
-                    <label>Dirección</label><br>
-                    <?php echo($alertasOrdenes['0']['CL']['direccion']); ?>                        
-                </div>
-                <div class="col-md-2">                                      
-                    <label>Cumpleaños</label><br>
-                    <a href="#" class="<?php echo $classBtn ?>" title="Crear alerta por cumpleaños" class="btn btn-default btn-sm" id="alerta_cumple"><span class="far fa-eye"></span></a>                     
-                    <!-- <a href="#" title="Crear alerta por cumpleaños" class="btn btn-default btn-sm" id="alerta_soat"><span class="far fa-eye"></span></a>                      -->
-                    <!-- <a href="#" title="Test" class="btn btn-default btn-sm" id="alerta_soat"><span class="far fa-eye"></span></a>                      -->
-                    <?php echo($alertasOrdenes['0']['CL']['cumpleanios']); ?>  
-                                      
-                </div>
-                <div class="col-md-2">                                      
-                                   
-                </div>
-
-            </div>
-        </div>  
-
-    </div><!-- Termina COL -->                 
+                   
 
     <div class="x_panel">
         <div class="x_title">

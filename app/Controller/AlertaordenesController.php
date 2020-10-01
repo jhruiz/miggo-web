@@ -646,7 +646,7 @@ class AlertaordenesController extends AppController
 
         //se obtiene la información de la orden de trabajo y del vehiculo
         $filtros = array(
-            'Alertaordene.prefactura_id' => $id,
+            'Alertaordene.id' => $id,
         );
 //  echo('<pre>');
 //         print_r($filtros);
