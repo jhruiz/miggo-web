@@ -273,6 +273,7 @@ echo $color;
                 <th><?php echo ('Id'); ?></th>
                                 <th>&nbsp;</th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
+                                <th><?php echo ('Usuario responsable'); ?></th>
                                 <!-- <th><//s?php echo ('Técnico'); ?></th> -->
                                 <th><?php echo ('Fecha Alerta'); ?></th>
                                 <!-- <th><//?php echo ('Fecha Mantenimiento'); ?></th> -->
@@ -306,6 +307,7 @@ echo $color;
                         <td><?php echo h($alertGen['AL']['descripcion']); ?></td>
                         <!-- <td><//?php echo h($alertOrd['VH']['placa'] . ' - ' . $alertOrd['VH']['linea']); ?></td> -->
                         <!-- <td><//?php echo h($alertOrd['US']['nombre']); ?></td> -->
+                        <td><?php echo h($alertGen['US']['nombre']); ?></td>
                         <td><?php echo h($alertGen['Alertaordene']['fecha_alerta']); ?></td>
                         <!-- <td><//?php echo h($alertOrd['Alertaordene']['fecha_mantenimiento']); ?></td> -->
                         <td><?php echo h($alertGen['EA']['descripcion']); ?></td>

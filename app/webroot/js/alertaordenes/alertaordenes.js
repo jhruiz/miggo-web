@@ -53,6 +53,8 @@ function obtenerParametros (){
   params.facturaId = $('#factura_idadd').val();
   // campos formulario alerta prefactura vista gestionalertasprefac
   params.prefacturaId = $('#prefacturaId').val(); 
+// campos formulario alerta generak vista gestionalertasgeneral
+  params.usuarioId = $('#usuarioId').val(); 
   
     return params;
 }

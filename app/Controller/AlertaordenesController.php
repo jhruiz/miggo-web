@@ -41,6 +41,8 @@ class AlertaordenesController extends AppController
         $this->autoRender = false;
         $postData = $this->request->data;
 
+    
+
         $resp = $this->Alertaordene->guardaralerta($postData);
         echo json_encode(array('resp' => $resp));
 
@@ -759,10 +761,17 @@ class AlertaordenesController extends AppController
         $this->loadModel('Estadoalerta');
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Prefactura');
+        $this->loadModel('Usuario');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
 
+        //se obtiene el listado de alertas
+        $alertas = $this->Alerta->obtenerListaAlertasSinCumpleanos($empresa_id);
+        
+        //se obtiene el listado de usuarios
+        $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresa_id);
+        
         //se obtiene el listado de alertas
         $alertas = $this->Alerta->obtenerListaAlertasSinCumpleanos($empresa_id);
 
@@ -774,12 +783,10 @@ class AlertaordenesController extends AppController
 
         $fechaActual = date('Y-m-d');
 
-        $filter['Prefactura.id'] = $facturaId;
-        $id_pre_factura= "";
-        $id_pre_factura= $facturaId;
-        $infoFacturaCli = $this->Prefactura->obtenerInfoAlertaFacturaGenerate($filter);
+       
+        // $infoFacturaCli = $this->Prefactura->obtenerInfoAlertaFacturaGenerate($filter);
         $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
-        $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'id_pre_factura','infoFacturaCli','id_factura'));
+        $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual','usuarios', 'id_pre_factura','infoFacturaCli','id_factura'));
     }
   
     public function alertas()

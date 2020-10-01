@@ -17,11 +17,14 @@ class Alertaordene extends AppModel {
             $data['km_mantenimiento'] = $params['kmProxMantto'];
             $data['observaciones'] = $params['observaciones'];
             $data['cliente_id'] = $params['clienteId'];
+            
 
             // parametros crear alerta factura
             $data['factura_id'] = $params['facturaId'];
             // parametros crear alerta prefactura
             $data['prefactura_id'] = $params['prefacturaId'];
+            // parametros crear alerta General
+            $data['usuario_id'] = $params['usuarioId'];
             
             if($alertaorden->save($data)){                
                 return '1';
@@ -943,12 +946,12 @@ class Alertaordene extends AppModel {
 
            
 
-            // array_push($arr_join, array(
-            //     'table' => 'usuarios', 
-            //     'alias' => 'US', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('F.usuario_id=US.id')                
-            // ));
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'US', 
+                'type' => 'LEFT',
+                'conditions' => array('Alertaordene.usuario_id=US.id')                
+            ));
 
             // array_push($arr_join, array(
             //     'table' => 'clientes', 
@@ -1027,7 +1030,7 @@ class Alertaordene extends AppModel {
                     'UM.*',
                     'AL.*',
                     // 'PS.*',
-                    // 'OE.*'
+                    'US.nombre'
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',

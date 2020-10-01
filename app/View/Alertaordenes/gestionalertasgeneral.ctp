@@ -7,7 +7,7 @@ cursor: default;
  </style>
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('alertaordenes/alertaordenes'));?>
-<?php echo ($this->Html->script('alertaordenes/gestionalertasprefac'));?>
+<?php echo ($this->Html->script('alertaordenes/gestionalertasgeneral'));?>
 <div class="ordentrabajos form">
 <?php echo $this->Form->create('Ordentrabajo', array('type' => 'file', 'class' => 'form-inline')); ?>
 <fieldset>                    
@@ -85,9 +85,13 @@ $fechaActual =  date('Y-m-d');
 
                     <div class="col-md-3">                                      
                         <label>Fecha actual</label><br>
-                        <?php echo($fechaActual); ?>                        
+                        <?php echo($fechaActual); ?>  
+                        
+                        
                     </div>
 
+
+                    
                 </div>
       
         </div>   
@@ -137,6 +141,22 @@ $fechaActual =  date('Y-m-d');
                             <input class="date form-control" placeholder="Fecha de Alerta" type="text" id="fecha_alerta">
                         </div>
 
+                        <div class="col-md-3">
+                        <label>Responsable</label><br>
+                        <?php 
+                            echo $this->Form->input("usuario_id",
+                                    array(
+                                        'name'=>"usuario_id",
+                                        'id'=>"usuarioId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$usuarios,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
 
                 </div>
       
