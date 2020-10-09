@@ -14,7 +14,7 @@ cursor: default;
 <?php echo $this->Form->input('empresa', array('type' => 'hidden', 'value' => $empresa_id, 'id' => 'empresaId'));?>
 <?php echo $this->Form->input('ordentrabajo', array('type' => 'hidden', 'value' => $ordenTrabajoId, 'id' => 'ordenTId'));?>
 <?php echo $this->Form->input('vehiculo_id', array('type' => 'hidden', 'value' => $infoFacturaCli['0']['VH']['id'], 'id' => 'vehiculoId'));?>
-<?php echo $this->Form->input('cliente_id', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'clienteId'));?>
+<!-- <//?php echo $this->Form->input('cliente_id', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'clienteId'));?> -->
 <?php echo $this->Form->input('clientecumpleanios', array('type' => 'hidden', 'value' => $infoFacturaCli['0']['CL']['cumpleanios'], 'id' => 'clientecumpleanios'));?>
 <?php echo $this->Form->input('prefactura_id', array('type' => 'hidden', 'class' => 'form-control','value' => $id_pre_factura, 'id' => 'prefacturaId'));?>
 <?php echo $this->Form->input('cliente_idadd', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'cliente_idadd'));?>
@@ -151,6 +151,22 @@ $fechaActual =  date('Y-m-d');
                                         'label' => "",
                                         'type' => 'select',
                                         'options'=>$usuarios,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
+                        <div class="col-md-4">
+                        <label>Cliente</label><br>
+                        <?php 
+                            echo $this->Form->input("cliente",
+                                    array(
+                                        'name'=>"cliente",
+                                        'id'=>"clienteId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$clientes,
                                         'empty'=>'Seleccione Una',
                                         'class' => 'form-control'
                                     )

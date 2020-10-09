@@ -192,7 +192,23 @@ $mdfechaalerta = date('m-d',strtotime($fechaCumple));
                             <input class="date form-control" placeholder="Fecha de Alerta" type="text" id="fecha_alerta">
                         </div>
 
-
+ <div class="col-md-3">
+                        <label>Responsable</label><br>
+                        <?php 
+                            echo $this->Form->input("usuario_id",
+                                    array(
+                                        'name'=>"usuario_id",
+                                        'id'=>"usuarioId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$usuarios,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
+                    
                 </div>
       
         </div>   

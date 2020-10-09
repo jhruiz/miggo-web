@@ -18,7 +18,7 @@ cursor: default;
 <?php echo $this->Form->input('clientecumpleanios', array('type' => 'hidden', 'value' => $infoFacturaCli['0']['CL']['cumpleanios'], 'id' => 'clientecumpleanios'));?>
 <?php echo $this->Form->input('prefactura_id', array('type' => 'hidden', 'class' => 'form-control','value' => $id_pre_factura, 'id' => 'prefacturaId'));?>
 <?php echo $this->Form->input('cliente_idadd', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'cliente_idadd'));?>
-<?php echo $id_pre_factura;?>
+
 <?php  
 $fechaActual =  date('Y-m-d'); 
 $yfechaalertamasuno =  date('Y',strtotime($fechaActual ." + 1 year"));
@@ -191,7 +191,22 @@ $mdfechaalerta = date('m-d',strtotime($fechaCumple));
                             <input class="date form-control" placeholder="Fecha de Alerta" type="text" id="fecha_alerta">
                         </div>
 
-
+                        <div class="col-md-3">
+                        <label>Responsable</label><br>
+                        <?php 
+                            echo $this->Form->input("usuario_id",
+                                    array(
+                                        'name'=>"usuario_id",
+                                        'id'=>"usuarioId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$usuarios,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
                 </div>
       
         </div>   

@@ -91,17 +91,17 @@ var generarAlertaSoat = function() {
     }); 
 }
 var generarAlertaCumple = function() {
+
     bootbox.confirm("¿Está seguro que desea generar una alerta para el cumpleaños del cliente?", function(result){
         if(result){            
-            var vehiculoId = $('#vehiculoId').val();
-            var usuarioId = $('#usuarioId').val(); 
+           
             var clienteId = $('#clienteId').val(); 
-            var facturaId = $('#facturaId').val(); 
+            var usuarioId = $('#usuarioId').val(); 
             var soat = $('#soat').val();         
             var fechacumple = $('#fechacumple').val();         
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertacumpleanos',
-                data: { vehiculoId: vehiculoId, fechacumple:fechacumple,clienteId: clienteId, usuarioId: usuarioId, facturaId: facturaId, soat: soat },
+                data: {  fechacumple:fechacumple,clienteId: clienteId, usuarioId: usuarioId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);

@@ -55,7 +55,7 @@ function obtenerParametros (){
   params.prefacturaId = $('#prefacturaId').val(); 
 // campos formulario alerta generak vista gestionalertasgeneral
   params.usuarioId = $('#usuarioId').val(); 
-  
+  params.cliente = $('#clienteId').val();
     return params;
 }
 
@@ -175,14 +175,27 @@ function unitLabel(){
 }
 
 var generarAlertaSoat = function() {
+
+
+    var mensaje = '';
+    var usuarioId = $('#usuarioId').val(); 
+    if($('#usuarioId').val() == ''){
+        bootbox.alert('Debe seleccionar un responsable para la alerta.<br>.');
+    }
+
+    if($('#usuarioId').val() != ''){
+
+    
+
     bootbox.confirm("¿Está seguro que desea generar una alerta para el SOAT del vehículo?", function(result){
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
             var clienteId = $('#clienteId').val(); 
-            var soat = $('#soat').val();         
+            var soat = $('#soat').val();  
+            var ordentrabajoId = $('#ordentrabajoId').val();     
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertasoat',
-                data: { vehiculoId: vehiculoId, clienteId: clienteId, soat: soat },
+                data: { vehiculoId: vehiculoId, clienteId: clienteId, ordentrabajoId:ordentrabajoId,usuarioId:usuarioId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
@@ -193,22 +206,39 @@ var generarAlertaSoat = function() {
                         bootbox.alert('Ya existe una alerta para el SOAT del vehículo');
                     }else{
                         bootbox.alert('No fue posible crear la alerta para la renovación del SOAT. Por favor, inténtelo de nuevo.');
-                    }
+                       }
                 }
             }); 
         }
     }); 
 }
+}
+
+
+
+
 
 var generarAlertaTecno = function() {
+
+    var mensaje = '';
+    var usuarioId = $('#usuarioId').val(); 
+    if($('#usuarioId').val() == ''){
+        bootbox.alert('Debe seleccionar un responsable para la alerta.<br>.');
+    }
+
+    if($('#usuarioId').val() != ''){
+
+    
+
     bootbox.confirm("¿Está seguro que desea generar una alerta para el Tecnomecánico del vehículo?", function(result){
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
             var clienteId = $('#clienteId').val();   
             var tecnomecanica = $('#tecnomecanica').val();
+            var ordentrabajoId = $('#ordentrabajoId').val();  
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertatecno',
-                data: { vehiculoId: vehiculoId, clienteId: clienteId, tecnomecanica: tecnomecanica },
+                data: { vehiculoId: vehiculoId, clienteId: clienteId,ordentrabajoId:ordentrabajoId,usuarioId:usuarioId, tecnomecanica: tecnomecanica },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
@@ -224,8 +254,10 @@ var generarAlertaTecno = function() {
             }); 
         }
     }); 
-
 }
+}
+
+
 
 $(function() {        
     datePicker();

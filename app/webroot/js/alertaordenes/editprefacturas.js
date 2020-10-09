@@ -94,6 +94,7 @@ var generarAlertaCumple = function() {
     bootbox.confirm("¿Está seguro que desea generar una alerta para el cumpleaños del cliente?", function(result){
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
+            var usuarioId = $('#usuarioId').val(); 
             var clienteId = $('#clienteId').val(); 
             var facturaId = $('#facturaId').val(); 
             var prefacturaId = $('#prefacturaId').val(); 
@@ -101,7 +102,7 @@ var generarAlertaCumple = function() {
             var fechacumple = $('#fechacumple').val();         
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertacumpleanos',
-                data: { vehiculoId: vehiculoId, fechacumple:fechacumple,clienteId: clienteId, facturaId: facturaId, prefacturaId: prefacturaId, soat: soat },
+                data: { vehiculoId: vehiculoId, fechacumple:fechacumple,clienteId: clienteId, prefacturaId: prefacturaId, usuarioId: usuarioId,prefacturaId: prefacturaId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);

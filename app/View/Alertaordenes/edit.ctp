@@ -7,11 +7,13 @@
 <?php echo $this->Form->input('alerta_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['Alertaordene']['id'], 'id' => 'alerta_id'));?>
 <?php echo $this->Form->input('vehiculo_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['VH']['id'], 'id' => 'vehiculoId'));?>
 <?php echo $this->Form->input('cliente_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['CL']['id'], 'id' => 'clienteId'));?>
+<?php echo $this->Form->input('ordentrabajo_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['O']['id'], 'id' => 'ordentrabajoId'));?>
+<?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['US']['id'], 'id' => 'usuarioId'));?>
 <?php echo $this->Form->input('soat', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['O']['soat'], 'id' => 'soat'));?>
 <?php echo $this->Form->input('tecno', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['O']['tecnomecanica'], 'id' => 'tecnomecanica'));?>
 
 <div class="col-md-12">
- 
+ <br>
     <div class="x_panel">
         <div class="x_title">
            <h2><?php echo __('Cliente'); ?></h2>
@@ -20,26 +22,31 @@
         <div class="container-fluid" style="margin-bottom: 10px;">
             <div class="row">
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Nombre</label><br>
                     <?php echo($alertasOrdenes['0']['CL']['nombre']); ?>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Nit</label><br>   
                     <?php echo($alertasOrdenes['0']['CL']['nit']); ?>                                                     
                 </div>                    
 
-                <div class="col-md-3">                                      
+                <div class="col-md-2">                                      
                     <label>Teléfono</label><br>  
                     <?php echo($alertasOrdenes['0']['CL']['celular']); ?>                      
                 </div>
 
-                <div class="col-md-3">                                      
+                <div class="col-md-2">                                      
                     <label>Dirección</label><br>
                     <?php echo($alertasOrdenes['0']['CL']['direccion']); ?>                        
                 </div>
 
+                <div class="col-md-2">                                      
+                    <label>Cumpleaños</label><br>
+                      <?php echo($alertasOrdenes['0']['CL']['cumpleanios']); ?>  
+                                      
+                </div>
             </div>
         </div>  
 
@@ -163,16 +170,22 @@
                         ?>                                                                                                     
                     </div>                    
 
-                    <div class="col-md-3">                                      
+                    <div class="col-md-2">                                      
                         <label>Unidad de medida</label><br>  
                         <?php echo $alertasOrdenes['0']['UM']['descripcion']; ?>                          
                     </div>
 
-                    <div class="col-md-3">                                      
+                    <div class="col-md-2">                                      
                         <label>Fecha creación</label><br>
                         <?php echo $alertasOrdenes['0']['Alertaordene']['created']; ?>                        
                     </div>
 
+                    <div class="col-md-2">
+                            <label>Responsable</label><br>
+                            <div id="ult_llamada">
+                                <?php echo $alertasOrdenes['0']['US']['nombre'];?>
+                            </div>
+                        </div>
                 </div>
       
         </div>   

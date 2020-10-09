@@ -69,10 +69,12 @@ var generarAlertaSoat = function() {
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
             var clienteId = $('#clienteId').val(); 
+            var ordentrabajoId = $('#ordentrabajoId').val();
+            var usuarioId = $('#usuarioId').val();  
             var soat = $('#soat').val();         
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertasoat',
-                data: { vehiculoId: vehiculoId, clienteId: clienteId, soat: soat },
+                data: { vehiculoId: vehiculoId, usuarioId:usuarioId, clienteId: clienteId, ordentrabajoId:ordentrabajoId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
@@ -96,9 +98,11 @@ var generarAlertaTecno = function() {
             var vehiculoId = $('#vehiculoId').val();
             var clienteId = $('#clienteId').val();   
             var tecnomecanica = $('#tecnomecanica').val();
+            var ordentrabajoId = $('#ordentrabajoId').val(); 
+            var usuarioId = $('#usuarioId').val(); 
             $.ajax({
                 url: $('#url-proyecto').val() + 'alertaordenes/generaralertatecno',
-                data: { vehiculoId: vehiculoId, clienteId: clienteId, tecnomecanica: tecnomecanica },
+                data: { vehiculoId: vehiculoId, clienteId: clienteId, usuarioId:usuarioId,ordentrabajoId:ordentrabajoId,tecnomecanica: tecnomecanica },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
