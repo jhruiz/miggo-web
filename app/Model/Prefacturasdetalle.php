@@ -174,5 +174,41 @@ class Prefacturasdetalle extends AppModel {
             return $prefacDet;
         }
         
+
+        public function obtenerPrefacturaDetalle($prefacturaId){
+            $arr_join = array();                  
+            
+            array_push($arr_join, array(
+                'table' => 'prefacturasdetalles',
+                'alias' => 'PFD',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'PFD.prefactura_id=Prefactura.id'
+                )
+            ));            
+            
+            array_push($arr_join, array(
+                'table' => 'cargueinventarios',
+                'alias' => 'CI',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CI.id=PFD.cargueinventario_id'
+                )
+            ));            
+            
+            
+            $infoPrefact = $this->find('all', array(
+                'joins' => $arr_join, 
+                'conditions' => array('PFD.id' => $prefacturaId),
+                'fields' => array(
+                    'PFD.*',
+                    'CI.*',
+                ),
+                'recursive' => '-1'                
+                ));        
+            
+            return $infoPrefact;               
+        }
+        
         
 }

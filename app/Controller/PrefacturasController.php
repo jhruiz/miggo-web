@@ -171,7 +171,7 @@ class PrefacturasController extends AppController {
         if(isset($posData['prefactId']) && !empty($posData['prefactId'])){
             $prefactId = $posData['prefactId'];
             $arrPrefactId = $this->Prefactura->obtenerPrefacturaPorId($prefactId);
-        }else{
+        }else{ 
             /*Se valida si existe la prefactura*/
 //            $arrPrefactId = $this->Prefactura->obtenerPrefacturaId($clienteId);
 //            if(isset($arrPrefactId['Prefactura'])){
@@ -217,11 +217,20 @@ class PrefacturasController extends AppController {
 	public function addProductoBarCode() {
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
+            $this->loadModel('CargueinventariosImpuesto');
             $this->loadModel('Deposito');
             
             $this->autoRender = false;
             $posData = $this->request->data;
 
+            $cargueinventarioId = $posData['cargueinventarioId'];
+            $cantidadventa = $posData['cantidadventa'];
+            $precioventa = $posData['precioventa'];
+            $valorDescuento = isset($posData['valorDescuento']) && !empty($posData['valorDescuento']) ? $posData['valorDescuento'] : 0;
+            $porcentajeDescuento = isset($posData['porcentajeDescuento']) && !empty($posData['porcentajeDescuento']) ? $posData['porcentajeDescuento'] : 0;
+            // $impuesto = $posData['impuesto'];
+        
+            // var_dump($impuesto);
             $usuarioId = $posData['usuarioId']; 
             if(isset($posData['clienteId'])){
                 $clienteId = $posData['clienteId'];
@@ -246,7 +255,7 @@ class PrefacturasController extends AppController {
             
             /*valida si se encuentra el producto descrito por el codigo de barras*/
             if(count($produtoInfo) <= '0'){
-                    $mensaje = "No se cuentra el producto en stock con el codigo " . $descripcionProd;
+                    $mensaje = "No se cuentra el producto en stock con el codigo " . $descripcionProd ;
                     echo json_encode(array('valido' => false, 'mensaje' => $mensaje));
             }else{
                 /*Se obtiene el id del producto en stock*/
@@ -281,10 +290,45 @@ class PrefacturasController extends AppController {
                     /*se actualiza la cantidad en stock tras la prefactura*/
                     $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
 
+            
+                    /*Se obtienen los impuestos grabados al producto*/
+                    $arrImpuestos = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($produtoInfo['0']['Cargueinventario']['id']);
+                    $valorImpuesto = $arrImpuestos['0']['Impuesto']['valor'];                         
+                 
+                    $prcImpuesto = 0;
+                    $vlrAntesImp = $produtoInfo['0']['Cargueinventario']['precioventa'];
+                    $vlrImpuesto = 0;
+                    //se valida si existen impuestos y se calcula los calores 
+                    if(!empty($arrImpuestos)){                
+                        $prcImpuesto = 1 + (floatval($arrImpuestos['0']['Impuesto']['valor'])/100);
+                        $vlrAntesImp = intval( $produtoInfo['0']['Cargueinventario']['precioventa']/$prcImpuesto);
+                        $vlrImpuesto = intval($produtoInfo['0']['Cargueinventario']['precioventa'] - $vlrAntesImp);
+                    }
+                    
+                    $totalConIva = $vlrAntesImp + $vlrImpuesto;
+
                     if($prefactId != '0'){
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId);
+                        // $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId);
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$produtoInfo['0']['Cargueinventario']['id'],
+                        $prefactId, '0', '0', $valorImpuesto);
+    
                         if($detalleId != '0' && $detalleId != ""){
-                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo));
+
+                            $detalleFactura = $this->Prefacturasdetalle->obtenerPrefacturaDetalle($detalleId);
+                            
+                            foreach ($detalleFactura as $proInf){
+                                $impuesto = $proInf['PFD']['impuesto'];
+                            }            
+                            
+                            echo json_encode(array(
+                                'valor descuento' =>   $valorDescuento,
+                                'resp' => $detalleId, 'valido' => true,
+                                'producto' => $produtoInfo,
+                                'valorProductoSinIva' => $vlrAntesImp,
+                                'ValorImp' => $vlrAntesImp,
+                                'ValorIva' => $vlrImpuesto ,
+                                'ValorTotalIva' => $totalConIva ,
+                            ));
                         }else{
                             echo json_encode(array('resp' => $detalleId, 'valido' => false));
                         }

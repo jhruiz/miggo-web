@@ -209,10 +209,29 @@ function actualizarCreditoLimite(){
     }    
 }
 
+function seleccionarProducto(dato){
+    var productoId = dato.name;  
+    var cargueInvId = dato.id;
+    
+    $("#div_producto").load(
+            $('#url-proyecto').val() + "cargueinventarios/seleccionproductoventa",
+            {
+                productoId: productoId, cargueInvId: cargueInvId
+            },
+            function(){                                                            
+                dialogDialogSeleccionProducto=$("#div_producto").dialog(opcDialogSeleccionProducto);
+                dialogDialogSeleccionProducto.dialog('open');
+                $('#datosProducto').hide();
+            }
+        );     
+}
+
 function fnObtenerDatosProducto(e){    
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
     var key = (document.all) ? e.keyCode : e.which;
+
+    
     if(key == 13){        
         if(typeof(clienteId) != "undefined" && clienteId != ""){
             $.ajax({
@@ -225,11 +244,36 @@ function fnObtenerDatosProducto(e){
                         $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
                                 '<td>' + prefactura.producto['0']['Producto']['descripcion'] + '</td>' + 
                                 '<td>' + prefactura.producto['0']['Producto']['codigo'] + '</td>' + 
-                                '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
-                                '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
-                                '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" readonly>&nbsp;</td>' +
-                                '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
-                        $('#FacturaProducto').val("");
+                                
+                                '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + 
+                                '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+                                
+                                '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + 
+                                '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                                
+                                '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp +
+                                 '" value="' + prefactura.ValorImp + '" readonly>&nbsp;</td>' +
+
+                                '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control" id="total_' + prefactura.resp +
+                                 '" value="' + '0' + '" readonly>&nbsp;</td>' +
+                                
+                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control" id="total_' + prefactura.resp +
+                                 '" value="' + '0' + '" readonly>&nbsp;</td>' +
+
+                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp +
+                                 '" value="' + prefactura.ValorIva + '" readonly>&nbsp;</td>' +
+
+                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="total_' + prefactura.resp +
+                                 '" value="' + prefactura.ValorTotalIva + '" readonly>&nbsp;</td>' +
+
+
+                                '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp 
+                                + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
+                        
+                        
+                        
+                        
+                                $('#FacturaProducto').val("");
                         $('#datosProducto').hide();
                         $('.numericPrice').number(true);
                     }else{                        
@@ -286,23 +330,6 @@ function fnObtenerDatosProducto(e){
 }
 
 
-function seleccionarProducto(dato){
-    var productoId = dato.name;  
-    var cargueInvId = dato.id;
-    
-    $("#div_producto").load(
-            $('#url-proyecto').val() + "cargueinventarios/seleccionproductoventa",
-            {
-                productoId: productoId, cargueInvId: cargueInvId
-            },
-            function(){                                                            
-                dialogDialogSeleccionProducto=$("#div_producto").dialog(opcDialogSeleccionProducto);
-                dialogDialogSeleccionProducto.dialog('open');
-                $('#datosProducto').hide();
-            }
-        );     
-}
-
 function agregarProductoFactura(){
     var impuesto = $('#impuesto').val();
     var usuarioId = $('#usuarioId').val();
@@ -334,17 +361,37 @@ function agregarProductoFactura(){
             if(prefactura.resp != '0' && prefactura.resp != ""){
                 $('#productosFacturas').append(                        
                         '<tr id="tr_' + prefactura.resp + '">' + 
-                        '<td>' + $('#nombreProducto').val() + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
+
+
+                        '<td>' + $('#nombreProducto').val() + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + 
+                        '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
                         '<td>' + $('#codigoProducto').val() + '</td>' +                         
-                        '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
-                        '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +
-                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
-                $('#FacturaProducto').val("");
+                        
+                        '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa + 
+                        '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+
+                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' +
+                         precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                        
+                         '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp +
+                          '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
+
+                        '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + 
+                        porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
+                        
+                        '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + 
+                        '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
+                        
+                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + 
+                        '" value="' + valorIva + '" readonly>&nbsp;</td>' +
+                        
+                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + 
+                        prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
+                        
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + 
+                        '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
+                
+                        $('#FacturaProducto').val("");
                 $('#prefacturaId').val(prefactura.prefactId);
                 $('.numericPrice').number(true);
                 calcularTotalConAbonos();
@@ -1100,6 +1147,92 @@ var guardarObsFactura = function(){
     }
 };
  
+
+
+function fnObtenerDatosProductoCodBarras(e){   
+    var usuarioId = $('#usuarioId').val();       
+    var mensaje = "";
+
+    var key = (document.all) ? e.keyCode : e.which;
+    if(key == 13){      
+        mensaje = validarDatosVentaRapida();
+        if(mensaje == ""){
+            $.ajax({
+               url: $('#url-proyecto').val() + 'prefacturas/addProductoClienteNuevoBarCode',
+               data: {usuarioId: usuarioId, descProducto: $('#FacturaProductoventarapida').val(), prefacturaId: null},
+               type: "POST",
+               success: function(data) {
+                    var prefactura = JSON.parse(data);
+                    if(prefactura.valido){
+                        $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
+                        '<td>' + prefactura.producto['0']['Producto']['descripcion'] + '</td>' + 
+                        '<td>' + prefactura.producto['0']['Producto']['codigo'] + '</td>' +                                
+                        '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" readonly>&nbsp;</td>' +
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
+                        $('#FacturaProductoventarapida').val("");
+                        $('#datosProductoventarapida').hide(); 
+                        $('#prefacturaId').val(prefactura.prefact); 
+                        $('.numericPrice').number(true);
+                   }else{
+                        $('#FacturaProductousuarionuevo').val("");
+                        $('#FacturaProductoventarapida').val("");
+                        $('#datosProductoventarapida').hide(); 
+                        bootbox.alert(prefactura.mensaje);                        
+                    }
+                    sumarTotales();
+               }
+           });                
+        }else{
+            bootbox.alert(mensaje);
+            $('#FacturaProducto').val("");                
+        }
+    }else if($('#FacturaProductoventarapida').val().length <= '0'){
+        $('#datosProductoventarapida').hide();        
+    }else{ 
+        mensaje = validarDatosVentaRapida();
+        if(mensaje != ""){
+            bootbox.alert(mensaje);
+            $('#FacturaProductoventarapida').val("");
+        }else{
+            if($('#FacturaProductoventarapida').val().length > 3){
+                $.ajax({
+                    url: $('#url-proyecto').val() + 'cargueinventarios/ajaxProductosVenta',
+                    data: {usuarioId: usuarioId, descProducto: $('#FacturaProductoventarapida').val()},
+                    type: "POST",
+                    success: function(data) {
+                        var producto = JSON.parse(data);
+                        var uls = "";
+                        for(var i = 0; i < producto.resp.length; i++){
+                            if(parseInt(producto.resp[i].Cargueinventario.existenciaactual) >= parseInt(1)){
+                                uls += "<a href='#' class='list-group-item list-group-item-info' ";
+                                uls += "name='" + producto.resp[i].Producto.id + "' ";
+                                uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
+                                uls += "onClick ='seleccionarProductoVentaRapida(this)'>" + producto.resp[i].Producto.descripcion;
+                                uls += " - " + producto.resp[i].Producto.codigo;
+                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") ";
+                                uls += producto.resp[i].Deposito.descripcion;
+                                uls += "</a>";
+                            } 
+                        }
+                        $('#datosProductoventarapida').show();
+                        $('#datosProductoventarapida').html(uls);
+                    }
+                });                    
+            }else{
+                $('#datosProductoventarapida').hide();
+                $('#datosProductoventarapida').html("");                
+            }
+     
+        }                
+    }    
+}
+
+
+
+
+
 $( function() {
     $('#FacturaDatoscliente').keyup(fnObtenerDatosCliente);    
     $('#FacturaProducto').prop('disabled', true);
