@@ -129,7 +129,7 @@
                 <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
                 <?php } ?>
@@ -346,7 +346,7 @@
                 <b>Condiciones del Contrato: 1</b>. El cliente autoriza a quien firma en el presente contrato a ordenar y contratar con el centro de servicio, la ejecución de los respectivos trabajos y por tanto
                 da fe que conoce y acepta en su totalidad las condiciones que son parte integrante del contrato que se celebra y consta en el presente documento. <b>2</b>. El centro de servicio queda
                 facultado para realizar las pruebas que requiera el vehiculó por fuera del taller. <b>3</b>. El centro de servicio no se hacer responsable por objetos dejados dentro del vehiculo. <b>4</b>. El cliente o la
-                persona autorizada. Faculta expresamente al taller. TOQUE RACING S.A.S., a ejercer el derecho de retención del vehiculo. <b>5</b>. El centro de servicio no se hace responsable por daños o
+                persona autorizada. Faculta expresamente al taller. <?php echo $infoEmpresa['Empresa']['nombre']; ?>, a ejercer el derecho de retención del vehiculo. <b>5</b>. El centro de servicio no se hace responsable por daños o
                 deterioro del vehiculo. Si estos se presentan por causas de fuerza mayor o extensión de tiempo causado por el cliente. <b>6</b>. El propietario o autorizado firmante del presente contrato, se
                 comprometen a reconocer un valor de cinco mil pesos m/cte. ($ 5.000) por concepto de parqueo, por cada día que transcurra desde que finalice los trabajos hasta el momento de
                 retiro del vehiculo. <b>7</b>. Aclaraciones: En el momento de la entrada del vehículo se debe cancelar el total del valor de los repuestos. Si la orden de trabajo se encuentra terminada y su
@@ -450,7 +450,7 @@
                 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
             </div>
@@ -670,7 +670,7 @@
                 <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Moto/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
                     </div>                           
                 </div>
                 <?php } ?>
