@@ -154,10 +154,10 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
         </tr>
     <?php
-    endforeach;
-}else if(isset($utilidades)){
+endforeach;
+} else if (isset($utilidades)) {
     foreach ($utilidades as $utilidade):
-        ?>
+    ?>
         <tr>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['referencia']); ?></td>
@@ -169,15 +169,15 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['precioventa'])); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad'])); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['utilidadbruta'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],4)); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'], 4)); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['created']); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['factura']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo']); ?></td>
         </tr>
     <?php
-    endforeach;
-}else if($arrRotation){
-    foreach($arrRotation as $rotation){
+endforeach;
+} else if (isset($arrRotation)) {
+    foreach ($arrRotation as $rotation) {
         ?>
     <tr>
         <td class="tableTdContent"><?php echo h($rotation['descripcion']); ?></td>
@@ -206,17 +206,17 @@ if (isset($ciudades)) {
 }else if(isset($arrInfoCompras)){
     foreach ($arrInfoCompras as $cpr):
 
-        if($typeTax == '1'){
+        if ($typeTax == '1') {
             $total = $cpr['valor'] + $cpr['iva_vlr'] - $cpr['retefuente_vlr'] - $cpr['reteica_vlr'];
-        }else if($typeTax == '2'){
-            $total = $cpr['valor'] + $cpr['iva_vlr'];
-        }else if($typeTax == '3'){
-            $total = $cpr['valor'] - $cpr['retefuente_vlr'];
-        }else if($typeTax == '4'){
-            $total = $cpr['valor'] - $cpr['reteica_vlr'];
-        }
-        
-        ?>
+        } else if ($typeTax == '2') {
+        $total = $cpr['valor'] + $cpr['iva_vlr'];
+    } else if ($typeTax == '3') {
+        $total = $cpr['valor'] - $cpr['retefuente_vlr'];
+    } else if ($typeTax == '4') {
+        $total = $cpr['valor'] - $cpr['reteica_vlr'];
+    }
+
+    ?>
 
     <tr>
         <td class="tableTdContent"><?php echo h($cpr['proveedor']); ?></td>
@@ -226,45 +226,77 @@ if (isset($ciudades)) {
         <td class="tableTdContent"><?php echo h($cpr['categoria']); ?></td>
         <td class="tableTdContent"><?php echo h($cpr['valor']); ?></td>
 
-        <?php if($typeTax == '1'){?>
-        <td class="tableTdContent"><?php echo h($cpr['iva_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['iva_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['retefuente_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['retefuente_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['reteica_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['reteica_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($total); ?></td>
-        <?php }else if($typeTax == '2'){?>
-        <td class="tableTdContent"><?php echo h($cpr['iva_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['iva_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($total); ?></td>
-        <?php }else if($typeTax == '3'){?>
-        <td class="tableTdContent"><?php echo h($cpr['retefuente_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['retefuente_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($total); ?></td>
-        <?php }else if($typeTax == '4'){?>
-        <td class="tableTdContent"><?php echo h($cpr['reteica_prc']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['reteica_vlr']); ?></td>
-        <td class="tableTdContent"><?php echo h($total); ?></td>
-        <?php }?>
-    </tr>
+            <?php if($typeTax == '1'){?>
+                <td class="tableTdContent" ><?php echo h($cpr['iva_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['iva_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['retefuente_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['retefuente_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['reteica_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['reteica_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($total); ?></td>
+            <?php }else if($typeTax == '2'){?>
+                <td class="tableTdContent" ><?php echo h($cpr['iva_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['iva_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($total); ?></td>
+            <?php }else if($typeTax == '3'){?>
+                <td class="tableTdContent" ><?php echo h($cpr['retefuente_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['retefuente_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($total); ?></td>
+            <?php }else if($typeTax == '4'){?>
+                <td class="tableTdContent" ><?php echo h($cpr['reteica_prc']); ?></td>
+                <td class="tableTdContent" ><?php echo h($cpr['reteica_vlr']); ?></td>
+                <td class="tableTdContent" ><?php echo h($total); ?></td>
+            <?php }?>
+        </tr>
     <?php
+endforeach;
+} else if(isset($pagosFacturas)){
+    foreach ($pagosFacturas as $pagosFact):
+        ?>
+            <tr>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['codigo']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['consecutivodian']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['F']['created']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['C']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['T']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosFact['FacturaCuentaValore']['valor']); ?></td>
+            </tr>
+        <?php
     endforeach;
-}else if(isset($gastos)){
+}else if(isset($facturaClientes)){
+
+        foreach ($facturaClientes as $fc): ?>
+    
+            <tr>
+                <td class="tableTdContent"><?php echo h($fc['C']['nombre']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['C']['nit']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['C']['celular']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['V']['placa']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['U']['nombre']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['Factura']['codigo']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['Factura']['created']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['0']['conteo']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['0']['valor']); ?></td>
+            </tr>
+    
+        <?php 
+        endforeach;
+
+}else if (isset($gastos)) {
     foreach ($gastos as $gasto):
         ?>
-    <tr>
-        <td class="tableTdContent"><?php echo h($gasto['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['usuario']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['empRel']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['fechagasto']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['created']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['itemsgasto']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['cuenta']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['traslado'] == '1' ? 'Traslado' : 'Gasto'); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['cuentadestino']); ?></td>
-        <td class="tableTdContent"><?php echo h($gasto['valor']); ?></td>
-    </tr>
+        <tr>
+            <td class="tableTdContent" ><?php echo h($gasto['descripcion']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['usuario']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['empRel']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['fechagasto']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['created']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['itemsgasto']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['cuenta']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['traslado'] == '1' ? 'Traslado' : 'Gasto'); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['cuentadestino']); ?></td>
+            <td class="tableTdContent" ><?php echo h($gasto['valor']); ?></td>
+        </tr>
     <?php
     endforeach;
 }
@@ -420,21 +452,21 @@ else if(isset($cierrediario)){
     $total += $cd['Cierrecaja']['abonos'];
     ?>
     <tr>
-        <td class="tableTdContent"><?php echo h($listCuentas[$cd['Cierrecaja']['caja_id']]); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['saldo_inicial']); ?></td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['ventas']); ?></td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['gastos']); ?></td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['traslados_ing']); ?></td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['traslados_gas']); ?></td>
-        <td class="tableTdContent"><?php echo h($cd['Cierrecaja']['abonos']); ?></td>
-        <td class="tableTdContent"><?php echo h($total); ?></td>
+        <td class="tableTdContent" ><?php echo h($listCuentas[$cd['Cierrecaja']['caja_id']]); ?>&nbsp;</td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['saldo_inicial']); ?></td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['ventas']); ?></td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['gastos']); ?></td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_ing']); ?></td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['traslados_gas']); ?></td>
+        <td class="tableTdContent" ><?php echo h($cd['Cierrecaja']['abonos']); ?></td>
+        <td class="tableTdContent" ><?php echo h($total); ?></td>
     </tr>
     <?php
     endforeach;
 } ?>
 </table>
 <?php }else{ ?>
-<table>
+    <table>
     <tr>
         <td><b><?php echo __('Detalles cierre del dia'); ?></b></td>
     </tr>
@@ -458,32 +490,26 @@ else if(isset($cierrediario)){
         <td class="tableTd"><?php echo ('Valor'); ?></td>
     </tr>
     <?php foreach ($ventasFactura as $dFact): ?>
-    <tr>
-        <td class="tableTdContent">
-            <?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
-        <td class="tableTdContent">
-            <?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?>
-        </td>
-        <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?>
-        </td>
+    <tr>        
+        <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+        <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
+        <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
         <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
-        <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>
-        <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>
+        <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
+        <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
     </tr>
     <?php endforeach; ?>
-</table>
-<br><br>
-<table>
-    <tr>
-        <td><b><?php echo __('Detalle Gastos'); ?></b></td>
-    </tr>
-    <tr id="titles">
-        <td class="tableTd"><?php echo ('Descripcion'); ?></td>
-        <td class="tableTd"><?php echo ('usuario'); ?></td>
-        <td class="tableTd"><?php echo ('Fecha del Gasto'); ?></td>
-        <td class="tableTd"><?php echo ('Cuenta'); ?></td>
-        <td class="tableTd"><?php echo ('Tipo'); ?></td>
-        <td class="tableTd"><?php echo ('Valor'); ?></td>
+    </table>
+    <br><br>
+    <table>
+    <tr><td><b><?php echo __('Detalle Gastos'); ?></b></td></tr>  
+    <tr  id="titles">
+        <td  class="tableTd"><?php echo ('Descripcion'); ?></td>
+        <td  class="tableTd"><?php echo ('usuario'); ?></td>
+        <td  class="tableTd"><?php echo ('Fecha del Gasto'); ?></td>                    
+        <td  class="tableTd"><?php echo ('Cuenta'); ?></td>
+        <td  class="tableTd"><?php echo ('Tipo'); ?></td>
+        <td  class="tableTd"><?php echo ('Valor'); ?></td>
     </tr>
     <?php foreach ($infoGastos as $gt): ?>
     <tr>
@@ -495,12 +521,10 @@ else if(isset($cierrediario)){
         <td class="tableTdContent"><?php echo h($gt['Gasto']['valor']); ?>&nbsp;</td>
     </tr>
     <?php endforeach; ?>
-</table>
-<br><br>
-<table>
-    <tr>
-        <td><b><?php echo __('Detalle Traslados'); ?></b></td>
-    </tr>
+    </table>
+    <br><br>
+    <table>
+    <tr><td><b><?php echo __('Detalle Traslados'); ?></b></td></tr>
     <tr>
         <td class="tableTd"><?php echo ('Descripcion'); ?></td>
         <td class="tableTd"><?php echo ('usuario'); ?></td>
@@ -511,21 +535,19 @@ else if(isset($cierrediario)){
     </tr>
     <?php foreach ($infoTraslados as $trs): ?>
     <tr>
-        <td class="tableTdContent"><?php echo h($trs['Gasto']['descripcion']); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($trs['Usuario']['nombre']); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($trs['Gasto']['fechagasto']); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($trs['Cuenta']['descripcion']); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($listCuenta[$trs['Gasto']['cuentadestino']]); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h($trs['Gasto']['valor']); ?>&nbsp;</td>
+        <td  class="tableTdContent"><?php echo h($trs['Gasto']['descripcion']); ?>&nbsp;</td>
+        <td  class="tableTdContent"><?php echo h($trs['Usuario']['nombre']); ?>&nbsp;</td>
+        <td  class="tableTdContent"><?php echo h($trs['Gasto']['fechagasto']); ?>&nbsp;</td>                    
+        <td  class="tableTdContent"><?php echo h($trs['Cuenta']['descripcion']); ?>&nbsp;</td>
+        <td  class="tableTdContent"><?php echo h($listCuenta[$trs['Gasto']['cuentadestino']]); ?>&nbsp;</td>
+        <td  class="tableTdContent"><?php echo h($trs['Gasto']['valor']); ?>&nbsp;</td>                    
     </tr>
     <?php endforeach; ?>
-</table>
-<br><br>
-
-<table>
-    <tr>
-        <td><b><?php echo __('Detalle Abonos'); ?></b></td>
-    </tr>
+    </table>
+    <br><br>
+      
+    <table>
+    <tr><td><b><?php echo __('Detalle Abonos'); ?></b></td></tr>
     <tr>
         <td class="tableTd"><?php echo ('usuario'); ?></td>
         <td class="tableTd"><?php echo ('Fecha del Abono'); ?></td>
@@ -540,7 +562,7 @@ else if(isset($cierrediario)){
         <td class="tableTdContent"><?php echo h($abn['valor']); ?>&nbsp;</td>
     </tr>
     <?php endforeach; ?>
-</table><br><br>
+    </table><br><br>
 
 <table>
     <tr>
@@ -559,18 +581,18 @@ else if(isset($cierrediario)){
     </tr>
     <?php foreach ($estadoCuentas as $key => $val): ?>
 
-    <?php 
-        $saldoInicial = 0;                    
-        $saldoInicial = $val['estado_actual'];
-        $saldoInicial -= isset($val['ing_ventas']) ? $val['ing_ventas'] : 0;
-        $saldoInicial += isset($val['gastos']) ? $val['gastos'] : 0;
-        $saldoInicial -= isset($val['ing_traslados']) ? $val['ing_traslados'] : 0;
-        $saldoInicial += isset($val['gasto_traslados']) ? $val['gasto_traslados'] : 0;
-        $saldoInicial -= isset($val['abono_prefact']) ? $val['abono_prefact'] : 0;
-        $saldoInicial -= isset($val['abono_fact']) ? $val['abono_fact'] : 0;
+    <?php
+$saldoInicial = 0;
+    $saldoInicial = $val['estado_actual'];
+    $saldoInicial -= isset($val['ing_ventas']) ? $val['ing_ventas'] : 0;
+    $saldoInicial += isset($val['gastos']) ? $val['gastos'] : 0;
+    $saldoInicial -= isset($val['ing_traslados']) ? $val['ing_traslados'] : 0;
+    $saldoInicial += isset($val['gasto_traslados']) ? $val['gasto_traslados'] : 0;
+    $saldoInicial -= isset($val['abono_prefact']) ? $val['abono_prefact'] : 0;
+    $saldoInicial -= isset($val['abono_fact']) ? $val['abono_fact'] : 0;
     ?>
     <tr>
-        <td class="tableTdContent"><?php echo ($listCuenta[$key]);?></td>
+        <td class="tableTdContent"><?php echo ($listCuenta[$key]);?></td>                                        
         <td class="tableTdContent"><?php echo ($saldoInicial); ?></td>
         <td class="tableTdContent"><?php echo (isset($val['ing_ventas']) ? $val['ing_ventas'] : 0); ?></td>
         <td class="tableTdContent"><?php echo (isset($val['gastos']) ? $val['gastos'] : 0); ?></td>
@@ -581,8 +603,43 @@ else if(isset($cierrediario)){
         <td class="tableTdContent"><?php echo (isset($val['estado_actual']) ? $val['estado_actual'] : 0); ?></td>
     </tr>
     <?php endforeach; ?>
-</table>
+    </table>
 
 
-<br><br>
-<?php } ?>
+    <br><br>
+    <?php }?>
+
+
+
+<!-- Zona descarga /ordentrabajos/ordenesPrefacturas (Prefacturas)-->
+<?php if (isset($prefacturas)) {?>
+
+        <?php foreach ($prefacturas as $prefactura): ?>
+            <tr>
+            <td class="tableTdContent" ><?php echo h($prefactura['CL']['nombre']); ?><br></td>
+
+            <td class="tableTdContent" ><?php echo h($prefactura['VH']['placa']); ?></td>
+            <td class="tableTdContent" ><?php echo h($prefactura['Prefactura']['created']); ?></td>
+            <td class="tableTdContent" ><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id']) ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?></td>
+            <td class="tableTdContent" ><?php echo h($prefactura['Prefactura']['observacion']); ?></td>
+            </tr>
+        <?php endforeach;?>
+
+    <?php }?>
+
+<!-- Zona descarga /ordentrabajos/ordenesPrefacturas (Ordenes trabajo)-->
+    <?php if (isset($ordenes)) {?>
+    <?php foreach ($ordenes as $ot): ?>
+
+        <tr>
+            <td class="tableTdContent" ><?php echo h($ot['Ordentrabajo']['codigo']); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h($ot['US']['nombre']); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h(!empty($ot['CL']['nombre']) ? $ot['CL']['nombre'] : ""); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h(!empty($ot['VH']['placa']) ? $ot['VH']['placa'] : ""); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h(!empty($ot['OE']['descripcion']) ? $ot['OE']['descripcion'] : ""); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_usuario']) ? $ot['Ordentrabajo']['observaciones_usuario'] : ""); ?>&nbsp;</td>
+            <td class="tableTdContent" ><?php echo h(!empty($ot['Ordentrabajo']['observaciones_cliente']) ? $ot['Ordentrabajo']['observaciones_cliente'] : ""); ?>&nbsp;</td>
+        </tr>
+
+    <?php endforeach;?>
+    <?php }?>
