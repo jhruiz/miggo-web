@@ -50,10 +50,15 @@ class DepositosController extends AppController {
             //se obtiene el listado de ciudades
             $ciudades = $this->Ciudade->obtenerListaCiudades();
             
+            $nombre = $this->passedArgs['nombre'];
+            $ciudad = $this->passedArgs['ciudad'];
+            $encargado = $this->passedArgs['encargado'];
+
+
             $paginate['Deposito.empresa_id'] = $empresaId;
             $this->Deposito->recursive = 0;
             $this->set('depositos', $this->Paginator->paginate('Deposito',$paginate));
-            $this->set(compact('usuarios', 'ciudades'));
+            $this->set(compact('usuarios', 'ciudades','nombre','ciudad','encargado'));
 	}
 
 /**

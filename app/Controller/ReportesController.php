@@ -1032,8 +1032,6 @@ class ReportesController extends AppController {
                 'Total');
         } 
         
-        
-        
         $texto_tit = "Compras";
         $this->set(compact('arrInfoCompras', 'typeTax'));
         $this->set('texto_tit', $texto_tit);
@@ -1074,8 +1072,8 @@ class ReportesController extends AppController {
         if (isset($_POST['referencia']) && $_POST['referencia'] != "") {
             $filtros['LOWER(Producto.referencia) LIKE'] = '%' . strtolower($_POST['referencia']) . '%';
         }
-        $productos = $this->Producto->obtenerProductosReporte($empresaId, $filtros);
-        
+       
+        $productos = $this->Producto->obtenerProductosReporte($empresaId, $filtros); 
         $texto_tit = "Productos";
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $productos);
@@ -1090,6 +1088,218 @@ class ReportesController extends AppController {
         );
         $this->set(compact('productos'));
         $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de categorias de la vista /categorias/index/
+     */
+    public function descargarReporteCategorias()
+    {
+        $this->loadModel('Categoria');
+     
+        $usuarioAct = $this->Auth->user('id');
+        $empresaId = $this->Auth->user('empresa_id');
+        $nombre = $_POST['nombre'];
+
+        $this->loadModel('Categoria');
+        if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
+            $filtros['LOWER(Categoria.descripcion) LIKE'] = '%' . strtolower($_POST['nombre']) . '%';
+        }
+       
+        $categoriasReporte = $this->Categoria->obtenerCategoriasReporte($empresaId, $filtros);
+        $texto_tit = "Categorias";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $categoriasReporte);
+        $arr_titulos = array(
+            'Nombre',
+            'Ver en cat&aacute;logo',
+            'Es servicio',
+            'Fecha',
+        );
+        $this->set(compact('categoriasReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de proveedores de la vista /proveedores/index
+     */
+    public function descargarReporteProveedores()
+    {
+        $this->loadModel('Proveedore');
+     
+        $usuarioAct = $this->Auth->user('id');
+        $empresaId = $this->Auth->user('empresa_id');
+        $nombre = $_POST['nombre'];
+        $nit = $_POST['nit'];
+        $ciudad = $_POST['ciudad'];
+
+        if(isset($_POST['nombre']) && $_POST['nombre'] != ""){
+            $filtros['LOWER(Proveedore.nombre) LIKE'] = '%' . strtolower($_POST['nombre']) . '%';
+        }
+        
+        if(isset($_POST['nit']) && $_POST['nit'] != ""){
+            $filtros['LOWER(Proveedore.nit) LIKE'] = '%' . strtolower($_POST['nit']) . '%';
+        }
+        
+        if(isset($_POST['ciudad']) && $_POST['ciudad'] != ""){
+            $filtros['Proveedore.ciudade_id'] = $_POST['ciudad'];
+        }  
+
+        $proovedoresReporte = $this->Proveedore->obtenerProovedoresReporte($empresaId, $filtros);
+        $texto_tit = "Proovedores";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $proovedoresReporte );
+        $arr_titulos = array(
+            'Nit',
+            'Nombre',
+            'C&oacute;digo',
+            'Direcci&oacute;n',
+            'Tel&eacute;fono',
+            'Ciudad',
+            'Celular',
+            'Estado',
+        );
+        $this->set(compact('proovedoresReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte depositos de la vista /depositos/index
+     */
+    public function descargarReporteDepositos()
+    {
+        $this->loadModel('Deposito');
+        $usuarioAct = $this->Auth->user('id');
+        $empresaId = $this->Auth->user('empresa_id');
+        if(isset($_POST['nombre']) && $_POST['nombre'] != ""){
+            $filtros['LOWER(Deposito.descripcion) LIKE'] = '%' . strtolower($_POST['nombre']) . '%';
+        }
+        
+        if(isset($_POST['encargado']) && $_POST['encargado'] != ""){
+            $filtros['Deposito.usuario_id'] = $_POST['encargado'];
+        }
+
+        if(isset($_POST['ciudad']) && $_POST['ciudad'] != ""){
+            $filtros['Deposito.ciudade_id'] = $_POST['ciudad'];
+        }            
+
+        
+        $depositosReporte = $this->Deposito->obtenerDepositosReporte($empresaId, $filtros);
+        $texto_tit = "Depositos";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $depositosReporte );
+        $arr_titulos = array(
+            'Nombre',
+            'Ciudad',
+            'Tel&eacute;fono',
+            'Direcci&oacute;n',
+            'Encargado',
+            'C&oacute;digo',
+        );
+        $this->set(compact('depositosReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de clientes de la vista /clientes/index
+     */
+    public function descargarReporteClientes()
+    {
+        $this->loadModel('Cliente');
+        $usuarioAct = $this->Auth->user('id');
+        $empresaId = $this->Auth->user('empresa_id');
+       
+        if (isset($_POST['nit']) && $_POST['nit'] != "") {
+            $filtros['LOWER(Cliente.nit) LIKE'] = '%' . strtolower($_POST['nit']) . '%';
+        }
+
+        if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
+            $filtros['LOWER(Cliente.nombre) LIKE'] = '%' . strtolower($_POST['nombre']) . '%';
+        }
+       
+        $clientesReporte = $this->Cliente->obtenerClientesReporte($empresaId, $filtros);
+        $texto_tit = "Clientes";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $clientesReporte );
+        $arr_titulos = array(
+            'Nit',
+            'Nombre',
+            'Direcci&oacute;n',
+            'Tel&eacute;fono',
+            'Ciudad',
+            'Celular',
+            'D&iacute;as de cr&eacute;dito',
+            'L&iacute;mite de cr&eacute;dito',
+            'Estado',
+            'Clasificaci&oacute;n',
+                );
+        $this->set(compact('clientesReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de prefacturas de la vista /prefacturas//index
+     */
+    public function descargarReportePrefacuras()
+    {   
+        $this->loadModel('Estadosprefactura');
+        $this->loadModel('Prefacturasdetalle');
+        $this->loadModel('Prefactura');
+        $this->loadModel('Vehiculo');
+        
+        $cliente = $_POST['cliente'];
+        $placa = $_POST['vehiculo'];
+        
+        $usuarioAct = $this->Auth->user('id');
+       
+        
+        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente);
+   
+        $texto_tit = "Prefacturas";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $prefacturasReporte );
+        $arr_titulos = array(
+            'Cliente',
+            'Veh&iacute;culo',
+            'Fecha',
+            'Estado',
+            'Observaci&oacute;n',
+            'Precio venta',
+            'Producto c&oacute;digo',
+            'Producto descripci&oacute;n',
+                );
+        $this->set(compact('prefacturasReporte'));
+        $this->set('titulos', $arr_titulos, );
+        $this->render('export_xls', 'export_xls');
+    }
+    /**
+     * Se genera el reporte de usuarios de la vista /usuarios/index
+     */
+    public function descargarReporteUsuarios()
+    {   
+        $empresaId = $this->Auth->user('empresa_id');
+        $this->loadModel('Usuario');
+        if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
+            $filtros['LOWER(Usuario.nombre) LIKE'] = '%' . strtolower($_POST['nombre']) . "%";
+        }
+
+        if (isset($_POST['identificacion']) && ($_POST['identificacion'] != "")) {
+            $filtros['Usuario.identificacion LIKE'] = '%' . $_POST['identificacion'] . "%";
+        }        
+       
+        $usuariosReporte = $this->Usuario->obtenerUsuariosReporte($empresaId, $filtros); 
+        $texto_tit = "Usuarios";
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows',$usuariosReporte );
+        $arr_titulos = array(
+            'Nombre',
+            'Identificaci&oacute;n',
+            'Username',
+            'Perfil',
+            'Estado',
+                );
+        $this->set(compact('usuariosReporte'));
+        $this->set('titulos', $arr_titulos, );
         $this->render('export_xls', 'export_xls');
     }
 
