@@ -21,12 +21,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group ">
-<<<<<<< HEAD
-                            <?php echo $this->Form->input('vehiculo', array('label' => 'Vehículo', 'name' => 'vehiculo', 'placeholder' => 'Placa del Vehículo', 'type' => 'text','class' => 'form-control' , 'value' => $vehiculo)); ?>
-=======
-                            <label>Vehículo</label><br>
-                            <input name="vehiculo" class="form-control" placeholder="Placa/Número Motor del Vehículo" type="text">
->>>>>>> master
+                            <?php echo $this->Form->input('vehiculo', array('label' => 'Vehículo', 'name' => 'vehiculo', 'placeholder' => 'Placa/Número Motor del Vehículo', 'type' => 'text','class' => 'form-control' , 'value' => $vehiculo)); ?>
                         </div>
                     </div>
 

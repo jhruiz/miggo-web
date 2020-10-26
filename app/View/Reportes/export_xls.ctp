@@ -139,22 +139,6 @@ if (isset($ciudades)) {
 }else if(isset($arrFacts)){
     foreach ($arrFacts as $fact):
         ?>
-<<<<<<< HEAD
-    <tr>
-        <td class="tableTdContent"><?php echo h($fact['Factura']['codigo']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['Factura']['consecutivodian']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['Factura']['factura'] ? "F" : "R"); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['CL']['nombre']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['CL']['nit']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['Factura']['created']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['DP']['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['PR']['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['PR']['codigo']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['FD']['cantidad']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['FD']['costoventa']); ?></td>
-        <td class="tableTdContent"><?php echo h($fact['FD']['costototal']); ?></td>
-    </tr>
-=======
         <tr>
             <td class="tableTdContent" ><?php echo h($fact['consecutivo']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['fecha']); ?></td>
@@ -169,34 +153,11 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['subtotal']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
         </tr>
->>>>>>> master
     <?php
     endforeach;
 }else if(isset($utilidades)){
     foreach ($utilidades as $utilidade):
         ?>
-<<<<<<< HEAD
-    <tr>
-        <td class="tableTdContent"><?php echo h($utilidade['P']['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h($utilidade['DP']['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h($utilidade['PV']['nombre']); ?></td>
-        <td class="tableTdContent"><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>
-        <td class="tableTdContent">
-            <?php echo h(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad'])); ?>
-        </td>
-        <td class="tableTdContent"><?php echo h($utilidade['Utilidade']['cantidad']); ?></td>
-        <td class="tableTdContent"><?php echo h(intval($utilidade['Utilidade']['precioventa'])); ?></td>
-        <td class="tableTdContent">
-            <?php echo h(intval($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad'])); ?></td>
-        <td class="tableTdContent"><?php echo h(intval($utilidade['Utilidade']['utilidadbruta'])); ?></td>
-        <td class="tableTdContent"><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],4)); ?></td>
-        <td class="tableTdContent"><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?></td>
-        <td class="tableTdContent"><?php echo h($utilidade['Utilidade']['created']); ?></td>
-        <td class="tableTdContent">
-            <?php echo h(!empty($utilidade['F']['factura']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo']); ?>
-        </td>
-    </tr>
-=======
         <tr>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['P']['referencia']); ?></td>
@@ -213,7 +174,6 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['created']); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['factura']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo']); ?></td>
         </tr>
->>>>>>> master
     <?php
     endforeach;
 }else if($arrRotation){
