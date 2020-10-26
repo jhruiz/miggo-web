@@ -21,41 +21,50 @@ class ProductosController extends AppController {
  *
  * @return void
  */
-	public function index() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            	
-            $this->loadModel('Categoria');
+public function index()
+{
+    /*se reagistra la actividad del uso de la aplicacion*/
+    $usuariosController = new UsuariosController();
+    $usuarioAct = $this->Auth->user('id');
+    $usuariosController->registraractividad($usuarioAct);
 
-            if(isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != ""){
-                $paginate['LOWER(Producto.codigo) LIKE'] = '%' . strtolower($this->passedArgs['codigo']) . '%';
-            }
-            
-            if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
-                $paginate['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre'] . '%');
-            }
+    $codigo = $this->passedArgs['codigo'];
+    $referencia = $this->passedArgs['referencia'];
+    $nombre = $this->passedArgs['nombre'];
+    $categoria = $this->passedArgs['categorias'];
 
-            if(isset($this->passedArgs['categorias']) && $this->passedArgs['categorias'] != ""){
-                $paginate['Producto.categoria_id'] = $this->passedArgs['categorias'];
-            }
-            
-            if(isset($this->passedArgs['referencia']) && $this->passedArgs['referencia'] != ""){
-                $paginate['LOWER(Producto.referencia) LIKE'] = '%' . strtolower($this->passedArgs['referencia']) . '%';
-            }
-            
-            $empresaId = $this->Auth->user('empresa_id');
-            $paginate['Producto.empresa_id'] = $empresaId;            
-            $this->Producto->recursive = 0;
-            
-            //Se obtiene el listado de categorias de producos de la empresa
-            $categorias = $this->Categoria->obtenerCategoriasEmpresa($empresaId);
-            
-            $this->set('productos', $this->Paginator->paginate('Producto',$paginate));
-           
-            $this->set(compact('categorias'));
-	}
+    $this->loadModel('Categoria');
+
+    if (isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != "") {
+        $paginate['LOWER(Producto.codigo) LIKE'] = '%' . strtolower($this->passedArgs['codigo']) . '%';
+    }
+
+    if (isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != "") {
+        $paginate['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre'] . '%');
+    }
+
+    if (isset($this->passedArgs['categorias']) && $this->passedArgs['categorias'] != "") {
+        $paginate['Producto.categoria_id'] = $this->passedArgs['categorias'];
+    }
+
+    if (isset($this->passedArgs['referencia']) && $this->passedArgs['referencia'] != "") {
+        $paginate['LOWER(Producto.referencia) LIKE'] = '%' . strtolower($this->passedArgs['referencia']) . '%';
+    }
+
+    $empresaId = $this->Auth->user('empresa_id');
+    $paginate['Producto.empresa_id'] = $empresaId;
+    $this->Producto->recursive = 0;
+
+    
+    //Se obtiene el listado de categorias de producos de la empresa
+    $categorias = $this->Categoria->obtenerCategoriasEmpresa($empresaId);
+    // $productos =
+    $this->Paginator->paginate('Producto', $paginate);
+    // var_dump($productos);
+    $this->set('productos', $this->Paginator->paginate('Producto', $paginate));
+
+    $this->set(compact('categorias', 'codigo', 'referencia', 'nombre', 'categoria'));
+}
 
 /**
  * view method

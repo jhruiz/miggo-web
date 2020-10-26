@@ -22,8 +22,8 @@ echo $this->Form->input("tipovehiculo_id",
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Placa Vehículo</label><br>
-                            <?php echo $this->Form->input('placa', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Placa del Vehículo')); ?>
+                        <label>Placa/Número Motor Vehículo</label><br>
+                            <?php echo $this->Form->input('placa', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Placa/Número Motor del Vehículo')); ?>
                     </div>
                 </div>
 

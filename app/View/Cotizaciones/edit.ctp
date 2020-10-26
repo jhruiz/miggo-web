@@ -64,12 +64,14 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group ">  
-                                    <label>Producto</label><br>
+                            <div class="form-group ">  
+                                    <label>Producto</label><br>  
                                     <div class="input-group"> 
-                                        <?php echo $this->Form->input('producto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto')); ?>
-                                        <div id="datosProducto" style="position:absolute; z-index:1;"></div>
+                                        <?php echo $this->Form->input('producto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto')); ?>                                        
                                         <a href="#" class="btn btn-default btn-sm input-group-addon" id="add_product"><span class="far fa-plus"></span></a>
+                                    </div>
+                                    <div>
+                                        <div id="datosProducto" style="position:absolute; z-index:1;"></div>
                                     </div>
                                 </div>  
                             </div>
@@ -275,17 +277,17 @@
                     <legend>&nbsp;</legend>            
                     <div class="container-fluid">                        
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $arrCotiza['0']['Cotizacione']['usuario_id']));?>
                             </div>     
-                            <div class="col-md-2">
-                            <label>Placa</label><br>
+                            <div class="col-md-6">
+                            <label>Placa/Número Motor</label><br>
                             <div class="input-group">                                                            
                                 <?php echo $this->Form->input('placa', 
                                     array(
                                         'label' => '',
                                         'class' => 'form-control', 
-                                        'placeholder' => 'Placa Vehículo',
+                                        'placeholder' => 'Placa/Número Motor del Vehículo',
                                         'value' => !empty($arrVehiculo['Vehiculo']['placa']) ? $arrVehiculo['Vehiculo']['placa'] : ""
                                         )
                                     ); 
@@ -311,7 +313,7 @@
                 <div class="col-md-6">
                     <?php if(!empty($cliTel)){?>        
                     <div class="row">
-                        <a href="https://wa.me/57<?php echo $cliTel; ?>?text=Somos%20el%20%23equipotorque%2c%20adjuntamos%20información%20de%20su%20interés" target="_blank">
+                        <a href="https://wa.me/57<?php echo $cliTel; ?>?text=adjuntamos%20información%20de%20su%20interés" target="_blank">
                             <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
                         </a>
                     </div>

@@ -49,16 +49,15 @@
             <table cellpadding="0" cellspacing="0"
                 class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
-                    <th>&nbsp;</th>
-                    <th><?php echo h('Tipo Evento'); ?></th>
-                    <th><?php echo h('Responsable'); ?></th>
-                    <th><?php echo h('Fecha Evento'); ?></th>
-                    <th><?php echo h('Cliente'); ?></th>
-                    <th><?php echo h('Estado'); ?></th>
-                    <th><?php echo h('Teléfono'); ?></th>
-                    <th><?php echo h('Placa'); ?></th>
-                    <th><?php echo h('Descripción'); ?></th>
-                    <th class="actions"><?php echo __('Acciones'); ?></th>
+                                <th><?php echo h('Tipo Evento'); ?></th>
+                                <th><?php echo h('Responsable'); ?></th>
+                                <th><?php echo h('Fecha Evento'); ?></th>
+                                <th><?php echo h('Cliente'); ?></th>
+                                <th><?php echo h('Estado'); ?></th>
+                                <th><?php echo h('Teléfono'); ?></th>
+                                <th><?php echo h('Placa/Numero Motor'); ?></th>
+                                <th><?php echo h('Descripción'); ?></th>
+                                <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($eventosIndex as $evento): ?>
                 <?php

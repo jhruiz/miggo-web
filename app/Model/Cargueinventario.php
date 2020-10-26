@@ -207,22 +207,12 @@ class Cargueinventario extends AppModel {
         
         public function obtenerCargueInventario($dataFilter){
             
-            $arr_join = array(); 
-            
-            array_push($arr_join, array(
-                'table' => 'prefacturasdetalles', 
-                'alias' => 'PD', 
-                'type' => 'LEFT',
-                'conditions' => array(
-                    'PD.cargueinventario_id=Cargueinventario.id',
-                    )
-                
-            ));    
+            $arr_join = array();  
             
             array_push($arr_join, array(
                 'table' => 'productos',
                 'alias' => 'P',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'P.id=Cargueinventario.producto_id'
                 )
@@ -231,7 +221,7 @@ class Cargueinventario extends AppModel {
             array_push($arr_join, array(
                 'table' => 'depositos',
                 'alias' => 'D',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'D.id=Cargueinventario.deposito_id'
                 )
@@ -240,7 +230,7 @@ class Cargueinventario extends AppModel {
             array_push($arr_join, array(
                 'table' => 'proveedores',
                 'alias' => 'PR',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'PR.id=Cargueinventario.proveedore_id'
                 )
@@ -252,7 +242,6 @@ class Cargueinventario extends AppModel {
                 'conditions' => array($dataFilter),
                 'fields' => array(
                     'Cargueinventario.*',
-                    'PD.*',
                     'P.*',
                     'D.id',
                     'D.descripcion',

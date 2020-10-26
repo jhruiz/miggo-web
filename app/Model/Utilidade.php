@@ -142,6 +142,7 @@ class Utilidade extends AppModel {
                 'fields' => array(
                     'P.id',
                     'P.descripcion',
+                    'P.referencia',
                     'F.id',
                     'F.factura',
                     'F.codigo',
