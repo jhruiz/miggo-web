@@ -12,12 +12,12 @@
                         <input name="nitCliente" class="form-control" value="<?php echo h($nitCliente) ?>"autocomplete="off" placeholder="Nit cliente" type="text" id="nitCliente">
                     </div>
                     <div class="col-md-2">
-                        <label>Placa</label><br>
-                        <input name="placa" class="form-control" value="<?php echo h($placa) ?>" autocomplete="off" placeholder="Placa" type="text" id="placa">
+                        <label>Vehiculo</label><br>
+                        <input name="placa" class="form-control" autocomplete="off" placeholder="Placa/Número Motor Vehículo" type="text" id="placa">
                     </div>
 
                     <div class="col-md-3">
-                        <label>Lista Mecánicos</label>
+                        <label>Lista Mecanicos</label>
                         <?php
                         echo $this->Form->input("usuario_id",
                             array(

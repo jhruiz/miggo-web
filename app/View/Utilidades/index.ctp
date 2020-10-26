@@ -33,6 +33,7 @@
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
                     <th><?php echo h('Producto'); ?></th>
+                    <th><?php echo h('Referencia'); ?></th>
                     <th><?php echo h('Deposito'); ?></th>
                     <th><?php echo h('Proveedor'); ?></th>
                     <th><?php echo h('Costo del Producto'); ?></th>
@@ -49,6 +50,7 @@
                 <?php foreach ($utilidades as $utilidade): ?>
                 <tr>
                     <td><?php echo h($utilidade['P']['descripcion']); ?>&nbsp;</td>
+                    <td><?php echo h($utilidade['P']['referencia']); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['DP']['descripcion']); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['PV']['nombre']) ? $utilidade['PV']['nombre'] : "Sin Proveedor"); ?>&nbsp;</td>
                     <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['costo_producto']),2)); ?>&nbsp;</td>
