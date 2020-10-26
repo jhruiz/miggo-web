@@ -50,33 +50,80 @@ class AlertaordenesController extends AppController
     {
         $this->loadModel('Alertaordene');
         $this->loadModel('Estadoalerta');
+        $this->loadModel('Alerta');
+        $this->loadModel('Usuario');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
 
         //fecha actual
         $fechaAct = date('Y-m-d');
+        $tipoAlerta = '';
+        $cliente= '';
+        $placa='';
+        $tecnico= '';
+        $tecnicoSelect= '';
+        $idEstado= '';
 
-        //se obtienen las alertas y las ordenes de trabajo
-        $filtros = array(
+        $filtros = array(); 
+
+        if (isset($this->passedArgs['tipoAlerta']) && $this->passedArgs['tipoAlerta'] != "") {
+            $tipoAlerta=  $this->passedArgs['tipoAlerta'];
+            array_push($filtros, array(
+                'AL.id' => $tipoAlerta,
+                ));
+        }
+        if (isset($this->passedArgs['cliente']) && $this->passedArgs['cliente'] != "") {
+            $cliente=  $this->passedArgs['cliente'];
+            array_push($filtros, array(
+                'LOWER(CL.nombre) LIKE' => '%' .strtolower($cliente) .  '%',            
+            ));
+        }
+        if (isset($this->passedArgs['placa']) && $this->passedArgs['placa'] != "") {
+            $placa=  $this->passedArgs['placa'];
+            array_push($filtros, array(
+                'LOWER(VH.placa) LIKE' => '%' .strtolower($placa) .  '%',         
+            ));
+        }
+        if (isset($this->passedArgs['tecnico']) && $this->passedArgs['tecnico'] != "") {
+            $tecnico=  $this->passedArgs['tecnico'];
+            // array_push($filtros, array(
+            // 'LOWER(US.nombre) LIKE' => '%' .strtolower($tecnico) .  '%',            
+            // ));
+        }
+        if (isset($this->passedArgs['tecnicoSelect']) && $this->passedArgs['tecnicoSelect'] != "") {
+            $tecnicoSelect=  $this->passedArgs['tecnicoSelect'];
+            // array_push($filtros, array(
+            // 'US.id' => $tecnicoSelect,            
+            // ));
+        }
+        if (isset($this->passedArgs['estadoalerta']) && $this->passedArgs['estadoalerta'] != "") {
+            $idEstado=  $this->passedArgs['estadoalerta'];
+            array_push($filtros, array(
+                'EA.id' => $idEstado,            
+            ));
+        }
+
+        array_push($filtros, array(
             'EA.final' => '0',
             'EA.empresa_id' => $empresa_id,
-            'Alertaordene.fecha_alerta <= ' => $fechaAct,
-        );
+            'Alertaordene.fecha_alerta <= ' => $fechaAct,              
+        ));
 
-        if (!empty($this->passedArgs['estadoalerta'])) {
-            $filtros['EA.id'] = $this->passedArgs['estadoalerta'];
-        }
+    
+        // echo('<pre>');
+        // var_dump($tecnicoSelect);
+        // echo('</pre>');
 
         //se obtiene el listado de estado alertas
         $estadoAlertas = $this->Estadoalerta->obtenerListaEstadoAlertas($empresa_id);
         $estadoAlertasTabs = $this->Estadoalerta->find('all');
-        //print($estadoAlertasTabs);
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtros);
-
+        $alertas = $this->Alerta->obtenerListaAlertas($empresa_id);
+        $tecnicosSelect = $this->Usuario->obtenerUsuarioEmpresa($empresa_id);
         $alertaDocumentos = $this->Alertaordene->obtnerAlertasRenovacionDocs($filtros);
-
-        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas'));
+       
+        $this->set(compact('empresa_id', 'fechaAct', 'alertasOrdenes', 'estadoAlertasTabs', 'alertaDocumentos', 'estadoAlertas','tipoAlerta','cliente','placa','tecnico','alertas','tecnicosSelect','tecnicoSelect'));
     }
 
     public function search()

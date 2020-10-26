@@ -5,31 +5,64 @@
             <legend><h2><b><?php echo __('Buscar Alertas'); ?></b></h2></legend>
 
 <!-- Inicio zona Tabs Estados alerta-->
-<div class="x_panel">
-    <div class="x_title">
-        <h2><?php echo __('Estado de alertas'); ?></h2>
+
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group ">
+            <?php echo $this->Form->input('Tipo Alerta', array( 'name' => 'tipoAlerta', 'empty' => 'Seleccione uno', 'options' => $alertas, 'class' => 'form-control' ,  'value' => $tipoAlerta)); ?>
+        </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group ">
+            <!-- <label for="cars">Tipo Alerta</label> -->
+            <?php echo $this->Form->input('Técnico', array( 'name' => 'tecnicoSelect', 'empty' => 'Seleccione uno', 'options' => $tecnicosSelect, 'class' => 'form-control' ,  'value' => $tecnicoSelect)); ?>
+        </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group ">
+                <?php echo $this->Form->input('Cliente', array('label' => 'Cliente', 'name' => 'cliente', 'placeholder' => 'Nombre del Cliente',  'class' => 'form-control',  'value' => $cliente)); ?>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group ">
+                <?php echo $this->Form->input('Placa', array('label' => 'Placa', 'name' => 'placa', 'placeholder' => 'Placa del Vehículo',  'class' => 'form-control',  'value' => $placa)); ?>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group ">
+                <?php echo $this->Form->input('Tecnico', array('label' => 'Técnico', 'name' => 'tecnico', 'placeholder' => 'Nombre del Técnico',  'class' => 'form-control',  'value' => $tecnico)); ?>
+            </div>
+        </div>
+       
     </div>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group ">
+                <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary')); ?>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Enlace tabs-->
     <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
 
-        <!--
-        <//?php foreach ($estadoAlertas as $estadoAlertas): ?>
-            <li role="presentation" class="active"><a href="/alertaordenes/index/estadoalerta:<//?php echo h($estadoAlertas->$id); ?>" aria-controls="registrado" data-toggle="tab" role="tab"><//?php echo h($estadoAlertas); ?></a></li>
-
-        <//?php endforeach;?>
-        -->
-        <?php foreach ($estadoAlertasTabs as $estadoAlertasTabs): ?>
-            <li role="presentation" class="active"> <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'alertaordenes', 'action' => '/index/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?></li>
-
+        <li role="presentation" class="active">
+                <?=$this->Html->link(("TODOS"), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico . '/tecnicoSelect:'.$tecnicoSelect])?></li>
+            <?php foreach ($estadoAlertasTabs as $estadoAlertasTabs): ?>
+            <li role="presentation" class="active">
+                <?=$this->Html->link(($estadoAlertasTabs["Estadoalerta"]["descripcion"]), ['controller' => 'alertaordenes', 'action' => '/index/'. 'tipoAlerta:'.$tipoAlerta. '/cliente:'.$cliente. '/placa:'.$placa . '/tecnico:'.$tecnico . '/tecnicoSelect:'.$tecnicoSelect.'/estadoalerta:' . ($estadoAlertasTabs["Estadoalerta"]["id"])])?>
+            </li>
             <?php endforeach;?>
 
-
+     
        </ul>
     </div>
 
-
+    <div class="x_panel">
 	<legend><h2><b><?php echo __('Listado de Alertas'); ?></b></h2></legend>
 
         <div class="table-responsive">
