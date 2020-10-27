@@ -240,5 +240,32 @@ class Producto extends AppModel {
             $result = $this->find('first', array('conditions' => array('Producto.referencia' => $referencia), 'recursive' => '-1'));
             return $result;
         }
-        
+        public function obtenerProductosReporte($empresaId, $filtros)
+        {
+            $arr_join = array();
+            array_push($arr_join, array(
+                'table' => 'categorias',
+                'alias' => 'C',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'C.id=Producto.categoria_id'),
+    
+            ));
+    
+            $arrProductos = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'Producto.*', 
+                    'C.descripcion', 
+                ),
+                'conditions' => array(
+                    $filtros,
+                    'Producto.empresa_id' => $empresaId,
+                ),
+                'recursive' => -1,
+            ));
+    
+            return $arrProductos;
+    
+        }
 }

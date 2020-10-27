@@ -102,7 +102,8 @@ class FacturaCuentaValoresController extends AppController
             $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
         }
         
-        if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])) {
+        if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])
+            && empty($this->passedArgs['fechaInicio']) && empty($this->passedArgs['fechaFin'])) {
             $filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
         }
 
@@ -122,7 +123,7 @@ class FacturaCuentaValoresController extends AppController
         for ($i = 0; $i < count($pagosFacturas); $i++) {
             $totalValor += $pagosFacturas[$i]['FacturaCuentaValore']['valor'];
         }
-        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor'));}
+        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor', 'numeroFactura', 'codigoDian', 'fechaInicio', 'fechaFin', 'numeroFactura', 'tipocuentas', 'tipopagos'));}
 
     public function search()
     {
@@ -131,6 +132,7 @@ class FacturaCuentaValoresController extends AppController
 
         foreach ($this->data as $kk => $vv) {
             $url[$kk] = $vv;
+
         }
 
         // redirect the user to the url

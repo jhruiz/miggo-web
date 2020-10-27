@@ -106,6 +106,7 @@ class Alertaordene extends AppModel {
                 'fields' => array(
                     'O.id',
                     'O.kilometraje',
+                    'O.usuario_id',
                     'O.fecha_ingreso',
                     'O.fecha_salida',
                     'O.soat',
@@ -138,7 +139,7 @@ class Alertaordene extends AppModel {
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',
-                'order' => 'Alertaordene.fecha_alerta ASC' 
+                'order' => 'Alertaordene.id DESC' 
                 ));            
             
             return $alertasOrdenes;            
@@ -382,7 +383,7 @@ class Alertaordene extends AppModel {
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',
-                'order' => 'Alertaordene.id DESC' 
+                'order' => 'Alertaordene.fecha_alerta DESC' 
                 ));            
             
             return $alertasOrdenes;             

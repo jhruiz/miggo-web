@@ -1470,6 +1470,12 @@ class FacturasController extends AppController
 
         $filtros = [];
 
+        $nitCliente = $this->passedArgs['nitCliente'];
+        $placa = $this->passedArgs['placa'];
+        $fechaInicio = $this->passedArgs['fecha_inicio'];
+        $fechaFin = $this->passedArgs['fecha_fin'];
+        $mecanico = $this->passedArgs['usuario'];
+
         if (!empty($this->passedArgs['usuario'])) {
             $filtros['O.usuario_id'] = $this->passedArgs['usuario'];
         }
@@ -1498,18 +1504,16 @@ class FacturasController extends AppController
             $filtros['V.placa'] = $this->passedArgs['placa'];
         }
 
-        //print_r($filtros);
         $empresaId = $this->Auth->user('empresa_id');
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
-        // Se obtiene el valor total sumando el valor de cada factura atributo pagocontado
         $totalValor = 0;
         $totalFactura = 0;
         for ($i = 0; $i < count($factClientes); $i++) {
             $totalValor += $factClientes[$i]['0']['valor'];
             $totalFactura += $factClientes[$i]['0']['conteo'];
         }
-        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura'));
+        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura', 'nitCliente', 'placa', 'fechaInicio', 'fechaFin', 'mecanico'));
 
     }
 

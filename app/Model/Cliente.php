@@ -265,4 +265,51 @@ class Cliente extends AppModel {
             return $clientes;             
         }
 
+        public function obtenerClientesReporte($empresaId, $filtros)
+        {
+            $arr_join = array();
+            array_push($arr_join, array(
+                'table' => 'ciudades',
+                'alias' => 'CU',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CU.id=Cliente.ciudade_id'),
+    
+            ));
+            array_push($arr_join, array(
+                'table' => 'estados',
+                'alias' => 'E',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'E.id=Cliente.estado_id'),
+    
+            ));
+            array_push($arr_join, array(
+                'table' => 'clasificacionclientes',
+                'alias' => 'C',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'C.id=Cliente.clasificacioncliente_id'),
+    
+            ));
+
+            $arrProductos = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'Cliente.*', 
+                    'CU.descripcion',
+                    'E.descripcion',
+                    'C.descripcion',
+                ),
+                'conditions' => array(
+                    $filtros,
+                    'Cliente.empresa_id' => $empresaId,
+                ),
+                'recursive' => -1,
+            ));
+    
+            return $arrProductos;
+    
+        }
+
 }

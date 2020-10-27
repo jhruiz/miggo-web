@@ -77,10 +77,10 @@ class PrefacturasController extends AppController {
                     }
                 }
             }
-            // echo ("<pre>");
-            // var_dump($prefacturas);
-            // echo ("</pre>");
-            $this->set(compact('prefacturas', 'prefactValor', 'estados'));
+            
+            $nombre = $this->passedArgs['cliente'];
+            $vehiculo = $this->passedArgs['vehiculo'];
+            $this->set(compact('prefacturas', 'prefactValor', 'estados','cliente','vehiculo'));
 	} 
 
 /**

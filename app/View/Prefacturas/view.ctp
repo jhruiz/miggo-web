@@ -325,7 +325,7 @@
                                     <tr>
                                                     <th><?php echo ('Orden'); ?></th>
                                                     <th><?php echo ('Mecánico'); ?></th>
-                                                    <th><?php echo ('Placa'); ?></th>
+                                                    <th><?php echo ('Número Motor'); ?></th>
                                                     <th><?php echo ('Planta'); ?></th>
                                                     <th><?php echo ('Estado'); ?></th>                                       
                                                     <th>&nbsp;</th>                                       
