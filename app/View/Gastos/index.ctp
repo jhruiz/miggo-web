@@ -11,21 +11,21 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicio">Fecha Inicial</label><br>
-                        <input name="data[Gasto][fechaInicio]" id="fechaInicio" autocomplete="off" class="date form-control" placeholder="Fecha Inicio" type="text">
+                        <input name="data[Gasto][fechaInicio]" id="fechaInicio"  value="<?php echo $fechaInicio ?>" autocomplete="off" class="date form-control" placeholder="Fecha Inicio" type="text">
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaFin">Fecha Final</label><br>
-                        <input name="data[Gasto][fechaFin]" id="fechaFin" autocomplete="off" class="date form-control" placeholder="Fecha Fin" type="text">
+                        <input name="data[Gasto][fechaFin]" id="fechaFin" value= "<?php echo $fechaFin ?>" autocomplete="off" class="date form-control" placeholder="Fecha Fin" type="text">
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="GastosItems">Items Gastos</label>
-                        <?php echo $this->Form->input('items', array('label' => '', 'name' => 'data[Gasto][itemsgasto_id]', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $itemsGasto, 'class' => 'form-control')); ?>
+                        <?php echo $this->Form->input('items', array('label' => '', 'name' => 'data[Gasto][itemsgasto_id]', 'empty' => 'Seleccione uno', 'type' => 'select','value' => $itemId, 'options' => $itemsGasto, 'class' => 'form-control')); ?>
                     </div>
                 </div>
             </div>

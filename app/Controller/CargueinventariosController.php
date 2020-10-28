@@ -302,7 +302,7 @@ class CargueinventariosController extends AppController {
             /*Se obtiene la url para la foto del producto*/
             $strDato = "urlImgProducto";
             $urlImgProducto = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
-            
+             
             /*Se obtienen los impuestos grabados al producto*/
             $arrImpuestos = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($arrProducto['Cargueinventario']['id']);
             
@@ -315,8 +315,9 @@ class CargueinventariosController extends AppController {
                 $vlrAntesImp = intval($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto);
                 $vlrImpuesto = intval($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp);
             }
-            
-            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto'));
+            $totalConIva = $vlrAntesImp + $vlrImpuesto;
+   
+            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto','totalConIva'));
         }
         
         public function seleccionproductoventaclientenuevo(){

@@ -318,10 +318,14 @@ class PrefacturasController extends AppController {
                             
                             foreach ($detalleFactura as $proInf){
                                 $impuesto = $proInf['PFD']['impuesto'];
+                                $porcenDescuento = $proInf['PFD']['porcentaje'];
+                                $valDescuento = $proInf['PFD']['descuento'];
                             }            
                             
                             echo json_encode(array(
-                                'valor descuento' =>   $valorDescuento,
+
+                                'valorPorDescuento' =>   $porcenDescuento,
+                                'valorDescuento' =>   $valDescuento,
                                 'resp' => $detalleId, 'valido' => true,
                                 'producto' => $produtoInfo,
                                 'valorProductoSinIva' => $vlrAntesImp,

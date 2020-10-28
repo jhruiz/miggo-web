@@ -263,7 +263,7 @@
                                                 <th><?php echo ('$ Dtto'); ?></th>
                                                 <th><?php echo ('Valor IVA'); ?></th>
                                                 <th><?php echo ('Ttal con IVA'); ?></th>
-                                                <th>&nbsp;</th>
+                                                <th><?php echo ('Acción'); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody id="productosFacturas"></tbody>

@@ -242,35 +242,35 @@ function fnObtenerDatosProducto(e){
                     var prefactura = JSON.parse(data);
                     if(prefactura.valido){
                         $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
-                                '<td>' + prefactura.producto['0']['Producto']['descripcion'] + '</td>' + 
-                                '<td>' + prefactura.producto['0']['Producto']['codigo'] + '</td>' + 
-                                
-                                '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + 
-                                '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
-                                
-                                '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + 
-                                '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
-                                
-                                '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp +
-                                 '" value="' + prefactura.ValorImp + '" readonly>&nbsp;</td>' +
+                
+                
+                        '<td>' + prefactura.producto['0']['Producto']['descripcion'] + '</td>' + 
+                        '<td>' + prefactura.producto['0']['Producto']['codigo'] + '</td>' + 
+               
+                    // '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa +'" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+                        '<td><input readonly type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+                
+                    // '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa +'" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +      
+                        '<td><input readonly type="text" name="precio_' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                
+                
+                    // '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="total_' + prefactura.ValorImp  + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.ValorImp  +'" value="' + prefactura.ValorImp + '" readonly>&nbsp;</td>' +
 
-                                '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control" id="total_' + prefactura.resp +
-                                 '" value="' + '0' + '" readonly>&nbsp;</td>' +
-                                
-                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control" id="total_' + prefactura.resp +
-                                 '" value="' + '0' + '" readonly>&nbsp;</td>' +
-
-                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp +
-                                 '" value="' + prefactura.ValorIva + '" readonly>&nbsp;</td>' +
-
-                                 '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="total_' + prefactura.resp +
-                                 '" value="' + prefactura.ValorTotalIva + '" readonly>&nbsp;</td>' +
-
-
-                                '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp 
-                                + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
+                    // '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +          
+                        '<td><input readonly type="text" name="pordtto_' + prefactura.valorPorDescuento  + '" class="form-control ttalPorDtto" id="pordtto_'  + prefactura.valorPorDescuento + '" value="' + prefactura.valorPorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
                         
-                        
+                    // '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +    
+                        '<td><input readonly type="text" name="valdtto_' + prefactura.valorDescuento + '" class="form-control ttales numericPrice ttalTotal" id="valdtto_' + prefactura.valorDescuento + '" value="' + prefactura.valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
+                
+                    // '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_iva_' + prefactura.ValorIva + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.ValorIva + '" value="' + prefactura.ValorIva + '" readonly>&nbsp;</td>' +
+                
+                        '<td><input type="text" name="valor_con_iva_' + prefactura.ValorTotalIva + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.ValorTotalIva + '" value="' + prefactura.ValorTotalIva + '" readonly>&nbsp;</td>' +
+                    // '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
+                
+                
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
                         
                         
                                 $('#FacturaProducto').val("");
@@ -362,34 +362,16 @@ function agregarProductoFactura(){
                 $('#productosFacturas').append(                        
                         '<tr id="tr_' + prefactura.resp + '">' + 
 
-
-                        '<td>' + $('#nombreProducto').val() + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + 
-                        '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
+                        '<td>' + $('#nombreProducto').val() + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
                         '<td>' + $('#codigoProducto').val() + '</td>' +                         
-                        
-                        '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa + 
-                        '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
-
-                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' +
-                         precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
-                        
-                         '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp +
-                          '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
-
-                        '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + 
-                        porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
-                        
-                        '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + 
-                        '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
-                        
-                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + 
-                        '" value="' + valorIva + '" readonly>&nbsp;</td>' +
-                        
-                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + 
-                        prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
-                        
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + 
-                        '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
+                        '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa +'" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' + 
+                        '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                 
                         $('#FacturaProducto').val("");
                 $('#prefacturaId').val(prefactura.prefactId);

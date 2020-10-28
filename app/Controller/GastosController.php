@@ -40,7 +40,8 @@ class GastosController extends AppController {
                 $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
                 $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
             }else{
-                $fechaInicio = date('Y-m-d');
+
+                // $fechaInicio = date('Y-m-d');
                 $fechaFin = date('Y-m-d');
             }                   
 
@@ -108,6 +109,8 @@ class GastosController extends AppController {
                 }                
             }
            
+
+            // var_dump(date('Y-m-d'));
             $this->set(compact('gastos', 'itemsGasto', 'ttalGastos', 'itemId', 'fechaInicio', 'fechaFin', 'arrEmpresa'));
 	}
 
