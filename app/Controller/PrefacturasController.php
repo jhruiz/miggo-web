@@ -141,6 +141,7 @@ class PrefacturasController extends AppController {
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
+            
             $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados'));
             $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP')); 
 	}
@@ -408,6 +409,7 @@ class PrefacturasController extends AppController {
 	public function delete($id = null) {
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
+            $this->loadModel('Prefactura');
             
             /*se obtiene el detalle de la prefactura que se va eliminar*/
             $prefactDet = $this->Prefacturasdetalle->obtenerProductosPrefacturaPrefactId($id);
@@ -425,18 +427,19 @@ class PrefacturasController extends AppController {
                 }
             }
             
-            
             $this->Prefactura->id = $id;
             if (!$this->Prefactura->exists()) {
                     throw new NotFoundException(__('La Orden de Pedido no existe.'));
             }
-            $this->request->onlyAllow('post', 'delete');
-            if ($this->Prefactura->delete()) {
+          
+            if ($this->Prefactura->actualizarEstadoPrefacturaEliminar($id)) {
                     $this->Session->setFlash(__('La Orden de Pedido ha sido eliminada.'));
             } else {
-                    $this->Session->setFlash(__('La Orden de Pedido no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
+                $this->Session->setFlash(__('La Orden de Pedido no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
             }
+              
             return $this->redirect(array('action' => 'index'));
+            
 	}
         
         public function actualizarPorcentajeValorDtto(){

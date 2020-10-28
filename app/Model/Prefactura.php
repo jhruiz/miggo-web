@@ -131,7 +131,9 @@ class Prefactura extends AppModel {
         public function obtenerPrefacturas($usuarioId, $placa, $cliente){
             
             $filters = [];
-            
+            // Si la prefactura esta en estado eliminar 0 se muestra el registro 
+            $filters['Prefactura.eliminar'] = 0;
+
             if(!empty($usuarioId)){
                 $filters['Prefactura.usuario_id'] = $usuarioId;                
             }
@@ -445,6 +447,133 @@ class Prefactura extends AppModel {
             }else{
                 return '0';
             }
-        }        
+        }     
 
+        /**
+         * Actualiza el estado de la prefactura de una especifica
+         * @param type $prefactId
+         * @param type $estadoId
+         * @return int
+         */
+        public function actualizarEstadoPrefacturaEliminar($id){
+            $data = array();
+            
+            $prefactura = new Prefactura();
+            
+            $data['id'] = $id;
+            $data['eliminar'] = 1;
+           
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }        
+        public function obtenerInfoAlertaPreFactura($filtros){
+
+            $arr_join = array(); 
+    
+            array_push($arr_join, array(
+                'table' => 'alertaordenes', 
+                'alias' => 'Alertaordene', 
+                'type' => 'LEFT',
+                'conditions' => array('Alertaordene.Prefactura_id=Prefactura.id')                
+            ));
+    
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'US', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.usuario_id=US.id')                
+            ));
+    
+            array_push($arr_join, array(
+                'table' => 'clientes', 
+                'alias' => 'CL', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.cliente_id=CL.id')                
+            ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'estadoalertas', 
+            //     'alias' => 'EA', 
+            //     'type' => 'INNER',
+            //     'conditions' => array('EA.id=Alertaordene.estadoalerta_id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'unidadesmedidas', 
+            //     'alias' => 'UM', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('Alertaordene.unidadesmedida_id=UM.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'alertas', 
+            //     'alias' => 'AL', 
+            //     'type' => 'INNER',
+            //     'conditions' => array('Alertaordene.alerta_id=AL.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'plantaservicios', 
+            //     'alias' => 'PS', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.plantaservicio_id=PS.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'ordenestados', 
+            //     'alias' => 'OE', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.ordenestado_id=OE.id')                
+            // ));
+            
+            $alertasOrdenes = $this->find('all', array(                
+                'joins' => $arr_join, 
+                'fields' => array(
+                   
+                    'CL.id',
+                    'CL.nit',
+                    'CL.nombre',
+                    'CL.direccion',
+                    'CL.celular',
+                    'CL.cumpleanios',
+                   
+                ),                             
+                'conditions' => $filtros,
+                'recursive' => '-1',
+                // 'order' => 'Alertaordene.id DESC' 
+                ));            
+            
+            return $alertasOrdenes;            
+        }
+
+        public function obtenerInfoAlertaFacturaGenerate($filtros){
+
+            $arr_join = array(); 
+           
+            array_push($arr_join, array(
+                'table' => 'clientes', 
+                'alias' => 'CL', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.cliente_id=CL.id')                
+            ));
+            
+            $alertasOrdenes = $this->find('all', array(                
+                'joins' => $arr_join, 
+                'fields' => array(
+                    'CL.id',
+                    'CL.nit',
+                    'CL.nombre',
+                    'CL.direccion',
+                    'CL.celular',
+                    'CL.cumpleanios',
+                ),                             
+                'conditions' => $filtros,
+                'recursive' => '-1', 
+                ));            
+            
+            return $alertasOrdenes;            
+        }
 }

@@ -2,11 +2,11 @@
 <?php echo ($this->Html->script('facturas/gestionfacturas.js'));?>
 <div class="container body">
 <div class="main_container">
+<br>
   <div class="x_panel"> 
     <input type="hidden" id="facturaId" value="<?php echo $infoFact['Factura']['id'];?>">
     <input type="hidden" id="cliName" value="<?php echo $infoFact['Cliente']['nombre'];?>">
     <input type="hidden" id="cliNit" value="<?php echo $infoFact['Cliente']['nit'];?>">
-    
     <?php if($infoFact['Factura']['factura']){?>
     <input type="hidden" id="emisor" value="<?php echo $infoEmpresa['Empresa']['nombre'];?>">    
     <input type="hidden" id="emisorNit" value="<?php echo $infoEmpresa['Empresa']['nit'];?>">
@@ -16,7 +16,7 @@
     <?php }?>
     
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-1" >
             <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="imprimirFactura();">Imprimir</button>
         </div>
         <div class="col-md-1" style="margin-left:20px; margin-right:70px;">

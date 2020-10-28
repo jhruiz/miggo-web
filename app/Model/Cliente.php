@@ -149,7 +149,20 @@ class Cliente extends AppModel {
             $arrInfoCliente = $this->find('first', array('conditions' => array('Cliente.id' => $clienteId), 'recursive' => '0'));
             return $arrInfoCliente;
         }
-        
+        public function obtenerInformacionClienteFecha($clienteId){
+            $clientes = $this->find('all', array(
+                
+                'fields' => array(
+                    'cumpleanios',
+                ),
+                'conditions' => array('Cliente.id' => $clienteId),
+                'recursive' => '-1',
+                // 'group' => array('F.cliente_id', 'V.placa'),
+                // 'order' => 'cta desc'
+                ));  
+            return $clientes;
+        }
+
         public function guardarClienteNuevo($nit,$nombre,$dir,$tel,$ciudad,$pagweb,$email,$cel,$diasCred,$limCred,$cumple,$usrId,$estId,$empId){
             $data = array();
             

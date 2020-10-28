@@ -568,7 +568,7 @@ class FacturasController extends AppController
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $costoTotalProd, $detallePrefactura['Prefacturasdetalle']['descuento'],
                 $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto)) {
                 /*se elimina el registro de prefacturadetalle*/
-                $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
+                // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
             }
 
             /*Se calculan las utilidades de la venta y se guarda la utilidad del producto*/
@@ -630,7 +630,8 @@ class FacturasController extends AppController
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
         if (count($detallePrefact) == '0') {
             /*se elimina el registro de la prefactura que fue procesada y facturada*/
-            $this->eliminarPrefactura($prefacturaId);
+            $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
+            // $this->eliminarPrefactura($prefacturaId);
         }
 
         //se actualiza el id de la factura en los abonos correspondientes

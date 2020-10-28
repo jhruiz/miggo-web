@@ -62,6 +62,7 @@
                                 <table class="table table-hover" cellpadding="0" cellspacing="0" >
                                     <thead>
                                         <tr>
+                                            <th><?php echo ('id pre factura'); ?></th>
                                             <th><?php echo ('Cliente'); ?></th>
                                             <th><?php echo ('Vehículo'); ?></th>
                                             <th><?php echo ('Fecha'); ?></th>
@@ -72,6 +73,7 @@
                                     <tbody>
                                         <?php foreach ($prefacturas as $prefactura): ?>
                                         <tr>
+                                            <td><?php echo h($prefactura['Prefactura']['id']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['CL']['nombre']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['VH']['placa']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['Prefactura']['created']); ?>&nbsp;</td>
