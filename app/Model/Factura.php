@@ -653,20 +653,7 @@ class Factura extends AppModel
     }
     public function obtenerInfoAlertaFactura($filtros){
 
-        $arr_join = array(); 
-        // array_push($arr_join, array(
-        //     'table' => 'ordentrabajos', 
-        //     'alias' => 'O', 
-        //     'type' => 'LEFT',
-        //     'conditions' => array('O.id=Alertaordene.ordentrabajo_id')                
-        // ));
-
-        // array_push($arr_join, array(
-        //     'table' => 'vehiculos', 
-        //     'alias' => 'VH', 
-        //     'type' => 'LEFT',
-        //     'conditions' => array('O.vehiculo_id=VH.id')                
-        // ));
+        $arr_join = array();
 
         array_push($arr_join, array(
             'table' => 'alertaordenes', 
@@ -710,44 +697,12 @@ class Factura extends AppModel
             'conditions' => array('Alertaordene.alerta_id=AL.id')                
         ));
         
-        // array_push($arr_join, array(
-        //     'table' => 'plantaservicios', 
-        //     'alias' => 'PS', 
-        //     'type' => 'LEFT',
-        //     'conditions' => array('O.plantaservicio_id=PS.id')                
-        // ));
-        
-        // array_push($arr_join, array(
-        //     'table' => 'ordenestados', 
-        //     'alias' => 'OE', 
-        //     'type' => 'LEFT',
-        //     'conditions' => array('O.ordenestado_id=OE.id')                
-        // ));
-        
         $alertasOrdenes = $this->find('all', array(                
             'joins' => $arr_join, 
             'fields' => array(
-                // 'O.id',
-                // 'O.kilometraje',
-                // 'O.fecha_ingreso',
-                // 'O.fecha_salida',
-                // 'O.soat',
-                // 'O.tecnomecanica',
                 'EA.id',
                 'EA.descripcion',
                 'Alertaordene.*',
-                // 'Alertaordene.created',
-                // 'Alertaordene.fecha_alerta',
-                // 'Alertaordene.fecha_mantenimiento',
-                // 'Alertaordene.fecha_ultima_llamada',
-                // 'Alertaordene.cant_llamadas',
-                // 'Alertaordene.observaciones',
-                // 'Alertaordene.prefactura_id',
-                // 'Alertaordene.factura_id',
-                // 'VH.id',
-                // 'VH.placa',
-                // 'VH.linea',
-                // 'VH.modelo',
                 'US.id',
                 'US.nombre',
                 'CL.id',
@@ -757,13 +712,10 @@ class Factura extends AppModel
                 'CL.celular',
                 'CL.cumpleanios',
                 'UM.*',
-                'AL.*',
-                // 'PS.*',
-                // 'OE.*'
+                'AL.*'
             ),                             
             'conditions' => $filtros,
             'recursive' => '-1',
-            // 'order' => 'Alertaordene.id DESC' 
             ));            
         
         return $alertasOrdenes;            
@@ -796,5 +748,22 @@ class Factura extends AppModel
         return $alertasOrdenes;            
     }
     
+
+    public function actualizarEstadoFacturaEliminar($id)
+    {
+        $data = array();
+        $factura = new Factura();
+
+        $data['id'] = $id;
+        $data['eliminar'] = "1";
+
+        if ($factura->save($data)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
 }

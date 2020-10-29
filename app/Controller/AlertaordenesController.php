@@ -126,7 +126,7 @@ class AlertaordenesController extends AppController
             'Alertaordene.fecha_alerta <= ' => $fechaAct,
             'Alertaordene.factura_id = ' => Null,
             'Alertaordene.prefactura_id = ' => Null,
-        );
+        ));
 
         if (!empty($this->passedArgs['estadoalerta'])) {
             $filtros['EA.id'] = $this->passedArgs['estadoalerta'];

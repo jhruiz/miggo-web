@@ -30,6 +30,8 @@ class FacturasController extends AppController
 
         $this->loadModel('Tipopago');
         $this->loadModel('Usuario');
+        $this->loadModel('Cuenta');
+
         if (isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != "") {
             $paginate['Factura.codigo LIKE'] = '%' . $this->passedArgs['codigo'] . '%';
             $rpcodigo = $this->passedArgs['codigo'];
@@ -98,13 +100,14 @@ class FacturasController extends AppController
         //se obtienen los usuarios de la empresa para el filtro
         $usuario = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         $paginate['Factura.empresa_id'] = $empresaId;
+        $paginate['Factura.eliminar'] = 0;
 
         $this->Factura->recursive = 0;
         $this->Paginator->settings = $this->Factura->obtenerIndexFacturas($paginate);
         $facturas = $this->Paginator->paginate('Factura');
 
-        $this->set(compact('facturas'));
 
+        $this->set(compact('facturas'));
         $this->set(compact('tipoPago', 'usuario', 'rpcodigo', 'rpconsecutivo', 'rpvendedor', 'rpfecha', 'rpvencimiento', 'rptipopago'));
         $this->set(compact('esFactura', 'rpfechaFin'));
 
@@ -384,6 +387,7 @@ class FacturasController extends AppController
                     if ($this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal)) {
                         $detalleId['Facturasdetalle.id'] = $detFact['id'];
                         $this->Facturasdetalle->delete($detalleId);
+
                     }
                 } else {
                     $detalleId['Facturasdetalle.id'] = $detFact['id'];
@@ -392,13 +396,39 @@ class FacturasController extends AppController
 
             }
 
-            /*al finalizar la actualización del cargue de inventario y la eliminacion del detalle, se elimina la factura*/
+            /*Al finalizar la actualización del cargue de inventario y la eliminacion del detalle, se actualiza el saldo de la cuenta*/
+            
             $this->Factura->id = $id;
+        
+            $this->loadModel('Facturasdetalle');
+            $this->loadModel('FacturaCuentaValore');
+
+            $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
+
+            // Se obtiene el detalle de la factura para obtener el id de la cuenta y el saldo a devolver.*/
+            $facDetalle = $this->FacturaCuentaValore->obtenerPagosFactura($id);
+
+            for ($i = 0; $i < count($facDetalle); $i++) {
+                $array[$i]['cuenta']= $facDetalle[$i]['FacturaCuentaValore']['cuenta_id']; 
+                $array[$i]['valor']= $facDetalle[$i]['FacturaCuentaValore']['valor']; 
+            }
+
+            // Se calcula el saldo nuevo de la cuentay se actualiza el registro
+            for ($i = 0; $i < count($array); $i++) { 
+                $arrayValor[$i]['valor']= $this->Cuenta->obtenerDatosCuentaId($array[$i]['cuenta']);; 
+                $arraySaldoCuenta[$i]['saldo'] = $arrayValor[$i]['valor']['Cuenta']['saldo'];
+                $arraySaldoNuevo[$i]['Nuevo valor'] = $arraySaldoCuenta[$i]['saldo'] - $array[$i]['valor'];
+                // enviamos el id y el saldo final de la cuenta para actualizar su valor
+                $this->Cuenta->actualizarSaldoCuenta($array[$i]['cuenta'],$arraySaldoNuevo[$i]['Nuevo valor']);
+            }
+            
+            //Al finalizar se actualiza el estado de la factura a eliminar = 1
+
             if (!$this->Factura->exists()) {
                 throw new NotFoundException(__('La factura no existe.'));
             }
             $this->request->onlyAllow('post', 'delete');
-            if ($this->Factura->delete()) {
+            if ($this->Factura->actualizarEstadoFacturaEliminar($id)) {
                 $this->Session->setFlash(__('La factura ha sido eliminada.'));
             } else {
                 $this->Session->setFlash(__('La factura no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
