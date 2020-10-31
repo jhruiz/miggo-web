@@ -50,34 +50,40 @@ class PrefacturasController extends AppController {
             if($perfilId != '1' && $perfilId != '4' && $perfilId != '5'){
                 $usuarioId = $this->Auth->user('id');
             }
-            
+
+            $empresaId = $this->Auth->user('empresa_id');
             //se obtienen las ordenes de pedido con la informacion de la orden de trabajo y vehiculo
-            $prefacturas = $this->Prefactura->obtenerPrefacturas($usuarioId, $placa, $cliente);
+            $prefacturas = $this->Prefactura->obtenerPrefacturas($usuarioId, $placa, $cliente,$empresaId);
 
             //se obtiene el listado de prefacturas
             $estados = $this->Estadosprefactura->obtenerListaEstados();
             
             //obtiene el detalle de las prefacturas
-            $arrPrefacturasDetalle = $this->Prefacturasdetalle->obtenerDetallePrefacturas();            
-                     
-            //se cuenta el valor total de las prefacturas
-            $prefactValor = 0;
-            if(!empty($arrPrefacturasDetalle)){                
-                foreach ($arrPrefacturasDetalle as $pf){
-                    
-                    //se obtiene el valor de las prefacturas
-                    if(!empty($pf['Prefacturasdetalle']['impuesto'])){
-                        $impuesto = floatval("1." . $pf['Prefacturasdetalle']['impuesto']);                        
-                        
-                        //se calcula el valor base menos el descuento
-                        $valBase = (ceil((floatval($pf['Prefacturasdetalle']['costoventa'])/$impuesto))) - floatval($pf['Prefacturasdetalle']['descuento']);                        
-                        $prefactValor += ceil($valBase * $impuesto);
-                    }else{
-                        $prefactValor += (floatval($pf['Prefacturasdetalle']['costoventa']) - floatval($pf['Prefacturasdetalle']['descuento']));
-                    }
-                }
+            $arrPrefacturasDetalle = $this->Prefacturasdetalle->obtenerDetallePrefacturas($empresaId);            
+
+            for ($i = 0; $i < count($arrPrefacturasDetalle); $i++) { 
+                $prefactValor += $arrPrefacturasDetalle[$i]['Prefacturasdetalle']['costoventa'];
             }
-            
+
+
+            // //se cuenta el valor total de las prefacturas
+            // $prefactValor = 0;
+            // if(!empty($arrPrefacturasDetalle)){                
+            //     foreach ($arrPrefacturasDetalle as $pf){
+                    
+            //         //se obtiene el valor de las prefacturas
+            //         if(!empty($pf['Prefacturasdetalle']['impuesto'])){
+            //             $impuesto = floatval("1." . $pf['Prefacturasdetalle']['impuesto']);                        
+                        
+            //             //se calcula el valor base menos el descuento
+            //             $valBase = (ceil((floatval($pf['Prefacturasdetalle']['costoventa'])/$impuesto))) - floatval($pf['Prefacturasdetalle']['descuento']);                        
+            //             $prefactValor += ceil($valBase * $impuesto);
+            //         }else{
+            //             $prefactValor += (floatval($pf['Prefacturasdetalle']['costoventa']) - floatval($pf['Prefacturasdetalle']['descuento']));
+            //         }
+            //     }
+            // }
+
             $nombre = $this->passedArgs['cliente'];
             $vehiculo = $this->passedArgs['vehiculo'];
             $this->set(compact('prefacturas', 'prefactValor', 'estados','cliente','vehiculo'));

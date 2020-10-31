@@ -13,6 +13,7 @@ class Prefactura extends AppModel {
  * Validation rules
  *
  * @var array
+ * 
  */
 	public $validate = array(
 		'usuario_id' => array(
@@ -128,16 +129,18 @@ class Prefactura extends AppModel {
             return $arrPrefact; 
         }
         
-        public function obtenerPrefacturas($usuarioId, $placa, $cliente){
+        public function obtenerPrefacturas($usuarioId, $placa, $cliente,$empresaId){
             
             $filters = [];
             // Si la prefactura esta en estado eliminar 0 se muestra el registro 
             $filters['Prefactura.eliminar'] = 0;
 
-            if(!empty($usuarioId)){
-                $filters['Prefactura.usuario_id'] = $usuarioId;                
-            }
+            // if(!empty($usuarioId)){
+            //     $filters['Prefactura.usuario_id'] = $usuarioId;                
+            // }
             
+            $filters['US.empresa_id'] = $empresaId;                
+
             if(!empty($placa)){
                 $filters['LOWER(VH.placa) LIKE'] = '%' . strtolower($placa) . '%';
             }
@@ -174,6 +177,25 @@ class Prefactura extends AppModel {
                     'CL.id = Prefactura.cliente_id'
                 )
             ));                      
+            
+            // array_push($arr_join, array(
+            //     'table' => 'prefacturasdetalles',
+            //     'alias' => 'PFD',
+            //     'type' => 'LEFT',
+            //     'conditions' => array(
+            //          'Prefactura.id = PFD.prefactura_id' 
+            //     )
+            // ));                      
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'US',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'US.id = Prefactura.usuario_id'
+                )
+            ));                      
+            
 
             $prefacturas = $this->find('all', array(
                 'joins' => $arr_join,
@@ -181,6 +203,8 @@ class Prefactura extends AppModel {
                     'CL.id',
                     'CL.nombre',
                     'VH.placa',
+                    'US.*',
+                    // 'PFD.costoventa',
                     'Prefactura.*'
                 ),
                 'conditions' => array($filters),
