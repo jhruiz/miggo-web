@@ -198,12 +198,21 @@ class Prefactura extends AppModel {
                 'conditions' => array(
                     'PFD.prefactura_id=Prefactura.id'
                 )
+            ));   
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id = Prefactura.usuario_id'
+                )
             ));            
             
             array_push($arr_join, array(
                 'table' => 'clientes',
                 'alias' => 'C',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'C.id=Prefactura.cliente_id'
                 )
@@ -214,7 +223,7 @@ class Prefactura extends AppModel {
                 'alias' => 'EM',
                 'type' => 'INNER',
                 'conditions' => array(
-                    'EM.id=C.empresa_id'
+                    'EM.id=U.empresa_id'
                 )
             ));            
             
