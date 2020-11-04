@@ -1,18 +1,48 @@
+<style>
+.disabled{
+pointer-events: none;
+cursor: default;
+
+}
+ </style>
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('alertaordenes/alertaordenes'));?>
+<?php echo ($this->Html->script('alertaordenes/gestionalertasfac'));?>
 <div class="ordentrabajos form">
 <?php echo $this->Form->create('Ordentrabajo', array('type' => 'file', 'class' => 'form-inline')); ?>
 <fieldset>                    
 <?php echo $this->Form->input('empresa', array('type' => 'hidden', 'value' => $empresa_id, 'id' => 'empresaId'));?>
 <?php echo $this->Form->input('ordentrabajo', array('type' => 'hidden', 'value' => $ordenTrabajoId, 'id' => 'ordenTId'));?>
-<?php echo $this->Form->input('vehiculo_id', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['VH']['id'], 'id' => 'vehiculoId'));?>
-<?php echo $this->Form->input('cliente_id', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['CL']['id'], 'id' => 'clienteId'));?>
-<?php echo $this->Form->input('km_actual', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['kilometraje'], 'id' => 'km_actual'));?>
-<?php echo $this->Form->input('soat', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['soat'], 'id' => 'soat'));?>
-<?php echo $this->Form->input('tecno', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['tecnomecanica'], 'id' => 'tecnomecanica'));?>
-<?php echo $this->Form->input('ordentrabajo_id', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['id'], 'id' => 'ordentrabajoId'));?>
+<?php echo $this->Form->input('vehiculo_id', array('type' => 'hidden', 'value' => $infoFacturaCli['0']['VH']['id'], 'id' => 'vehiculoId'));?>
+<?php echo $this->Form->input('cliente_id', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'clienteId'));?>
+<?php echo $this->Form->input('clientecumpleanios', array('type' => 'hidden', 'value' => $infoFacturaCli['0']['CL']['cumpleanios'], 'id' => 'clientecumpleanios'));?>
+<?php echo $this->Form->input('factura_id', array('type' => 'hidden', 'class' => 'form-control','value' => $id_factura, 'id' => 'facturaId'));?>
+<?php echo $this->Form->input('factura_idadd', array('type' => 'hidden', 'class' => 'form-control','value' => $id_factura, 'id' => 'factura_idadd'));?>
+<?php echo $this->Form->input('cliente_idadd', array('type' => 'hidden', 'class' => 'form-control', 'value' => $infoFacturaCli['0']['CL']['id'], 'id' => 'cliente_idadd'));?>
 
-<div class="col-md-12">
+<?php  
+$fechaActual =  date('Y-m-d'); 
+$yfechaalertamasuno =  date('Y',strtotime($fechaActual ." + 1 year"));
+$yfechaActual =  date('Y');
+$mdfechaactual= date('m-d',strtotime($fechaActual));
+$fechaCumple = $infoFacturaCli['0']['CL']['cumpleanios']; 
+$mdfechaalerta = date('m-d',strtotime($fechaCumple));
+
+    if ($mdfechaactual > $mdfechaalerta){
+        $fechaAlerta = $yfechaalertamasuno . "-" . $mdfechaalerta ;
+    }
+    else if ($mdfechaactual < $mdfechaalerta){
+        $fechaAlerta = $yfechaActual . "-" . $mdfechaalerta ;
+    }
+
+    if ($fechaCumple == NULL){
+    $classBtn= "disabled";
+    ;
+    }
+?>
+<?php echo $this->Form->input('fecha_cumple', array('type' => ' hidden', 'value' => $fechaAlerta, 'id' => 'fechacumple'));?>
+
+<div  class="col-md-12">
  <br>
     <div class="x_panel">
         <div class="x_title">
@@ -22,118 +52,36 @@
         <div class="container-fluid" style="margin-bottom: 10px;">
             <div class="row">
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Nombre</label><br>
-                    <?php echo($infoOrdenCliV['0']['CL']['nombre']); ?>
+                    <?php echo($infoFacturaCli['0']['CL']['nombre']); ?>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Nit</label><br>   
-                    <?php echo($infoOrdenCliV['0']['CL']['nit']); ?>                                                     
+                    <?php echo($infoFacturaCli['0']['CL']['nit']); ?>                                                     
                 </div>                    
 
-                <div class="col-md-3">                                      
+                <div class="col-md-2">                                      
                     <label>Teléfono</label><br>  
-                    <?php echo($infoOrdenCliV['0']['CL']['telefono']); ?>                      
+                    <?php echo($infoFacturaCli['0']['CL']['celular']); ?>                      
                 </div>
 
-                <div class="col-md-3">                                      
+                <div class="col-md-2">                                      
                     <label>Dirección</label><br>
-                    <?php echo($infoOrdenCliV['0']['CL']['direccion']); ?>                        
+                    <?php echo($infoFacturaCli['0']['CL']['direccion']); ?>                        
                 </div>
-
+                <div class="col-md-2">                                      
+                    <label>Cumpleaños</label><br>
+                    <a class="<?php echo $classBtn ?>" href="#"  title="Crear alerta por cumpleaños" class="btn btn-default btn-sm" id="alerta_cumple"><span class="far fa-eye"></span></a>                     
+                    <?php echo($infoFacturaCli['0']['CL']['cumpleanios']); ?>  
+                                      
+                </div>
             </div>
         </div>  
 
     </div><!-- Termina COL -->                 
-
-    <div class="x_panel">
-        <div class="x_title">
-           <h2><?php echo __('Vehículo'); ?></h2>
-           <ul class="nav navbar-right panel_toolbox"></ul>
-       </div>          
-            <div class="container-fluid" style="margin-bottom: 10px;">
-                <div class="row">
-
-                    <div class="col-md-2">
-                        <label style="margin-bottom:10px;">Placa/Número Motor</label><br>
-                        <?php echo($infoOrdenCliV['0']['VH']['placa']); ?>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label style="margin-bottom:10px;">Modelo</label><br>   
-                        <?php echo($infoOrdenCliV['0']['VH']['modelo']); ?>                                                     
-                    </div>                    
-
-                    <div class="col-md-2">                                      
-                        <label style="margin-bottom:10px;">Línea</label><br>  
-                        <?php echo($infoOrdenCliV['0']['VH']['linea']); ?>                      
-                    </div>
-
-                    <div class="col-md-2">                                      
-                        <label style="margin-bottom:10px;">Kilometraje</label><br>
-                        <?php echo($infoOrdenCliV['0']['Ordentrabajo']['kilometraje']); ?>                        
-                    </div>
-
-                    <div class="col-md-2">                                      
-                        <label>SOAT</label><br>
-                        <?php echo($infoOrdenCliV['0']['Ordentrabajo']['soat']); ?>   
-                        <a href="#" class="btn btn-default btn-sm" id="alerta_soat"><span class="far fa-eye"></span></a>                     
-                    </div>
-
-                    <div class="col-md-2">                                      
-                        <label>Tecnomecánica</label><br>
-                        <?php echo($infoOrdenCliV['0']['Ordentrabajo']['tecnomecanica']); ?>                
-                        <a href="#" class="btn btn-default btn-sm" id="alerta_tecno"><span class="far fa-eye"></span></a>        
-                    </div>
-
-                </div>
-      
-        </div>   
-
-    </div><!-- Termina COL -->                    
-
-    <div class="x_panel">
-        <div class="x_title">
-           <h2><?php echo __('Orden de Trabajo'); ?></h2>
-           <ul class="nav navbar-right panel_toolbox"></ul>
-       </div>          
-            <div class="container-fluid" style="margin-bottom: 10px;">
-                <div class="row">
-
-                    <div class="col-md-1">&nbsp;</div>
-
-                    <div class="col-md-2">
-                        <label>Planta de servicio</label><br>
-                        <?php echo($infoOrdenCliV['0']['PS']['descripcion']); ?>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label>Técnico</label><br>   
-                        <?php echo($infoOrdenCliV['0']['US']['nombre']); ?>                                                     
-                    </div>                    
-
-                    <div class="col-md-2">                                      
-                        <label>Estado</label><br>  
-                        <?php echo($infoOrdenCliV['0']['OE']['descripcion']); ?>                      
-                    </div>
-
-                    <div class="col-md-2">                                      
-                        <label>Fecha de ingreso</label><br>
-                        <?php echo($infoOrdenCliV['0']['Ordentrabajo']['fecha_ingreso']); ?>                        
-                    </div>
-
-                    <div class="col-md-2">                                      
-                        <label>Fecha de salida</label><br>
-                        <?php echo($infoOrdenCliV['0']['Ordentrabajo']['fecha_salida']); ?>                        
-                    </div>
-
-                    <div class="col-md-1">&nbsp;</div>
-
-                </div>
-        </div>   
-
-    </div><!-- Termina COL -->                    
+                 
 
     <div class="x_panel">
         <div class="x_title">
@@ -159,7 +107,7 @@
                         ?>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label>Estado alerta</label><br>  
                         <?php 
                             echo $this->Form->input("estado_alerta_id",
@@ -175,7 +123,7 @@
                         ?>                                                                                                     
                     </div>                    
 
-                    <div class="col-md-2">                                      
+                    <div class="col-md-3">                                      
                         <label>Unidad de medida</label><br>  
                         <?php 
                             echo $this->Form->input("unidades_medida_id",
@@ -190,28 +138,11 @@
                         ?>                          
                     </div>
 
-                    <div class="col-md-2">                                      
+                    <div class="col-md-3">                                      
                         <label>Fecha actual</label><br>
                         <?php echo($fechaActual); ?>                        
                     </div>
 
-                    <div class="col-md-2">
-                        <label>Responsable</label><br>
-                        <?php 
-                            echo $this->Form->input("usuario_id",
-                                    array(
-                                        'name'=>"usuario_id",
-                                        'id'=>"usuarioId",
-                                        'label' => "",
-                                        'type' => 'select',
-                                        'options'=>$usuarios,
-                                        'empty'=>'Seleccione Una',
-                                        'class' => 'form-control'
-                                    )
-                            );
-                        ?>
-                    </div>
-                   
                 </div>
       
         </div>   
@@ -254,17 +185,30 @@
                
                     </div>
 
-                        <div class="col-md-3">
-                            <label>Fecha próximo mantenimiento</label><br>   
-                            <input class="date form-control" placeholder="Fecha de Mantenimiento" type="text" id="fecha_mant">           
-                        </div>                    
+                                        
                         
                         <div class="col-md-3">
                             <label>Fecha de alerta</label><br>
                             <input class="date form-control" placeholder="Fecha de Alerta" type="text" id="fecha_alerta">
                         </div>
 
-
+ <div class="col-md-3">
+                        <label>Responsable</label><br>
+                        <?php 
+                            echo $this->Form->input("usuario_id",
+                                    array(
+                                        'name'=>"usuario_id",
+                                        'id'=>"usuarioId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$usuarios,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
+                    
                 </div>
       
         </div>   

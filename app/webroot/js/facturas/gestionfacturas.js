@@ -102,6 +102,37 @@ function imprimirOrden() {
     mywindow.close();
 
 }
+var generarAlerta = function() {
+    //valida que tenga todos los datos ingresados
+    var vehiculo = $('#vehiculo_id').val();
+    var factura = $('#facturaId').val();
+    var cliente = $('#cliente_id').val();
+    var orden = $('#ordentrabajo_id').val();
+    var fechacumple = $('fechacumple').val();
+
+    if(vehiculo != '' && cliente != '' && orden != ''){
+        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val() );
+    } else {
+        bootbox.alert('Asegúrese de gestionar la orden de trabajo completa e inténtelo nuevamente.');
+    }
+    
+}
+var generarAlertaFactura = function() {
+    //valida que tenga todos los datos ingresados
+    var vehiculo = $('#vehiculo_id').val();
+    var factura = $('#facturaId').val();
+    var cliente = $('#cliente_id').val();
+    var orden = $('#ordentrabajo_id').val();
+    var fechacumple = $('fechacumple').val();
+
+    if(vehiculo != '' && cliente != '' && orden != ''){
+        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val() );
+    } else {
+        bootbox.alert('Asegúrese de gestionar la orden de trabajo completa e inténtelo nuevamente.');
+    }
+    
+}
+
 
 $(function() {
     $('#conditions').hide();
@@ -109,4 +140,6 @@ $(function() {
     $('#conditions_ot').hide();
     $('#dvNota').hide();
     $('#dvTicket').hide();
+    $('#btn_alerta').click(generarAlerta);
+    $('#btn_alertaFactura').click(generarAlertaFactura);
 });

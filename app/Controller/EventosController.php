@@ -16,20 +16,48 @@ class EventosController extends AppController {
  * @return void
  */
 public function index() {
+
     $this->loadModel('Tipoevento');
     $this->loadModel('Usuario');
     $this->loadModel('Estadoalerta');
 
     $this->Evento->recursive = 0;
-
+    $fechaAct = date('Y-m-d');
     $empresaId = $this->Auth->user('empresa_id');
 
     $tipoEventos = $this->Tipoevento->obtenerTipoEventos();
     $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId); 
     $estados = $this->Estadoalerta->obtenerListaEstadoAlertas($empresaId);   
 
-    $this->set('eventos', $this->Paginator->paginate());
-    $this->set(compact('tipoEventos', 'usuarios', 'estados')); 
+    $responsable = "";
+    $tipoEvento = "";
+    $estado = "";
+    // se crea los filtros de busqueda
+
+    if (isset($this->passedArgs['responsable']) && $this->passedArgs['responsable'] != "") {
+        $filtros['LOWER(U.nombre) LIKE'] = '%' . strtolower($this->passedArgs['responsable']) . '%';
+        $responsable = $this->passedArgs['responsable'];
+    }
+    if (isset($this->passedArgs['tipoEvento']) && $this->passedArgs['tipoEvento'] != "") {
+        $filtros['LOWER(Evento.tipoevento_id) LIKE'] = '%' . strtolower($this->passedArgs['tipoEvento']) . '%';
+        $tipoEvento = $this->passedArgs['tipoEvento'];
+    }
+
+    // Se valida si se envía estado alerta, se pasa el id de la alerta para realizar la consulta correspondiente a los tabs. 
+    $idEstado = $this->passedArgs['estadoalerta'];
+            
+    if ($idEstado){
+        $filtros['LOWER(U.nombre) LIKE'] = '%' . strtolower($this->passedArgs['responsable']) . '%';
+        $filtros['LOWER(Evento.tipoevento_id) LIKE'] = '%' . strtolower($this->passedArgs['tipoEvento']) . '%';
+        $eventosIndex = $this->Evento->obtenerEventosIndexBusqueda($empresaId,$idEstado, $filtros); 
+    }
+    else{
+        $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId, $filtros); 
+    }
+
+    
+    $estadosTab = $this->Estadoalerta->obtenerListaEstadoTest($empresaId);
+    $this->set(compact('eventosIndex','tipoEventos', 'usuarios', 'estados','estadosTab','fechaAct','responsable','tipoEvento','estado')); 
 }
 
 /**
@@ -116,13 +144,15 @@ public function index() {
 
 
         
-    public function search() {
+    public function search()
+    {
         $url = array();
         $url['action'] = 'index';
 
         foreach ($this->data as $kk => $vv) {
             $url[$kk] = $vv;
         }
+        
 
         // redirect the user to the url
         $this->redirect($url, null, true);
