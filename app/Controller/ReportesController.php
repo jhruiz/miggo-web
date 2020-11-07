@@ -651,7 +651,7 @@ class ReportesController extends AppController
             'Observaci&oacute;n',
         );
 
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
 
     }
