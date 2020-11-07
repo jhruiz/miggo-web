@@ -796,7 +796,7 @@ class ReportesController extends AppController
             'Valor total Facturas',
         );
         $this->set(compact('facturaClientes'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
 
