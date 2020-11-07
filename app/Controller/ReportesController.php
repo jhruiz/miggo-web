@@ -678,7 +678,7 @@ class ReportesController extends AppController
             'Observaci&oacute;n Mec&aacute;nico',
             'Observaci&oacute;n Cliente',
         );
-        //aqui se debio solucionar problema de comas
+        //aqui se debio solucionar problema de comas.
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
