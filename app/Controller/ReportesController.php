@@ -1248,7 +1248,7 @@ class ReportesController extends AppController
             'Fecha',
         );
         $this->set(compact('categoriasReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1291,7 +1291,7 @@ class ReportesController extends AppController
             'Estado',
         );
         $this->set(compact('proovedoresReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1328,7 +1328,7 @@ class ReportesController extends AppController
             'C&oacute;digo',
         );
         $this->set(compact('depositosReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1365,7 +1365,7 @@ class ReportesController extends AppController
             'Clasificaci&oacute;n',
                 );
         $this->set(compact('clientesReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1400,7 +1400,7 @@ class ReportesController extends AppController
             'Producto descripci&oacute;n',
                 );
         $this->set(compact('prefacturasReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1430,7 +1430,7 @@ class ReportesController extends AppController
             'Estado',
                 );
         $this->set(compact('usuariosReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
 
