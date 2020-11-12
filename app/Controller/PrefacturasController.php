@@ -46,13 +46,11 @@ class PrefacturasController extends AppController {
             $perfilId = $this->Auth->user('perfile_id');              
             
             $usuarioId = "";
-            
-            if($perfilId != '1' && $perfilId != '4' && $perfilId != '5'){
-                $usuarioId = $this->Auth->user('id');
-            }
+
+            $empresaId = $this->Auth->user('empresa_id');
             
             //se obtienen las ordenes de pedido con la informacion de la orden de trabajo y vehiculo
-            $prefacturas = $this->Prefactura->obtenerPrefacturas($usuarioId, $placa, $cliente);
+            $prefacturas = $this->Prefactura->obtenerPrefacturas($usuarioId, $placa, $cliente, $empresaId);
 
             //se obtiene el listado de prefacturas
             $estados = $this->Estadosprefactura->obtenerListaEstados();

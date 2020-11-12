@@ -23,15 +23,16 @@ class TipopagosController extends AppController {
 	public function index() {
             $this->loadModel('Cuenta');
 
-            $arrEmpresas = $this->Auth->user('Empresa');
-            $empresaId = $arrEmpresas['id'];
+            $empresaId = $this->Auth->user('empresa_id');
 
             //se obtiene el listado de cuentas
             $this->loadModel('Cuenta');
-            $listCtas = $this->Cuenta->obtenerCuentasDestino($empresaId);            
-
+			$listCtas = $this->Cuenta->obtenerCuentasDestino($empresaId); 
+			
+			$data['Tipopago.empresa_id'] = $empresaId;
+			
             $this->Tipopago->recursive = 0;
-            $this->set('tipopagos', $this->Paginator->paginate());
+            $this->set('tipopagos', $this->Paginator->paginate('Tipopago', $data));
             $this->set(compact('listCtas')); 
             
 	}

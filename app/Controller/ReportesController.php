@@ -636,7 +636,7 @@ class ReportesController extends AppController
         $this->loadModel('Prefactura');
         $this->loadModel('Estadosprefactura');
         $empresaId = $this->Auth->user('empresa_id');
-        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null, $empresaId);
         $estados = $this->Estadosprefactura->obtenerListaEstados();
         $texto_tit = "Prefacturas";
         $this->set(compact('prefacturas'));
@@ -1382,9 +1382,9 @@ class ReportesController extends AppController
         $placa = $_POST['vehiculo'];
         
         $usuarioAct = $this->Auth->user('id');
-       
+        $empresaId = $this->Auth->user('empresa_id');
         
-        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente);
+        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente, $empresaId);
    
         $texto_tit = "Prefacturas";
         $this->set('texto_tit', $texto_tit);

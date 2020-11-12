@@ -1535,6 +1535,9 @@ class FacturasController extends AppController
         }
 
         $empresaId = $this->Auth->user('empresa_id');
+
+        $filtros['Factura.empresa_id'] = $empresaId;
+
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
         $totalValor = 0;
