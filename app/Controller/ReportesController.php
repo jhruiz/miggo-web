@@ -5,7 +5,7 @@ App::uses('CuentasclientesController', 'Controller');
 
 class ReportesController extends AppController
 {
-
+    // obtiene estadisticas
     public function estadisticastortas()
     {
         $this->loadModel('Deposito');
