@@ -925,9 +925,10 @@ class CargueinventariosController extends AppController {
                         $fechaPago = $this->sumarDiasFecha(date('Y-m-d'),$infoProv['Proveedore']['diascredito']);
     
                         $totalObligacion = ($infP['costo_producto'] * $infP['cantidad']);
+
                         $this->Cuentaspendiente->guardarCuentasPendientes(  $documentoId, $infP['producto_id'], $infP['bodega_id'],
                                                                             $infP['costo_producto'], $infP['cantidad'], $infP['proveedore_id'],
-                                                                            $infP['num_factura'], $infP['usuario_id'], $arrProductos['empresa_id'], 
+                                                                            $infP['num_factura'], $infP['usuario_id'],$infP['empresa_id'], 
                                                                             $totalObligacion, $fechaPago);
                     }
                 }
