@@ -26,14 +26,16 @@ class CategoriasController extends AppController {
             $usuariosController = new UsuariosController();
             $usuarioAct = $this->Auth->user('id');
             $usuariosController->registraractividad($usuarioAct);
-                        
+			$nombre = $this->passedArgs['nombre'];
+			// var_dump($nombre);            
             if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
                 $paginate['LOWER(Categoria.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
             }
             
             $empresaId = $this->Auth->user('empresa_id');
             $paginate['Categoria.empresa_id'] = $empresaId;
-            $this->Categoria->recursive = 0;
+			$this->Categoria->recursive = 0;
+			$this->set(compact('nombre'));
             $this->set('categorias', $this->Paginator->paginate('Categoria',$paginate));            
         }
 

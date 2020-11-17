@@ -10,10 +10,9 @@
 <?php echo $this->Form->input('km_actual', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['kilometraje'], 'id' => 'km_actual'));?>
 <?php echo $this->Form->input('soat', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['soat'], 'id' => 'soat'));?>
 <?php echo $this->Form->input('tecno', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['tecnomecanica'], 'id' => 'tecnomecanica'));?>
-<?php echo $this->Form->input('ordentrabajo_id', array('type' => 'hidden', 'value' => $infoOrdenCliV['0']['Ordentrabajo']['id'], 'id' => 'ordentrabajoId'));?>
-
+<?php echo $id_factura;?>
 <div class="col-md-12">
- <br>
+ 
     <div class="x_panel">
         <div class="x_title">
            <h2><?php echo __('Cliente'); ?></h2>
@@ -56,7 +55,7 @@
                 <div class="row">
 
                     <div class="col-md-2">
-                        <label style="margin-bottom:10px;">Placa/Número Motor</label><br>
+                        <label style="margin-bottom:10px;">Placa</label><br>
                         <?php echo($infoOrdenCliV['0']['VH']['placa']); ?>
                     </div>
 
@@ -159,7 +158,7 @@
                         ?>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label>Estado alerta</label><br>  
                         <?php 
                             echo $this->Form->input("estado_alerta_id",
@@ -175,7 +174,7 @@
                         ?>                                                                                                     
                     </div>                    
 
-                    <div class="col-md-2">                                      
+                    <div class="col-md-3">                                      
                         <label>Unidad de medida</label><br>  
                         <?php 
                             echo $this->Form->input("unidades_medida_id",
@@ -190,28 +189,11 @@
                         ?>                          
                     </div>
 
-                    <div class="col-md-2">                                      
+                    <div class="col-md-3">                                      
                         <label>Fecha actual</label><br>
                         <?php echo($fechaActual); ?>                        
                     </div>
 
-                    <div class="col-md-2">
-                        <label>Responsable</label><br>
-                        <?php 
-                            echo $this->Form->input("usuario_id",
-                                    array(
-                                        'name'=>"usuario_id",
-                                        'id'=>"usuarioId",
-                                        'label' => "",
-                                        'type' => 'select',
-                                        'options'=>$usuarios,
-                                        'empty'=>'Seleccione Una',
-                                        'class' => 'form-control'
-                                    )
-                            );
-                        ?>
-                    </div>
-                   
                 </div>
       
         </div>   
@@ -292,7 +274,7 @@
     </div><!--TEMRINA PANEL-->              
             
 	</fieldset>
-    <a href="#" class="btn btn-primary active" role="button" aria-pressed="true" id="guardarAlerta">Guardar Alerta</a>
+    <a href="#" class="btn btn-primary active" role="button" aria-pressed="true" id="guardarAlertaFactura">Guardar Alerta</a>
     </form>
 </div>  
 

@@ -22,4 +22,21 @@ class Estadoalerta extends AppModel {
 
         return $estadoAlerta;
     }
+
+    public function obtenerListaEstadoTest($empresa_id){
+
+        $estadosAlerta = $this->find('all', array(
+            'fields' => array(
+                'Estadoalerta.*',
+                
+            ),
+            'conditions' => array(
+                'Estadoalerta.empresa_id' => $empresa_id,
+            ),
+        ));
+
+
+        return $estadosAlerta;
+    }  
+
 }

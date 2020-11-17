@@ -302,5 +302,42 @@ class Deposito extends AppModel {
 
 			return $depositos;
 		}
+		public function obtenerDepositosReporte($empresaId, $filtros){
+			
+			$arr_join = array();
+            array_push($arr_join, array(
+                'table' => 'ciudades',
+                'alias' => 'C',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'C.id=Deposito.ciudade_id'),
+    
+            ));
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'U.id=Deposito.usuario_id'),
+    
+            ));
+    
+            $arrDepositos = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'Deposito.*', 
+                    'C.descripcion',
+                    'U.nombre'
+                ),
+                'conditions' => array(
+                    $filtros,
+                    'Deposito.empresa_id' => $empresaId,
+                ),
+                'recursive' => -1,
+            ));
+    
+            return $arrDepositos;
+
+		}
 
 }

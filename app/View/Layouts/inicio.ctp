@@ -314,8 +314,7 @@ if ($logged_in) {
           <footer>
             <div class="copyright-info">
 
-              <p class="pull-right">TORQUE RACING - Todos los derechos reservados <a href="https://colorlib.com">TORQUE RACING</a>
-              </p>
+              <p class="pull-right"><a href="http://miggo.com.co/">MIGGO SOLUTIONS</a> - Todos los derechos reservados.</p>
             </div>
             <div class="clearfix"></div>
           </footer>

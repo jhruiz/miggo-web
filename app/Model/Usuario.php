@@ -290,5 +290,42 @@ class Usuario extends AppModel {
         
         return $resp;
          
-     }
+	 }
+	 public function obtenerUsuariosReporte($empresaId, $filtros)
+	 {
+		 $arr_join = array();
+		 array_push($arr_join, array(
+			 'table' => 'estados',
+			 'alias' => 'E',
+			 'type' => 'INNER',
+			 'conditions' => array(
+				 'E.id= Usuario.estado_id'),
+ 
+		 ));
+		 array_push($arr_join, array(
+			 'table' => 'perfiles',
+			 'alias' => 'P',
+			 'type' => 'INNER',
+			 'conditions' => array(
+				 'P.id= Usuario.perfile_id'),
+ 
+		 ));
+ 
+		 $arrProductos = $this->find('all', array(
+			 'joins' => $arr_join,
+			 'fields' => array(
+				 'Usuario.*', 
+				 'E.descripcion', 
+				 'P.descripcion', 
+			 ),
+			 'conditions' => array(
+				 $filtros,
+				 'Usuario.empresa_id' => $empresaId,
+			 ),
+			 'recursive' => -1,
+		 ));
+ 
+		 return $arrProductos;
+ 
+	 }
 }

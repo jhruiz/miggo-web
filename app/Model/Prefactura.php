@@ -128,10 +128,15 @@ class Prefactura extends AppModel {
             return $arrPrefact; 
         }
         
-        public function obtenerPrefacturas($usuarioId, $placa, $cliente){
+        /**
+         * obtiene el listado de prefacturas de una empresa
+         */
+        public function obtenerPrefacturas($usuarioId, $placa, $cliente, $empresaId = null){
             
             $filters = [];
-            
+            // Si la prefactura esta en estado eliminar 0 se muestra el registro 
+            $filters['Prefactura.eliminar'] = 0;
+
             if(!empty($usuarioId)){
                 $filters['Prefactura.usuario_id'] = $usuarioId;                
             }
@@ -142,6 +147,10 @@ class Prefactura extends AppModel {
             
             if(!empty($cliente)){
                 $filters['LOWER(CL.nombre) LIKE'] = '%'. strtolower($cliente) .'%';
+            }
+
+            if(!empty($empresaId)){
+                $filters['U.empresa_id'] = $empresaId;
             }
             
             $arr_join = [];
@@ -172,6 +181,15 @@ class Prefactura extends AppModel {
                     'CL.id = Prefactura.cliente_id'
                 )
             ));                      
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'U.id = Prefactura.usuario_id'
+                )
+            ));                      
 
             $prefacturas = $this->find('all', array(
                 'joins' => $arr_join,
@@ -187,6 +205,102 @@ class Prefactura extends AppModel {
             
             return $prefacturas;
         }
+
+
+        public function obtenerPrefacturasReporte( $placa, $cliente, $empresaId ){
+            $arr_join = [];
+            array_push($arr_join, array(
+                'table' => 'ordentrabajos',
+                'alias' => 'OT',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'Prefactura.ordentrabajo_id = OT.id'
+                )
+            ));    
+            array_push($arr_join, array(
+                'table' => 'clientes',
+                'alias' => 'CL',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'Prefactura.cliente_id = CL.id  '
+                )
+            ));    
+            
+            array_push($arr_join, array(
+                'table' => 'vehiculos',
+                'alias' => 'VH',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'OT.vehiculo_id = VH.id'
+                )
+            ));    
+            array_push($arr_join, array(
+                'table' => 'estadosprefacturas',
+                'alias' => 'ES',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'Prefactura.estadoprefactura_id = ES.id'
+                )
+            ));    
+            array_push($arr_join, array(
+                'table' => 'prefacturasdetalles',
+                'alias' => 'PD',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'Prefactura.id = PD.prefactura_id'
+                )
+            ));    
+            
+            array_push($arr_join, array(
+                'table' => 'cargueinventarios',
+                'alias' => 'CI',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'PD.cargueinventario_id = CI.id'
+                )
+            ));   
+
+            array_push($arr_join, array(
+                'table' => 'productos',
+                'alias' => 'PR',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'CI.producto_id = PR.id'
+                )
+            ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'usuarios',
+            //     'alias' => 'U',
+            //     'type' => 'LEFT',
+            //     'conditions' => array(
+            //         'U.id = Prefactura.usuario_id'
+            //     )
+            // ));             
+            
+            $arrProductos = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'Prefactura.*', 
+                    'CL.nombre', 
+                    'VH.placa', 
+                    'ES.descripcion', 
+                    'PR.codigo', 
+                    'PR.descripcion', 
+                    'Prefactura.id', 
+                    'PD.costoventa', 
+                    
+                ),
+                'conditions' => array(
+                    'LOWER(VH.placa) LIKE' => "%".$placa."%",
+                    'LOWER(CL.nombre) LIKE' => "%".$cliente."%",
+                    // 'U.empresa_id' => $empresaId
+                ),
+                'recursive' => -1,
+            )); 
+            return $arrProductos;
+            
+        }
         
         public function obtenerPrefacturaDetalle($prefacturaId){
             $arr_join = array();                  
@@ -198,12 +312,21 @@ class Prefactura extends AppModel {
                 'conditions' => array(
                     'PFD.prefactura_id=Prefactura.id'
                 )
+            ));   
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id = Prefactura.usuario_id'
+                )
             ));            
             
             array_push($arr_join, array(
                 'table' => 'clientes',
                 'alias' => 'C',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'C.id=Prefactura.cliente_id'
                 )
@@ -214,7 +337,7 @@ class Prefactura extends AppModel {
                 'alias' => 'EM',
                 'type' => 'INNER',
                 'conditions' => array(
-                    'EM.id=C.empresa_id'
+                    'EM.id=U.empresa_id'
                 )
             ));            
             
@@ -362,6 +485,133 @@ class Prefactura extends AppModel {
             }else{
                 return '0';
             }
-        }        
+        }     
 
+        /**
+         * Actualiza el estado de la prefactura de una especifica
+         * @param type $prefactId
+         * @param type $estadoId
+         * @return int
+         */
+        public function actualizarEstadoPrefacturaEliminar($id){
+            $data = array();
+            
+            $prefactura = new Prefactura();
+            
+            $data['id'] = $id;
+            $data['eliminar'] = 1;
+           
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }        
+        public function obtenerInfoAlertaPreFactura($filtros){
+
+            $arr_join = array(); 
+    
+            array_push($arr_join, array(
+                'table' => 'alertaordenes', 
+                'alias' => 'Alertaordene', 
+                'type' => 'LEFT',
+                'conditions' => array('Alertaordene.Prefactura_id=Prefactura.id')                
+            ));
+    
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'US', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.usuario_id=US.id')                
+            ));
+    
+            array_push($arr_join, array(
+                'table' => 'clientes', 
+                'alias' => 'CL', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.cliente_id=CL.id')                
+            ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'estadoalertas', 
+            //     'alias' => 'EA', 
+            //     'type' => 'INNER',
+            //     'conditions' => array('EA.id=Alertaordene.estadoalerta_id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'unidadesmedidas', 
+            //     'alias' => 'UM', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('Alertaordene.unidadesmedida_id=UM.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'alertas', 
+            //     'alias' => 'AL', 
+            //     'type' => 'INNER',
+            //     'conditions' => array('Alertaordene.alerta_id=AL.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'plantaservicios', 
+            //     'alias' => 'PS', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.plantaservicio_id=PS.id')                
+            // ));
+            
+            // array_push($arr_join, array(
+            //     'table' => 'ordenestados', 
+            //     'alias' => 'OE', 
+            //     'type' => 'LEFT',
+            //     'conditions' => array('O.ordenestado_id=OE.id')                
+            // ));
+            
+            $alertasOrdenes = $this->find('all', array(                
+                'joins' => $arr_join, 
+                'fields' => array(
+                   
+                    'CL.id',
+                    'CL.nit',
+                    'CL.nombre',
+                    'CL.direccion',
+                    'CL.celular',
+                    'CL.cumpleanios',
+                   
+                ),                             
+                'conditions' => $filtros,
+                'recursive' => '-1',
+                // 'order' => 'Alertaordene.id DESC' 
+                ));            
+            
+            return $alertasOrdenes;            
+        }
+
+        public function obtenerInfoAlertaFacturaGenerate($filtros){
+
+            $arr_join = array(); 
+           
+            array_push($arr_join, array(
+                'table' => 'clientes', 
+                'alias' => 'CL', 
+                'type' => 'LEFT',
+                'conditions' => array('Prefactura.cliente_id=CL.id')                
+            ));
+            
+            $alertasOrdenes = $this->find('all', array(                
+                'joins' => $arr_join, 
+                'fields' => array(
+                    'CL.id',
+                    'CL.nit',
+                    'CL.nombre',
+                    'CL.direccion',
+                    'CL.celular',
+                    'CL.cumpleanios',
+                ),                             
+                'conditions' => $filtros,
+                'recursive' => '-1', 
+                ));            
+            
+            return $alertasOrdenes;            
+        }
 }

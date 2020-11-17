@@ -1251,7 +1251,22 @@ var guardarObsFactura = function(){
         $(this).val("");
     }
 };
+var generarAlertaPreFactura = function() {
+    //valida que tenga todos los datos ingresados
+    var vehiculo = $('#vehiculo_id').val();
+    var factura = $('#facturaId').val();
+    var prefactura = $('#prefacturaId').val();
+    var cliente = $('#cliente_id').val();
+    var orden = $('#ordentrabajo_id').val();
+    var fechacumple = $('fechacumple').val();
 
+    if(vehiculo != '' && cliente != '' && orden != ''){
+        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasprefac/' + $('#prefacturaId').val() );
+    } else {
+        bootbox.alert('Asegúrese de gestionar la orden de trabajo completa e inténtelo nuevamente.');
+    }
+    
+}
 $( function() {
     validarExisteCliente();
     validarProductosPrefacturados();      
@@ -1260,6 +1275,7 @@ $( function() {
     $('#PrefacturaProductoventarapida').prop('disabled', true); //keyup(fnObtenerDatosProductoVentaRapida); 
     $('#editOrden').click(editarOrdenTrabajo);    
     $('#obs_fact').blur(guardarObsFactura);
+    $('#btn_alerta').click(generarAlertaPreFactura);
 });
 
 

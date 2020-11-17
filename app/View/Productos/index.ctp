@@ -55,7 +55,6 @@
                 </button>
             </div>
             <div class="col-md-auto">
-                <!-- Inicio zona descargue reporte excel-->
                 <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarReporteProductos')); ?>
                 <fieldset>
                     <?php echo $this->Form->input('codigo', array('type' => 'hidden', 'name' => 'codigo', 'value' => $codigo)) ?>
@@ -65,7 +64,7 @@
                     <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
                 </fieldset>
                 </form><br><br>
-                <!-- Fin zona descargue reporte excel -->
+                
             </div>
         </div>
     </div>

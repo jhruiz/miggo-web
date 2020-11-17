@@ -12,14 +12,14 @@ $this->layout='inicio';
                         <?php echo $this->Form->input('depositoorigen_id', array('label' => 'Deposito Origen', 'options' => $depositos, 'class' => 'form-control', 'empty' => 'Seleccione Uno', 'onchange' => 'habilitarBuscarProducto();'));?>
                     </div>
                     <div class="col-md-3">
-                        <?php echo $this->Form->input('depositodestino_id', array('label' => 'Deposito Origen', 'options' => $depositos, 'class' => 'form-control', 'empty' => 'Seleccione Uno', 'onchange' => 'habilitarBuscarProducto();'));?>
+                        <?php echo $this->Form->input('depositodestino_id', array('label' => 'Deposito Destino', 'options' => $depositos, 'class' => 'form-control', 'empty' => 'Seleccione Uno', 'onchange' => 'habilitarBuscarProducto();'));?>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">  
                             <label>Buscar Producto</label><br>               
                                 <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
                                 <?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $usuarioId)); ?>
-                                <?php echo $this->Form->input('buscarproducto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Ingresar Nombre o C¨®digo del Producto', 'onkeyup' => 'fnObtenerDatosProducto(event);')); ?>
+                                <?php echo $this->Form->input('buscarproducto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Ingresar Nombre o Codigo del Producto', 'onkeyup' => 'fnObtenerDatosProducto(event);')); ?>
                             <div id="datosProducto" style="position:absolute; z-index:1;"></div> <br>                               
                         </div>  
                     </div>                                      

@@ -476,9 +476,11 @@ class OrdentrabajosController extends AppController {
 
         $filterOT = array('OE.ordenfinal <>' => '1');
 
+        $empresaId = $this->Auth->user('empresa_id');
+
         //////////////////////////////// INFORMACION DE LAS PREFACTURAS/////////////////////
         //obtiene todas las prefacturas
-        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null, $empresaId);
         $estados = $this->Estadosprefactura->obtenerListaEstados();
 
         //////////////////////////////// INFORMACION DE ORDENES DE TRABAJO/////////////////////

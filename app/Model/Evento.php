@@ -78,10 +78,80 @@ class Evento extends AppModel {
             'conditions' => array(
                 'Evento.empresa_id' => $empresaId,
                 'Evento.fecha < ' => $fecha,
-                'EA.final' => '0'
                 ), 
             'recursive' => '-1'));
         return $eventos;          
-
     }
+
+
+    public function obtenerEventosIndexBusqueda($empresaId,$idEstado, $filtros){
+
+        $arr_join = array();
+        array_push($arr_join, array(
+            'table' => 'estadoalertas', 
+            'alias' => 'EA', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.estadoalerta_id=EA.id'
+                )                
+        ));         
+        array_push($arr_join, array(
+            'table' => 'usuarios', 
+            'alias' => 'U', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.usuario_id = U.id'
+                )                
+        ));      
+        $eventos = $this->find('all', array(
+            'joins' => $arr_join,
+            'conditions' => array(
+                 $filtros,
+                'Evento.empresa_id' => $empresaId,
+                'Evento.estadoalerta_id' => $idEstado
+                
+                ), 
+            'recursive' => '-1',
+            'order' => 'fecha desc',
+        ));
+        return $eventos; 
+
+
+    } 
+    public function obtenerEventosIndex($empresaId, $filtros){
+
+        $arr_join = array();
+        array_push($arr_join, array(
+            'table' => 'estadoalertas', 
+            'alias' => 'EA', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.estadoalerta_id=EA.id'
+                )                
+        ));         
+        array_push($arr_join, array(
+            'table' => 'usuarios', 
+            'alias' => 'U', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'Evento.usuario_id = U.id'
+                )                
+        ));         
+                   
+        $eventos = $this->find('all', array(
+            'joins' => $arr_join,
+            'conditions' => array(
+                $filtros,
+                'Evento.empresa_id' => $empresaId,
+                
+                ), 
+            'recursive' => '-1',
+            'order' => 'fecha desc',
+        
+        
+        ));
+        return $eventos; 
+
+
+    } 
 }

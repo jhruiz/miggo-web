@@ -55,6 +55,7 @@ public function index()
     $paginate['Producto.empresa_id'] = $empresaId;
     $this->Producto->recursive = 0;
 
+    
     //Se obtiene el listado de categorias de producos de la empresa
     $categorias = $this->Categoria->obtenerCategoriasEmpresa($empresaId);
     // $productos =

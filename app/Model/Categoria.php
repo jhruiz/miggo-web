@@ -89,6 +89,24 @@ class Categoria extends AppModel {
                 'recursive' => '-1',
                 'order' => 'Categoria.descripcion'));
             return $listCategoria;
+		}
+		
+
+		public function obtenerCategoriasReporte($empresaId,$filtros)
+        {
+            
+    
+			$arrProductos = $this->find('all', array(
+				'conditions' => array(
+					'Categoria.empresa_id' => $empresaId,
+					$filtros
+				
+				), 
+				'recursive' => '-1'
+				));            
+            return $arrProductos;
+            
+    
         }
 
 }

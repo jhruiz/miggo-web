@@ -149,7 +149,20 @@ class Cliente extends AppModel {
             $arrInfoCliente = $this->find('first', array('conditions' => array('Cliente.id' => $clienteId), 'recursive' => '0'));
             return $arrInfoCliente;
         }
-        
+        public function obtenerInformacionClienteFecha($clienteId){
+            $clientes = $this->find('all', array(
+                
+                'fields' => array(
+                    'cumpleanios',
+                ),
+                'conditions' => array('Cliente.id' => $clienteId),
+                'recursive' => '-1',
+                // 'group' => array('F.cliente_id', 'V.placa'),
+                // 'order' => 'cta desc'
+                ));  
+            return $clientes;
+        }
+
         public function guardarClienteNuevo($nit,$nombre,$dir,$tel,$ciudad,$pagweb,$email,$cel,$diasCred,$limCred,$cumple,$usrId,$estId,$empId){
             $data = array();
             
@@ -250,6 +263,53 @@ class Cliente extends AppModel {
                 ));            
 
             return $clientes;             
+        }
+
+        public function obtenerClientesReporte($empresaId, $filtros)
+        {
+            $arr_join = array();
+            array_push($arr_join, array(
+                'table' => 'ciudades',
+                'alias' => 'CU',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CU.id=Cliente.ciudade_id'),
+    
+            ));
+            array_push($arr_join, array(
+                'table' => 'estados',
+                'alias' => 'E',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'E.id=Cliente.estado_id'),
+    
+            ));
+            array_push($arr_join, array(
+                'table' => 'clasificacionclientes',
+                'alias' => 'C',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'C.id=Cliente.clasificacioncliente_id'),
+    
+            ));
+
+            $arrProductos = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'Cliente.*', 
+                    'CU.descripcion',
+                    'E.descripcion',
+                    'C.descripcion',
+                ),
+                'conditions' => array(
+                    $filtros,
+                    'Cliente.empresa_id' => $empresaId,
+                ),
+                'recursive' => -1,
+            ));
+    
+            return $arrProductos;
+    
         }
 
 }

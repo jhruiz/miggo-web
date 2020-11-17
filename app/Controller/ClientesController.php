@@ -24,6 +24,8 @@ class ClientesController extends AppController
  */
     public function index()
     {
+        $nit = "";
+        $nombre= "";
         $this->loadModel('Clasificacioncliente');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
@@ -44,7 +46,9 @@ class ClientesController extends AppController
         $paginate['Cliente.empresa_id'] = $empresaId;
         $this->Cliente->recursive = 0;
         $this->set('clientes', $this->Paginator->paginate('Cliente', $paginate));
-        $this->set(compact('clasificacion'));
+        $nit = $this->passedArgs['nit'];
+        $nombre= $this->passedArgs['nombre'];
+        $this->set(compact('clasificacion', 'nombre','nit   '));
     }
 
 /**

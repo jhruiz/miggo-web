@@ -65,68 +65,97 @@ var actualizarObservacion = function() {
 }
 
 var generarAlertaSoat = function() {
-    bootbox.confirm("¿Está seguro que desea generar una alerta para el SOAT del vehículo?", function(result){
+    bootbox.confirm("¿Está seguro que desea generar una alerta para el cumpleaños del cliente?", function(result){
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
             var clienteId = $('#clienteId').val(); 
-            var ordentrabajoId = $('#ordentrabajoId').val();
-            var usuarioId = $('#usuarioId').val();  
+            var facturaId = $('#facturaId').val(); 
             var soat = $('#soat').val();         
             $.ajax({
-                url: $('#url-proyecto').val() + 'alertaordenes/generaralertasoat',
-                data: { vehiculoId: vehiculoId, usuarioId:usuarioId, clienteId: clienteId, ordentrabajoId:ordentrabajoId, soat: soat },
+                url: $('#url-proyecto').val() + 'alertaordenes/generaralertacumpleanos',
+                data: { vehiculoId: vehiculoId, clienteId: clienteId, facturaId: facturaId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
         
                     if(resp.resp == '1'){
-                        bootbox.alert('Se creó la alerta para la renovación del SOAT del vehículo.');
+                        bootbox.alert('Se creó la alerta para el cumpleaños del cliente.');
                     }else if ( resp.resp == '2' ) {
-                        bootbox.alert('Ya existe una alerta para el SOAT del vehículo');
+                        bootbox.alert('Ya existe una alerta para el cumpleaños del cliente');
                     }else{
-                        bootbox.alert('No fue posible crear la alerta para la renovación del SOAT. Por favor, inténtelo de nuevo.');
+                        bootbox.alert('No fue posible crear la alerta para cumpleaños del cliente. Por favor, inténtelo de nuevo.');
                     }
                 }
             }); 
         }
     }); 
 }
+var generarAlertaCumple = function() {
+    
+var mensaje = '';
+var usuarioId = $('#usuarioId').val(); 
+if($('#usuarioId').val() == ''){
+    bootbox.alert('Debe seleccionar un responsable para la alerta.<br>.');
+}
 
-var generarAlertaTecno = function() {
-    bootbox.confirm("¿Está seguro que desea generar una alerta para el Tecnomecánico del vehículo?", function(result){
+if($('#usuarioId').val() != ''){
+
+bootbox.confirm("¿Está seguro que desea generar una alerta para el cumpleaños del cliente?", function(result){
         if(result){            
             var vehiculoId = $('#vehiculoId').val();
-            var clienteId = $('#clienteId').val();   
-            var tecnomecanica = $('#tecnomecanica').val();
-            var ordentrabajoId = $('#ordentrabajoId').val(); 
-            var usuarioId = $('#usuarioId').val(); 
+            var clienteId = $('#clienteId').val(); 
+            var prefacturaId = $('#prefacturaId').val(); 
+            var soat = $('#soat').val();         
+            var fechacumple = $('#fechacumple').val();         
             $.ajax({
-                url: $('#url-proyecto').val() + 'alertaordenes/generaralertatecno',
-                data: { vehiculoId: vehiculoId, clienteId: clienteId, usuarioId:usuarioId,ordentrabajoId:ordentrabajoId,tecnomecanica: tecnomecanica },
+                url: $('#url-proyecto').val() + 'alertaordenes/generaralertacumpleanos',
+                data: { vehiculoId: vehiculoId, fechacumple:fechacumple,clienteId: clienteId,usuarioId:usuarioId, prefacturaId: prefacturaId, soat: soat },
                 type: "POST",
                 success: function(data) {
                     var resp = JSON.parse(data);
         
                     if(resp.resp == '1'){
-                        bootbox.alert('Se creó la alerta para la renovación del Tecnomecáncio del vehículo.');
+                        bootbox.alert('Se creó la alerta para el cumpleaños del cliente.');
                     }else if ( resp.resp == '2' ) {
-                        bootbox.alert('Ya existe una alerta para el Tecnomecánico del vehículo');
+                        bootbox.alert('Ya existe una alerta para el cumpleaños del cliente');
                     }else{
-                        bootbox.alert('No fue posible crear la alerta para la renovación del Tecnomecánico. Por favor, inténtelo de nuevo.');
+                        bootbox.alert('No fue posible crear la alerta para cumpleaños del cliente. Por favor, inténtelo de nuevo.');
                     }
                 }
             }); 
         }
     }); 
-
+}
 }
 
-$(function() {    
-    $('#cant_llamadas').click(nuevallamada);
-    $('#OrdentrabajoEstadoAlertaId').change(actualizarEstado);
-    $('#OrdentrabajoObservacionesCliente').blur(actualizarObservacion);
-    $('#alerta_soat').click(generarAlertaSoat);
-    $('#alerta_tecno').click(generarAlertaTecno);
 
+var nuevallamada = function() {
+
+    bootbox.confirm("¿Está seguro que desea actualizar el registro de llamadas?", function(result){
+        if(result){            
+            var id = $('#alerta_id').val();    
+            $.ajax({
+                url: $('#url-proyecto').val() + 'alertaordenes/actualizarllamadas',
+                data: { alerta_id: id },
+                type: "POST",
+                success: function(data) {
+                    var resp = JSON.parse(data);
+        
+                    if(resp.resp){
+                        bootbox.alert('Se actualizó la fecha de última llamada con éxito.', function(){
+                            $('#ult_llamada').html(resp.fecha);
+                            $('#cant_llamadas_text').html(resp.cant);
+                        })
+                    }else{
+                        bootbox.alert('No se pudo actualizar la fecha de la última llamada. Por favor, inténtelo de nuevo');
+                    }
+                }
+            }); 
+        }
+    }); 
+}
+$(function() {    
+    $('#alerta_cumple').click(generarAlertaCumple);
+    $('#cant_llamadas').click(nuevallamada);
     $('.onlyview').prop('disabled', true);
 });

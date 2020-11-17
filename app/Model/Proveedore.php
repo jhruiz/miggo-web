@@ -106,5 +106,23 @@ class Proveedore extends AppModel {
             $infoProveedor = $this->find('first', array('conditions' => array('Proveedore.id' => $id), 'recursive' => '-1'));
             return $infoProveedor;
         }
-        
+		
+		
+		public function obtenerProovedoresReporte($empresaId,$filtros)
+        {
+
+			
+			$arrProveedores = $this->find('all', array(
+				'conditions' => array(
+					'Proveedore.empresa_id' => $empresaId,
+					$filtros
+				
+				), 
+				'recursive' => '-1'
+				));            
+            return $arrProveedores;
+            
+    
+        }
+
 }
