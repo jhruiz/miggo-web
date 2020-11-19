@@ -10,12 +10,25 @@ var actualizarGasto = function(){
         var descripcion = $('#descripcion').val();
         var valor_actual = $('#val_actual').val();
         var valor_nuevo = $('#val_nuevo').val();
-        var cuenta_id = $('#cuenta_id').val();
+        var cuenta_id = $('#cuenta_actual_id').val();
+        var usuario_id = $('#usuario_actual_id').val();
+        var item_id = $('#item_actual_id').val();
         
         $.ajax({
             url: $('#url-proyecto').val() + 'gastos/actualizargasto',
-            data: {usuarioregistra_id : usuarioregistra_id, gasto_id : gasto_id, descripcion : descripcion, 
-                valor_actual : valor_actual, valor_nuevo : valor_nuevo, nueva_desc: nueva_desc, cuenta_id: cuenta_id},
+            data: {
+                usuarioregistra_id : usuarioregistra_id, 
+                gasto_id : gasto_id, 
+                descripcion : descripcion, 
+                valor_actual : valor_actual, 
+                valor_nuevo : valor_nuevo, 
+                nueva_cuenta : cuenta_id,  
+                nuevo_usuario : usuario_id, 
+                nueva_desc: nueva_desc, 
+                cuenta_id: cuenta_id,
+                item_id : item_id,
+            
+            },
             type: "POST",
             success: function(data) {                
                 var resp = JSON.parse(data);
