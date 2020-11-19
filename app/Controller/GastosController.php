@@ -39,8 +39,14 @@ class GastosController extends AppController {
             if(!empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
                 $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
                 $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
-            }else{
-                $fechaInicio = date('Y-m-d');
+            }
+            if(!empty($this->passedArgs['Gasto']['fechaInicio']) && empty($this->passedArgs['Gasto']['fechaFin'])){
+                $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
+                $fechaFin = date('Y-m-d');
+            }
+            
+            else{
+                $fechaInicio = date('0000-00-00');
                 $fechaFin = date('Y-m-d');
             }                   
 
@@ -108,6 +114,8 @@ class GastosController extends AppController {
                 }                
             }
            
+            // var_dump($fechaInicio);
+            // die();
             $this->set(compact('gastos', 'itemsGasto', 'ttalGastos', 'itemId', 'fechaInicio', 'fechaFin', 'arrEmpresa'));
 	}
 
@@ -358,6 +366,7 @@ class GastosController extends AppController {
             $data['itemsgasto_id'] = $posData['item_id'];            
             $data['descripcion'] = $descripcion;            
             
+
 
             $result  = $this->Gasto->actualizarGasto($data);
             
