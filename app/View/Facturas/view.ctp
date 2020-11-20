@@ -581,126 +581,129 @@
 </div><!-- class="main_container"-->
 
 
-
 <!-- div para impresora de ticket -->
-<div class="container-fluid" id="dvTicket">
-    <div style="margin:0px; width:27%; font-family:serif; font-size:12px;">    
-        <?php if(!empty($infoRemision)){?>
-        <div style="width:100%; margin:0px" align="center"><h4><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></h4></div>
-        <div style="width:100%; margin:0px" align="center"><h4><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></h4></div>
-        <?php }else{?>
-        <div style="width:100%; margin:0px" align="center"><h4><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></h4></div>
-        <?php }?>
-       
-        <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; margin:0px" align="center"><h4><b><?php echo __('FACTURA DE VENTA No. ' . $consecutivoFact) ?></b></h4></div> 
-        <input id="tipoVenta" type="hidden" value="1">
-        <?php }else{?>
-        <div style="width:100%; margin:0px" align="center"><h4><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $consecutivoFact) ?></b></h4></div>    
-        <input id="tipoVenta" type="hidden" value="2">
-        <?php }?>
-        
-        <!--informacion e imagen de empresa-->
-        <div style="margin:0px; width:100%; float:left;">
-            <div style="margin-top: 10px;" align="left">
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Nit: </b><?php 
-                        if(!empty($infoRemision)){
-                            echo h($infoRemision['Relacionempresa']['nit']);
-                        }else
-                            echo h($infoEmpresa['Empresa']['nit']);
-                        ?>
-                    </div>          
-                </div>
-                
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Teléfono: </b><?php 
-                        if(!empty($infoRemision)){
-                            echo h($infoRemision['Relacionempresa']['telefono1']);
-                        }else{
-                            echo h($infoEmpresa['Empresa']['telefono1'] . " / " . $infoEmpresa['Empresa']['telefono2']);
-                        }
-                                 
-                        ?>
-                    </div>                 
-                </div>
-                
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Dirección: </b><?php 
-                        if(!empty($infoRemision)){
-                            echo h($infoRemision['Relacionempresa']['direccion']);
-                        }else{
-                            echo h($infoEmpresa['Empresa']['direccion']);
-                        }                                                           
-                        ?>
-                    </div>                           
-                </div>
-            </div>           
-        </div> 
-        
-        <div style="width:100%; float:left; margin-top: 5px;">
-            <?php
-            echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual);
-            ?>
-        </div>    
-        
-        <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin-top: 5px;">IVA REGIMEN COMUN</div>         
-        <div style="width:100%; float:left; margin: 0px;" align="justify">Código de Actividad Económica 4541 Tarifa I.C.A.: 7.7 x MIL</div>         
-        <div style="width:100%; float:left; margin: 0px;" align="justify">No somos Grandes Contribuyentes</div>
-        <?php } ?>
-        
-        <!--informacion del cliente y moto-->
-        <div style="margin:0px; width:100%; float:left;">
-            <div style="float:left; margin-top: 10px; width:50%" align="left">
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Cliente: </b><?php echo h(!empty($infoFact['Cliente']['nombre']) ? $infoFact['Cliente']['nombre'] : "ANONIMO"); ?>
-                    </div>          
-                </div>
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Teléfono: </b><?php echo $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular']; ?>
-                    </div>                 
-                </div>
-                
-                <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
-                    </div>                           
-                </div>
-                <?php } ?>
-
+<div class="container-fluid" id="dvTicket" style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">
+    <div>
+        <img src="<?php 
+                echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];                        
+            ?>" 
+                class="img-responsive img-thumbnail center-block" width="200">
+    </div>     
+    <?php if(!empty($infoRemision)){?>
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
+    <?php }else{?>
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
+    <?php }?>
+    
+    <?php if($infoFact['Factura']['factura']){ ?>
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $consecutivoFact) ?></b></div> 
+    <input id="tipoVenta" type="hidden" value="1">
+    <?php }else{?>
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $consecutivoFact) ?></b></div>    
+    <input id="tipoVenta" type="hidden" value="2">
+    <?php }?>
+    
+    <!--informacion e imagen de empresa-->
+    <div style="margin:0px; width:100%; float:left;">
+        <div style="float:left; margin-top: 10px;" align="left">
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Nit: </b><?php 
+                    if(!empty($infoRemision)){
+                        echo h($infoRemision['Relacionempresa']['nit']);
+                    }else
+                        echo h($infoEmpresa['Empresa']['nit']);
+                    ?>
+                </div>          
             </div>
             
-            <div style="float:right; margin-top:10px; width:50%" align="left">
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Identificación: </b><?php echo h(!empty($infoFact['Cliente']['nit']) ? $infoFact['Cliente']['nit'] : "N/A"); ?>
-                    </div>          
-                </div>
-                
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Dirección: </b><?php $infoFact['Cliente']['direccion']; ?>
-                    </div>                 
-                </div>
-                
-                <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){ ?>
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Linea: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['linea'])); ?>
-                    </div>                           
-                </div>
-                <?php } ?>
-            </div>            
-        </div> 
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Telefono: </b><?php 
+                    if(!empty($infoRemision)){
+                        echo h($infoRemision['Relacionempresa']['telefono1']);
+                    }else{
+                        echo h($infoEmpresa['Empresa']['telefono1'] . " / " . $infoEmpresa['Empresa']['telefono2']);
+                    }
+                                
+                    ?>
+                </div>                 
+            </div>
+            
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Direccion: </b><?php 
+                    if(!empty($infoRemision)){
+                        echo h($infoRemision['Relacionempresa']['direccion']);
+                    }else{
+                        echo h($infoEmpresa['Empresa']['direccion']);
+                    }                                                           
+                    ?>
+                </div>                           
+            </div>
+        </div>           
+    </div> 
+    
+    <div style="width:100%; float:left; margin-top: 5px;">
+        <?php
+        echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual);
+        ?>
+    </div>    
+    
+    <!--informacion del cliente y moto-->
+    <div style="margin:0px; width:100%; float:left;">
+        <div style="float:left; margin-top: 10px; width:50%" align="left">
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Cliente: </b><?php echo h(!empty($infoFact['Cliente']['nombre']) ? $infoFact['Cliente']['nombre'] : "ANONIMO"); ?>
+                </div>          
+            </div>
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Telefono: </b><?php echo $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular']; ?>
+                </div>                 
+            </div>
+            
+            <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){?>
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Motor/Placa: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['placa'])); ?>
+                </div>                           
+            </div>
+            <?php } ?>
 
-        <div style="width:100%;">
+        </div>
+        
+        <div style="float:right; margin-top:10px; width:50%" align="left">
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Identificacion: </b><?php echo h(!empty($infoFact['Cliente']['nit']) ? $infoFact['Cliente']['nit'] : "N/A"); ?>
+                </div>          
+            </div>
+            
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Direccion: </b><?php $infoFact['Cliente']['direccion']; ?>
+                </div>                 
+            </div>
+            
+            <?php if(!empty($infoFact['Factura']['ordentrabajo_id'])){ ?>
+            <div style="margin: 2px; float: left; width: 100%;">
+                <div style="margin: 0px; float: left; width: 100%;">
+                    <b>Linea: </b><?php echo __(strtoupper($arrVeh['Vehiculo']['linea'])); ?>
+                </div>                           
+            </div>
+            <?php } ?>
+        </div>            
+    </div> 
+    <div style="margin: 2px; float: left; width: 100%;">
+        <div style="margin: 0px; float: left; width: 100%;">
+            <b>Vendedor: </b><?php echo $infoFact['Usuario']['nombre']?>
+        </div>                           
+    </div>
+
+    <div style="width:100%;">
             <table style="font-size:12px; width: 70%;">
                 <?php 
                     if(!$infoFact['Factura']['factura']){
@@ -836,15 +839,28 @@
 
             </table> 
         </div>
-        <div id="contResolTicket">
-            <div id="dvResolucionTicket" style="font-family:serif; font-size:12px; width:100%;"><small><b>
-                        <?php if($infoFact['Factura']['factura']){?>
-                            Resolución <?php echo ($infoResolucion['resolucion'])?>. Fecha de Resolución <?php echo ($infoResolucion['fechaRes'])?>.
-                            Numeración habilitada del <?php echo ($infoResolucion['resInicial']);?> al <?php echo ($infoResolucion['resFin']);?>. Regimen Común. <?php echo ($infoResolucion['nota']);?>. 
-                        <?php } ?>
-            </b></small></div>
-        </div>    
-    </div> 
+
+    <?php if(count($notaFactura) > '0'){?>        
+        <div align="center">
+            <?php foreach ($notaFactura as $nF): ?>
+            <div>
+                <?php echo h($nF['Notafactura']['descripcion']); ?>
+                &nbsp;
+            </div>
+            <?php endforeach;?>
+        </div>
+    <?php }?>    
+
+
+    <?php if($infoFact['Factura']['observacion'] != ""){?>
+        <div id="dvNota">
+            <div id='nota_factura' align="center">
+                <small>
+                <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
+                </small>
+            </div>
+        </div> 
+    <?php } ?>  
 </div>
 
 
