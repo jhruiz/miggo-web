@@ -226,8 +226,8 @@ class Producto extends AppModel {
          * @param type $codigo
          * @return string
          */
-        public function obtenerProductoPorCodigo($codigo){
-            $result = $this->find('first', array('conditions' => array('Producto.codigo' => $codigo), 'recursive' => '-1'));
+        public function obtenerProductoPorCodigo($codigo, $empresaId){
+            $result = $this->find('first', array('conditions' => array('Producto.codigo' => $codigo, 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
             return $result;
         }
         
@@ -236,8 +236,8 @@ class Producto extends AppModel {
          * @param type $referencia
          * @return type
          */
-        public function obtenerProductoPorReferencia($referencia){
-            $result = $this->find('first', array('conditions' => array('Producto.referencia' => $referencia), 'recursive' => '-1'));
+        public function obtenerProductoPorReferencia($referencia, $empresaId){
+            $result = $this->find('first', array('conditions' => array('Producto.referencia' => $referencia, 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
             return $result;
         }
         public function obtenerProductosReporte($empresaId, $filtros)

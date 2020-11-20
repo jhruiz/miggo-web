@@ -725,7 +725,7 @@ class CargueinventariosController extends AppController {
                         }                        
                         
                         //se obtiene un producto por referencia
-                        $producto = $this->Producto->obtenerProductoPorCodigo($datos['0']);
+                        $producto = $this->Producto->obtenerProductoPorCodigo($datos['0'], $empresaId);
 
                         if(!empty($producto) && $this->validarCargue($datos)){
                             //se despeja el id de la bodega
