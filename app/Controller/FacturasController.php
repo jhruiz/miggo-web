@@ -456,6 +456,7 @@ class FacturasController extends AppController
     public function facturarProductos()
     {
         $this->loadModel('Prefacturasdetalle');
+        $this->loadModel('Prefactura');
         $this->loadModel('Documento');
         $this->loadModel('Cargueinventario');
         $this->loadModel('DepositosUsuario');
@@ -658,11 +659,12 @@ class FacturasController extends AppController
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
-        if (count($detallePrefact) == '0') {
+
+        // if (count($detallePrefact) == '0') {
             /*se elimina el registro de la prefactura que fue procesada y facturada*/
             $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
             // $this->eliminarPrefactura($prefacturaId);
-        }
+        // }
 
         //se actualiza el id de la factura en los abonos correspondientes
         $this->Abonofactura->asignarFacturaAbonos($prefacturaId, $facturaId);

@@ -112,7 +112,8 @@ class PrefacturasController extends AppController {
             $tipoPago = $this->Tipopago->find('list');            
             $options = array('conditions' => array('Prefactura.' . $this->Prefactura->primaryKey => $id));
             
-            $notaFactura = $this->Notafactura->find('list');
+            // $notaFactura = $this->Notafactura->find('list');
+            $notaFactura = $this->Notafactura->obtenerNotasFacturasEmpresa($empresaId);
             $vendedor = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
             $relacionEmpresa = $this->Relacionempresa->obtenerListaEmpresasRelacion($empresaId);
                         
