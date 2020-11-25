@@ -57,35 +57,66 @@
                     <legend><h2><b><?php echo __('Caja'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['C']['descripcion']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h($fab['C']['descripcion']); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>
+
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Tipo de pago'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['T']['descripcion']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>  
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h($fab['TP']['descripcion']); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                  
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Fecha'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['FacturaCuentaValore']['created']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>  
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h($fab['Abonofactura']['created']); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                  
                 </div>  
 
                 <div class="col-md-3">
                     <legend><h2><b><?php echo __('Usuario'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h(!empty($usrEmpresa[$fvcv['FacturaCuentaValore']['usuario_id']]) ? $usrEmpresa[$fvcv['FacturaCuentaValore']['usuario_id']] : ""); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?> 
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h(!empty($usrEmpresa[$fab['Abonofactura']['usuario_id']]) ? $usrEmpresa[$fab['Abonofactura']['usuario_id']] : ""); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                   
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Valor'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h("$ " . number_format($fvcv['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>  
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h("$ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                  
                 </div>  
             </div>
         </div>
