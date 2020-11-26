@@ -5,7 +5,7 @@ App::uses('CuentasclientesController', 'Controller');
 
 class ReportesController extends AppController
 {
-
+    // obtiene estadisticas r
     public function estadisticastortas()
     {
         $this->loadModel('Deposito');
@@ -636,7 +636,7 @@ class ReportesController extends AppController
         $this->loadModel('Prefactura');
         $this->loadModel('Estadosprefactura');
         $empresaId = $this->Auth->user('empresa_id');
-        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null);
+        $prefacturas = $this->Prefactura->obtenerPrefacturas(null, null, null, $empresaId);
         $estados = $this->Estadosprefactura->obtenerListaEstados();
         $texto_tit = "Prefacturas";
         $this->set(compact('prefacturas'));
@@ -651,7 +651,7 @@ class ReportesController extends AppController
             'Observaci&oacute;n',
         );
 
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
 
     }
@@ -678,7 +678,8 @@ class ReportesController extends AppController
             'Observaci&oacute;n Mec&aacute;nico',
             'Observaci&oacute;n Cliente',
         );
-        $this->set('titulos', $arr_titulos, );
+        //aqui se debio solucionar problema de comas.
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -736,7 +737,7 @@ class ReportesController extends AppController
             'Tipo pago',
             'Valor pago',
         );
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');       
     }
     /**
@@ -795,7 +796,7 @@ class ReportesController extends AppController
             'Valor total Facturas',
         );
         $this->set(compact('facturaClientes'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
 
@@ -1247,7 +1248,7 @@ class ReportesController extends AppController
             'Fecha',
         );
         $this->set(compact('categoriasReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1290,7 +1291,7 @@ class ReportesController extends AppController
             'Estado',
         );
         $this->set(compact('proovedoresReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1327,7 +1328,7 @@ class ReportesController extends AppController
             'C&oacute;digo',
         );
         $this->set(compact('depositosReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1364,7 +1365,7 @@ class ReportesController extends AppController
             'Clasificaci&oacute;n',
                 );
         $this->set(compact('clientesReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1381,9 +1382,9 @@ class ReportesController extends AppController
         $placa = $_POST['vehiculo'];
         
         $usuarioAct = $this->Auth->user('id');
-       
+        $empresaId = $this->Auth->user('empresa_id');
         
-        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente);
+        $prefacturasReporte = $this->Prefactura->obtenerPrefacturasReporte($placa, $cliente, $empresaId);
    
         $texto_tit = "Prefacturas";
         $this->set('texto_tit', $texto_tit);
@@ -1399,7 +1400,7 @@ class ReportesController extends AppController
             'Producto descripci&oacute;n',
                 );
         $this->set(compact('prefacturasReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
     /**
@@ -1429,7 +1430,7 @@ class ReportesController extends AppController
             'Estado',
                 );
         $this->set(compact('usuariosReporte'));
-        $this->set('titulos', $arr_titulos, );
+        $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
     }
 

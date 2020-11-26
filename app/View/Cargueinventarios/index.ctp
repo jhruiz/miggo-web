@@ -62,6 +62,8 @@ $this->layout = 'inicio';
                                 <th><?php echo h('Depósito'); ?></th>
                                 <th><?php echo h('Valor'); ?></th>
                                 <th><?php echo h('Existencia Actual'); ?></th>
+                                <th><?php echo h('En Prefacturas'); ?></th>
+                                <th><?php echo h('En Ordenes'); ?></th>
                                 <th><?php echo h('Precio de Venta'); ?></th>
                                 <th><?php echo h('Fecha de Cargue'); ?></th>
                                 <th><?php echo h('Movimientos'); ?></th>
@@ -76,6 +78,8 @@ $this->layout = 'inicio';
                         </td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['costoproducto'], 2)); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['existenciaactual']); ?>&nbsp;</td>
+                        <td><?php echo h($cargueinventario['Cargueinventario']['prefacturas']); ?>&nbsp;</td>
+                        <td><?php echo h($cargueinventario['Cargueinventario']['ordeninsumos']); ?>&nbsp;</td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['precioventa'], 2)); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['created']); ?>&nbsp;</td>
 		<td class="actions">

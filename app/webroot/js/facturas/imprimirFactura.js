@@ -179,15 +179,17 @@ var imprimirFactura = function() {
             mywindow.document.write('</table></div>');
 
             //EMISOR Y RECEPTOR
+            var clienteNombre = prefact.resp['0'].C.nombre == null ? 'ANONIMO' : prefact.resp['0'].C.nombre;
+            var clienteNit = prefact.resp['0'].C.nit == null ? '' : prefact.resp['0'].C.nit;
             mywindow.document.write('<div style="margin-top:20px; float:left;">');
             mywindow.document.write("<b>EMISOR: </b>" + prefact.resp['0'].EM.nombre + "<br>");
             mywindow.document.write("________________________________<br>");
             mywindow.document.write("<b>Nit: </b>" + prefact.resp['0'].EM.nit);
             mywindow.document.write('</div>');
             mywindow.document.write('<div style="margin-top:20px; float:right;">');
-            mywindow.document.write("<b>CLIENTE: </b>" + prefact.resp['0'].C.nombre + "<br>");
+            mywindow.document.write("<b>CLIENTE: </b>" + clienteNombre + "<br>");
             mywindow.document.write("________________________________<br>");
-            mywindow.document.write("C.C/NIT: " + prefact.resp['0'].C.nit);
+            mywindow.document.write("C.C/NIT: " + clienteNit);
             mywindow.document.write('</div>');
 
             mywindow.document.write('<div style="float:left; margin-top:10px; width:100%" align="left">');
@@ -256,16 +258,20 @@ var imprimirDocumentoEquivalente = function() {
 
             //informacion del cliente
             if ($('#PrefacturaDatoscliente').val() != "") {
+                var clienteNombre = prefact.resp['0'].C.nombre == null ? 'ANONIMO' : prefact.resp['0'].C.nombre;
+                var clienteNit = prefact.resp['0'].C.nit == null ? '' : prefact.resp['0'].C.nit;
+                var clienteCelular = prefact.resp['0'].C.celular == null ? '' : prefact.resp['0'].C.celular;
+                var clienteDireccion = prefact.resp['0'].C.direccion == null ? '' : prefact.resp['0'].C.direccion;
                 mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
                 mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                mywindow.document.write('<b>Cliente: </b>' + prefact.resp['0'].C.nombre + '</div></div>');
+                mywindow.document.write('<b>Cliente: </b>' + clienteNombre + '</div></div>');
                 mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                mywindow.document.write('<b>Teléfono: </b>' + prefact.resp['0'].C.celular + '</div></div></div>');
+                mywindow.document.write('<b>Teléfono: </b>' + clienteCelular + '</div></div></div>');
                 mywindow.document.write('<div style="float:right; margin-top:10px; width:50%" align="left"><div style="margin: 2px; float: left; width: 100%;">');
                 mywindow.document.write('<div style="margin: 0px; float: left; width: 100%;">');
-                mywindow.document.write('<b>Identificación: </b>' + prefact.resp['0'].C.nit + '</div></div>');
+                mywindow.document.write('<b>Identificación: </b>' + clienteNit + '</div></div>');
                 mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                mywindow.document.write('<b>Dirección: </b>' + prefact.resp['0'].C.direccion + '</div></div></div></div>');
+                mywindow.document.write('<b>Dirección: </b>' + clienteDireccion + '</div></div></div></div>');
             } else if ($('#PrefacturaNuevonombre').val() != "") {
                 mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
                 mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
@@ -357,15 +363,17 @@ var imprimirDocumentoEquivalente = function() {
             mywindow.document.write('</table></div>');
 
             //EMISOR Y RECEPTOR
+            var clienteNombre = prefact.resp['0'].C.nombre == null ? 'ANONIMO' : prefact.resp['0'].C.nombre;
+            var clienteNit = prefact.resp['0'].C.nit == null ? '' : prefact.resp['0'].C.nit;
             mywindow.document.write('<div style="margin-top:20px; float:left;">');
             mywindow.document.write("<b>EMISOR: </b>" + prefact.resp['0'].RE.representantelegal + "<br>");
             mywindow.document.write("________________________________<br>");
             mywindow.document.write("<b>Nit: </b>" + prefact.resp['0'].RE.nit);
             mywindow.document.write('</div>');
             mywindow.document.write('<div style="margin-top:20px; float:right;">');
-            mywindow.document.write("<b>CLIENTE: </b>" + prefact.resp['0'].C.nombre + "<br>");
+            mywindow.document.write("<b>CLIENTE: </b>" + clienteNombre + "<br>");
             mywindow.document.write("________________________________<br>");
-            mywindow.document.write("C.C/NIT: " + prefact.resp['0'].C.nit);
+            mywindow.document.write("C.C/NIT: " + clienteNit);
             mywindow.document.write('</div>');
 
             //OBSERVACION

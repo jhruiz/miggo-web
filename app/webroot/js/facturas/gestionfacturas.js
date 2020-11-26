@@ -110,12 +110,12 @@ var generarAlerta = function() {
     var orden = $('#ordentrabajo_id').val();
     var fechacumple = $('fechacumple').val();
 
-    if(vehiculo != '' && cliente != '' && orden != ''){
-        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val() );
+    if (vehiculo != '' && cliente != '' && orden != '') {
+        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val());
     } else {
         bootbox.alert('Asegúrese de gestionar la orden de trabajo completa e inténtelo nuevamente.');
     }
-    
+
 }
 var generarAlertaFactura = function() {
     //valida que tenga todos los datos ingresados
@@ -125,12 +125,12 @@ var generarAlertaFactura = function() {
     var orden = $('#ordentrabajo_id').val();
     var fechacumple = $('fechacumple').val();
 
-    if(vehiculo != '' && cliente != '' && orden != ''){
-        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val() );
+    if (vehiculo != '' && cliente != '' && orden != '') {
+        window.open($('#url-proyecto').val() + 'alertaordenes/gestionalertasfac/' + $('#facturaId').val());
     } else {
         bootbox.alert('Asegúrese de gestionar la orden de trabajo completa e inténtelo nuevamente.');
     }
-    
+
 }
 
 

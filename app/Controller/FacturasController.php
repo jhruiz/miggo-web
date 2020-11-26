@@ -456,6 +456,7 @@ class FacturasController extends AppController
     public function facturarProductos()
     {
         $this->loadModel('Prefacturasdetalle');
+        $this->loadModel('Prefactura');
         $this->loadModel('Documento');
         $this->loadModel('Cargueinventario');
         $this->loadModel('DepositosUsuario');
@@ -658,11 +659,12 @@ class FacturasController extends AppController
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
-        if (count($detallePrefact) == '0') {
+
+        // if (count($detallePrefact) == '0') {
             /*se elimina el registro de la prefactura que fue procesada y facturada*/
             $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
             // $this->eliminarPrefactura($prefacturaId);
-        }
+        // }
 
         //se actualiza el id de la factura en los abonos correspondientes
         $this->Abonofactura->asignarFacturaAbonos($prefacturaId, $facturaId);
@@ -1403,6 +1405,9 @@ class FacturasController extends AppController
         //se obtiene la factura cuenta valor
         $factCV = $this->FacturaCuentaValore->obtenerPagosFactura($id);
 
+        //se obtiene la informacion de los abonos
+        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id);
+
         //se obtiene la informacion de la empresa
         $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($infoFact['Factura']['empresa_id']);
 
@@ -1478,7 +1483,7 @@ class FacturasController extends AppController
         $this->set(compact('consecutivoFact', 'fechaActual', 'arrUbicacion', 'usrEmpresa'));
 
         $this->set(compact('infoFact', 'infoVentaRapida', 'infoDetFact'));
-        $this->set(compact('infoRemision', 'infoResolucion', 'factCV'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos'));
 
     }
 
@@ -1535,6 +1540,9 @@ class FacturasController extends AppController
         }
 
         $empresaId = $this->Auth->user('empresa_id');
+
+        $filtros['Factura.empresa_id'] = $empresaId;
+
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
         $totalValor = 0;

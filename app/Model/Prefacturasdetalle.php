@@ -94,6 +94,34 @@ class Prefacturasdetalle extends AppModel {
             $arrDetPreFact = $this->find('all', array('conditions' => array('Prefacturasdetalle.prefactura_id' => $prefacturaId), 'recursive' => '0'));
             return $arrDetPreFact;
         }
+
+        public function obtenerProductosEnPrefacturas($ciId){
+
+            $arr_join = array();
+
+            array_push($arr_join, array(
+                'table' => 'prefacturas',
+                'alias' => 'P',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=Prefacturasdetalle.prefactura_id',
+                ),
+            )); 
+
+            $arrCantCI = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'sum(Prefacturasdetalle.cantidad) as cantprefact'                   
+                ),
+                'conditions' => array(                    
+                    'Prefacturasdetalle.cargueinventario_id' => $ciId,
+                    'P.ordentrabajo_id is NULL',
+                    'P.eliminar' => 0
+                    )
+            ));
+
+            return $arrCantCI;
+        }
         
         
         /**
@@ -169,34 +197,32 @@ class Prefacturasdetalle extends AppModel {
          * Obtiene todas las prefacturas
          * @return type
          */
-        public function obtenerDetallePrefacturas($empresaId){
-            $filters['US.empresa_id'] = $empresaId;   
-            
-            $arr_join = [];
-                         
+        public function obtenerDetallePrefacturas($empresa_id){
+            $arr_join = array();
+
+            array_push($arr_join, array(
+                'table' => 'prefacturas',
+                'alias' => 'P',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=Prefacturasdetalle.prefactura_id',
+                ),
+            ));                
+
             array_push($arr_join, array(
                 'table' => 'usuarios',
-                'alias' => 'US',
-                'type' => 'LEFT',
+                'alias' => 'U',
+                'type' => 'INNER',
                 'conditions' => array(
-                    'US.id = Prefactura.usuario_id'
-                )
-            ));                      
+                    'U.id=P.usuario_id',
+                ),
+            ));                
 
             $prefacDet = $this->find('all', array(
                 'joins' => $arr_join,
-                    'fields' => array(
-                        'Prefacturasdetalle.*',
-                        'Cargueinventario.*',
-                        'Prefactura.*',
-                        'US.*'
-                        // 'PFD.costoventa',
-                        // 'Prefactura.*'
-                    ),
-                    'conditions' => array($filters),
-                    'recursive' => '-1'                
-                    ));  
-
+                'conditions' => array('U.empresa_id' => $empresa_id, 'P.eliminar' => '0'),
+                'recursive' => '-1'
+            ));
             return $prefacDet;
         }
 

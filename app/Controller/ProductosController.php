@@ -349,8 +349,9 @@ public function index()
 
             $posData = $this->request->data;
             $codigo = $posData['codigo'];
+            $empresaId = $this->Auth->user('empresa_id');
 
-            $result = $this->Producto->obtenerProductoPorCodigo($codigo);
+            $result = $this->Producto->obtenerProductoPorCodigo($codigo, $empresaId);
             
             $bresult = empty($result) ? false : true;
 
@@ -364,9 +365,10 @@ public function index()
             $this->autoRender = false;
 
             $posData = $this->request->data;
-            $referencia = $posData['referencia'];           
+            $referencia = $posData['referencia'];   
+            $empresaId = $this->Auth->user('empresa_id');        
 
-            $result = $this->Producto->obtenerProductoPorReferencia($referencia);
+            $result = $this->Producto->obtenerProductoPorReferencia($referencia, $empresaId);
             
             $bresult = empty($result) ? false : true;
             echo json_encode(array('resp' => $bresult));                         
@@ -381,9 +383,10 @@ public function index()
             $posData = $this->request->data;
             $codigo = $posData['codigo'];           
             $productoId = $posData['productoId'];  
+            $empresaId = $this->Auth->user('empresa_id');
             
             //busca un producto con el codigo ingresado
-            $result = $this->Producto->obtenerProductoPorCodigo($codigo);
+            $result = $this->Producto->obtenerProductoPorCodigo($codigo, $empresaId);
 
             if(!empty($result) && $result['Producto']['id'] != $productoId){
                 
@@ -406,9 +409,10 @@ public function index()
             $posData = $this->request->data;
             $referencia = $posData['referencia'];
             $productoId = $posData['productoId'];
+            $empresaId = $this->Auth->user('empresa_id');
             
             //busca un producto con la referencia ingresada
-            $result = $this->Producto->obtenerProductoPorReferencia($referencia);
+            $result = $this->Producto->obtenerProductoPorReferencia($referencia, $empresaId);
             
             if(!empty($result) && $result['Producto']['id'] != $productoId){
                 //obtiene los datos del producto a editar

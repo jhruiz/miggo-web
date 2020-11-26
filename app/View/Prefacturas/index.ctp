@@ -7,7 +7,7 @@
         <br>
             <div class="x_panel">
                 <div class="x_title">
-                    <h2><?php echo __('Buscar Orden de Pedido'); ?></h2>
+                    <h2><?php echo __('Buscar Prefactura'); ?></h2>
                 </div>
                 <div class="x_content">
                     <?php echo $this->Form->create('Prefactura', array('action' => 'search', 'method' => 'post')); ?>
@@ -53,7 +53,7 @@
         <div class="col-md-12">
              <div class="x_panel">
                 <div class="x_title">
-                    <h2><?php echo __('Orden de Pedido'); ?></h2>
+                    <h2><?php echo __('Prefacturas'); ?></h2>
                 </div>
                 <div class="x_content">
 	                <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '30', 'id' => 'menuvert')) ?>
