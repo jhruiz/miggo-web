@@ -47,30 +47,7 @@
 ?>
         </div>
     </div>
-
-
-    <div class="row">
-
-        <div class="col-md-6">
-            <label for="ClienteClasificacionclienteId">Cuenta</label>
-            <?php echo $this->Form->input("cuenta_actual_id",
-array(
-'name' => "cuenta_actual_id",
-'label' => "",
-'value' => $gasto['Gasto']['cuentadestino'],
-'type' => 'select',
-'id' => 'cuenta_actual_id',
-'options' => $cuentas,
-'class' => 'form-control',
-)
-);
-?>
-        </div>
-    </div>
     
-
-
-
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -102,7 +79,7 @@ array(
         <div class="form-group">
             <label>Descripción:</label>
             <textarea class="form-control" rows="5"
-                id="descripcion"><?php echo $gasto['Gasto']['descripcion']; ?></textarea>
+                id="descripcion" readonly><?php echo $gasto['Gasto']['descripcion']; ?></textarea>
         </div>
     </div>
     <div class="col-md-6">&nbsp;</div>

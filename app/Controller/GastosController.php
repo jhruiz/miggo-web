@@ -35,21 +35,18 @@ class GastosController extends AppController {
             if(isset($this->passedArgs['Gasto']['itemsgasto_id']) && !empty($this->passedArgs['Gasto']['itemsgasto_id'])){
                 $itemId = $this->passedArgs['Gasto']['itemsgasto_id'];
             }
-
+            
             if(!empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
                 $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
                 $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
-            }
-            if(!empty($this->passedArgs['Gasto']['fechaInicio']) && empty($this->passedArgs['Gasto']['fechaFin'])){
+            }else if(!empty($this->passedArgs['Gasto']['fechaInicio']) && empty($this->passedArgs['Gasto']['fechaFin'])){
                 $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
                 $fechaFin = date('Y-m-d');
-            }
-            if(empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
+            }else if(empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
                 $fechaInicio = date('0000-00-00');
                 $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
-            }
-            else{
-                $fechaInicio = date('0000-00-00');
+            }else{
+                $fechaInicio = date('Y-m-d');
                 $fechaFin = date('Y-m-d');
             }                   
 
@@ -253,10 +250,6 @@ class GastosController extends AppController {
             $itemsGasto = $this->Itemsgasto->obtenerListaItemsGastos($empresaId);            
             $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
             $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
-//             echo ('<pre>');
-//             print_r($gasto);
-//             echo ('</pre>');
-// die();
 
             $this->set(compact('usuario_id', 'id', 'gasto', 'cuenta','itemsGasto','usuarios','cuentas'));
 	}
@@ -326,11 +319,6 @@ class GastosController extends AppController {
             $this->loadModel('Usuario');
             $this->loadModel('Cuenta');
             $posData = $this->request->data;         
-            
-//             echo ('<pre>');
-//             var_dump($posData);
-//             echo ('</pre>');
-// die();
 
             $valorActual = str_replace(",", "", $posData['valor_actual']);
             
@@ -354,15 +342,17 @@ class GastosController extends AppController {
             
             $data = [];
             $descripcion = $posData['descripcion'] . ". ";
-            $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
-            $descripcion .= ", realizó cambio de valor del gasto el día " . $date . ". ";
-            $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
-            $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
+
+            if($valorActual != $posData['valor_nuevo']) {
+                $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
+                $descripcion .= ", realizó cambio de valor del gasto el día " . $date . ". ";
+                $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
+                $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
+            }
             
             $data['id'] = $posData['gasto_id'];
             $data['usuario_id'] = $posData['usuarioregistra_id'];
-            $data['valor'] = $posData['valor_nuevo'];            
-            $data['cuentadestino'] = $posData['cuenta_id'];            
+            $data['valor'] = $posData['valor_nuevo'];           
             $data['usuario_id'] = $posData['nuevo_usuario'];            
             $data['itemsgasto_id'] = $posData['item_id'];            
             $data['descripcion'] = $descripcion;            
