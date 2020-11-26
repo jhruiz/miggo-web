@@ -169,8 +169,32 @@ class Prefacturasdetalle extends AppModel {
          * Obtiene todas las prefacturas
          * @return type
          */
-        public function obtenerDetallePrefacturas(){
-            $prefacDet = $this->find('all', array('recursive' => '-1'));
+        public function obtenerDetallePrefacturas($empresa_id){
+            $arr_join = array();
+
+            array_push($arr_join, array(
+                'table' => 'prefacturas',
+                'alias' => 'P',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=Prefacturasdetalle.prefactura_id',
+                ),
+            ));                
+
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=P.usuario_id',
+                ),
+            ));                
+
+            $prefacDet = $this->find('all', array(
+                'joins' => $arr_join,
+                'conditions' => array('U.empresa_id' => $empresa_id, 'P.eliminar' => '0'),
+                'recursive' => '-1'
+            ));
             return $prefacDet;
         }
         
