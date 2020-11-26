@@ -131,4 +131,39 @@ class OrdentrabajosSuministro extends AppModel {
             return $infoSum;          
     }
 
+    public function obtenerProductosEnOrdenes($idCargueInv) {
+
+        $arr_join = array(); 
+        array_push($arr_join, array(
+            'table' => 'ordentrabajos', 
+            'alias' => 'OT', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'OT.id = OrdentrabajosSuministro.ordentrabajo_id',
+                )                
+        ));
+
+        array_push($arr_join, array(
+            'table' => 'ordenestados', 
+            'alias' => 'OE', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'OE.id =OT.ordenestado_id',
+                )                
+        ));
+
+        $arrCantCI = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'sum(OrdentrabajosSuministro.cantidad) as cantordent'        
+            ),
+            'conditions' => array(                    
+                'OrdentrabajosSuministro.cargueinventario_id' => $idCargueInv,
+                'OE.ordenfinal <> 1'
+                )
+        ));
+
+        return $arrCantCI;        
+    }
+
 }

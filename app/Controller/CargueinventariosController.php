@@ -24,13 +24,16 @@ class CargueinventariosController extends AppController {
  */
         
 	public function index() {
+            $this->loadModel('Cuentaspendiente');
+            $this->loadModel('Deposito');
+            $this->loadModel('Prefacturasdetalle');
+            $this->loadModel('OrdentrabajosSuministro');
+
             /*se reagistra la actividad del uso de la aplicacion*/
             $usuariosController = new UsuariosController();
             $usuarioAct = $this->Auth->user('id');
             $usuariosController->registraractividad($usuarioAct);
             	
-            $this->loadModel('Cuentaspendiente');
-            $this->loadModel('Deposito');
             $empresaId = $this->Auth->user('empresa_id');
             $this->Cargueinventario->recursive = 0;
             
@@ -50,21 +53,27 @@ class CargueinventariosController extends AppController {
             
             $data['Cargueinventario.empresa_id'] = $empresaId;
             
-            /*se obtiene el stock que tiene la empresa en el inventario*/
-//            $cargueinventariosP = $this->Cargueinventario->obtenerCargueInventario($data); 
-            
+            /**se obtiene el inventario de la empresa */
             $cargueinventariosP = $this->Paginator->paginate('Cargueinventario',$data);
             
             $totalUnidades = 0;
             $valorInventario = 0;
             for ($i = 0; $i < count($cargueinventariosP); $i++){
+
+                /** se obtiene la cantidad del producto en prefacturas */
+                $cantPreFact = $this->Prefacturasdetalle->obtenerProductosEnPrefacturas($cargueinventariosP[$i]['Cargueinventario']['id']);
+                $cargueinventariosP[$i]['Cargueinventario']['prefacturas'] = $cantPreFact['0']['0']['cantprefact'] != '' ? $cantPreFact['0']['0']['cantprefact'] : 0;
                 
+                /** se obtiene la cantidad del producto en ordenes de trabajo */
+                $cantProdOT = $this->OrdentrabajosSuministro->obtenerProductosEnOrdenes($cargueinventariosP[$i]['Cargueinventario']['id']);
+                $cargueinventariosP[$i]['Cargueinventario']['ordeninsumos'] = $cantProdOT['0']['0']['cantordent'] != '' ? $cantProdOT['0']['0']['cantordent'] : 0;
+
                 /*se valida si la existencia del producto está por debajo del mínimo*/
                 if($cargueinventariosP[$i]['Cargueinventario']['existenciaactual'] < $cargueinventariosP[$i]['Producto']['existenciaminima']){
                     $cargueinventariosP[$i]['Cargueinventario']['color'] = 'danger';
                 }else{
                     $cargueinventariosP[$i]['Cargueinventario']['color'] = 'success';
-                }
+                }                
             }
             
             /*Se obtienen las cuentas pendientes que tiene la empresa*/
@@ -87,7 +96,6 @@ class CargueinventariosController extends AppController {
             //Se obtienen los depositos de la empresa del usaurio que se encuentra en sesion
             $depositos = $this->Deposito->obtenerDepositoEmpresa($empresaId);
             
-//            $this->set('cargueinventariosP', $this->Paginator->paginate('Cargueinventario', $data));
             $this->set(compact('cargueinventariosP', 'cuentasPendientes', 'totalUnidades', 'valorInventario', 'totalDeuda', 'depositos', 'empresaId'));
             $this->set(compact('producto', 'deposito'));                        
 	}        
