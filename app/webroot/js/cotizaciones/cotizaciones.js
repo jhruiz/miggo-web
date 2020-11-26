@@ -517,6 +517,7 @@ function formatNumber(num) {
     return (((sign) ? '' : '-') + num);
 }
 
+
 /**
  * Imprime la cotizacion
  * @returns {undefined}
@@ -623,6 +624,30 @@ var imprimirCotizacion = function() {
                 mywindow.focus();
                 mywindow.print();
                 mywindow.close();
+            }
+        });
+    }
+};
+
+/**
+ * Imprime la cotizacion
+ * @returns {undefined}
+ */
+var generarPrefactura = function() {
+    var cotizacionId = $('#cotizacionId').val();
+
+    if (cotizacionId == "") {
+        bootbox.alert('No se ha creado la cotización.');
+    } else {
+        $.ajax({
+            url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxObtenerDetallesCotizacionPrefactura',
+            data: { cotizacionId: cotizacionId },
+            type: "POST",
+            success: function(data) {
+                var resp = JSON.parse(data);
+                if (resp.resp != '1') {
+                    bootbox.alert('Se creo la prefactura con exito');
+                }
             }
         });
     }
@@ -888,7 +913,8 @@ $(function() {
     $('#CotizacioneVendedor').change(cambiarResponsableCotiza);
 
     $('#imprimirCot').click(imprimirCotizacion);
+    $('#generarPrefac').click(generarPrefactura);
 
     $('.ttales').number(true);
-    calcularTtalCot();
+    calcularTtalCot(); 
 });

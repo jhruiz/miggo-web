@@ -19,6 +19,10 @@
         <div class="col-md-1" >
             <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="imprimirFactura();">Imprimir</button>
         </div>
+        <div class="col-md-1">
+        <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaFactura();">Generar Alerta</button>
+        
+        </div>
         <div class="col-md-1" style="margin-left:20px; margin-right:70px;">
             <button id="butImprimirTk" class="btn btn-primary hidden-print" onclick="imprimirTicket();">Imprimir Ticket</button>
         </div>

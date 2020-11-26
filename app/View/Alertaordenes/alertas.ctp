@@ -15,7 +15,7 @@
     </ul>
 
     <br>
-    <a class="btn btn-primary" href="/miggo-web/alertaordenes/gestionalertasgeneral" role="button">Nueva Alerta General</a>
+    <a class="btn btn-primary" href="/alertaordenes/gestionalertasgeneral" role="button">Nueva Alerta General</a>
    
 
     <legend>

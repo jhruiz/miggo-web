@@ -1405,6 +1405,9 @@ class FacturasController extends AppController
         //se obtiene la factura cuenta valor
         $factCV = $this->FacturaCuentaValore->obtenerPagosFactura($id);
 
+        //se obtiene la informacion de los abonos
+        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id);
+
         //se obtiene la informacion de la empresa
         $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($infoFact['Factura']['empresa_id']);
 
@@ -1480,7 +1483,7 @@ class FacturasController extends AppController
         $this->set(compact('consecutivoFact', 'fechaActual', 'arrUbicacion', 'usrEmpresa'));
 
         $this->set(compact('infoFact', 'infoVentaRapida', 'infoDetFact'));
-        $this->set(compact('infoRemision', 'infoResolucion', 'factCV'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos'));
 
     }
 

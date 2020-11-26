@@ -35,9 +35,15 @@ class GastosController extends AppController {
             if(isset($this->passedArgs['Gasto']['itemsgasto_id']) && !empty($this->passedArgs['Gasto']['itemsgasto_id'])){
                 $itemId = $this->passedArgs['Gasto']['itemsgasto_id'];
             }
-
+            
             if(!empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
                 $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
+                $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
+            }else if(!empty($this->passedArgs['Gasto']['fechaInicio']) && empty($this->passedArgs['Gasto']['fechaFin'])){
+                $fechaInicio = $this->passedArgs['Gasto']['fechaInicio'];
+                $fechaFin = date('Y-m-d');
+            }else if(empty($this->passedArgs['Gasto']['fechaInicio']) && !empty($this->passedArgs['Gasto']['fechaFin'])){
+                $fechaInicio = date('0000-00-00');
                 $fechaFin = $this->passedArgs['Gasto']['fechaFin'];
             }else{
                 $fechaInicio = date('Y-m-d');
@@ -225,7 +231,11 @@ class GastosController extends AppController {
  */
 	public function edit($id = null) {    
             $this->loadModel('Cuenta');
-
+            $this->loadModel('Itemsgasto');
+            $this->loadModel('Empresa');
+            $this->loadModel('Usuario');
+            $this->loadModel('Cuenta');
+      
             //se obtiene la informacion del usuario logueado
             $usuario_id = $this->Auth->user('id');
             
@@ -235,7 +245,13 @@ class GastosController extends AppController {
             //se obtiene el listado de cuentas
             $cuenta = $this->Cuenta->obtenerDatosCuentaId($gasto['Gasto']['cuenta_id']);
             
-            $this->set(compact('usuario_id', 'id', 'gasto', 'cuenta'));
+
+            $empresaId = $this->Auth->user('empresa_id');
+            $itemsGasto = $this->Itemsgasto->obtenerListaItemsGastos($empresaId);            
+            $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+            $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+
+            $this->set(compact('usuario_id', 'id', 'gasto', 'cuenta','itemsGasto','usuarios','cuentas'));
 	}
 
 /**
@@ -303,7 +319,7 @@ class GastosController extends AppController {
             $this->loadModel('Usuario');
             $this->loadModel('Cuenta');
             $posData = $this->request->data;         
-            
+
             $valorActual = str_replace(",", "", $posData['valor_actual']);
             
             //se obtiene la información del usuario que realiza el registro
@@ -326,17 +342,23 @@ class GastosController extends AppController {
             
             $data = [];
             $descripcion = $posData['descripcion'] . ". ";
-            $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
-            $descripcion .= ", realizó cambio de valor del gasto el dia " . $date . ". ";
-            $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
-            $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
+
+            if($valorActual != $posData['valor_nuevo']) {
+                $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
+                $descripcion .= ", realizó cambio de valor del gasto el día " . $date . ". ";
+                $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
+                $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
+            }
             
             $data['id'] = $posData['gasto_id'];
             $data['usuario_id'] = $posData['usuarioregistra_id'];
-            $data['valor'] = $posData['valor_nuevo'];            
-            $data['valor'] = $posData['valor_nuevo'];            
+            $data['valor'] = $posData['valor_nuevo'];           
+            $data['usuario_id'] = $posData['nuevo_usuario'];            
+            $data['itemsgasto_id'] = $posData['item_id'];            
             $data['descripcion'] = $descripcion;            
             
+
+
             $result  = $this->Gasto->actualizarGasto($data);
             
             echo json_encode(array('resp' => $result)); 

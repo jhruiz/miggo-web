@@ -1,5 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="detallefactura">
+<? $pagos = 0; $ttalFact = 0; ?>
     <legend><h2><b><?php echo __('Detalle Factura No. ' . $consecutivoFact . '. ' 
             . $arrUbicacion['0']['Ciudade']['descripcion'] . ', ' . $arrUbicacion['0']['P']['descripcion'] . ', '
             . $fechaActual); ?></b></h2></legend>
@@ -57,35 +58,62 @@
                     <legend><h2><b><?php echo __('Caja'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['C']['descripcion']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h($fab['C']['descripcion']); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>
+
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Tipo de pago'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['T']['descripcion']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>                                                   
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Fecha'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h($fvcv['FacturaCuentaValore']['created']); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?>  
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h($fab['Abonofactura']['created']); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                  
                 </div>  
 
                 <div class="col-md-3">
                     <legend><h2><b><?php echo __('Usuario'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h(!empty($usrEmpresa[$fvcv['FacturaCuentaValore']['usuario_id']]) ? $usrEmpresa[$fvcv['FacturaCuentaValore']['usuario_id']] : ""); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                    <?php endforeach; ?> 
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h(!empty($usrEmpresa[$fab['Abonofactura']['usuario_id']]) ? $usrEmpresa[$fab['Abonofactura']['usuario_id']] : ""); ?>&nbsp;</dd>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                   
                 </div>  
 
                 <div class="col-md-2">
                     <legend><h2><b><?php echo __('Valor'); ?></b></h2></legend>
                     <?php foreach($factCV as $fvcv):?>
                         <dd><?php echo h("$ " . number_format($fvcv['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;</dd>
-                    <?php endforeach; ?>                                
+                        <?php $pagos += $fvcv['FacturaCuentaValore']['valor']; ?>
+                    <?php endforeach; ?>  
+
+                    <?php if(count($factAbonos) > 0 ){ ?>
+                        <?php foreach($factAbonos as $fab):?>
+                            <dd><?php echo h("$ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;</dd>
+                            <?php $pagos += $fab['Abonofactura']['valor']; ?>
+                        <?php endforeach; ?>
+                    <?php } ?>                                                  
                 </div>  
             </div>
         </div>
@@ -204,6 +232,7 @@
             <tr>
                 <td colspan="4">&nbsp;</td>
                 <td  align="right"><b>TOTAL</b></td>
+                <?php $ttalFact = ($subTtalVenta - $ttalDtto) + $ttalIVA; ?>
                 <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
             </tr>                
             <?php }else{ ?>
@@ -220,12 +249,30 @@
             <tr>
                 <td colspan="4">&nbsp;</td>
                 <td  align="right"><b>TOTAL</b></td>
+                <?php $ttalFact = ($subTtalVenta - $ttalDtto); ?>
                 <td  align="right"><b><?php echo ("$ ". number_format(ceil($subTtalVenta - $ttalDtto),2));?></b></td>
             </tr>                
             <?php } ?>
 
         </table> 
     </div>
+
+    <?php if($pagos < $ttalFact) { ?>
+        <div class="container">        
+            <legend><h2><b><?php echo __('Cartera'); ?></b></h2></legend>
+            <div class="container-fluid">
+                <div class="container">
+                    <div class="col-md-3">                    
+                        <dd><b><?php echo h('$ ' . number_format(($ttalFact - $pagos), 2)); ?>&nbsp;</b></dd>
+                    </div>  
+
+                    <div class="col-md-9">
+                        &nbsp;                                          
+                    </div>  
+                </div>
+            </div>
+        </div><br><br>    
+    <?php } ?>
 
 </div>
 

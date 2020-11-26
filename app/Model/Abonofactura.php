@@ -128,7 +128,31 @@ class Abonofactura extends AppModel {
      * @return type
      */
     public function obtenerAbonosFactura($facturaId){
-        $abonosFacts = $this->find('all', array('conditions' => array('Abonofactura.factura_id' => $facturaId), 'recursive' => '-1'));
+
+        $arr_join = [];     
+
+        array_push($arr_join, array(
+            'table' => 'cuentas',
+            'alias' => 'C',
+            'type' => 'INNER',
+            'conditions' => array(
+                'C.id=Abonofactura.cuenta_id',
+            ),
+        ));              
+
+
+        $abonosFacts = $this->find('all',array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'C.*',
+                'Abonofactura.*',
+            ),            
+            'conditions' => array(
+                'Abonofactura.factura_id' => $facturaId
+            ), 
+            'recursive' => '-1')
+        );
+
         return $abonosFacts; 
     }
     

@@ -387,11 +387,11 @@
                     <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
                 </a>
             </div>
-            <div class="col-md-3">
-                                <a href="#" class="btn btn-primary btn-sm active" role="button" aria-pressed="true" id="btn_alerta">Generar Alerta</a>
-                            </div>
-                  </div>
            
+                  <div class="col-md-1">
+        <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
+        
+        </div>
         </div>  
     </div><!-- termina x_content-->
     </div> <!--Termina x_panel-->
