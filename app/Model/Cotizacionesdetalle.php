@@ -69,6 +69,24 @@ class Cotizacionesdetalle extends AppModel {
             $arr_join = array();                  
             
             array_push($arr_join, array(
+                'table' => 'cargueinventarios_impuestos',
+                'alias' => 'CII',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'Cotizacionesdetalle.cargueinventario_id = CII.cargueinventario_id'
+                )
+            ));    
+
+            array_push($arr_join, array(
+                'table' => 'impuestos',
+                'alias' => 'I',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CII.impuesto_id=I.id'
+                )
+            ));            
+            
+            array_push($arr_join, array(
                 'table' => 'cotizaciones',
                 'alias' => 'C',
                 'type' => 'INNER',
@@ -82,6 +100,8 @@ class Cotizacionesdetalle extends AppModel {
                 'conditions' => array('Cotizacionesdetalle.cotizacione_id' => $idCotizacion),
                 'fields' => array(
                     'C.*',
+                    'CII.*',
+                    'I.*',
                     'Cotizacionesdetalle.*'
                 ),
                 'recursive' => '-1'                

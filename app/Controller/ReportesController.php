@@ -960,6 +960,8 @@ class ReportesController extends AppController
         if (!empty($infoGastos)) {
             foreach ($infoGastos as $gts) {
 
+                if($gts['Gasto']['traslado']) { continue; }
+
                 $empRelGasto = "";
                 foreach ($arrEmpresa as $empRel) {
                     if ($empRel['id'] == $gts['Gasto']['empresaasg_id'] && $empRel['tipo'] == $gts['Gasto']['tipoempresa']) {

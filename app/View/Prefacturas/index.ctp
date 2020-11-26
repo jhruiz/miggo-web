@@ -73,7 +73,6 @@
                                     <tbody>
                                         <?php foreach ($prefacturas as $prefactura): ?>
                                         <tr>
-                                            <td><?php echo h($prefactura['Prefactura']['id']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['CL']['nombre']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['VH']['placa']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['Prefactura']['created']); ?>&nbsp;</td>

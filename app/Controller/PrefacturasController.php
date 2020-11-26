@@ -56,7 +56,7 @@ class PrefacturasController extends AppController {
             $estados = $this->Estadosprefactura->obtenerListaEstados();
             
             //obtiene el detalle de las prefacturas
-            $arrPrefacturasDetalle = $this->Prefacturasdetalle->obtenerDetallePrefacturas($empresaId); 
+            $arrPrefacturasDetalle = $this->Prefacturasdetalle->obtenerDetallePrefacturas();            
                      
             //se cuenta el valor total de las prefacturas
             $prefactValor = 0;

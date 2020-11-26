@@ -225,6 +225,7 @@ class Prefacturasdetalle extends AppModel {
             ));
             return $prefacDet;
         }
+
         
         
 }
