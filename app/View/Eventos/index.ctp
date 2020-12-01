@@ -49,6 +49,7 @@
             <table cellpadding="0" cellspacing="0"
                 class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
+                                <th>&nbsp;</th>
                                 <th><?php echo h('Tipo Evento'); ?></th>
                                 <th><?php echo h('Responsable'); ?></th>
                                 <th><?php echo h('Fecha Evento'); ?></th>
