@@ -62,7 +62,6 @@
                                 <table class="table table-hover" cellpadding="0" cellspacing="0" >
                                     <thead>
                                         <tr>
-                                            <th><?php echo ('id pre factura'); ?></th>
                                             <th><?php echo ('Cliente'); ?></th>
                                             <th><?php echo ('Vehículo'); ?></th>
                                             <th><?php echo ('Fecha'); ?></th>
