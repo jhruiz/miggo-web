@@ -35,7 +35,7 @@ class PrecargueinventariosController extends AppController {
             /*Se obtiene la empresa del usuario en sesion*/
             $arrEmpresa = $this->Auth->user('Empresa');
             
-            /*Se obtiene el usuario que se encuentra gestionando el inventario para mostrar s¨®lo sus productos*/
+            /*Se obtiene el usuario que se encuentra gestionando el inventario para mostrar sï¿½ï¿½lo sus productos*/
             $usuarioId = $this->Auth->user('id');
             $arrInfoPreCargue = $this->Precargueinventario->obtenerPrecargueUsuario($usuarioId);
             $costoProducto = 0;
@@ -56,7 +56,7 @@ class PrecargueinventariosController extends AppController {
             /*Cantidad de items*/
             $cantItems = $i;
             
-            /*Se obtiene el listado de dep¨®sitos*/
+            /*Se obtiene el listado de depï¿½ï¿½sitos*/
             $listDepositos = $this->Deposito->obtenerListaDepositosUsuario($usuarioId);
             
             /*Se obtiene el listado de proveedores de la empresa*/
@@ -188,7 +188,7 @@ class PrecargueinventariosController extends AppController {
 		if ($this->Precargueinventario->delete()) {                    
 			$this->Session->setFlash(__('El producto ha sido eliminado.'));
 		} else {
-			$this->Session->setFlash(__('El producto no pudo ser eliminado. Por favor, int„1¤7„1¤7ntelo de nuevo.'));
+			$this->Session->setFlash(__('El producto no pudo ser eliminado. Por favor, intï¿½1ï¿½7ï¿½1ï¿½7ntelo de nuevo.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
@@ -212,9 +212,11 @@ class PrecargueinventariosController extends AppController {
        
             $preCargueId = $this->Precargueinventario->guardarPreCargueInventario($posData);
             
-            foreach ($posData['impuestos'] as $imp){
-                $this->PrecargueinventariosImpuesto->guardarPrecargueImpuesto($preCargueId,$imp);
-            }           
+            if(!empty($posData['impuestos'])){
+                foreach ($posData['impuestos'] as $imp){
+                    $this->PrecargueinventariosImpuesto->guardarPrecargueImpuesto($preCargueId,$imp);
+                }
+            }        
         }
         
         public function actualizardepositoajax(){
