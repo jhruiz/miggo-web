@@ -142,7 +142,7 @@ class Prefactura extends AppModel {
             //     $filters['Prefactura.usuario_id'] = $usuarioId;                
             // }
             
-            $filters['US.empresa_id'] = $empresaId;                
+            $filters['U.empresa_id'] = $empresaId;                
 
             if(!empty($placa)){
                 $filters['LOWER(VH.placa) LIKE'] = '%' . strtolower($placa) . '%';
