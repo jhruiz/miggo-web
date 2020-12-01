@@ -928,16 +928,25 @@ class CargueinventariosController extends AppController {
                     
                     /*Si el tipo de pago es crédito, se guarda en cuentas por pagar*/
                     if($infP['tipopago'] == '2'){
+
+                        //se valida si ya existe una cuenta por pagar para el proveedor con el número de factura
+                        $infoCtaXPagar = $this->Cuentaspendiente->obtenerCuentaProvFact($infP['proveedore_id'], $infP['num_factura'], $infP['empresa_id']);                        
+
+                        $idCXP = null;
+                        $totalObligacion = ($infP['costo_producto'] * $infP['cantidad']);                        
+                        if(!empty($infoCtaXPagar)) {
+                            $idCXP = $infoCtaXPagar['0']['Cuentaspendiente']['id'];
+                            $totalObligacion += $infoCtaXPagar['0']['Cuentaspendiente']['totalobligacion'];
+                        }
+
                         //se obtiene la información del proveedor
                         $infoProv = $this->Proveedore->obtenerProveedorPorId($infP['proveedore_id']);
                         $fechaPago = $this->sumarDiasFecha(date('Y-m-d'),$infoProv['Proveedore']['diascredito']);
     
-                        $totalObligacion = ($infP['costo_producto'] * $infP['cantidad']);
-
                         $this->Cuentaspendiente->guardarCuentasPendientes(  $documentoId, $infP['producto_id'], $infP['bodega_id'],
                                                                             $infP['costo_producto'], $infP['cantidad'], $infP['proveedore_id'],
                                                                             $infP['num_factura'], $infP['usuario_id'],$infP['empresa_id'], 
-                                                                            $totalObligacion, $fechaPago);
+                                                                            $totalObligacion, $fechaPago, $idCXP);
                     }
                 }
                 

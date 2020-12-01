@@ -263,15 +263,25 @@ class DocumentosController extends AppController {
                 
                 /*Si el tipo de pago es crédito, se guarda en cuentas por pagar*/
                 if($infP['Precargueinventario']['tipopago_id'] == '2'){
+
+                    //se valida si ya existe una cuenta por pagar para el proveedor con el número de factura
+                    $infoCtaXPagar = $this->Cuentaspendiente->obtenerCuentaProvFact($infP['Proveedore']['id'], $infP['Precargueinventario']['numerofactura'], $infoPrecargue['0']['Usuario']['empresa_id']);
+
+                    $idCXP = null;
+                    $totalObligacion = ($infP['Precargueinventario']['costoproducto'] * $infP['Precargueinventario']['cantidad']);
+                    if(!empty($infoCtaXPagar)) {
+                        $idCXP = $infoCtaXPagar['0']['Cuentaspendiente']['id'];
+                        $totalObligacion += $infoCtaXPagar['0']['Cuentaspendiente']['totalobligacion'];
+                    }
+
                     //se obtiene la información del proveedor
                     $infoProv = $this->Proveedore->obtenerProveedorPorId($infP['Proveedore']['id']);
                     $fechaPago = $this->sumarDiasFecha(date('Y-m-d'),$infoProv['Proveedore']['diascredito']);
-
-                    $totalObligacion = ($infP['Precargueinventario']['costoproducto'] * $infP['Precargueinventario']['cantidad']);
+                    
                     $this->Cuentaspendiente->guardarCuentasPendientes($documentoId,$infP['Producto']['id'],$infP['Deposito']['id'],
                             $infP['Precargueinventario']['costoproducto'],$infP['Precargueinventario']['cantidad'],$infP['Proveedore']['id'],
                             $infP['Precargueinventario']['numerofactura'],$usuarioId, $infoPrecargue['0']['Usuario']['empresa_id'],$totalObligacion,
-                            $fechaPago);
+                            $fechaPago, $idCXP);
                 }
 
                 if($resp){

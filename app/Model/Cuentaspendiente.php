@@ -121,10 +121,12 @@ class Cuentaspendiente extends AppModel {
 		)            
 	);
         
-        public function guardarCuentasPendientes($dctoId,$pdrId,$dptoId,$costProd,$cantidad,$provId,$numFact,$usrId,$emprId,$ttOblig,$fechaPago){
+        public function guardarCuentasPendientes($dctoId,$pdrId,$dptoId,$costProd,$cantidad,$provId,$numFact,$usrId,$emprId,$ttOblig,$fechaPago,$id){
             $data=array();                        
               
-            $cuentaspendientes = new Cuentaspendiente();                        
+            $cuentaspendientes = new Cuentaspendiente();    
+            
+            if(!empty($id)){ $data['id'] = $id; }
 
             if(!empty($dctoId)){ $data['documento_id'] = $dctoId; }
 
@@ -146,7 +148,7 @@ class Cuentaspendiente extends AppModel {
             
             if(!empty($ttOblig)){ $data['totalobligacion'] = $ttOblig; }
             
-            if(!empty($fechaPago)){ $data['fechapago'] = $fechaPago; }            
+            if(!empty($fechaPago)){ $data['fechapago'] = $fechaPago; }   
             
             if($cuentaspendientes->save($data)){
                 return true;
@@ -298,5 +300,22 @@ class Cuentaspendiente extends AppModel {
                     ), 
                 'recursive' => '-1'));
             return $cuentaspendientes;     			
-		}
+        }
+        
+        /**
+         * obtiene las cuentas por pagar en una factura para un proveedor
+         */
+        public function obtenerCuentaProvFact($provId, $numFact, $empresaId) {
+            $ctaXPagar = $this->find('all', array(
+                'conditions' => array(
+                    'Cuentaspendiente.proveedore_id' => $provId,
+                    'Cuentaspendiente.numerofactura' => $numFact,
+                    'Cuentaspendiente.empresa_id' => $empresaId
+                ),
+                'recursive' => '-1')
+            );
+
+            return $ctaXPagar;
+
+        }
 }

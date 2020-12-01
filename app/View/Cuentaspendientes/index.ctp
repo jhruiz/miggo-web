@@ -59,10 +59,6 @@
             <div class="container-fluid">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                                <th><?php echo $this->Paginator->sort('documento_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('producto_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('Costo Producto'); ?></th>
-                                <th><?php echo $this->Paginator->sort('Cantidad'); ?></th>
                                 <th><?php echo $this->Paginator->sort('Costo Total'); ?></th>
                                 <th><?php echo $this->Paginator->sort('proveedore_id', 'Proveedor'); ?></th>
                                 <th><?php echo $this->Paginator->sort('# Factura'); ?></th>
@@ -74,10 +70,6 @@
                 </tr>
                 <?php foreach ($cuentaspendientes as $cuentaspendiente): ?>
                 <tr class="<?php echo $cuentaspendiente['Cuentaspendiente']['color']; ?>">
-                        <td><?php echo $this->Html->link($cuentaspendiente['Documento']['codigo'], array('controller' => 'documentos', 'action' => 'view', $cuentaspendiente['Documento']['id'])); ?></td>
-                        <td><?php echo $this->Html->link($cuentaspendiente['Producto']['descripcion'], array('controller' => 'productos', 'action' => 'view', $cuentaspendiente['Producto']['id'])); ?></td>
-                        <td><?php echo h("$" . number_format($cuentaspendiente['Cuentaspendiente']['costoproducto'], 2)); ?>&nbsp;</td>
-                        <td><?php echo h($cuentaspendiente['Cuentaspendiente']['cantidad']); ?>&nbsp;</td>
                         <td class="<?php echo $cuentaspendiente['Cuentaspendiente']['limitecredito']; ?>"><?php echo h("$" . number_format($cuentaspendiente['Cuentaspendiente']['totalobligacion'], 2)); ?>&nbsp;</td>
                         <td><?php echo $this->Html->link($cuentaspendiente['Proveedore']['nombre'], array('controller' => 'proveedores', 'action' => 'view', $cuentaspendiente['Proveedore']['id'])); ?></td>
                         <td><?php echo h($cuentaspendiente['Cuentaspendiente']['numerofactura']); ?>&nbsp;</td>
