@@ -18,27 +18,21 @@ class CotizacionesdetallesController extends AppController {
         $this->loadModel('Producto');                
 
         $posData = $this->request->data;        
-        
-        // var_dump($posData);
-        // die();
+
         $catizacionId = $posData['catizacionId'];
         $nomProduct = $posData['nomProduct'];
         $idProd = $posData['idProd'];
-        
+
         $data = array();
         
         $prod = [];
         if(!empty($idProd)){
             $prod = $this->Cargueinventario->obtenerInventarioId($idProd);
         }
-        // echo ('<pre>');
-        // var_dump($prod['Cargueinventario']['id']);
-        // echo ('</pre>');
-        // die();
 
         $data['cantidad'] = '1';
         $data['costoventa'] = !empty($prod['Cargueinventario']) ? $prod['Cargueinventario']['precioventa'] : '0';        
-        $data['cargueinventario_id'] = $prod['Cargueinventario']['id'];
+        $data['cargueinventario_id'] = !empty($prod['Cargueinventario']['id']) ? $prod['Cargueinventario']['id'] : '0';
         $data['cotizacione_id'] = $catizacionId;
         $data['costototal'] = !empty($prod['Cargueinventario']) ? $prod['Cargueinventario']['precioventa'] : '0';
         $data['nombreproducto'] = $nomProduct;
@@ -64,8 +58,6 @@ class CotizacionesdetallesController extends AppController {
 
         $posData = $this->request->data;        
         
-        // var_dump($posData);
-        // die();
         $catizacionId = $posData['catizacionId'];
         $nomProduct = $posData['nomProduct'];
         $idProd = $posData['idProd'];
@@ -76,10 +68,6 @@ class CotizacionesdetallesController extends AppController {
         if(!empty($idProd)){
             $prod = $this->Cargueinventario->obtenerInventarioId($idProd);
         }
-        // echo ('<pre>');
-        // var_dump($prod['Cargueinventario']['id']);
-        // echo ('</pre>');
-        // die();
 
         $data['cantidad'] = '1';
         $data['costoventa'] = !empty($prod['Cargueinventario']) ? $prod['Cargueinventario']['precioventa'] : '0';        
@@ -183,11 +171,7 @@ class CotizacionesdetallesController extends AppController {
 
         /*Se obtienen los depositos en los cuales está el usuario*/
         $arrCotDet = $this->Cotizacionesdetalle->obtenerCotizacionProductos($cotizacionId);
-
-        // echo ("<pre>");
-        // echo ($arrCotDet);
-        // echo ("</pre>");
-        // die();        
+     
         echo json_encode(array('resp' => $arrCotDet));             
     }        
     
