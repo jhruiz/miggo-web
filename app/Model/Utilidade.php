@@ -155,6 +155,7 @@ class Utilidade extends AppModel {
                 ),
                 'conditions' => array(
                     'Utilidade.empresa_id' => $empresaId, 
+                    'F.eliminar' => '0',
                     'Utilidade.created BETWEEN ? AND ?' => array($fechaInicio, $fechaFin)), 
                 'recursive' => '-1'));
             return $utilidades;
