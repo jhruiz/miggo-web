@@ -71,7 +71,7 @@ class Cotizacionesdetalle extends AppModel {
             array_push($arr_join, array(
                 'table' => 'cargueinventarios_impuestos',
                 'alias' => 'CII',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'Cotizacionesdetalle.cargueinventario_id = CII.cargueinventario_id'
                 )
@@ -80,7 +80,7 @@ class Cotizacionesdetalle extends AppModel {
             array_push($arr_join, array(
                 'table' => 'impuestos',
                 'alias' => 'I',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'CII.impuesto_id=I.id'
                 )
