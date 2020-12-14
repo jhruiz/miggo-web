@@ -52,7 +52,8 @@
                                     array(
                                         'label' => '',
                                         'class' => 'form-control', 
-                                        'placeholder' => 'Placa/Número motor vehículo'
+                                        'placeholder' => 'Placa/Número motor vehículo',
+                                        'autocomplete' => 'off'
                                         )
                                     ); 
                             ?> 

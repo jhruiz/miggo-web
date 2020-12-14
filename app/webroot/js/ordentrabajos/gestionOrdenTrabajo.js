@@ -104,9 +104,9 @@ var validarFomulario = function() {
         mensaje += "- Debe seleccionar una fecha de ingreso del vehículo. <br>";
     }
 
-    if ($('#fecha_salida').val() == "") {
-        mensaje += "- Debe seleccionar una fecha de salida del vehículo. <br>";
-    }
+    // if ($('#fecha_salida').val() == "") {
+    //     mensaje += "- Debe seleccionar una fecha de salida del vehículo. <br>";
+    // }
 
     if ($('#fecha_soat').val() == "") {
         mensaje += "- Debe seleccionar una fecha de vencimiento de Soat. <br>";

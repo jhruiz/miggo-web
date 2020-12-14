@@ -406,6 +406,7 @@ class PrefacturasController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
             $this->loadModel('Prefactura');
@@ -419,11 +420,13 @@ class PrefacturasController extends AppController {
                 /*se restaura la cantidad en el inventario*/
                 $cantFinal = $prefactDet[$i]['Prefacturasdetalle']['cantidad'] + $prefactDet[$i]['Cargueinventario']['existenciaactual'];
                 
-                /*se actualiza la cantidad en el stock*/
-                if($this->Cargueinventario->actalizarExistenciaStock($prefactDet[$i]['Prefacturasdetalle']['cargueinventario_id'], $cantFinal)){
-                    /*una vez actualizado el inventario, se elimina el registro del detalle de la factura*/
-                    $this->Prefacturasdetalle->delete($prefactDet[$i]['Prefacturasdetalle']['id']);
+                if(empty($prefactDet['0']['Prefactura']['ordentrabajo_id'])){
+                    /*se actualiza la cantidad en el stock*/
+                    $this->Cargueinventario->actalizarExistenciaStock($prefactDet[$i]['Prefacturasdetalle']['cargueinventario_id'], $cantFinal);
                 }
+
+                /*una vez actualizado el inventario, se elimina el registro del detalle de la factura*/
+                $this->Prefacturasdetalle->delete($prefactDet[$i]['Prefacturasdetalle']['id']);
             }
             
             $this->Prefactura->id = $id;
