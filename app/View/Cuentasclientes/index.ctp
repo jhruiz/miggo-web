@@ -44,7 +44,7 @@
                         </td>    
                         <td>
                             <button id="pagarCuenta" class="btn btn-primary" onclick="pagarCuenta('<?php echo $cuentascliente['Cuentascliente']['id']?>');">Pagar</button>
-                            <button id="eliminarCuenta" class="btn btn-primary" onclick="eliminarCuenta('<?php echo $cuentascliente['Cuentascliente']['id']?>');">Eliminar</button>
+                            <button id="eliminarCuenta" class="btn btn-primary" onclick="eliminarCuenta('<?php echo $cuentascliente['Cuentascliente']['id']?>', '<?php echo $cuentascliente['Cuentascliente']['totalobligacion'];?>');">Eliminar</button>
                             <button id="verAbonos" class="btn btn-primary" onclick="verAbonos('<?php echo $cuentascliente['Cuentascliente']['id']?>');">Ver Abonos</button>
                         </td>
                 </tr>

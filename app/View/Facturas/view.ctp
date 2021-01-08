@@ -164,7 +164,17 @@
         </div> 
         <div style="margin: 2px; float: left; width: 100%;">
             <div style="margin: 0px; float: left; width: 100%;">
-                <b>Método de Pago: </b><?php if(isset($infoTipoPago['Tipopago'])){echo __($infoTipoPago['Tipopago']['descripcion']);}?>
+                <b>Método de Pago: </b> <br>
+                <?php if(count($factCV) > 0 ){ ?>
+                    <?php foreach($factCV as $fvcv):?>
+                        <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;<br>
+                    <?php endforeach; ?>                             
+                <?php } ?>
+                <?php if(count($factAbonos) > 0 ){ ?>
+                    <?php foreach($factAbonos as $fab):?>
+                        <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;<br>
+                    <?php endforeach; ?>
+                <?php } ?>                                  
             </div>                           
         </div>
 
@@ -204,10 +214,17 @@
                         $valorXCantidad = ceil($costoVenta * $DetFact['Facturasdetalle']['cantidad']);
                         $descuento = $valorXCantidad * ($DetFact['Facturasdetalle']['porcentaje']/100);
                         $valorConDescuento = $valorXCantidad - $descuento;
+
+                        if($DetFact['C']['servicio'] == '1'){
+                            $ttalServ += $valorXCantidad;
+                        } else {
+                            $ttalRep += $valorXCantidad;
+                        }
+
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
-                        <td><?php echo h($DetFact['Producto']['descripcion']); ?>&nbsp;</td>                    
+                        <td><?php echo h($DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$ " . number_format($costoVenta,2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h($DetFact['Facturasdetalle']['porcentaje'] . "%"); ?>&nbsp;</td>
                         <td  align="right"><?php echo h("$ " . number_format(($valorXCantidad),2)); ?>&nbsp;</td>
@@ -233,10 +250,15 @@
                         $valorXCantidad = $costoBase * $DetFact['Facturasdetalle']['cantidad'];                                                
                         $valorIVA = ceil(($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impuesto']/100));
 
+                        if($DetFact['C']['servicio'] == '1'){                            
+                            $ttalServ += $valorXCantidad;
+                        } else {
+                            $ttalRep += $valorXCantidad;
+                        }
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
-                        <td><?php echo h($imp . $DetFact['Producto']['descripcion']); ?>&nbsp;</td>                    
+                        <td><?php echo h($imp . $DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$ " . number_format($costoBase,2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h($DetFact['Facturasdetalle']['porcentaje'] . "%"); ?>&nbsp;</td>
                         <td  align="right"><?php echo h("$ " . number_format(($costoBase * $DetFact['Facturasdetalle']['cantidad']),2)); ?>&nbsp;</td>
@@ -251,6 +273,18 @@
                 endforeach; ?> 
                     
                 <?php if($infoFact['Factura']['factura']){ ?>
+
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td  align="right"><b><?php echo($serviceName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td  align="right"><b><?php echo($productName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
+                </tr>
+
                 <tr>
                     <td colspan="3">&nbsp;</td>
                     <td  align="right"><b>Subtotal</b></td>
@@ -289,6 +323,18 @@
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
                 </tr>                
                 <?php }else{ ?>
+
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td  align="right"><b><?php echo($serviceName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
+                </tr>
+                <tr>                
+                    <td colspan="3">&nbsp;</td>
+                    <td  align="right"><b><?php echo($productName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
+                </tr>
+
                 <tr>
                     <td colspan="3">&nbsp;</td>
                     <td  align="right"><b>SUBTOTAL</b></td>
@@ -706,6 +752,20 @@
             <b>Vendedor: </b><?php echo $infoFact['Usuario']['nombre']?>
         </div>                           
     </div>
+    <div style="margin: 0px; float: left; width: 100%;">
+        <b>Método de Pago: </b> <br>
+        <?php if(count($factCV) > 0 ){ ?>
+            <?php foreach($factCV as $fvcv):?>
+                <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 0)); ?>&nbsp;<br>
+            <?php endforeach; ?>                             
+        <?php } ?>
+
+        <?php if(count($factAbonos) > 0 ){ ?>
+            <?php foreach($factAbonos as $fab):?>
+                <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 0)); ?>&nbsp;<br>
+            <?php endforeach; ?>
+        <?php } ?>                                  
+    </div>      
 
     <div style="width:100%;">
             <table style="font-size:12px; width: 70%;">
@@ -740,11 +800,11 @@
                         $costoVenta = $DetFact['Facturasdetalle']['costoventa'];
                         $valorXCantidad = ceil($costoVenta * $DetFact['Facturasdetalle']['cantidad']);
                         $descuento = $valorXCantidad * ($DetFact['Facturasdetalle']['porcentaje']/100);
-                        $valorConDescuento = $valorXCantidad - $descuento;
+                        $valorConDescuento = $valorXCantidad - $descuento;                     
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
-                        <td><?php echo h($DetFact['Producto']['descripcion']); ?>&nbsp;</td>                    
+                        <td><?php echo h($DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$" . number_format($costoVenta,0)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h("$" . number_format(($valorXCantidad),0)); ?>&nbsp;</td>
                     </tr>    
@@ -767,12 +827,12 @@
                         }                        
                         
                         $valorXCantidad = $costoBase * $DetFact['Facturasdetalle']['cantidad'];                                                
-                        $valorIVA = ceil(($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impuesto']/100));
+                        $valorIVA = ceil(($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impuesto']/100));                      
 
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
-                        <td><?php echo h($imp . $DetFact['Producto']['descripcion']); ?>&nbsp;</td>                    
+                        <td><?php echo h($imp . $DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$" . number_format($costoBase,0)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h("$" . number_format(($costoBase * $DetFact['Facturasdetalle']['cantidad']),0)); ?>&nbsp;</td>
 
@@ -788,7 +848,18 @@
                 <?php if($infoFact['Factura']['factura']){ ?>
                 <tr>
                     <td colspan="2">&nbsp;</td>
-                    <td  align="right"><b>Subttal</b></td>
+                    <td  align="right"><b><?php echo($serviceName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),0); ?></td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td  align="right"><b><?php echo($productName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),0); ?></td></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td  align="right"><b>Subtotal</b></td>
                     <td  align="right"><b><?php echo "$" . number_format(($subTtalVenta),0); ?></td></td>
                 </tr>
                 <?php if(!empty($ttalDtto)){ ?>
@@ -824,6 +895,17 @@
                     <td  align="right"><b><?php echo ("$". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),0));?></b></td>
                 </tr>                
                 <?php }else{ ?>
+                    <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td  align="right"><b><?php echo($serviceName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td  align="right"><b><?php echo($productName);?></b></td>
+                    <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
+                </tr>
+
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>Subttal</b></td>

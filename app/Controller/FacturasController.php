@@ -146,9 +146,17 @@ class FacturasController extends AppController
         $this->loadModel('Marcavehiculo');
         $this->loadModel('Paise');
         $this->loadModel('Ciudade');
+        $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Abonofactura');
 
         /*se obtiene la información de la factura por el id*/
         $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
+
+        //se obtiene la factura cuenta valor
+        $factCV = $this->FacturaCuentaValore->obtenerPagosFactura($id);
+
+        //se obtiene la informacion de los abonos
+        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id);              
 
         if ($infoFact['Factura']['relacionempresa'] == "") {
             /*se obtiene la información de la empresa*/
@@ -167,6 +175,9 @@ class FacturasController extends AppController
         /*Se recorre el detalle para obtener el total de la venta y el total de productos*/
         $ttalUnid = '0';
 
+        $ttalServ = 0;
+        $ttalRep = 0;
+
         for ($i = 0; $i < count($infoDetFact); $i++) {
 
             $ttalUnid += $infoDetFact[$i]['Facturasdetalle']['cantidad'];
@@ -174,7 +185,7 @@ class FacturasController extends AppController
             $infoDetFact[$i]['Facturasdetalle']['valorconiva'] = $infoDetFact[$i]['Facturasdetalle']['costototal'];
             $infoDetFact[$i]['Facturasdetalle']['valoriva'] = 'N/A';
             $infoDetFact[$i]['Facturasdetalle']['iva'] = 'N/A';
-        }
+        }     
 
         $impuestos = '0';
 
@@ -189,6 +200,14 @@ class FacturasController extends AppController
 
         /*se valida si fue una venta rapida*/
         $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($id);
+
+        /*Se obtiene el nombre para el total de manos de obra*/
+        $strDato = "service";
+        $serviceName = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        /*Se obtiene el nombre para el total de repuestos*/
+        $strDato = "product";
+        $productName = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
 
         /*Se obtiene la url de las imagenes de las empresas*/
         $strDato = "urlImgEmpresa";
@@ -264,7 +283,7 @@ class FacturasController extends AppController
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
         $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
-        $this->set(compact('infoRemision', 'infoResolucion'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName'));
     }
 
 /**

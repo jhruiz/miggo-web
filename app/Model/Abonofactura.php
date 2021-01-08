@@ -12,7 +12,7 @@ class Abonofactura extends AppModel {
      * @param type $empresaId
      * @return boolean
      */
-    public function guardarAbonoFactura($prefacturaId, $usuarioId, $valor, $empresaId, $cuentaId){
+    public function guardarAbonoFactura($prefacturaId, $usuarioId, $valor, $empresaId, $cuentaId, $tipopagoId){
 
         $data=array();                        
 
@@ -23,6 +23,7 @@ class Abonofactura extends AppModel {
         $data['valor'] = $valor;
         $data['empresa_id'] = $empresaId;
         $data['cuenta_id'] = $cuentaId;
+        $data['tipopago_id'] = $tipopagoId;
 
         if($abonoFactura->save($data)){
             return true;
@@ -138,13 +139,22 @@ class Abonofactura extends AppModel {
             'conditions' => array(
                 'C.id=Abonofactura.cuenta_id',
             ),
-        ));              
+        ));
 
+        array_push($arr_join, array(
+            'table' => 'tipopagos',
+            'alias' => 'TP',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'TP.id=Abonofactura.tipopago_id',
+            ),
+        ));  
 
         $abonosFacts = $this->find('all',array(
             'joins' => $arr_join,
             'fields' => array(
                 'C.*',
+                'TP.*',
                 'Abonofactura.*',
             ),            
             'conditions' => array(
@@ -250,7 +260,7 @@ class Abonofactura extends AppModel {
      * @param type $empresaId
      * @return boolean
      */
-    public function guardarAbonoFacturaCuentaCliente($facturaId, $usuarioId, $valor, $empresaId, $cuentaId, $cuentaClienteId, $prefacturaId){
+    public function guardarAbonoFacturaCuentaCliente($facturaId, $usuarioId, $valor, $empresaId, $cuentaId, $cuentaClienteId, $prefacturaId, $tipopagoId){
 
         $data=array();                        
 
@@ -263,6 +273,7 @@ class Abonofactura extends AppModel {
         $data['empresa_id'] = $empresaId;
         $data['cuenta_id'] = $cuentaId;
         $data['cuentacliente_id'] = $cuentaClienteId;
+        $data['tipopago_id'] = $tipopagoId;
 
         if($abonoFactura->save($data)){
             return true;

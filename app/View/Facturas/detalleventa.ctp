@@ -113,7 +113,7 @@
                             <dd><?php echo h("$ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;</dd>
                             <?php $pagos += $fab['Abonofactura']['valor']; ?>
                         <?php endforeach; ?>
-                    <?php } ?>                                                  
+                    <?php } ?>                       
                 </div>  
             </div>
         </div>
