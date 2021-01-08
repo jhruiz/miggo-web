@@ -78,7 +78,7 @@
                         <td><?php echo h($cuentaspendiente['Cuentaspendiente']['fechalimitepago']); ?>&nbsp;</td>
                         <td><?php echo h($cuentaspendiente['Cuentaspendiente']['diasvencido']); ?>&nbsp;</td>
                         <td><button id="pagarCuenta" class="btn btn-primary btn-sm" onclick="datosCuentasPendientes('<?php echo $cuentaspendiente['Cuentaspendiente']['id'] ?>');">Pagar</button>
-                        <button id="eliminarCuentaPendiente" class="btn btn-primary btn-sm" onclick="eliminarCuentaPendiente('<?php echo $cuentaspendiente['Cuentaspendiente']['id'] ?>');">Eliminar</button>
+                        <button id="eliminarCuentaPendiente" class="btn btn-primary btn-sm" onclick="eliminarCuentaPendiente('<?php echo $cuentaspendiente['Cuentaspendiente']['id']; ?> ', '<?php echo $cuentaspendiente['Cuentaspendiente']['totalobligacion']; ?>');">Eliminar</button>
                         </td>
                 </tr>
                 <?php endforeach;?>

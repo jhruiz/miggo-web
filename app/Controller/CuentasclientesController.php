@@ -226,7 +226,7 @@ class CuentasclientesController extends AppController {
                 $this->Abonofactura->guardarAbonoFacturaCuentaCliente($datosCuentaPendiente['Cuentascliente']['factura_id'], 
                         $usuarioId, $ttalPago, $datosCuentaPendiente['Cuentascliente']['empresa_id'], 
                         $datosTipoPago['Tipopago']['cuenta_id'], $cuentaPendienteId,
-                        $datosCuentaPendiente['Cuentascliente']['prefactura_id']);
+                        $datosCuentaPendiente['Cuentascliente']['prefactura_id'], $tipopagoId);
                 
             }else{
                 $resp = false;

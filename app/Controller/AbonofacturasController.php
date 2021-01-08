@@ -49,7 +49,7 @@ class AbonofacturasController extends AppController {
                 $empresaId = $this->Auth->user('empresa_id');
                 $usuarioId = $this->Auth->user('id');
                 
-                $resp = $this->Abonofactura->guardarAbonoFactura($prefactId, $usuarioId, $ttalAbono, $empresaId, $cuentaId);
+                $resp = $this->Abonofactura->guardarAbonoFactura($prefactId, $usuarioId, $ttalAbono, $empresaId, $cuentaId, $tipoPagoId);
                 if($resp){
                     //se agrega el saldo a la cuenta
                     $infoCuenta = $this->Cuenta->obtenerDatosCuentaId($cuentaId);

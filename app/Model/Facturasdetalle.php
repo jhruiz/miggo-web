@@ -112,7 +112,50 @@ class Facturasdetalle extends AppModel {
         }
         
         public function obtenerFacturaDetalleFactId($facturaId){
-            $infoDetFact = $this->find('all', array('conditions' => array('Facturasdetalle.factura_id' => $facturaId), 'recursive' => '0'));
+			$arr_join = array(); 
+
+			array_push($arr_join, array(
+				'table' => 'facturas', 
+				'alias' => 'F', 
+				'type' => 'INNER',
+				'conditions' => array('F.id=Facturasdetalle.factura_id')                
+			));
+
+			array_push($arr_join, array(
+				'table' => 'depositos', 
+				'alias' => 'D', 
+				'type' => 'INNER',
+				'conditions' => array('D.id=Facturasdetalle.deposito_id')                
+			));
+
+			array_push($arr_join, array(
+				'table' => 'productos', 
+				'alias' => 'P', 
+				'type' => 'INNER',
+				'conditions' => array('P.id=Facturasdetalle.producto_id')                
+			));
+
+			array_push($arr_join, array(
+				'table' => 'categorias', 
+				'alias' => 'C', 
+				'type' => 'INNER',
+				'conditions' => array('C.id=P.categoria_id')                
+			));
+
+            $infoDetFact = $this->find('all', array(
+				'joins' => $arr_join,
+				'fields' => array(
+					'Facturasdetalle.*',
+					'F.*',
+					'D.*',
+					'P.*',
+					'C.*'
+				),
+				'conditions' => array(
+					'Facturasdetalle.factura_id' => $facturaId
+				), 
+				'recursive' => '0'));
+
             return $infoDetFact;
         }
 }
