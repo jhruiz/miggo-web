@@ -115,7 +115,11 @@ class Prefactura extends AppModel {
          * @return type
          */
         public function obtenerPrefactPorOrden($ordenId){
-            $arrPrefact = $this->find('first', array('conditions' => array('Prefactura.ordentrabajo_id' => $ordenId), 'recursive' => '-1'));
+            $arrPrefact = $this->find('first', array(
+                'conditions' => array(
+                    'Prefactura.ordentrabajo_id' => $ordenId,
+                    'Prefactura.eliminar' => '0'
+                ), 'recursive' => '-1'));
             return $arrPrefact;
         }
         
