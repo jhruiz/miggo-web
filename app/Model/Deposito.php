@@ -288,7 +288,18 @@ class Deposito extends AppModel {
         
         //se obtiene toda la informacion de los depositos de una empresa
         public function obtenerInfoDepositosEmpresa($empresaId){
-            $infoDepositos = $this->find('all', array('conditons' => array('Deposito.empresa_id' => $empresaId), 'recursive' => '-1'));
+            $infoDepositos = $this->find('all', array('conditions' => array('Deposito.empresa_id' => $empresaId), 'recursive' => '-1'));
+            return $infoDepositos; 
+		}
+
+        //se obtiene la informacion de un deposito por empresa
+        public function obtenerDepositosEmpresaDeposito($empresaId, $depositoId){
+			$depositoId = 10000;
+            $infoDepositos = $this->find('first', array(
+				'conditions' => array(
+					'Deposito.empresa_id' => $empresaId,
+					'Deposito.id' => $depositoId
+				), 'recursive' => '-1'));
             return $infoDepositos; 
 		}
 		

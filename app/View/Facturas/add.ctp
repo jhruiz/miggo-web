@@ -12,6 +12,7 @@
 <div class="x_panel">
         <div class="x_title">
                     <h2><?php echo __('Venta de Productos'); ?></h2>
+                    <a class="btn btn-primary btn-sm" href="https://catalogo-vpfe.dian.gov.co/User/Login" role="button" target="_blank">Facturacion Electronica</a>
                     <ul class="nav navbar-right panel_toolbox">
 
                   </li>

@@ -686,6 +686,7 @@ class CargueinventariosController extends AppController {
             
             if ($this->request->is('post')) {
                 $this->loadModel('Producto');
+                $this->loadModel('Deposito');
                 $productos = new ProductosController();
                 
                 //se obtiene el archivo que llega por post
@@ -710,7 +711,6 @@ class CargueinventariosController extends AppController {
                 $usuarioId = $this->Auth->user('id');
 
                 if($productos->subirArchivo($posData['Cargueplano']['cargarInventario'], $confDato, $nameImg, $empresaId, $usuarioId)){
-                    
                     //se obtiene la url del archivo 
                     $urlCsv = $this->Configuraciondato->obtenerValorDatoConfig($confDato) . $empresaId . '//' . $nameImg . '.csv';
                     $linea = 0;
@@ -720,9 +720,10 @@ class CargueinventariosController extends AppController {
                     $arrErrores = array();
                     $errorCsv = '';
                     $mensaje = 'El cargue del inventario fue exitoso!!!';
+                    $secondMessage = '';
                     //Lo recorremos
                     while (($datos = fgetcsv($archivo, ",")) == true) 
-                    {
+                    {                        
                         if($linea == 0){
                             $linea++;
                             continue;
@@ -730,41 +731,58 @@ class CargueinventariosController extends AppController {
 
                         if(count($datos) == 1 ) {
                             $datos = explode(';', $datos['0']);                            
-                        }                        
+                        }    
                         
-                        //se obtiene un producto por referencia
-                        $producto = $this->Producto->obtenerProductoPorCodigo($datos['0'], $empresaId);
+                        //se obtiene un producto por codigo
+                        $producto = $this->Producto->obtenerProductoPorCodigo(trim($datos['0']), $empresaId);               
 
-                        if(!empty($producto) && $this->validarCargue($datos)){
-                            //se despeja el id de la bodega
-                            $arrBodega = explode('-', $datos['2']);
-                            
-                            //se valida si existe impuesto y se despeja de ser asi
-                            $imp = '';
-                            if($datos['3'] != 'na') {
-                                $arrImp = explode('-', $datos['3']);
-                                $imp = $arrImp['1'];
+                        if(!empty($producto)){
+
+                            if($this->validarCargue($datos)) {
+                                //se despeja el id de la bodega
+                                $arrBodega = explode('-', $datos['2']);
+                                
+                                //se valida si existe impuesto y se despeja de ser asi
+                                $imp = '';
+                                if($datos['3'] != 'na') {
+                                    $arrImp = explode('-', $datos['3']);
+                                    $imp = $arrImp['1'];
+                                }
+                                
+                                //se despeja el id del proveedor
+                                $arrProv = explode('-', $datos['8']);
+
+                                $prod['producto_id'] = $producto['Producto']['id'];
+                                $prod['cantidad'] = $datos['1'];
+                                $prod['bodega_id'] = $arrBodega['1'];
+                                $prod['impuesto_id'] = $imp;   
+                                $prod['costo_producto'] = $datos['4'];
+                                $prod['precio_maximo'] = $datos['5'];
+                                $prod['precio_minimo'] = $datos['6'];
+                                $prod['precio_venta'] = $datos['7'];
+                                $prod['proveedore_id'] = $arrProv['1'];
+                                $prod['tipopago'] = $datos['9'];
+                                $prod['num_factura'] = $datos['10'];
+                                $prod['empresa_id'] = $empresaId;
+                                $prod['usuario_id'] = $usuarioId;
+                                
+                                $arrProductos[] = $prod;
+                            }else{
+                                $prodErr['producto_id'] = $datos['0'];
+                                $prodErr['cantidad'] = $datos['1'];
+                                $prodErr['bodega_id'] = $datos['2'];
+                                $prodErr['impuesto_id'] = $datos['3'];   
+                                $prodErr['costo_producto'] = $datos['4'];
+                                $prodErr['precio_maximo'] = $datos['5'];
+                                $prodErr['precio_minimo'] = $datos['6'];
+                                $prodErr['precio_venta'] = $datos['7'];
+                                $prodErr['proveedore_id'] = $datos['8'];
+                                $prodErr['tipopago'] = $datos['9'];
+                                $prodErr['num_factura'] = $datos['10'];
+                                $arrErrores[]= $prodErr;
                             }
-                            
-                            //se despeja el id del proveedor
-                            $arrProv = explode('-', $datos['8']);
-                            
-                            $prod['producto_id'] = $producto['Producto']['id'];
-                            $prod['cantidad'] = $datos['1'];
-                            $prod['bodega_id'] = $arrBodega['1'];
-                            $prod['impuesto_id'] = $imp;   
-                            $prod['costo_producto'] = $datos['4'];
-                            $prod['precio_maximo'] = $datos['5'];
-                            $prod['precio_minimo'] = $datos['6'];
-                            $prod['precio_venta'] = $datos['7'];
-                            $prod['proveedore_id'] = $arrProv['1'];
-                            $prod['tipopago'] = $datos['9'];
-                            $prod['num_factura'] = $datos['10'];
-                            $prod['empresa_id'] = $empresaId;
-                            $prod['usuario_id'] = $usuarioId;
-                            
-                            $arrProductos[] = $prod;
-                        }else{
+                        } else {
+                            $secondMessage .= 'No se encontró producto con código ' . $datos['0'] . '<br>';
                             $prodErr['producto_id'] = $datos['0'];
                             $prodErr['cantidad'] = $datos['1'];
                             $prodErr['bodega_id'] = $datos['2'];
@@ -776,7 +794,7 @@ class CargueinventariosController extends AppController {
                             $prodErr['proveedore_id'] = $datos['8'];
                             $prodErr['tipopago'] = $datos['9'];
                             $prodErr['num_factura'] = $datos['10'];
-                            $arrErrores[]= $prodErr;
+                            $arrErrores[]= $prodErr;                            
                         }
                     }
                     
@@ -793,7 +811,8 @@ class CargueinventariosController extends AppController {
                 if(!empty($arrErrores)){
                     $nameError = date('Ymdhis');
                     $errorCsv = $this->Configuraciondato->obtenerValorDatoConfig($confDato) . $empresaId . '//' . $nameError . '.csv';
-                    $mensaje = "No fue posible realizar el cargue de todos los productos debido a inconsistencias en el archivo. ";
+                    $mensaje = "No fue posible realizar el cargue de todos los productos debido a las siguientes inconsistencias: <br><br>";
+                    $mensaje .= $secondMessage . '<br>';
                     $mensaje .= "Por favor, corrija los registros e inténtelo nuevamente. Para obtener los registros con error, seleccione el siguiente botón ";
                     $this->crearPlanoErrores($errorCsv, $arrErrores);
                 }  

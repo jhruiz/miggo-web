@@ -355,7 +355,7 @@ if (!$logged_in) {
                 <div class="alert alert-danger alert-dismissible fade in" role="alert">
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">��</span>
                   </button>
-                  <strong>Atenci��n.</strong> <?php echo $flash ?>.
+                  <strong>Atencion.</strong> <?php echo $flash ?>.
                 </div>
                     <?php }?>
 
