@@ -41,6 +41,10 @@ class Regimene extends AppModel {
         public function obtenerRegimenPorId($id){
             $infoRegimen = $this->find('first', array('conditions' => array('Regimene.id' => $id), 'recursive' => '-1'));
             return $infoRegimen;
-        }
+		}
+		
+		public function obtenerListaRegimen() {
+			return $this->find('list', array('recursive' => '-1'));
+		}
 
 }

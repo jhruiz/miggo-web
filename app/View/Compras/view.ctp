@@ -34,9 +34,10 @@
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                     <?php foreach ($catComprasComp as $cat): ?>
                     <tr>
-                        <?php $subtotal += $cat['CategoriacomprasCompra']['valor'];?>
-                        <td><?php echo h($listCat[$cat['CategoriacomprasCompra']['categoriacompra_id']]); ?>&nbsp;</td>
-                        <td><?php echo h("$" . number_format($cat['CategoriacomprasCompra']['valor'], 2)); ?>&nbsp;</td>
+                        <?php $subtotal += $cat['CategoriacomprasCompra']['costottal'];?>
+                        <?php $ttalIva += $cat['CategoriacomprasCompra']['vlriva'];?>
+                        <td><?php echo h($productos[$cat['CategoriacomprasCompra']['producto_id']]); ?>&nbsp;</td>
+                        <td><?php echo h("$" . number_format($cat['CategoriacomprasCompra']['costottal'], 2)); ?>&nbsp;</td>
                     </tr>
                     <?php endforeach;?>
                     <tr>
@@ -44,9 +45,9 @@
                         <td style="border-top:2pt solid black;"><b><?php echo h("$" . number_format($subtotal, 2)); ?></b></td>
                     </tr>
                     <tr>
-                        <td><b>IVA <?php echo h((($infoCompra['0']['Compra']['prciva'] - 1) * 100) . "%"); ?></b></td>
+                        <td><b>IVA <?php echo h($ivaCompra . "%"); ?></b></td>
                         <td>
-                            <?php echo h("$" . number_format($infoCompra['0']['Compra']['vlriva'], 2)); ?>
+                            <?php echo h("$" . number_format($ttalIva, 2)); ?>
                         </td>
                     </tr>
                     <tr>
@@ -70,7 +71,7 @@
                     <tr>
                         <td><b>TOTAL</b></td>
                         <td style="border-top:2pt solid black;"><b><?php echo h("$" . number_format((
-    $subtotal + $infoCompra['0']['Compra']['vlriva'] - $infoCompra['0']['Compra']['vlrretefuente'] - $infoCompra['0']['Compra']['vlrreteica']
+                            $subtotal + $ttalIva - $infoCompra['0']['Compra']['vlrretefuente'] - $infoCompra['0']['Compra']['vlrreteica']
 ), 2)); ?></b></td>
                     </tr>
                 </table>

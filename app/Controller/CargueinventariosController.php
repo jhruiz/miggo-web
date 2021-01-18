@@ -248,7 +248,7 @@ class CargueinventariosController extends AppController {
                 $impuestos = $this->Impuesto->obtenerImpuestosInfo($empresa_id);
                 
                 /*Se obtienen los proveedores por empresa*/
-                $proveedores = $this->Proveedore->obtenerProveedoresEmpresa($empresa_id);
+                $proveedores = $this->Proveedore->obtenerInfoProveedores($empresa_id);
                 
                 /*Se obtienen los tipos de pago por empresa*/
                 $tipopagos = $this->Tipopagopago->obtenerListaTiposPagos();

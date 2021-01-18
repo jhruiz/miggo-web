@@ -95,6 +95,19 @@
                         <?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $usuarioId)); ?>
                     </div>
                 </div><br>
+
+                <div class="row">
+                    <div class="form-group">
+                    <label for="regimeneId">Regimen</label>
+                        <?php echo $this->Form->input('regimene_id', array(
+                            'label' => '',
+                            'type' => 'select',
+                            'options' => $regimen,
+                            'id' => 'regimeneId',
+                            'class' => 'form-control'
+                        )); ?>
+                    </div>
+                </div><br>                
 	</fieldset>
 <?php echo $this->Form->submit('Guardar', array('class' => 'btn btn-primary')); ?>
 </div>

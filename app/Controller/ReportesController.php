@@ -1067,7 +1067,8 @@ class ReportesController extends AppController
         $this->loadModel('Usuario');
         $this->loadModel('Compra');
         $this->loadModel('Reteicaretefuente');
-        $this->loadModel('Categoriacompra');
+        $this->loadModel('Producto');
+        $this->loadModel('Configuraciondato');
 
         $proveedorId = $_POST['proveedorId'];
         $usuarioId = $_POST['usuarioId'];
@@ -1088,7 +1089,10 @@ class ReportesController extends AppController
         $compras = $this->Compra->obtenerCompras($proveedorId, $usuarioId, $numFactura, $FDesde, $FHasta, $empresaId);
 
         //se obtiene las categorias de compras
-        $listCat = $this->Categoriacompra->obtenerlistaCategoriasCompras($empresaId);
+        $productos = $this->Producto->obtenerListaProductosEmpresa($empresaId);
+
+        $strDato = "ivaCompra";
+        $ivaCompra = $this->Configuraciondato->obtenerValorDatoConfig($strDato);         
 
         //se obtiene la lista de reteica retefuente
         $listRicaRfte = $this->Reteicaretefuente->obtenerListaReteicaRetefuente($empresaId);
@@ -1102,10 +1106,10 @@ class ReportesController extends AppController
                     'fecha' => $cmp['Compra']['fecha'],
                     'num_factura' => $cmp['Compra']['numerofactura'],
                     'usuario' => $listUsr[$cmp['Compra']['usuario_id']],
-                    'categoria' => $listCat[$cmp['CCC']['categoriacompra_id']],
-                    'valor' => $cmp['CCC']['valor'],
-                    'iva_prc' => ($cmp['Compra']['prciva'] - 1) * 100,
-                    'iva_vlr' => ($cmp['CCC']['valor'] * $cmp['Compra']['prciva']) - $cmp['CCC']['valor'],
+                    'categoria' => $productos[$cmp['CCC']['producto_id']],
+                    'valor' => $cmp['CCC']['costottal'],
+                    'iva_prc' => $ivaCompra,
+                    'iva_vlr' => $cmp['CCC']['vlriva'],
                     'retefuente_prc' => !empty($cmp['Compra']['prcretefuente']) ? ($cmp['Compra']['prcretefuente'] - 1) * 100 : 0,
                     'retefuente_vlr' => $cmp['Compra']['prcretefuente'] != 0 ? ($cmp['CCC']['valor'] * $cmp['Compra']['prcretefuente']) - $cmp['CCC']['valor'] : 0,
                     'reteica_prc' => !empty($cmp['Compra']['prcreteica']) ? ($cmp['Compra']['prcreteica'] - 1) * 100 : 0,

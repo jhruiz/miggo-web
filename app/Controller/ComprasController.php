@@ -84,10 +84,12 @@ class ComprasController extends AppController {
  */
     public function view($id = null) {
         $this->loadModel('CategoriacomprasCompra');
-        $this->loadModel('Categoriacompra');
+        $this->loadModel('Producto');
         $this->loadModel('Reteicaretefuente');
         $this->loadModel('Usuario');
         $this->loadModel('Proveedore');
+        $this->loadModel('Configuraciondato');
+
         if (!$this->Compra->exists($id)) {
                 throw new NotFoundException(__('La compra no existe.'));
         }
@@ -101,7 +103,10 @@ class ComprasController extends AppController {
         $catComprasComp = $this->CategoriacomprasCompra->obtenerCatCompraPorCompraId($id);
 
         //se obtiene las categorias de compras
-        $listCat = $this->Categoriacompra->obtenerlistaCategoriasCompras($empresaId);
+        $productos = $this->Producto->obtenerListaProductosEmpresa($empresaId);
+
+        $strDato = "ivaCompra";
+        $ivaCompra = $this->Configuraciondato->obtenerValorDatoConfig($strDato);        
         
         //se obtiene el listado de proveedores
         $infoProv = $this->Proveedore->obtenerProveedorPorId($infoCompra['0']['Compra']['proveedore_id']);
@@ -112,7 +117,7 @@ class ComprasController extends AppController {
         //se obtiene la lista de reteica retefuente
         $listRicaRfte = $this->Reteicaretefuente->obtenerListaReteicaRetefuente($empresaId);
         
-        $this->set(compact('infoCompra', 'catComprasComp', 'listCat', 'infoProv', 'infoUsr', 'listRicaRfte'));
+        $this->set(compact('infoCompra', 'catComprasComp', 'productos', 'infoProv', 'infoUsr', 'listRicaRfte', 'ivaCompra'));
         
     }
 

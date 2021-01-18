@@ -123,6 +123,10 @@ class Proveedore extends AppModel {
             return $arrProveedores;
             
     
-        }
+		}
+		
+		public function obtenerInfoProveedores($empresaId) {
+			return $this->find('all', array('conditions' => array('Proveedore.empresa_id' => $empresaId), 'recursive' => '-1'));
+		}
 
 }

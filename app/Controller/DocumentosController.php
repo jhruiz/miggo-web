@@ -212,6 +212,7 @@ class DocumentosController extends AppController {
             /*se guarda la informacion del detalle del documento y del inventario*/
             $resp = true;
             foreach ($infoPrecargue as $infP){
+
                 if(!$this->Detalledocumento->guardarDetalleDocumento($infP['Producto']['id'],$depOrg=null,$infP['Deposito']['id'],
                         $infP['Precargueinventario']['costoproducto'],$infP['Precargueinventario']['cantidad'],$infP['Precargueinventario']['preciomaximo'],
                         $infP['Precargueinventario']['preciominimo'],$infP['Precargueinventario']['precioventa'],$infP['Proveedore']['id'],
@@ -284,7 +285,15 @@ class DocumentosController extends AppController {
                             $fechaPago, $idCXP);
                 }
 
+                //se guarda la informacion de compras
+                $idCompra = $this->gestionarCompra($infP['Precargueinventario']['proveedore_id'], $usuarioId, $infP['Precargueinventario']['numerofactura']);
+
+                if(!empty($idCompra)){
+                    $this->gestionarDetalleCompra($infP['Producto']['id'], $infP['Precargueinventario']['cantidad'], $idCompra, $infP['Precargueinventario']['costoproducto'], $infP['Precargueinventario']['proveedore_id']);
+                }
+
                 if($resp){
+
                     $this->Precargueinventario->delete(array('Precargueinventario.id' => $infP['Precargueinventario']['id']));
                 }
             }  
@@ -306,6 +315,58 @@ class DocumentosController extends AppController {
             /*Se guarda la la auditoria*/
             $this->Auditoria->logAuditoria($usuarioId, $descripcion, $accion);
             echo json_encode(array('resp' => $resp, 'documentoId' => $documentoId));
+        }
+
+        /**
+         * Se gestiona el detalle de la compra
+         */
+        public function gestionarDetalleCompra($productoId, $cantidad, $idCompra, $costoUnit, $proveedorId){
+            $this->loadModel('Proveedore');
+            $this->loadModel('Configuraciondato');
+            $this->loadModel('CategoriacomprasCompra');
+
+            //se obtiene la información del proveedor
+            $proveedor = $this->Proveedore->obtenerProveedorPorId($proveedorId);
+
+            $detCompra['productoId'] = $productoId;
+            $detCompra['cantidad'] = $cantidad;
+            $detCompra['compraId'] = $idCompra;
+            $detCompra['costoUnitario'] = $costoUnit;
+            $detCompra['costoTtal'] = $costoUnit * $cantidad;
+            $detCompra['prciva'] = 0;
+            $detCompra['vlrIva'] = 0;             
+
+            if($proveedor['Proveedore']['regimene_id'] == '1') {
+
+                //se obtiene el porcentaje de iva configurado
+                $strDato = "ivaCompra";
+                $ivaCompra = $this->Configuraciondato->obtenerValorDatoConfig($strDato);                
+                $ivaProd = ($costoUnit * $cantidad) * (intval($ivaCompra) / 100);                
+                $detCompra['prciva'] = $ivaCompra;
+                $detCompra['vlrIva'] = $ivaProd;                
+            }
+
+            $this->CategoriacomprasCompra->guardarCategoriaComprasCompra($detCompra);
+        }
+
+        /**
+         * Se gestiona la compra
+         */
+        public function gestionarCompra($proveedorId, $usuarioId, $numFactura) {
+            $this->loadModel('Compra');
+
+            $compra = $this->Compra->obtenerCompraFactProv($proveedorId, $numFactura);
+
+            if(!empty($compra)) {
+                return $compra['Compra']['id'];
+            }else{
+                $dataCompra['fechaFact'] = date('Y-m-d');
+                $dataCompra['proveedorId'] = $proveedorId;
+                $dataCompra['usuarioId'] = $usuarioId;
+                $dataCompra['numFactura'] = $numFactura;
+
+                return $this->Compra->guardarCompra($dataCompra);               
+            }
         }
 
         public function sumarDiasFecha($fecha,$dias){
