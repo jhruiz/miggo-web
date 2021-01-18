@@ -66,11 +66,11 @@
 
     <legend><h2><b><?php echo __('Compras'); ?></b></h2></legend>
     <!--Enlaces de acción -->
-	<div class="actions">
+	<!-- <div class="actions">
         <button type="button" class="btn btn-primary">
-            <?php echo $this->Html->link(__('Nueva Compra'), array('action' => 'add'), ["style" => "color:white;"]); ?>
+            <?php //echo $this->Html->link(__('Nueva Compra'), array('action' => 'add'), ["style" => "color:white;"]); ?>
         </button>
-	</div>
+	</div> -->
 
         <div class="table-responsive">
             <div class="container">
@@ -90,14 +90,6 @@
                             <td><?php echo h($compra['Compra']['numerofactura']); ?>&nbsp;</td>
                             <td class="actions">
                                 <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Ciudad', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $compra['Compra']['id']))); ?>
-                                <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Ciudad', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $compra['Compra']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar la compra %s?', $compra['Compra']['numerofactura']) //la confirmacion
-);
-?>
                             </td>
                     </tr>
                     <?php endforeach;?>

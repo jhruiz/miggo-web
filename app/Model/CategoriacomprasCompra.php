@@ -13,13 +13,18 @@ class CategoriacomprasCompra extends AppModel {
      * @param type $idCompra
      * @return boolean
      */
-    public function guardarCategoriaComprasCompra($infoCatCom, $idCompra){
+    public function guardarCategoriaComprasCompra($dataCompra){
+
         $data = array();
         $catCompComp = new CategoriacomprasCompra();
 
-        $data['categoriacompra_id'] = $infoCatCom['id'];
-        $data['compra_id'] = $idCompra;
-        $data['valor'] = $infoCatCom['valor'];
+        $data['producto_id'] = $dataCompra['productoId'];
+        $data['cantidad'] = $dataCompra['cantidad'];
+        $data['compra_id'] = $dataCompra['compraId'];
+        $data['costounitario'] = $dataCompra['costoUnitario'];
+        $data['costottal'] = $dataCompra['costoTtal'];
+        $data['prciva'] = $dataCompra['prciva'];
+        $data['vlriva'] = $dataCompra['vlrIva'];
 
         if($catCompComp->save($data)){
             return $catCompComp->id;

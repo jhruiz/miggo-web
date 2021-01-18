@@ -281,12 +281,12 @@ if ($logged_in) {
 
                 <!-- Listado de cuentas -->
                 <?php echo $this->Form->input('accounts', array(
-        'label' => '',
-        'type' => 'select',
-        'options' => $listCuentas,
-        'id' => 'account',
-        'style' => 'width:150px;',
-    )); ?>
+                    'label' => '',
+                    'type' => 'select',
+                    'options' => $listCuentas,
+                    'id' => 'account',
+                    'style' => 'width:150px;',
+                )); ?>
 
                 </span>
                 <b><div style="font-size:30px;" class="value_account number">0</div></b>

@@ -60,7 +60,7 @@ echo $this->Html->script('utilsjs/utilArchivos.js');
 
 
                                     <?php $contador = 6;
-$k = 0;?>
+                                        $k = 0;?>
                                     <?php for ($i = 0; $i < ceil(count($productos) / 6); $i++) {?>
                                     <div class="row">
                                         <?php for ($k; $k < $contador; $k++) {?>
@@ -69,10 +69,9 @@ $k = 0;?>
                                                  <div class="thumbnail">
                                                     <div id="dv_<?php echo $productos[$k]['Producto']['id']; ?>" class="">
                                                         <div class="image view view-first">
-    <?php if (empty($productos[$k]['Producto']['imagen'])) {?>
- <img src="/app/torque/img/png/multiply.png" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />
-
-   <?php } else {?>
+                                                            <?php if (empty($productos[$k]['Producto']['imagen'])) {?>
+                                                            <img src="/app/torque/img/png/multiply.png" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />
+                                                            <?php } else {?>
                                                             <img src="<?php echo $urlImg . $productos[$k]['Producto']['empresa_id'] . '/' . $productos[$k]['Producto']['imagen']; ?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />               <?php }?>
                                                         </div>
                                                         <div class="mask">

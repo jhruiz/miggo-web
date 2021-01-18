@@ -22,38 +22,42 @@ class ProveedoresController extends AppController {
  * @return void
  */
 	public function index() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            		
-            $this->loadModel('Ciudade');
-            $empresaId = $this->Auth->user('empresa_id');
-             
-            if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
-                $paginate['LOWER(Proveedore.nombre) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
-            }
-            
-            if(isset($this->passedArgs['nit']) && $this->passedArgs['nit'] != ""){
-                $paginate['LOWER(Proveedore.nit) LIKE'] = '%' . strtolower($this->passedArgs['nit']) . '%';
-            }
-            
-            if(isset($this->passedArgs['ciudad']) && $this->passedArgs['ciudad'] != ""){
-                $paginate['Proveedore.ciudade_id'] = $this->passedArgs['ciudad'];
-            }            
-            
-            //Se obtiene el listado de ciudades
-            $ciudades = $this->Ciudade->obtenerListaCiudades();
-            
-            $paginate['Proveedore.empresa_id'] = $empresaId;
-			$this->Proveedore->recursive = 0;  
+		$this->loadModel('Regimene');
+
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
+				
+		$this->loadModel('Ciudade');
+		$empresaId = $this->Auth->user('empresa_id');
 			
-			$nombre = $this->passedArgs['nombre'];
-			$nit = $this->passedArgs['nit'];
-			$ciudad = $this->passedArgs['ciudad'];
-			$this->set(compact('nombre','nit', 'ciudad'));
-			$this->set('proveedores', $this->Paginator->paginate('Proveedore',$paginate));
-            $this->set(compact('ciudades'));
+		if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
+			$paginate['LOWER(Proveedore.nombre) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
+		}
+		
+		if(isset($this->passedArgs['nit']) && $this->passedArgs['nit'] != ""){
+			$paginate['LOWER(Proveedore.nit) LIKE'] = '%' . strtolower($this->passedArgs['nit']) . '%';
+		}
+		
+		if(isset($this->passedArgs['ciudad']) && $this->passedArgs['ciudad'] != ""){
+			$paginate['Proveedore.ciudade_id'] = $this->passedArgs['ciudad'];
+		}            
+		
+		//Se obtiene el listado de ciudades
+		$ciudades = $this->Ciudade->obtenerListaCiudades();
+		
+		$paginate['Proveedore.empresa_id'] = $empresaId;
+		$this->Proveedore->recursive = 0;  
+		
+		$nombre = $this->passedArgs['nombre'];
+		$nit = $this->passedArgs['nit'];
+		$ciudad = $this->passedArgs['ciudad'];
+		$regimen = $this->Regimene->obtenerListaRegimen();
+
+		$this->set(compact('nombre','nit', 'ciudad', 'regimen'));
+		$this->set('proveedores', $this->Paginator->paginate('Proveedore',$paginate));
+		$this->set(compact('ciudades'));
 	}
 
 /**
@@ -82,17 +86,17 @@ class ProveedoresController extends AppController {
  * @return void
  */
 	public function add() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+		$this->loadModel('Regimene');
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
             		
 		if ($this->request->is('post')) {
 			$this->Proveedore->create();
-
-                        /*Se eliminan las comas del valor*/
-                        $this->request->data['Proveedore']['limitecredito'] = str_replace(',', '', $this->request->data['Proveedore']['limitecredito']);
-                			
+			/*Se eliminan las comas del valor*/
+			$this->request->data['Proveedore']['limitecredito'] = str_replace(',', '', $this->request->data['Proveedore']['limitecredito']);
+			
 			if ($this->Proveedore->save($this->request->data)) {
 				$this->Session->setFlash(__('El proveedor ha sido guardado.'));
 				return $this->redirect(array('action' => 'index'));
@@ -100,11 +104,13 @@ class ProveedoresController extends AppController {
 				$this->Session->setFlash(__('El proveedor no pudo ser guardado. Por favor, inténtelo de nuevo.'));
 			}
 		}
-                $empresaId = $this->Auth->user('empresa_id');
-                $usuarioId = $this->Auth->user('id');                        
+		$empresaId = $this->Auth->user('empresa_id');
+		$usuarioId = $this->Auth->user('id');                        
 		$ciudades = $this->Proveedore->Ciudade->find('list');		
 		$estados = $this->Proveedore->Estado->find('list');
-		$this->set(compact('ciudades', 'usuarioId', 'estados', 'empresaId'));
+		$regimen = $this->Regimene->obtenerListaRegimen();
+
+		$this->set(compact('ciudades', 'usuarioId', 'estados', 'empresaId', 'regimen'));
 	}
 
 /**
@@ -115,10 +121,12 @@ class ProveedoresController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+		$this->loadModel('Regimene');
+
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
             		
 		if (!$this->Proveedore->exists($id)) {
 			throw new NotFoundException(__('El proveedor no existe.'));
@@ -136,10 +144,11 @@ class ProveedoresController extends AppController {
 			$options = array('conditions' => array('Proveedore.' . $this->Proveedore->primaryKey => $id));
 			$this->request->data = $this->Proveedore->find('first', $options);
 		}
-                $usuarioId = $this->Auth->user('id');  
+        $usuarioId = $this->Auth->user('id');  
 		$ciudades = $this->Proveedore->Ciudade->find('list');                
 		$estados = $this->Proveedore->Estado->find('list');
-		$this->set(compact('ciudades', 'usuarioId', 'estados'));
+		$regimen = $this->Regimene->obtenerListaRegimen();
+		$this->set(compact('ciudades', 'usuarioId', 'estados', 'regimen'));
 	}
 
 /**

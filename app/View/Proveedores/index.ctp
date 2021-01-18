@@ -76,6 +76,7 @@
                     <th><?php echo $this->Paginator->sort('ciudade_id'); ?></th>
                     <th><?php echo $this->Paginator->sort('celular'); ?></th>
                     <th><?php echo $this->Paginator->sort('estado_id'); ?></th>
+                    <th><?php echo ('Regimen'); ?></th>
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($proveedores as $proveedore): ?>
@@ -93,17 +94,20 @@
                     <td>
                         <?php echo $this->Html->link($proveedore['Estado']['descripcion'], array('controller' => 'estados', 'action' => 'view', $proveedore['Estado']['id'])); ?>
                     </td>
+                    <td>
+                        <?php echo ($regimen[$proveedore['Proveedore']['regimene_id']]); ?>
+                    </td>
                     <td class="actions">
                         <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Proveedor', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $proveedore['Proveedore']['id']))); ?>
                         <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Proveedor', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $proveedore['Proveedore']['id']))); ?>
                         <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Proveedor', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $proveedore['Proveedore']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar el proveedor %s?', $proveedore['Proveedore']['nombre']) //la confirmacion
-);
-?>
+                        echo $this->Form->postLink(
+                            $this->Html->image('png/list-2.png', array('title' => 'Eliminar Proveedor', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                            array('action' => 'delete', $proveedore['Proveedore']['id']), //url
+                            array('escape' => false), //el escape
+                            __('Está seguro que desea eliminar el proveedor %s?', $proveedore['Proveedore']['nombre']) //la confirmacion
+                        );
+                        ?>
                     </td>
                 </tr>
                 <?php endforeach;?>

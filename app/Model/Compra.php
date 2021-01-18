@@ -20,14 +20,14 @@ class Compra extends AppModel {
         $data['proveedore_id'] = $dataCompra['proveedorId'];
         $data['usuario_id'] = $dataCompra['usuarioId'];
         $data['numerofactura'] = $dataCompra['numFactura'];
-        $data['prciva'] = $dataCompra['prcIVA'];
-        $data['vlriva'] = $dataCompra['vlrIVA'];
-        $data['prcreteica'] = $dataCompra['prcReteica'];
-        $data['vlrreteica'] = $dataCompra['vlrReteica'];
-        $data['reteica_id'] = $dataCompra['idReteica'];
-        $data['prcretefuente'] = $dataCompra['prcRetefuente'];
-        $data['vlrretefuente'] = $dataCompra['vlrRetefuente'];
-        $data['retefuente_id'] = $dataCompra['idRetefuente'];
+        // $data['prciva'] = $dataCompra['prcIVA'];
+        // $data['vlriva'] = $dataCompra['vlrIVA'];
+        // $data['prcreteica'] = $dataCompra['prcReteica'];
+        // $data['vlrreteica'] = $dataCompra['vlrReteica'];
+        // $data['reteica_id'] = $dataCompra['idReteica'];
+        // $data['prcretefuente'] = $dataCompra['prcRetefuente'];
+        // $data['vlrretefuente'] = $dataCompra['vlrRetefuente'];
+        // $data['retefuente_id'] = $dataCompra['idRetefuente'];
 
         if($compra->save($data)){
             return $compra->id;
@@ -44,6 +44,13 @@ class Compra extends AppModel {
     public function obtenerInfoCompra($id){
         $compra = $this->find('all', array('conditions' => array('Compra.id' => $id)));
         return $compra;
+    }
+
+    /**
+     * Obtiene la informacion de la compra de una factura a un proveedor
+     */
+    public function obtenerCompraFactProv($proveedorId, $numFactura) {
+        return $this->find('first', array('conditions' => array('Compra.proveedore_id' => $proveedorId, 'Compra.numerofactura' => $numFactura)));
     }
     
     public function obtenerCompras($proveedorId, $usuarioId, $numFactura, $FDesde, $FHasta, $empresaId){

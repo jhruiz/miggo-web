@@ -24,7 +24,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <?php if($producto['Producto']['imagen'] == ""){ ?>
-                                <?php echo $this->Html->image('png/image-4.png', array('alt' => 'CakePHP', 'width' => '400', 'height' => '500')); ?>  
+                                <?php echo $this->Html->image('png/image-4.png', array('alt' => 'CakePHP', 'width' => '240')); ?>  
                             <?php }else{?>
                                 <img src="<?php echo $urlImg . $producto['Producto']['imagen'];?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />
                             <?php }?>                            
@@ -70,18 +70,16 @@
                     <div class="form-group form-inline"> 
                         <label>Proveedores</label>
                         <div class="input-group">
-                            <?php 
-                                echo $this->Form->input("proveedore_id",
-                                        array(
-                                            'name'=>"proveedores",
-                                            'label' => "",
-                                            'type' => 'select',
-                                            'options'=> $proveedores,
-                                            'empty'=>'Seleccione Uno',
-                                            'class' => 'form-control'
-                                        )
-                                );
-                            ?>
+
+                            <select name="proveedores" id="proveedore_id" class="form-control">
+                                <option value="">Seleccione uno</option>
+                                <?php foreach($proveedores as $prov){ ?>
+                                    <option value="<?php echo $prov['Proveedore']['id']; ?>" data-type="<?php echo $prov['Proveedore']['regimene_id']; ?>">
+                                        <?php echo $prov['Proveedore']['nombre']; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+
                         </div>
                     </div>          
                     <div class="form-group form-inline"> 
@@ -124,7 +122,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group form-inline"> 
-                        <label>Valor Unitario</label>
+                        <label><span id="val_prod">Costo Unitario</span></label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>                    
                             <?php echo $this->Form->input('costoproducto', array('label' => '', 'class' => 'form-control numericPrice', 'placeholder' => 'Valor Unitario', 'onblur' => 'calcularValorTotal();')); ?>
