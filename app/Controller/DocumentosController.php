@@ -190,6 +190,7 @@ class DocumentosController extends AppController {
             $this->loadModel('Cargueinventario');
             $this->loadModel('Cuentaspendiente');
             $this->loadModel('Proveedore');
+            $this->loadModel('Configuraciondato');
             $this->autoRender = false;                 
             
             $posData = $this->request->data;
@@ -269,7 +270,19 @@ class DocumentosController extends AppController {
                     $infoCtaXPagar = $this->Cuentaspendiente->obtenerCuentaProvFact($infP['Proveedore']['id'], $infP['Precargueinventario']['numerofactura'], $infoPrecargue['0']['Usuario']['empresa_id']);
 
                     $idCXP = null;
-                    $totalObligacion = ($infP['Precargueinventario']['costoproducto'] * $infP['Precargueinventario']['cantidad']);
+
+                    if($infP['Proveedore']['regimene_id']) {
+
+                        //se obtiene el porcentaje de iva configurado
+                        $strDato = "ivaCompra";
+                        $ivaCompra = $this->Configuraciondato->obtenerValorDatoConfig($strDato);                
+
+                        $totalObligacion = (intval($infP['Precargueinventario']['costoproducto']) * intval($infP['Precargueinventario']['cantidad'])) * (intval($ivaCompra) / 100);
+                        $totalObligacion += (intval($infP['Precargueinventario']['costoproducto']) * intval($infP['Precargueinventario']['cantidad']));
+                    }else{
+                        $totalObligacion = (intval($infP['Precargueinventario']['costoproducto']) * intval($infP['Precargueinventario']['cantidad']));
+                    }
+                    
                     if(!empty($infoCtaXPagar)) {
                         $idCXP = $infoCtaXPagar['0']['Cuentaspendiente']['id'];
                         $totalObligacion += $infoCtaXPagar['0']['Cuentaspendiente']['totalobligacion'];
@@ -293,8 +306,7 @@ class DocumentosController extends AppController {
                 }
 
                 if($resp){
-
-                    $this->Precargueinventario->delete(array('Precargueinventario.id' => $infP['Precargueinventario']['id']));
+                    //$this->Precargueinventario->delete(array('Precargueinventario.id' => $infP['Precargueinventario']['id']));
                 }
             }  
             
