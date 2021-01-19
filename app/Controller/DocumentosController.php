@@ -306,7 +306,7 @@ class DocumentosController extends AppController {
                 }
 
                 if($resp){
-                    //$this->Precargueinventario->delete(array('Precargueinventario.id' => $infP['Precargueinventario']['id']));
+                    $this->Precargueinventario->delete(array('Precargueinventario.id' => $infP['Precargueinventario']['id']));
                 }
             }  
             
