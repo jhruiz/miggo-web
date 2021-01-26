@@ -271,7 +271,7 @@ class DocumentosController extends AppController {
 
                     $idCXP = null;
 
-                    if($infP['Proveedore']['regimene_id']) {
+                    if($infP['Proveedore']['regimene_id'] == '1') {
 
                         //se obtiene el porcentaje de iva configurado
                         $strDato = "ivaCompra";
