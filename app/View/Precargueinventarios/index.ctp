@@ -59,7 +59,7 @@
                                                         'label' => "",
                                                         'type' => 'select',
                                                         'options'=>$listProveedores,
-                                                        'class' => 'form-control',
+                                                        'class' => 'form-control inp-prov',
                                                         'default' => $datCarg['Proveedore']['id'],
                                                         'onchange' => 'actualizarProveedor(this);'
                                                     )
@@ -78,7 +78,7 @@
                                                     )
                                             );
                                          ?> </td>
-                            <td><br><input type="text" size="9" name="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm" value="<?php echo $datCarg['Precargueinventario']['numerofactura']; ?>" onblur="actualizarNumeroFactura(this);"></td>
+                            <td><br><input type="text" size="9" name="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm inp-fact" value="<?php echo $datCarg['Precargueinventario']['numerofactura']; ?>" onblur="actualizarNumeroFactura(this);"></td>
                             <td class="actions"><br>                                      
                                 <?php
                                 echo $this->Form->postLink(                        
