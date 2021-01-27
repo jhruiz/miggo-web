@@ -59,7 +59,7 @@
                                                         'label' => "",
                                                         'type' => 'select',
                                                         'options'=>$listProveedores,
-                                                        'class' => 'form-control inp-prov',
+                                                        'class' => 'form-control',
                                                         'default' => $datCarg['Proveedore']['id'],
                                                         'onchange' => 'actualizarProveedor(this);'
                                                     )

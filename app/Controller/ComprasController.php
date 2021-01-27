@@ -323,5 +323,32 @@ class ComprasController extends AppController {
                                                             null, $provInfo['Proveedore']['id'], $numFactura, $usuarioId,
                                                             $empresaId, $valor, $fechaLim );            
     }
+
+
+    /**
+     * Valida si una factura ya fue cargada a un proveedor
+     */
+    public function obtenerFacturasProveedore() {
+        $this->loadModel('Compra');
+        $this->autoRender = false;
+        $data = $this->request->data;
+
+        $respuesta = [];
+        foreach($data['info'] as $key => $val){
+            $arrData = explode("_", $val);
+            
+            //se valida si a un proveedor ya se le cargo una factura
+            $resp = $this->Compra->obtenerCompraFactProv($arrData['1'], $arrData['0']);
+            
+            if(!empty($resp)) {
+                $respuesta[] = [
+                    'numFact' => $arrData['0'],
+                    'nomProv' => $resp['p']['nombre']
+                ];
+            }
+        }
+
+        echo json_encode(array('resp' => $respuesta)); 
+    }
         
 }
