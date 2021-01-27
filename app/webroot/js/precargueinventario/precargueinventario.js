@@ -134,8 +134,41 @@ function actualizarNumeroFactura(dato) {
 
 function aprobarCargueProductos(dato) {
 
-    validarFacturasProveedor();
+    var factsProvs = obtenerDataFacturaProveedor();
 
+    $.ajax({
+        type: 'POST',
+        url: $('#url-proyecto').val() + 'compras/obtenerFacturasProveedore',
+        data: { info: factsProvs },
+        success: function(data) {
+            var respuesta = JSON.parse(data);
+            var mensaje = "";
+
+            if (respuesta.resp.length > 0) {
+                respuesta.resp.forEach(element => {
+                    mensaje += '- Ya existe la factura ' + element.numFact + ' para el proveedor ' + element.nomProv + '<br>';
+                });
+
+                mensaje += '¿Desea continuar?';
+            }
+
+            if (mensaje != '') {
+                bootbox.confirm(mensaje, function(result) {
+                    if (result) { mostrarCargueInvNotas(dato); }
+                });
+            } else {
+                mostrarCargueInvNotas(dato);
+            }
+        }
+    });
+
+}
+
+/**
+ * Muestra el modal para ingresar la nota del cargue de inventario
+ * @param {*} dato 
+ */
+function mostrarCargueInvNotas(dato) {
     $("#div_anotacion").load(
         $('#url-proyecto').val() + "anotaciones/notacargueinventario", { usuarioId: dato.name },
         function() {
@@ -145,12 +178,23 @@ function aprobarCargueProductos(dato) {
     );
 }
 
-function validarFacturasProveedor() {
+/**
+ * Obtiene un array de objetos donde se detalla la factura y el proveedor que le corresponde
+ */
+function obtenerDataFacturaProveedor() {
+    var fact_prov = new Array();
     $('.inp-fact').each(function(index, element) {
-        //jaiber
-        console.log($(this).val(), $(this).attr('name'));
+
+        var arrDat = $(this).attr('name').split('_');
+        var idProv = $('#proveedore_' + arrDat['1']).val();
+
+        if (fact_prov.indexOf($(this).val() + '_' + idProv) == -1) {
+            fact_prov.push($(this).val() + '_' + idProv);
+        }
 
     });
+
+    return fact_prov;
 }
 
 function guardarCargueInventario(dato) {

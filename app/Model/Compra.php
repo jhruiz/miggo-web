@@ -50,7 +50,28 @@ class Compra extends AppModel {
      * Obtiene la informacion de la compra de una factura a un proveedor
      */
     public function obtenerCompraFactProv($proveedorId, $numFactura) {
-        return $this->find('first', array('conditions' => array('Compra.proveedore_id' => $proveedorId, 'Compra.numerofactura' => $numFactura)));
+        $arr_join = [];
+
+        array_push($arr_join, array(
+            'table' => 'proveedores',
+            'alias' => 'p',
+            'type' => 'INNER',
+            'conditions' => array(
+                'p.id=Compra.proveedore_id'
+            )
+        ));
+
+        return $this->find('first', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'p.*',
+                'Compra.*'
+            ),
+            'conditions' => array(
+                'Compra.proveedore_id' => $proveedorId, 
+                'Compra.numerofactura' => $numFactura
+            )
+        ));
     }
     
     public function obtenerCompras($proveedorId, $usuarioId, $numFactura, $FDesde, $FHasta, $empresaId){
