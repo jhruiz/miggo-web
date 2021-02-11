@@ -89,22 +89,22 @@ function validarDatosPago() {
 }
 
 function validarSaldoCuenta() {
-    var cuenta = $('#cuentaId').val();
-    var ttalPago = $('#totalPago').val();
-    $.ajax({
-        type: 'POST',
-        url: $('#url-proyecto').val() + 'cuentaspendientes/validarsaldoencuenta',
-        data: { ttalPago: ttalPago, cuenta: cuenta },
-        success: function(data) {
-            var respuesta = JSON.parse(data);
-            if (!respuesta.resp) {
-                bootbox.alert('No hay suficiente saldo en la cuenta para realizar el pago.', function() {
-                    $('#cuentaId').val("");
-                });
+    // var cuenta = $('#cuentaId').val();
+    // var ttalPago = $('#totalPago').val();
+    // $.ajax({
+    //     type: 'POST',
+    //     url: $('#url-proyecto').val() + 'cuentaspendientes/validarsaldoencuenta',
+    //     data: { ttalPago: ttalPago, cuenta: cuenta },
+    //     success: function(data) {
+    //         var respuesta = JSON.parse(data);
+    //         if (!respuesta.resp) {
+    //             bootbox.alert('No hay suficiente saldo en la cuenta para realizar el pago.', function() {
+    //                 $('#cuentaId').val("");
+    //             });
 
-            }
-        }
-    });
+    //         }
+    //     }
+    // });
 }
 
 function eliminarCuentaPendiente(id, valPendiente) {
