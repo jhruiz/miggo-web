@@ -961,7 +961,7 @@ class FacturasController extends AppController
         }
 
         //se obtienen las observaciones del cierre
-        $arrObsCierre = $this->Observacionescierre->obtenerObsFecha(date('Y-m-d'), $empresaId);
+        $arrObsCierre = $this->Observacionescierre->obtenerObsFecha($fechaCierre, $empresaId);
         $obsCierre = !empty($arrObsCierre['0']) ? $arrObsCierre['0']['Observacionescierre']['descripcion'] : "";
 
         $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));

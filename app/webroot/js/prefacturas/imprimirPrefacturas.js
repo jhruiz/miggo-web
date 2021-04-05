@@ -47,9 +47,7 @@ var imprimirPrefacturaFactura = function() {
             mywindow.document.write('<div>' + prefact.resp['0'].CIU.descripcion + ', ');
             mywindow.document.write(prefact.resp['0'].PAI.descripcion + ', ');
             mywindow.document.write(fechaActual + '</div>');
-            mywindow.document.write('<div>IVA REGIMEN COMUN</div>');
-            mywindow.document.write('<div>Código de Actividad Económica 4541 Tarifa I.C.A.: 7.7 x MI</div>');
-            mywindow.document.write('<div>No somos Grandes Contribuyente</div>');
+            mywindow.document.write('<div>' + prefact.resp['0'].EM.texto1 + '</div>');
 
             //informacion del cliente
             if ($('#PrefacturaDatoscliente').val() != "") {

@@ -143,7 +143,15 @@ class Empresa extends AppModel {
         
         public function obtenerEmpresaPorId($empresaId){
 
-            $datosEmpresa = $this->find('first', array('conditions' => array('Empresa.id' => $empresaId), 'recursive' => '-1'));
+            $datosEmpresa = $this->find('first', array(
+				'conditions' => array(
+					'Empresa.id' => $empresaId
+				), 
+				'recursive' => '-1',
+				'fields' => array(
+					'Empresa.*'
+				)
+			));
             return $datosEmpresa;
         }
 

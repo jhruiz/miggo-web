@@ -111,9 +111,7 @@
         </div>    
         
         <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin-top: 5px;">IVA REGIMEN COMUN</div>         
-        <div style="width:100%; float:left; margin: 0px;">Código de Actividad Económica 4541 Tarifa I.C.A.: 7.7 x MIL</div>         
-        <div style="width:100%; float:left; margin: 0px;">No somos Grandes Contribuyentes</div>
+        <div style="width:100%; float:left; margin-top: 5px;"><?php echo $infoEmpresa['Empresa']['texto1']?></div>
         <?php } ?>
         
         <!--informacion del cliente y moto-->
@@ -372,7 +370,7 @@
             <div id="dvResolucion" style="font-family:sans-serif; font-size:15px;"><small><b>
                         <?php if($infoFact['Factura']['factura']){?>
                             Resolución <?php echo ($infoResolucion['resolucion'])?>. Fecha de Resolución <?php echo ($infoResolucion['fechaRes'])?>.
-                            Numeración habilitada del <?php echo ($infoResolucion['resInicial']);?> al <?php echo ($infoResolucion['resFin']);?>. Regimen Común. <?php echo ($infoResolucion['nota']);?>. 
+                            Numeración habilitada del <?php echo ($infoResolucion['resInicial']);?> al <?php echo ($infoResolucion['resFin']);?>. <?php echo ($infoResolucion['nota']);?>. 
                         <?php } ?>
             </b></small></div>
         </div>
@@ -380,13 +378,7 @@
         <div id="conditions">
             <div id="p_condCont" style="font-family:sans-serif; font-size:15px;"><small>
                     <?php if($infoFact['Factura']['factura']){?>
-                ESTA FACTURA SE AJUSTA A LO DISPUESTO EN LA LEY 1231 Y DE CONFORMIDAD CON LOS ART. 621 Y 774 DEL CODIGO
-                DEL COMERCIO, ART 617 DEL E.T. EL COMPRADOR CON SU FIRMA EXPRESA LA ACEPTACION DEL CONTENIDO DE LA
-                FACTURA EN TODAS SUS PARTES, ADEMAS QUE EQUIVALE A LA CONSTANCIA DEL RECIBO REAL Y MATERIAL DE LAS
-                MERCANCIAS Y / O LOS SERVICIOS DESCRITOS EN ESTE TITULO VALOR, Y SE OBLIGA A PAGAR DENTRO DE LOS
-                TERMINOS Y CONDICIONES AQUI DESCRITOS AL TENEDOR LEGITIMO DE LA FACTURA EL COMPRADOR NO PODRA
-                ALEGAR FALTA DE REPRESENTACION O INDEBIDA REPRESENTACION POR RAZON DE LA PERSONA QUE RECIBA LA
-                MERCANCIA O EL SERVICIO EN SUS DEPENDENCIAS.
+                        <?php echo $infoEmpresa['Empresa']['texto2']?>
                     <?php } ?>
             </small></div>
         </div>    
