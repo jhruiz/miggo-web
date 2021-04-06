@@ -213,3 +213,4 @@ app/tmp/cache/models/myapp_cake_model_default_torque_regimenes
 app/tmp/cache/models/myapp_cake_model_default_torque_tipodepositos
 app/tmp/cache/models/myapp_cake_model_default_torque_vehiculos
 app/tmp/cache/models/myapp_cake_model_default_torque_ventarapidas
+app/tmp/logs/debug.log
