@@ -93,9 +93,9 @@ class FacturasController extends AppController
             $esFactura = '0';
         }
 
-        //Se obtiene el listado de tipos de pago para el filtro
-        $tipoPago = $this->Tipopago->obtenerListaTiposPagosAll();
         $empresaId = $this->Auth->user('empresa_id');
+        //Se obtiene el listado de tipos de pago para el filtro
+        $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
 
         //se obtienen los usuarios de la empresa para el filtro
         $usuario = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
@@ -1557,7 +1557,6 @@ class FacturasController extends AppController
         if (!empty($this->passedArgs['placa'])) {
             $filtros['V.placa'] = $this->passedArgs['placa'];
         }
-
         $empresaId = $this->Auth->user('empresa_id');
 
         $filtros['Factura.empresa_id'] = $empresaId;

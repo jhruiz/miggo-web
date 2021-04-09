@@ -56,7 +56,7 @@ class OrdentrabajosController extends AppController {
         $arrUsr = $this->Usuario->obtenerUsuarioEmpresa($this->Auth->user('empresa_id'));
         
         //se obtiene el listado de plantas de servicios
-        $arrPlantas = $this->Plantaservicio->obtenerListaPlantasServicio();
+        $arrPlantas = $this->Plantaservicio->obtenerListaPlantaEmpresa($this->Auth->user('empresa_id'));
         
         //se obtiene el listado clientes
         $arrClientes = $this->Cliente->obtenerClienteEmpresa($this->Auth->user('empresa_id'));
@@ -99,7 +99,7 @@ class OrdentrabajosController extends AppController {
         $arrUsr = $this->Usuario->obtenerUsuarioEmpresa($empresaId);     
         
         //se obtiene el listado de plantas de servicios
-        $arrPlantas = $this->Plantaservicio->obtenerListaPlantasServicio();
+        $arrPlantas = $this->Plantaservicio->obtenerListaPlantaEmpresa($empresaId);
         
         //se obtienen los estados
         $arrOrdenEst = $this->Ordenestado->obtenerListaEstados();        
@@ -148,7 +148,7 @@ class OrdentrabajosController extends AppController {
         $arrUsr = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         
         //se obtiene el listado de plantas de servicios
-        $arrPlantas = $this->Plantaservicio->obtenerListaPlantasServicio();        
+        $arrPlantas = $this->Plantaservicio->obtenerListaPlantaEmpresa($empresaId);    
         
         //se obtienen los estados
         $arrOrdenEst = $this->Ordenestado->obtenerListaEstados();         
@@ -201,7 +201,7 @@ class OrdentrabajosController extends AppController {
         $arrUsr = $this->Usuario->obtenerUsuarioEmpresa($empresaId);     
         
         //se obtiene el listado de plantas de servicios
-        $arrPlantas = $this->Plantaservicio->obtenerListaPlantasServicio();
+        $arrPlantas = $this->Plantaservicio->obtenerListaPlantaEmpresa($this->Auth->user('empresa_id'));
         
         //se obtienen los estados
         $arrOrdenEst = $this->Ordenestado->obtenerListaEstados();        
@@ -430,9 +430,10 @@ class OrdentrabajosController extends AppController {
      */
     public function obtenerOrdenTrabajos($arrFilter){
         $this->loadModel('Semaforo');  
+        $empresaId = $this->Auth->user('empresa_id');
            
         $this->Ordentrabajo->recursive = 0;
-        $this->Paginator->settings = $this->Ordentrabajo->obtenerIndexOrdenesTrabajo($arrFilter);
+        $this->Paginator->settings = $this->Ordentrabajo->obtenerIndexOrdenesTrabajo($arrFilter, $empresaId);
         $ordenes = $this->Paginator->paginate('Ordentrabajo'); 
         
         if(!empty($ordenes)){

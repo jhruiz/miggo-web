@@ -36,13 +36,12 @@ class CotizacionesController extends AppController {
         }
         
         //se obtienen toda la informacion de cotizaciones
-        $arrCot = $this->Cotizacione->obtenerCotizaciones($arrFilter);
+        $arrCot = $this->Cotizacione->obtenerCotizaciones($arrFilter, $empresaId);
 
         //se obtiene el listado de clientes
         $arrCli = $this->Cliente->obtenerClienteEmpresa($empresaId);
             
         $this->set(compact('arrCot', 'arrCli'));
-            
             
     }
 

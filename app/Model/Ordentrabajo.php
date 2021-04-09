@@ -90,7 +90,7 @@ class Ordentrabajo extends AppModel {
      * @param type $arrFilter
      * @return type
      */
-    public function obtenerIndexOrdenesTrabajo($arrFilter){
+    public function obtenerIndexOrdenesTrabajo($arrFilter, $empresaId){
 
         $arr_join = array(); 
         array_push($arr_join, array(
@@ -114,10 +114,20 @@ class Ordentrabajo extends AppModel {
         array_push($arr_join, array(
             'table' => 'usuarios', 
             'alias' => 'US', 
-            'type' => 'LEFT',
+            'type' => 'INNER',
             'conditions' => array(
-                'US.id=Ordentrabajo.usuario_id'
+                'US.id=Ordentrabajo.usuario_id'                
                 )                
+        ));
+
+        array_push($arr_join, array(
+            'table' => 'empresas',
+            'alias' => 'EMP',
+            'type' => 'INNER',
+            'conditions' => array(
+                'EMP.id = US.empresa_id',
+                'EMP.id' => $empresaId
+            )
         ));
         
         array_push($arr_join, array(

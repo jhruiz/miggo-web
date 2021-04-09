@@ -14,4 +14,14 @@ class Plantaservicio extends AppModel {
             return $plantaservicio;
         }
 
+        public function obtenerListaPlantaEmpresa($empresaId){
+            $plantaServicio = $this->find('list', array(
+                'conditions' => array(
+                    'Plantaservicio.empresa_id' => $empresaId
+                )
+            ));
+
+            return $plantaServicio;
+        }
+
 }

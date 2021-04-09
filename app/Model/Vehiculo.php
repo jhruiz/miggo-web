@@ -17,10 +17,11 @@ class Vehiculo extends AppModel {
      * @param type $placa
      * @return type
      */
-    public function obtenerDatosVehiculo($placa){
+    public function obtenerDatosVehiculo($placa, $empresaId){
         $arrV = $this->find('all', array(
             'conditions' => array(
                     'LOWER(Vehiculo.placa) LIKE' => '%'. $placa . '%',
+                    'Vehiculo.empresa_id' => $empresaId
             ), 
             'order' => 'Vehiculo.placa',
             'recursive' => '-1'));

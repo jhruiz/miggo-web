@@ -28,7 +28,7 @@ var abonosPrefactura = function(){
     
     ttales = ttales - parseInt($('.ttalAbonos').val());
 
-    if(parseInt(ttales) > 0){
+    // if(parseInt(ttales) > 0){
         $("#div_abono").load(
             $('#url-proyecto').val() + "abonofacturas/abonofactura",
             {ttales: ttales},
@@ -38,9 +38,9 @@ var abonosPrefactura = function(){
                 $('.numericPrice').number(true);
             }
         );          
-    }else{
-        alert("No es posible realizar abonos.");
-    }
+    // }else{
+    //     alert("No es posible realizar abonos.");
+    // }
    
 };
 

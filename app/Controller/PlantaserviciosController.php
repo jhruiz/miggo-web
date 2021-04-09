@@ -12,6 +12,8 @@ class PlantaserviciosController extends AppController {
     public function index() {
         $paginate = array();
 
+		$paginate['Plantaservicio.empresa_id'] = $this->Auth->user('empresa_id');
+
         $this->Plantaservicio->recursive = 0;
         $this->set('plantaservicios', $this->Paginator->paginate('Plantaservicio', $paginate));
     }
@@ -38,6 +40,7 @@ class PlantaserviciosController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
+			$this->request->data['Plantaservicio']['empresa_id'] = $this->Auth->user('empresa_id');
 			$this->Plantaservicio->create();
 			if ($this->Plantaservicio->save($this->request->data)) {
 				$this->Session->setFlash(__('La planta de servicio ha sido guardado.'));

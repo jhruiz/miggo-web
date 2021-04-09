@@ -7,16 +7,16 @@
                 <div class="col-md-4">
                    <label>Tipo Vehículo</label>
                         <?php
-echo $this->Form->input("tipovehiculo_id",
-    array(
-        'label' => "",
-        'type' => 'select',
-        'options' => $arrTipV,
-        'empty' => 'Seleccione Uno',
-        'class' => 'form-control',
-    )
-);
-?>
+                        echo $this->Form->input("tipovehiculo_id",
+                            array(
+                                'label' => "",
+                                'type' => 'select',
+                                'options' => $arrTipV,
+                                'empty' => 'Seleccione Uno',
+                                'class' => 'form-control',
+                            )
+                        );
+                        ?>
                 </div>
 
                 <div class="col-md-4">

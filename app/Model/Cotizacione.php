@@ -14,7 +14,7 @@ class Cotizacione extends AppModel {
      * @param type $arrFilter
      * @return type
      */
-    public function obtenerCotizaciones($arrFilter){
+    public function obtenerCotizaciones($arrFilter, $empresaId){
         $arr_join = array(); 
         array_push($arr_join, array(
             'table' => 'usuarios', 
@@ -23,6 +23,16 @@ class Cotizacione extends AppModel {
             'conditions' => array(
                 'U.id=Cotizacione.usuario_id'
                 )                
+        ));
+
+        array_push($arr_join, array(
+            'table' => 'empresas',
+            'alias' => 'E',
+            'type' => 'INNER',
+            'conditions' => array(
+                'U.empresa_id=E.id',
+                'E.id' => $empresaId
+            )
         ));
 
         $arrCot = $this->find('all', array(

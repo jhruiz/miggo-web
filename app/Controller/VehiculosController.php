@@ -37,6 +37,8 @@ class VehiculosController extends AppController {
             $paginate['Vehiculo.marcavehiculo_id'] = $this->passedArgs['Vehiculos']['marcavehiculo_id'];
         }
 
+        $paginate['Vehiculo.empresa_id'] = $this->Auth->user('empresa_id');
+
         $this->Vehiculo->recursive = 0;
         $this->set('vehiculos', $this->Paginator->paginate('Vehiculo', $paginate));
         
@@ -81,6 +83,7 @@ class VehiculosController extends AppController {
         $this->loadModel('Tipovehiculo');
         $this->loadModel('Marcavehiculo');
         if ($this->request->is('post')) {
+                $this->request->data['Vehiculo']['empresa_id'] = $this->Auth->user('empresa_id');
                 $this->Vehiculo->create();
                 if ($this->Vehiculo->save($this->request->data)) {
                         $this->Session->setFlash(__('El vehículo ha sido guardado.'));
@@ -176,7 +179,7 @@ class VehiculosController extends AppController {
         
         $posData = $this->request->data;
         $vehiculo = strtolower($posData['datosVehiculo']);
-        $resp = $this->Vehiculo->obtenerDatosVehiculo($vehiculo);
+        $resp = $this->Vehiculo->obtenerDatosVehiculo($vehiculo, $this->Auth->user('empresa_id'));
         echo json_encode(array('resp' => $resp));          
     }
     

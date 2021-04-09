@@ -287,9 +287,9 @@ public function index()
  * @return void
  */         
         public function productocatalogo(){
-            $categorias = $this->Producto->Categoria->find('list');
-            $arrEmpresa = $this->Auth->user('Empresa');
-            $empresaId = $arrEmpresa['id'];
+            $this->loadModel('Categoria');
+            $empresaId = $this->Auth->user('empresa_id');
+            $categorias = $this->Categoria->obtenerCategoriasEmpresa($empresaId);
             $this->set(compact('categorias', 'empresaId'));           
         }
         
