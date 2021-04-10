@@ -69,7 +69,8 @@ class Evento extends AppModel {
             'alias' => 'EA', 
             'type' => 'INNER',
             'conditions' => array(
-                'Evento.estadoalerta_id=EA.id'
+                'Evento.estadoalerta_id=EA.id',
+                'EA.final <> 1'
                 )                
         ));         
                    

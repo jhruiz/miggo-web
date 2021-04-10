@@ -55,7 +55,6 @@ public function index() {
         $eventosIndex = $this->Evento->obtenerEventosIndex($empresaId, $filtros); 
     }
 
-    
     $estadosTab = $this->Estadoalerta->obtenerListaEstadoTest($empresaId);
     $this->set(compact('eventosIndex','tipoEventos', 'usuarios', 'estados','estadosTab','fechaAct','responsable','tipoEvento','estado')); 
 }
