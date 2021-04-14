@@ -220,7 +220,7 @@ class VehiculosController extends AppController {
         $placa = $posData['placaN'];
         
         if(!empty($placa)){
-            $vehiculo = $this->Vehiculo->obtenerDatosVehiculo($placa);
+            $vehiculo = $this->Vehiculo->obtenerDatosVehiculo($placa, $this->Auth->user('empresa_id'));
             
             if(!empty($vehiculo)){
                 echo json_encode(array('resp' => '1', 'data' => $vehiculo));

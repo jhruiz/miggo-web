@@ -31,6 +31,6 @@ var datePicker = function(){
 $(function() { 
     
     placa = $('#VehiculoPlaca').val();
-    $('#VehiculoPlaca').change(validarVehiculoUnico);
+    $('#VehiculoPlaca').blur(validarVehiculoUnico);
     datePicker();
 });
