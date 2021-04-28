@@ -102,7 +102,13 @@ class Producto extends AppModel {
  * @array $arrProductos
  */  
         public function obtenerProductosEmpresa($empresaId){
-            $arrProductos = $this->find('all', array('conditions' => array('Producto.empresa_id' => $empresaId, 'Producto.mostrarencatalogo' => '1'), 'recursive' => '-1'));            
+            $arrProductos = $this->find('all', array(
+                'conditions' => array(
+                    'Producto.empresa_id' => $empresaId, 
+                    'Producto.mostrarencatalogo' => '1'
+                ), 'recursive' => '-1',
+                'limit' => '100'
+            ));            
             return $arrProductos;
             
         }

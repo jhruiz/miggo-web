@@ -52,10 +52,11 @@ class CargueinventariosController extends AppController {
             }
             
             $data['Cargueinventario.empresa_id'] = $empresaId;
+
+            $this->Paginator->settings['order'] = array('Cargueinventario.existenciaactual' => 'ASC');
             
             /**se obtiene el inventario de la empresa */
             $cargueinventariosP = $this->Paginator->paginate('Cargueinventario',$data);
-            
             $totalUnidades = 0;
             $valorInventario = 0;
             for ($i = 0; $i < count($cargueinventariosP); $i++){
