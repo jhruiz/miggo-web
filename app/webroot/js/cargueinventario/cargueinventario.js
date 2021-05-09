@@ -43,7 +43,7 @@ var dialogProductoNuevo;
 
 
 ///Se obtienen todos los checkbox seleccionados del formulario
-function cargueInventarioCuadro() {
+function cargueInventarioCuadro(prdId = null) {
     var productoId = [];
     var i = 0;
     
@@ -54,9 +54,11 @@ function cargueInventarioCuadro() {
             i++;
         }
     });
-    
+
     if(productoId.length >= 0 && typeof productoId[0] != 'undefined' && productoId[0] != null){
         cargarProductoInventario(productoId[0]);
+    }else if(prdId != null){
+        cargarProductoInventario(prdId);
     }else{
         bootbox.alert('Se ha finalizado con el cargue de archivos', function(){
             $('#butCargarInventarioUp').attr('disabled', true);
@@ -209,7 +211,7 @@ function fnObtenerDatosProducto(e){
            data: {descProducto: $('#buscarproducto').val(), empresaId: $('#empresa_id').val()},
            type: "POST",
            success: function(data) {
-               
+
                var respuesta = JSON.parse(data);
                if(respuesta.resp == '1'){
                     $('#buscarproducto').val("");
@@ -263,14 +265,14 @@ function fnObtenerDatosProducto(e){
        });
     }else if($('#buscarproducto').val().length <= '0'){
         $('#datosProducto').hide();
-    }else{
+    }else {
             $.ajax({
                 url: $('#url-proyecto').val() + 'cargueinventarios/ajaxProductoCargueInventario',
                 data: {descProducto: $('#buscarproducto').val(), empresaId: $('#empresa_id').val()},
                 type: "POST",
                 success: function(data) {
-
-                    var producto = JSON.parse(data);
+        
+                    var producto = JSON.parse(data);                    
                     var uls = "";
                     for(var i = 0; i < producto.resp.length; i++){
                         uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Producto.id + "' onClick ='seleccionarProducto(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
@@ -283,11 +285,11 @@ function fnObtenerDatosProducto(e){
 }
 
 function seleccionarProducto(dato){
-    var productoId = dato.name;  
+    var productoId = dato.name;
     $('#chk_' + productoId).prop('checked',true);
     $('#buscarproducto').val("");
     $('#datosProducto').hide();
-    cargueInventarioCuadro();
+    cargueInventarioCuadro(productoId);
     
 }
 
