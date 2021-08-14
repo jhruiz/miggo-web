@@ -140,7 +140,6 @@
                     <th><?php echo $this->Paginator->sort('vehiculo_id'); ?></th>
                     <th><?php echo $this->Paginator->sort('usuario_id', 'Vendedor'); ?></th>
                     <th><?php echo $this->Paginator->sort('created', 'Fecha Factura'); ?></th>
-                    <th><?php echo $this->Paginator->sort('fechavence', 'Fecha Vencimiento'); ?></th>
                     <th><?php echo $this->Paginator->sort('factura', 'Tipo'); ?></th>
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
@@ -152,19 +151,18 @@
                         <td><?php echo h($factura['V']['placa']); ?>&nbsp;</td>
                         <td><?php echo h($factura['U']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['created']); ?>&nbsp;</td>
-                        <td><?php echo h($factura['Factura']['fechavence']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['factura'] ? "F" : "R"); ?>&nbsp;</td>
                         <td class="actions">
                             <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $factura['Factura']['id']))); ?>
                             <?php echo $this->Html->image('png/list-3.png', array('title' => 'Ver Detalle Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'detalleventa', $factura['Factura']['id']))); ?>
                             <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Cancelar Factura', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $factura['Factura']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea cancelar la factura?') //la confirmacion
-);
-?>
+                                    echo $this->Form->postLink(
+                                        $this->Html->image('png/list-2.png', array('title' => 'Nota crédito', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                                        array('action' => 'delete', $factura['Factura']['id']), //url
+                                        array('escape' => false), //el escape
+                                        __('Está seguro que desea generar la nota crédito?') //la confirmacion
+                                    );
+                            ?>
                         </td>
                 </tr>
     <?php endforeach;?>

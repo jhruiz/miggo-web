@@ -371,13 +371,17 @@ class FacturasController extends AppController
  */
     public function delete($id = null)
     {
+
         $this->loadModel('Documento');
         $this->loadModel('Cargueinventario');
         $this->loadModel('Facturasdetalle');
         $this->loadModel('Cuentascliente');
         $this->loadModel('Ventarapida');
+        $this->loadModel('Utilidade');
+        $this->loadModel('FacturaCuentaValore');        
 
         $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
+    
         $usuarioId = $this->Auth->user('id');
 
         /*se obtiene el documento de la factura*/
@@ -396,40 +400,26 @@ class FacturasController extends AppController
             /*Se eliminan los registros de ventas rapidas que se encuentren relacionadas con la factura*/
             $this->Ventarapida->deleteAll(array('Ventarapida.factura_id' => $id), false);
 
-            /*se restauran los productos de la factura*/
-            $detalleFact = $infoFact['Facturasdetalle'];
-            foreach ($detalleFact as $detFact) {
+            /**Se eliminan las utilidades generadas por la factura*/
+            $this->Utilidade->deleteAll(array('Utilidade.factura_id' => $id), false);
+
+            /**Se recorre el detalle de la factura para restaurar el inventario */
+            foreach ($infoFact['Facturasdetalle'] as $detFact) {
                 /*se obtiene el id del cargue inventario*/
                 $infoCargueInventario = $this->Cargueinventario->obtenerCargueInventarioProdDep($detFact['producto_id'], $detFact['deposito_id']);
-                if (count($infoCargueInventario) > '0') {
-                    $existFinal = $infoCargueInventario['Cargueinventario']['existenciaactual'] + $detFact['cantidad'];
-                    if ($this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal)) {
-                        $detalleId['Facturasdetalle.id'] = $detFact['id'];
-                        $this->Facturasdetalle->delete($detalleId);
-
-                    }
-                } else {
-                    $detalleId['Facturasdetalle.id'] = $detFact['id'];
-                    $this->Facturasdetalle->delete($detalleId);
-                }
-
+                $existFinal = $infoCargueInventario['Cargueinventario']['existenciaactual'] + $detFact['cantidad'];
+                $this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal);
             }
-
-            /*Al finalizar la actualización del cargue de inventario y la eliminacion del detalle, se actualiza el saldo de la cuenta*/
-            
-            $this->Factura->id = $id;
-        
-            $this->loadModel('Facturasdetalle');
-            $this->loadModel('FacturaCuentaValore');
-
-            $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
 
             // Se obtiene el detalle de la factura para obtener el id de la cuenta y el saldo a devolver.*/
             $facDetalle = $this->FacturaCuentaValore->obtenerPagosFactura($id);
 
+            /**Se eliminan los pagos realizados a la factura*/
+            $this->FacturaCuentaValore->deleteAll(array('FacturaCuentaValore.factura_id' => $id), false);            
+
             for ($i = 0; $i < count($facDetalle); $i++) {
-                $array[$i]['cuenta']= $facDetalle[$i]['FacturaCuentaValore']['cuenta_id']; 
-                $array[$i]['valor']= $facDetalle[$i]['FacturaCuentaValore']['valor']; 
+                $array[$i]['cuenta'] = $facDetalle[$i]['FacturaCuentaValore']['cuenta_id']; 
+                $array[$i]['valor'] = $facDetalle[$i]['FacturaCuentaValore']['valor']; 
             }
 
             // Se calcula el saldo nuevo de la cuentay se actualiza el registro
@@ -437,24 +427,19 @@ class FacturasController extends AppController
                 $arrayValor[$i]['valor']= $this->Cuenta->obtenerDatosCuentaId($array[$i]['cuenta']);; 
                 $arraySaldoCuenta[$i]['saldo'] = $arrayValor[$i]['valor']['Cuenta']['saldo'];
                 $arraySaldoNuevo[$i]['Nuevo valor'] = $arraySaldoCuenta[$i]['saldo'] - $array[$i]['valor'];
+
                 // enviamos el id y el saldo final de la cuenta para actualizar su valor
                 $this->Cuenta->actualizarSaldoCuenta($array[$i]['cuenta'],$arraySaldoNuevo[$i]['Nuevo valor']);
             }
             
-            //Al finalizar se actualiza el estado de la factura a eliminar = 1
-
-            if (!$this->Factura->exists()) {
-                throw new NotFoundException(__('La factura no existe.'));
-            }
-            $this->request->onlyAllow('post', 'delete');
             if ($this->Factura->actualizarEstadoFacturaEliminar($id)) {
-                $this->Session->setFlash(__('La factura ha sido eliminada.'));
+                $this->Session->setFlash(__('La nota crédito ha sido registrada.'));
             } else {
-                $this->Session->setFlash(__('La factura no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
+                $this->Session->setFlash(__('La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
             }
 
         } else {
-            $this->Session->setFlash(__('La factura no pudo ser cancelada. Por favor, inténtelo de nuevo.'));
+            $this->Session->setFlash(__('La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
         }
         return $this->redirect(array('action' => 'index'));
     }
@@ -1065,13 +1050,17 @@ class FacturasController extends AppController
             $filter['Factura.estadopagomecanico_id'] = $this->passedArgs['estadopagomecanico'];
         }
 
+        $empresaId = $this->Auth->user('empresa_id');
+
+        $filter['Factura.empresa_id'] = $empresaId;
+
         //se obtiene la informacion de las facturas que tienen relacionada una orden de trabajo con productos catalogados como servicios
         $arrFactOrdenes = null;
         if (!empty($filter)) {
             $arrFactOrdenes = $this->Factura->obtenerFacturasOrdenesServicios($filter);
         }
 
-        $empresaId = $this->Auth->user('empresa_id');
+        
         //se obtiene el listado de mecanicos
         $listMecanicos = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
 
