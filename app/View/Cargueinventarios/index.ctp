@@ -59,6 +59,7 @@ $this->layout = 'inicio';
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
                                 <th><?php echo h('Producto'); ?></th>
+                                <th><?php echo h('Código'); ?></th>
                                 <th><?php echo h('Depósito'); ?></th>
                                 <th><?php echo h('Valor'); ?></th>
                                 <th><?php echo h('Existencia Actual'); ?></th>
@@ -72,6 +73,9 @@ $this->layout = 'inicio';
                 <tr class="<?php echo $cargueinventario['Cargueinventario']['color']; ?>">
                         <td>
                                 <?php echo $this->Html->link($cargueinventario['Producto']['descripcion'], array('controller' => 'productos', 'action' => 'view', $cargueinventario['Producto']['id'])); ?>
+                        </td>
+                        <td>
+                                <?php echo ($cargueinventario['Producto']['codigo']); ?>
                         </td>
                         <td>
                                 <?php echo $this->Html->link($cargueinventario['Deposito']['descripcion'], array('controller' => 'depositos', 'action' => 'view', $cargueinventario['Deposito']['id'])); ?>

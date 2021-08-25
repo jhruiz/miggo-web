@@ -28,6 +28,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
 
     <div class="col-md-6">        
         <input type="hidden" id="precioMinimo" value="<?php echo $arrProducto['Cargueinventario']['preciominimo'];?>">
+        <input type="hidden" id="precioVenta" value="<?php echo $arrProducto['Cargueinventario']['precioventa'];?>">
         <input type="hidden" id="cantidadProducto" value="<?php echo $arrProducto['Cargueinventario']['existenciaactual'];?>">
         <input type="hidden" id="cargueinventarioId" value="<?php echo $arrProducto['Cargueinventario']['id'];?>">  
         <input type="hidden" id="nombreProducto" value="<?php echo $arrProducto['Producto']['descripcion'];?>">
@@ -44,7 +45,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'class' => 'form-control quant_sale', 
                     'placeholder' => 'Cantidad', 
                     'value' => '1', 
-                    'onblur' => 'validarCantidadStock();'
+                    'onchange' => 'validarCantidadStock();'
                     )); ?>
             </div>
         </div> 
@@ -57,7 +58,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'label' => '', 
                     'class' => 'form-control numericPrice salePriceWI', 
                     'placeholder' => 'Precio de Venta', 
-                    'onblur' => 'calcularTotales();',
+                    'onchange' => 'calcularTotales();',
                     'value' => $arrProducto['Cargueinventario']['precioventa'])); ?>
             </div>
         </div> 

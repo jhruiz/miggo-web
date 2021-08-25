@@ -1,9 +1,16 @@
 //se calculan el total de venta sin iva, el valor del impuesto y total con descuento
 var calcularTotales = function(){
-    calcularPrecioVentaSinIva();    
-    calcularDescuentoPorPorcentaje();    
-    calcularValorImpuesto();
-    calcularTotalConDescuento();
+    // se valida si el precio esta por debajo del minimo establecido
+    if(parseFloat($('#precioventa').val()) < parseFloat($('#precioMinimo').val())) {
+        $('#precioventa').val($('#precioVenta').val()); 
+        bootbox.alert('El precio de venta no puede ser menor al mínimo establecido.');        
+    }else{
+        calcularPrecioVentaSinIva();    
+        calcularDescuentoPorPorcentaje();    
+        calcularValorImpuesto();
+        calcularTotalConDescuento();
+    }
+
 };
 
 //se valida si hay existencia en el stock del producto que se desea

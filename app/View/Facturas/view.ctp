@@ -14,28 +14,21 @@
     <input type="hidden" id="emisor" value="<?php echo $infoRemision['Relacionempresa']['representantelegal'];?>">    
     <input type="hidden" id="emisorNit" value="<?php echo $infoRemision['Relacionempresa']['nit'];?>">
     <?php }?>
-    
+
     <div class="row">
-        <div class="col-md-1" >
-            <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="imprimirFactura();">Imprimir</button>
-        </div>
-        <div class="col-md-1">
-        <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaFactura();">Generar Alerta</button>
-        
-        </div>
-        <div class="col-md-1" style="margin-left:20px; margin-right:70px;">
+        <div class="col-md-10" >
+            <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="imprimirFactura();">Imprimir</button>            
             <button id="butImprimirTk" class="btn btn-primary hidden-print" onclick="imprimirTicket();">Imprimir Ticket</button>
-        </div>
-        <div class="col-md-8">
+            <button id="butImprimirFactT" class="btn btn-primary hidden-print" onclick="generarAlertaFactura();">Generar Alerta</button>        
+            <a class="btn btn-primary" href="https://catalogo-vpfe.dian.gov.co/User/Login" role="button" target="_blank">Facturacion Electronica</a>
+
             <?php if(!empty($infoFact['Cliente']['celular'])){?>        
-            <div class="row">
                 <a href="https://wa.me/57<?php echo $infoFact['Cliente']['celular']; ?>?text=adjuntamos%20información%20de%20su%20interés" target="_blank">
                     <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
                 </a>
-            </div>
             <?php }else{ ?>     
-            <div class="alert alert-danger" role="alert" style="margin-top: 15px;">
-                  El usuario no tiene un número celular registrado.
+                <div class="alert alert-danger" role="alert" style="margin-top: 15px;">
+                    El usuario no tiene un número celular registrado.
                 </div>    
             <?php } ?>
         </div>
@@ -183,6 +176,7 @@
                 ?>
                 <tr>
                                 <th class="text-left"><?php echo ('Cant'); ?></th>
+                                <th class="text-left"><?php echo ('Cod'); ?></th>
                                 <th class="text-left"><?php echo ('Descripcion'); ?></th>                                
                                 <th class="text-right"><?php echo ('Vlr. Unit'); ?></th>
                                 <th class="text-right"><?php echo ('% Dcto.'); ?></th>
@@ -191,6 +185,7 @@
                     <?php }else{?>
                 <tr>
                                 <th class="text-left"><?php echo ('Cant'); ?></th>
+                                <th class="text-left"><?php echo ('Cod.'); ?></th>                              
                                 <th class="text-left"><?php echo ('Descripcion'); ?></th>                                
                                 <th class="text-right"><?php echo ('Vlr. Unit'); ?></th>                              
                                 <th class="text-right"><?php echo ('%Dcto.'); ?></th>                          
@@ -222,6 +217,7 @@
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
+                        <td><?php echo h($DetFact['P']['codigo']); ?>&nbsp;</td>
                         <td><?php echo h($DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$ " . number_format($costoVenta,2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h($DetFact['Facturasdetalle']['porcentaje'] . "%"); ?>&nbsp;</td>
@@ -256,6 +252,7 @@
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
+                        <td><?php echo h($DetFact['P']['codigo']); ?>&nbsp;</td>                        
                         <td><?php echo h($imp . $DetFact['P']['descripcion']); ?>&nbsp;</td>                    
                         <td  align="right"><?php echo h("$ " . number_format($costoBase,2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h($DetFact['Facturasdetalle']['porcentaje'] . "%"); ?>&nbsp;</td>
@@ -273,78 +270,78 @@
                 <?php if($infoFact['Factura']['factura']){ ?>
 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b><?php echo($serviceName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
                 </tr>
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b><?php echo($productName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
                 </tr>
 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>Subtotal</b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($subTtalVenta),2); ?></td></td>
                 </tr>
                 <?php if(!empty($ttalDtto)){ ?>
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>Descuento</b></td>
                     <td  align="right"><b>(<?php echo ("$ ". number_format(($ttalDtto),2));?>)</b></td>
                 </tr>                 
                 <?php } ?>                
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>Subtotal con Dcto.</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto)),2));?></b></td>
                 </tr>                 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>IVA</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format($ttalIVA,2));?></b></td>
                 </tr>                    
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>Reteica</b></td>
                     <td  align="right"><b>0%</b></td>
                 </tr>                    
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>Retefuente</b></td>
                     <td  align="right"><b>0%</b></td>
                 </tr> 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
                 </tr>                
                 <?php }else{ ?>
 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b><?php echo($serviceName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
                 </tr>
                 <tr>                
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b><?php echo($productName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
                 </tr>
 
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>SUBTOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(($subTtalVenta),2));?></b></td>
                 </tr>                
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>DESCUENTO</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(($ttalDtto),2));?></b></td>
                 </tr>                
                 <tr>
-                    <td colspan="3">&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(ceil($subTtalVenta - $ttalDtto),2));?></b></td>
                 </tr>                
