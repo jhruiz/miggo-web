@@ -280,6 +280,80 @@ class ReportesController extends AppController
     }
 
     /**
+     * Suma una cantidad de dias especifica a una fecha dada
+     */
+    public function sumarDiasFecha($fecha,$dias){
+        if(empty($dias)){
+            $dias = 30;
+        }
+        $fechaNew = new DateTime($fecha);
+        $fechaNew->add(new DateInterval('P' . $dias . 'D'));
+        $fechaFin = $fechaNew->format('Y-m-d');
+        return $fechaFin;          
+    }
+
+    /**
+     * Retorna la diferencia entre dos fechas
+     */
+    public function diffFechas($fechaLimite, $fechaActual){
+        $datetime1 = date_create($fechaLimite);
+        $datetime2 = date_create($fechaActual);
+        $interval = date_diff($datetime1, $datetime2);
+        $dias = $interval->format('%R%a');
+        return $dias;            
+    }       
+
+    /**
+     * Genera el reporte de cuentas por cobrar
+     */
+    public function descargarCuentasClientes() {
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($empresaId);
+
+        for($i = 0; $i < count($cuentasclientes); $i++){
+            if($cuentasclientes[$i]['Cuentascliente']['cliente_id'] != ""){
+                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = $this->sumarDiasFecha($cuentasclientes[$i]['Cuentascliente']['created'],$cuentasclientes[$i]['CL']['diascredito']);
+            }else{
+                $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($cuentasclientes[$i]['Factura']['id']);
+
+                if(count($infoVentaRapida) > 0){
+                    $cuentasclientes[$i]['CL']['nombre'] = $infoVentaRapida['Ventarapida']['cliente'];
+                }else{
+                    $cuentasclientes[$i]['CL']['nombre'] = "";
+                }
+                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = "";
+            }
+       
+            $diff = $this->diffFechas($fechaActual, $cuentasclientes[$i]['Cuentascliente']['fechalimitepago']);                               
+                
+            if($diff <= '0'){
+                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
+            }else{
+                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
+            }
+        }
+        
+        $texto_tit = "Cuentas por Cobrar";
+        $this->set(compact('cuentasclientes'));
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $cuentasclientes);
+        $arr_titulos = array(
+            'Cliente',
+            '# Factura',
+            'Total obligacion',
+            'Fecha factura',
+            'Dias credito',
+            'Fecha limite',
+            'Dias vencido',
+            'Usuario'            
+        );
+        $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');        
+
+    }
+
+    /**
      * Descarga el listado de cuentas pendientes por pagar
      */
     public function descargarCuentasPendientes()
@@ -1396,6 +1470,7 @@ class ReportesController extends AppController
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $prefacturasReporte );
         $arr_titulos = array(
+            'Codigo',
             'Cliente',
             'Veh&iacute;culo',
             'Fecha',

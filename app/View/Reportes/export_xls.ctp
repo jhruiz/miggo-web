@@ -194,6 +194,7 @@ endforeach;
         ?>
     <tr>
         <td class="tableTdContent"><?php echo h($cuentasCli['CL']['nombre']); ?></td>
+        <td class="tableTdContent"><?php echo h(!empty($cuentasCli['F']['consecutivodian']) ? $cuentasCli['F']['consecutivodian'] : $cuentasCli['F']['codigo']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['totalobligacion']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['created']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['CL']['diascredito']); ?></td>
@@ -411,6 +412,7 @@ else if (isset($prefacturasReporte)) {
     foreach ($prefacturasReporte as $prefactura):
     ?>
     <tr>
+        <th class="tableTdContent"><?php echo h($prefactura['Prefactura']['id']) ?></th>
         <th class="tableTdContent"><?php echo h($prefactura['CL']['nombre']) ?></th>
         <th class="tableTdContent"><?php echo h($prefactura['VH']['placa']) ?></th>
         <th class="tableTdContent"><?php echo h($prefactura['Prefactura']['created']) ?></th>

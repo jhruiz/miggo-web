@@ -108,7 +108,7 @@ function validarSaldoCuenta() {
 }
 
 function eliminarCuentaPendiente(id, valPendiente) {
-    if (valPendiente > 0) {
+    if (valPendiente > 1) {
         alert('No es posible eliminar la cuenta ya que tiene saldo pendiente');
     } else {
         bootbox.confirm("¿Esta seguro que desea eliminar el registro?", function(result) {

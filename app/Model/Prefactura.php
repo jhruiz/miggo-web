@@ -214,6 +214,9 @@ class Prefactura extends AppModel {
         }
 
 
+        /**
+         * Obtiene la información de las prefacturas para el reporte
+         */
         public function obtenerPrefacturasReporte( $placa, $cliente, $empresaId ){
             $arr_join = [];
             array_push($arr_join, array(
@@ -223,7 +226,8 @@ class Prefactura extends AppModel {
                 'conditions' => array(
                     'Prefactura.ordentrabajo_id = OT.id'
                 )
-            ));    
+            ));   
+
             array_push($arr_join, array(
                 'table' => 'clientes',
                 'alias' => 'CL',
@@ -240,7 +244,8 @@ class Prefactura extends AppModel {
                 'conditions' => array(
                     'OT.vehiculo_id = VH.id'
                 )
-            ));    
+            ));   
+
             array_push($arr_join, array(
                 'table' => 'estadosprefacturas',
                 'alias' => 'ES',
@@ -248,11 +253,12 @@ class Prefactura extends AppModel {
                 'conditions' => array(
                     'Prefactura.estadoprefactura_id = ES.id'
                 )
-            ));    
+            ));
+
             array_push($arr_join, array(
                 'table' => 'prefacturasdetalles',
                 'alias' => 'PD',
-                'type' => 'LEFT',
+                'type' => 'INNER',
                 'conditions' => array(
                     'Prefactura.id = PD.prefactura_id'
                 )
@@ -261,7 +267,7 @@ class Prefactura extends AppModel {
             array_push($arr_join, array(
                 'table' => 'cargueinventarios',
                 'alias' => 'CI',
-                'type' => 'LEFT',
+                'type' => 'INNER',
                 'conditions' => array(
                     'PD.cargueinventario_id = CI.id'
                 )
@@ -270,20 +276,20 @@ class Prefactura extends AppModel {
             array_push($arr_join, array(
                 'table' => 'productos',
                 'alias' => 'PR',
-                'type' => 'LEFT',
+                'type' => 'INNER',
                 'conditions' => array(
                     'CI.producto_id = PR.id'
                 )
             ));
             
-            // array_push($arr_join, array(
-            //     'table' => 'usuarios',
-            //     'alias' => 'U',
-            //     'type' => 'LEFT',
-            //     'conditions' => array(
-            //         'U.id = Prefactura.usuario_id'
-            //     )
-            // ));             
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id = Prefactura.usuario_id'
+                )
+            ));             
             
             $arrProductos = $this->find('all', array(
                 'joins' => $arr_join,
@@ -293,17 +299,22 @@ class Prefactura extends AppModel {
                     'VH.placa', 
                     'ES.descripcion', 
                     'PR.codigo', 
-                    'PR.descripcion', 
-                    'Prefactura.id', 
+                    'PR.descripcion',  
                     'PD.costoventa', 
-                    
+                    'U.id',
+                    'U.nombre',
+                    'U.identificacion',
+                    'U.empresa_id'
+
                 ),
                 'conditions' => array(
-                    'LOWER(VH.placa) LIKE' => "%".$placa."%",
+                    // 'LOWER(VH.placa) LIKE' => "%".$placa."%",
                     'LOWER(CL.nombre) LIKE' => "%".$cliente."%",
-                    // 'U.empresa_id' => $empresaId
+                    'U.empresa_id' => $empresaId,
+                    'Prefactura.eliminar' => '0'
                 ),
                 'recursive' => -1,
+                'order' => array('Prefactura.id')
             )); 
             return $arrProductos;
             

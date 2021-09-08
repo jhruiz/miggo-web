@@ -415,7 +415,7 @@ class FacturasController extends AppController
             $facDetalle = $this->FacturaCuentaValore->obtenerPagosFactura($id);
 
             /**Se eliminan los pagos realizados a la factura*/
-            $this->FacturaCuentaValore->deleteAll(array('FacturaCuentaValore.factura_id' => $id), false);            
+            $this->FacturaCuentaValore->deleteAll(array('FacturaCuentaValore.factura_id' => $id), false);
 
             for ($i = 0; $i < count($facDetalle); $i++) {
                 $array[$i]['cuenta'] = $facDetalle[$i]['FacturaCuentaValore']['cuenta_id']; 
