@@ -18,7 +18,7 @@ var printQR = function(){
 
 
 function crearHtml(cliente){
-    $('#qr').append('<div><img src="/app/img/cabecera_qr/torque8.png" alt="Brownies" width="155px" height="100px"><br>');
+    // $('#qr').append('<div><img src="/app/img/cabecera_qr/torque8.png" alt="Brownies" width="155px" height="100px"><br>');
     generateQR();
     $('#qr').append('<br><div align="left" style="font: 120% sans-serif"><b style="color:#FCFC03;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' 
             + $("#placacodificado").val() + '</b></div></div>'); 

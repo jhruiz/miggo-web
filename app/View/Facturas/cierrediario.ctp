@@ -32,16 +32,22 @@
                                 <th><?php echo ('Tipo Pago'); ?></th>                                
                                 <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
-                <?php foreach ($ventasFactura as $dFact): ?>
+                <?php $ttalventasFact = 0; ?>
+                <?php foreach ($ventasFactura as $dFact): ?>                
                 <tr>
                     <td><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
-                    <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta An¨®nima');?></td>
+                    <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anï¿½ï¿½nima');?></td>
                     <td><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?>&nbsp;</td>
                     <td><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?>&nbsp;</td>
                     <td><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?>&nbsp;</td>
                     <td align="right"><?php echo h('$' . number_format($dFact['fcv_valor'],2)); ?>&nbsp;</td>
                 </tr>
+                <?php $ttalventasFact += $dFact['fcv_valor']; ?>
                 <?php endforeach; ?>
+                <tr>
+                    <th colspan="5" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalventasFact,2)); ?>&nbsp;</th>
+                </tr>
                 </table>
             </div>
         </div>
@@ -59,6 +65,7 @@
                     <th><?php echo ('Tipo'); ?></th>
                     <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
+                <?php $ttalGastos = 0; ?>
                 <?php foreach ($infoGastos as $gt): ?>
                 <tr>
                     <td><?php echo h($gt['Gasto']['descripcion']); ?>&nbsp;</td>
@@ -68,7 +75,12 @@
                     <td><?php echo h(!empty($gt['Cuenta']['traslado']) ? "Traslado" : "Gasto"); ?>&nbsp;</td>
                     <td align="right"><?php echo h('$' . number_format($gt['Gasto']['valor'],2)); ?>&nbsp;</td>                    
                 </tr>
+                <?php $ttalGastos += $gt['Gasto']['valor']; ?>
                 <?php endforeach; ?>
+                <tr>
+                    <th colspan="5" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalGastos,2)); ?>&nbsp;</th>
+                </tr>                
                 </table>
             </div>
         </div>
@@ -86,6 +98,7 @@
                     <th><?php echo ('Cuenta Destino'); ?></th>
                     <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
+                <?php $ttalTraslados = 0; ?> 
                 <?php foreach ($infoTraslados as $trs): ?> 
                 <tr>
                     <td><?php echo h($trs['Gasto']['descripcion']); ?>&nbsp;</td>
@@ -95,7 +108,12 @@
                     <td><?php echo h($listCuenta[$trs['Gasto']['cuentadestino']]); ?>&nbsp;</td>
                     <td align="right"><?php echo h('$' . number_format($trs['Gasto']['valor'],2)); ?>&nbsp;</td>                    
                 </tr>
+                <?php $ttalTraslados += $trs['Gasto']['valor']; ?>
                 <?php endforeach; ?>
+                <tr>
+                    <th colspan="5" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalTraslados,2)); ?>&nbsp;</th>
+                </tr>                
                 </table>
             </div>
         </div> 
@@ -110,6 +128,7 @@
                     <th><?php echo ('Cuenta'); ?></th>                    
                     <th class="text-right"><?php echo ('Valor Abono'); ?></th>
                 </tr>
+                <?php $ttalAbonos = 0; ?> 
                 <?php foreach ($arrAbonos as $abn): ?> 
                 <tr>
                     <td><?php echo h($abn['cliente']); ?>&nbsp;</td>
@@ -117,7 +136,12 @@
                     <td><?php echo h($abn['cuenta']); ?>&nbsp;</td>                    
                     <td align="right"><?php echo h('$' . number_format($abn['valor'],2)); ?>&nbsp;</td>                    
                 </tr>
+                <?php $ttalAbonos += $abn['valor']; ?>
                 <?php endforeach; ?>
+                <tr>
+                    <th colspan="3" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalAbonos,2)); ?>&nbsp;</th>
+                </tr>                  
                 </table>
             </div>
         </div> <br><br>

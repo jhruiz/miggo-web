@@ -43,10 +43,10 @@
         <?php }?>
        
         <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('FACTURA DE VENTA No. ' . $consecutivoFact) ?></b></h4></div> 
+        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></h4></div> 
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $consecutivoFact) ?></b></h4></div>    
+        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></h4></div>    
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
         
@@ -175,6 +175,7 @@
                     if(!$infoFact['Factura']['factura']){
                 ?>
                 <tr>
+                                <th class="text-left"><?php echo ('#'); ?></th>
                                 <th class="text-left"><?php echo ('Cant'); ?></th>
                                 <th class="text-left"><?php echo ('Cod'); ?></th>
                                 <th class="text-left"><?php echo ('Descripcion'); ?></th>                                
@@ -184,6 +185,7 @@
                 </tr>
                     <?php }else{?>
                 <tr>
+                                <th class="text-left"><?php echo ('#'); ?></th>
                                 <th class="text-left"><?php echo ('Cant'); ?></th>
                                 <th class="text-left"><?php echo ('Cod.'); ?></th>                              
                                 <th class="text-left"><?php echo ('Descripcion'); ?></th>                                
@@ -197,6 +199,7 @@
                 $ttalIVA = 0;
                 $ttalDtto = 0;
                 $valorIVA = 0;
+                $contador = 1;
                 ?>
                 <?php foreach ($infoDetFact as $DetFact): ?>
                 
@@ -216,6 +219,7 @@
 
                 ?>                
                     <tr>
+                        <td><?php echo h($contador); ?></td>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
                         <td><?php echo h($DetFact['P']['codigo']); ?>&nbsp;</td>
                         <td><?php echo h($DetFact['P']['descripcion']); ?>&nbsp;</td>                    
@@ -251,6 +255,7 @@
                         }
                 ?>                
                     <tr>
+                        <td><?php echo h($contador); ?></td>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
                         <td><?php echo h($DetFact['P']['codigo']); ?>&nbsp;</td>                        
                         <td><?php echo h($imp . $DetFact['P']['descripcion']); ?>&nbsp;</td>                    
@@ -264,84 +269,85 @@
                     }                                
                     $subTtalVenta += $valorXCantidad; 
                     $ttalIVA += $valorIVA;
-                    $ttalDtto += $descuento;                    
+                    $ttalDtto += $descuento; 
+                    $contador ++;                   
                 endforeach; ?> 
                     
                 <?php if($infoFact['Factura']['factura']){ ?>
 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b><?php echo($serviceName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
                 </tr>
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b><?php echo($productName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
                 </tr>
 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>Subtotal</b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($subTtalVenta),2); ?></td></td>
                 </tr>
                 <?php if(!empty($ttalDtto)){ ?>
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>Descuento</b></td>
                     <td  align="right"><b>(<?php echo ("$ ". number_format(($ttalDtto),2));?>)</b></td>
                 </tr>                 
                 <?php } ?>                
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>Subtotal con Dcto.</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto)),2));?></b></td>
                 </tr>                 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>IVA</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format($ttalIVA,2));?></b></td>
                 </tr>                    
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>Reteica</b></td>
                     <td  align="right"><b>0%</b></td>
                 </tr>                    
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>Retefuente</b></td>
                     <td  align="right"><b>0%</b></td>
                 </tr> 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
                 </tr>                
                 <?php }else{ ?>
 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b><?php echo($serviceName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),2); ?></td></td>
                 </tr>
                 <tr>                
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b><?php echo($productName);?></b></td>
                     <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),2); ?></td></td>
                 </tr>
 
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>SUBTOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(($subTtalVenta),2));?></b></td>
                 </tr>                
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>DESCUENTO</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(($ttalDtto),2));?></b></td>
                 </tr>                
                 <tr>
-                    <td colspan="4">&nbsp;</td>
+                    <td colspan="5">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format(ceil($subTtalVenta - $ttalDtto),2));?></b></td>
                 </tr>                
@@ -636,10 +642,10 @@
     <?php }?>
     
     <?php if($infoFact['Factura']['factura']){ ?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $consecutivoFact) ?></b></div> 
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
     <input id="tipoVenta" type="hidden" value="1">
     <?php }else{?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $consecutivoFact) ?></b></div>    
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
     <input id="tipoVenta" type="hidden" value="2">
     <?php }?>
     

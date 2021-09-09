@@ -148,6 +148,7 @@ class FacturasController extends AppController
         $this->loadModel('Ciudade');
         $this->loadModel('FacturaCuentaValore');
         $this->loadModel('Abonofactura');
+        $this->loadModel('Deposito');
 
         /*se obtiene la información de la factura por el id*/
         $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
@@ -248,6 +249,13 @@ class FacturasController extends AppController
         //se obtiene la ciudad y el pais
         $arrUbicacion = $this->Ciudade->obtenerCiudadPais($infoEmpresa['Empresa']['ciudade_id']);
 
+        //se obtiene el prefijo del consecutivo
+        $prefijo = '';
+        $infoDepositos = $this->Deposito->obtenerDepositoConsecutivo($infoFact['Factura']['empresa_id']);
+        if(!empty($infoDepositos)) {
+            $prefijo = $infoDepositos['Deposito']['prefijo'];
+        }
+
         $arrInfoOrd = array();
         /*Se valida si existe una orden de trabajo relacionada*/
         if (!empty($infoFact['Factura']['ordentrabajo_id'])) {
@@ -283,7 +291,7 @@ class FacturasController extends AppController
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
         $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
-        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'prefijo'));
     }
 
 /**

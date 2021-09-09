@@ -313,6 +313,7 @@ class Deposito extends AppModel {
 
 			return $depositos;
 		}
+
 		public function obtenerDepositosReporte($empresaId, $filtros){
 			
 			$arr_join = array();
@@ -349,6 +350,18 @@ class Deposito extends AppModel {
     
             return $arrDepositos;
 
+		}
+
+		/**
+		 * Obtiene la informacion de un deposito cuyo prefijo no esta vacio
+		 */
+		public function obtenerDepositoConsecutivo($empresaId) {
+            $data = $this->find('first', array(
+				'conditions' => array(
+					'Deposito.empresa_id' => $empresaId,
+					'Deposito.prefijo <>' => ''
+				), 'recursive' => '-1'));
+			return $data;
 		}
 
 }
