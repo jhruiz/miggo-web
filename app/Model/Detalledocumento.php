@@ -62,8 +62,8 @@ class Detalledocumento extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Tipopago' => array(
-			'className' => 'Tipopago',
+		'Tipopagopagos' => array(
+			'className' => 'Tipopagopagos',
 			'foreignKey' => 'tipopago_id',
 			'conditions' => '',
 			'fields' => '',

@@ -59,6 +59,7 @@ class CuentaspendientesController extends AppController {
             $empresaId = $this->Auth->user('empresa_id');
                         
             $paginate['Cuentaspendiente.empresa_id'] = $empresaId;
+            $paginate['Cuentaspendiente.eliminar'] = '0';
             $this->Cuentaspendiente->recursive = 0;
             $cuentaspendientes = $this->Paginator->paginate('Cuentaspendiente',$paginate);
 
@@ -333,5 +334,5 @@ class CuentaspendientesController extends AppController {
             $posData['id'];
             $resp = $this->Cuentaspendiente->eliminarCuentaPendiente($posData['id']);
             echo $resp;            
-        }      
+        }  
 }

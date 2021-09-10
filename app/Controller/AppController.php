@@ -101,7 +101,7 @@ class AppController extends Controller
         $ctasXCobrar = $this->Cuentascliente->obtenerCuentasVencidas($empresaId, date('Y-m-d 23:59:59'));
 
         //cuentas por pagar
-        $filterCtas = array('Cuentaspendiente.empresa_id' => $empresaId, 'Cuentaspendiente.fechapago <' => date('Y-m-d 23:59:59'));
+        $filterCtas = array('Cuentaspendiente.empresa_id' => $empresaId, 'Cuentaspendiente.eliminar = 0', 'Cuentaspendiente.fechapago <' => date('Y-m-d 23:59:59'));
         $ctasXPagar = $this->Cuentaspendiente->obtenerCuentasPendientes($filterCtas);
 
         $arrColMd = $this->contador(count($ordenTrabajos), 6);

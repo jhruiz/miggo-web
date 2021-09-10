@@ -66,7 +66,7 @@
                         <td><?php echo h("$ ". number_format($detalledocumento['Detalledocumento']['preciominimo'],2)); ?>&nbsp;</td>
                         <td><?php echo h("$ ". number_format($detalledocumento['Detalledocumento']['precioventa'],2)); ?>&nbsp;</td>
                         <td><?php echo h($detalledocumento['Proveedore']['nombre']); ?>&nbsp;</td>
-                        <td><?php echo h($detalledocumento['Tipopago']['descripcion']); ?>&nbsp;</td>
+                        <td><?php echo h($detalledocumento['Tipopagopagos']['descripcion']); ?>&nbsp;</td>
                         <td><?php echo h($detalledocumento['Detalledocumento']['numerofactura']); ?>&nbsp;</td>
                     </tr>
                     <?php endforeach; ?>                  

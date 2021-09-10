@@ -146,9 +146,11 @@ class Cuentaspendiente extends AppModel {
             
             if(!empty($emprId)){ $data['empresa_id'] = $emprId; }
             
-            if(!empty($ttOblig)){ $data['totalobligacion'] = $ttOblig; }
+            if(!empty($ttOblig)){ $data['totalobligacion'] = $ttOblig; $data['total'] = $ttOblig; }
             
-            if(!empty($fechaPago)){ $data['fechapago'] = $fechaPago; }   
+            if(!empty($fechaPago)){ $data['fechapago'] = $fechaPago; } 
+
+            $data['eliminar'] = 0;
             
             if($cuentaspendientes->save($data)){
                 return true;
@@ -158,12 +160,12 @@ class Cuentaspendiente extends AppModel {
         }
         
         public function obtenerCuentasPendientesEmpresa($empresaId){
-            $ctasPendientes = $this->find('all', array('conditions' => array('Cuentaspendiente.empresa_id' => $empresaId),'recursive' => '-1'));
+            $ctasPendientes = $this->find('all', array('conditions' => array('Cuentaspendiente.empresa_id' => $empresaId, 'Cuentaspendiente.eliminar = 0'),'recursive' => '-1'));
             return $ctasPendientes;
         }
         
         public function obtenerCuentaPendienteId($cuentaId){
-            $ctasPendiente = $this->find('first', array('conditions' => array('Cuentaspendiente.id' => $cuentaId), 'recursive' => '-1'));
+            $ctasPendiente = $this->find('first', array('conditions' => array('Cuentaspendiente.id' => $cuentaId, 'Cuentaspendiente.eliminar = 0'), 'recursive' => '-1'));
             return $ctasPendiente;
         }
         
@@ -181,11 +183,16 @@ class Cuentaspendiente extends AppModel {
         }
         
         public function eliminarCuentaPendiente($id){
-            if($this->deleteAll(['Cuentaspendiente.id' => $id])){
+            $cuentaPendiente = new Cuentaspendiente();            
+            $data = array();
+            $data['id'] = $id;
+            $data['eliminar'] = 1;
+            
+            if($cuentaPendiente->save($data)){
                 return true;
             }else{
                 return false;
-            }            
+            }       
         }
         
         public function obtenerCuentasPendientes($filter){
@@ -296,6 +303,7 @@ class Cuentaspendiente extends AppModel {
                 ),
                 'conditions' => array(
                     'Cuentaspendiente.empresa_id' => $empresaId,
+                    'Cuentaspendiente.eliminar = 0',
                     'Cuentaspendiente.fechapago BETWEEN ? AND ? ' => array($fechaInicio, $fechaFin),                    
                     ), 
                 'recursive' => '-1'));
@@ -310,7 +318,8 @@ class Cuentaspendiente extends AppModel {
                 'conditions' => array(
                     'Cuentaspendiente.proveedore_id' => $provId,
                     'Cuentaspendiente.numerofactura' => $numFact,
-                    'Cuentaspendiente.empresa_id' => $empresaId
+                    'Cuentaspendiente.empresa_id' => $empresaId,
+                    'Cuentaspendiente.eliminar = 0'
                 ),
                 'recursive' => '-1')
             );
@@ -318,4 +327,48 @@ class Cuentaspendiente extends AppModel {
             return $ctaXPagar;
 
         }
+
+        /**
+         * Obtienen los creditos de una empresa de un dia especifo para el cierre diario
+         */
+        public function obtenerComprasCredito($empresaId, $fechaCierre) {
+
+			$arr_join = array(); 
+			
+            array_push($arr_join, array(
+                'table' => 'proveedores', 
+                'alias' => 'P', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=Cuentaspendiente.proveedore_id'
+                    )                
+            )); 
+			
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'U', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=Cuentaspendiente.usuario_id'
+                    )                
+            ));     
+            
+            $cuentaspendientes = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'P.id',
+                    'P.nombre',
+                    'U.id',
+                    'U.nombre',
+                    'Cuentaspendiente.*',
+                ),
+                'conditions' => array(
+                    'Cuentaspendiente.empresa_id' => $empresaId,
+                    'Cuentaspendiente.created BETWEEN ? AND ? ' => array($fechaCierre . ' 00:00:01', $fechaCierre . ' 23:59:59'),                    
+                    ), 
+                'recursive' => '-1'));
+                
+            return $cuentaspendientes;             
+
+        }        
 }

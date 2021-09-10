@@ -378,6 +378,8 @@ class ReportesController extends AppController
 
         $paginate['Cuentaspendiente.empresa_id'] = $this->Auth->user('empresa_id');
 
+        $paginate['Cuentaspendiente.eliminar'] = 0;
+
         $cuentaspendientes = $this->Cuentaspendiente->obtenerCuentasPendientes($paginate);
 
         $texto_tit = "Cuentas por Pagar";

@@ -807,6 +807,8 @@ class FacturasController extends AppController
         $this->loadModel('Tipopago');
         $this->loadModel('Cierrecaja');
         $this->loadModel('Observacionescierre');
+        $this->loadModel('Cuentascliente');
+        $this->loadModel('Cuentaspendiente');
 
         $flgCierre = true;
         $cuenta = "";
@@ -957,9 +959,14 @@ class FacturasController extends AppController
         $arrObsCierre = $this->Observacionescierre->obtenerObsFecha($fechaCierre, $empresaId);
         $obsCierre = !empty($arrObsCierre['0']) ? $arrObsCierre['0']['Observacionescierre']['descripcion'] : "";
 
+        //se obtienen las cuentas pendientes de los clientes registradas en el dia consultado
+        $ctasClientes = $this->Cuentascliente->obtenerVentasCredito($empresaId, $fechaCierre);
+
+        $ctasPendientes = $this->Cuentaspendiente->obtenerComprasCredito($empresaId, $fechaCierre);
+
         $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));
         $this->set(compact('infoGastos', 'arrAbonos', 'flgCierre', 'rpcuenta', 'estadoCuentas', 'listTipoPago'));
-        $this->set(compact('cierreDiario', 'anotDay', 'obsCierre'));
+        $this->set(compact('cierreDiario', 'anotDay', 'obsCierre', 'ctasClientes', 'ctasPendientes'));
     }
 
     public function buscarcierre()

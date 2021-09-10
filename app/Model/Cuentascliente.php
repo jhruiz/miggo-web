@@ -122,7 +122,7 @@ class Cuentascliente extends AppModel {
 		)
 	);
         
-        public function guardarCuentaPorCobrar($documentoId,$depositoId,$clienteId,$usuarioId,$empresaId,$total,$facturaId){
+        public function guardarCuentaPorCobrar($documentoId,$depositoId,$clienteId,$usuarioId,$empresaId,$total,$facturaId){        
             $data = array();
             $cuentasclientes = new Cuentascliente();
             
@@ -133,6 +133,8 @@ class Cuentascliente extends AppModel {
             $data['empresa_id'] = $empresaId;
             $data['totalobligacion'] = $total;
             $data['factura_id'] = $facturaId;
+            $data['total'] = $total;
+            $data['eliminar'] = '0';
             
             if($cuentasclientes->save($data)){
                 return true;
@@ -165,11 +167,16 @@ class Cuentascliente extends AppModel {
         }
         
         public function eliminarCuenta($id){
-            if($this->deleteAll(['Cuentascliente.id' => $id])){
+            $cuentaCliente = new Cuentascliente();            
+            $data = array();
+            $data['id'] = $id;
+            $data['eliminar'] = 1;
+            
+            if($cuentaCliente->save($data)){
                 return true;
             }else{
                 return false;
-            }
+            }     
         }
         
         public function obtenerCuentasClientes($empresaId){
@@ -228,7 +235,8 @@ class Cuentascliente extends AppModel {
                     'Cuentascliente.*',
                 ),
                 'conditions' => array(
-                    'Cuentascliente.empresa_id' => $empresaId
+                    'Cuentascliente.empresa_id' => $empresaId,
+                    'Cuentascliente.eliminar = 0'
                     ), 
                 'recursive' => '-1'));
             return $cuentasClientes;            
@@ -252,7 +260,9 @@ class Cuentascliente extends AppModel {
             $data['tipopago_id'] = $tipoPagoId;
             $data['prefactura_id'] = $prefactId;
             $data['usuario_id'] = $userId;
-            $data['fechapago'] = $fechaPago;             
+            $data['fechapago'] = $fechaPago;           
+            $data['total'] = $ttalOblig;           
+            $data['eliminar'] = 0;
 
             if($cuentaCliente->save($data)){
                 return $cuentaCliente->id;
@@ -345,6 +355,72 @@ class Cuentascliente extends AppModel {
             )); 
 
             return $cuentas;
+        }
+
+        /**
+         * Obtiene las ventas a credito para el reporte de cierre diario
+         */
+        public function obtenerVentasCredito($empresaId, $fechaCierre) {
+
+            $arr_join = array(); 
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'U', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=Cuentascliente.usuario_id'
+                    )                
+            ));
+            
+            array_push($arr_join, array(
+                'table' => 'clientes', 
+                'alias' => 'C', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'C.id=Cuentascliente.cliente_id'
+                    )                
+            ));             
+            
+            array_push($arr_join, array(
+                'table' => 'facturas', 
+                'alias' => 'F', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'F.id=Cuentascliente.factura_id'
+                    )                
+            ));            
+            
+            array_push($arr_join, array(
+                'table' => 'tipopagos', 
+                'alias' => 'T', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'T.id=Cuentascliente.tipopago_id'
+                    )                
+            ));    
+            
+            $cuentasClientes = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'U.id',
+                    'U.nombre',
+                    'C.id',
+                    'C.nombre',
+                    'F.id',
+                    'F.consecutivodian',
+                    'F.codigo',
+                    'T.id',
+                    'T.descripcion',
+                    'Cuentascliente.*',
+                ),
+                'conditions' => array(
+                    'Cuentascliente.empresa_id' => $empresaId,
+                    'Cuentascliente.created BETWEEN ? AND ? ' => array($fechaCierre . ' 00:00:01', $fechaCierre . ' 23:59:59'),                    
+                    ), 
+                'recursive' => '-1'));
+            return $cuentasClientes;             
+            
         }
 
 }

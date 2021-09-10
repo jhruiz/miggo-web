@@ -144,7 +144,65 @@
                 </tr>                  
                 </table>
             </div>
-        </div> <br><br>
+        </div>
+
+        <legend><h2><b><?php echo __('Detalle Ventas a Crédito: ' . $fechaCierre); ?></b></h2></legend>        
+        <div class="table-responsive">
+            <div class="container">        
+                <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
+                <tr>
+                    <th><?php echo ('Usuario'); ?></th>
+                    <th><?php echo ('Cliente'); ?></th>
+                    <th><?php echo ('Factura'); ?></th>
+                    <th><?php echo ('Tipo de pago'); ?></th>                    
+                    <th class="text-right"><?php echo ('Total Obligación'); ?></th>
+                </tr>
+                <?php $ttalCreditos = 0; ?> 
+                <?php foreach ($ctasClientes as $ccl): ?> 
+                <tr>
+                    <td><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
+                    <td><?php echo h($ccl['C']['nombre']); ?>&nbsp;</td>                    
+                    <td><?php echo h(!empty($ccl['F']['consecutivodian']) ? $ccl['F']['consecutivodian'] : $ccl['F']['codigo']); ?>&nbsp;</td>                    
+                    <td><?php echo h($ccl['T']['descripcion']); ?>&nbsp;</td>
+                    <td align="right"><?php echo h('$' . number_format($ccl['Cuentascliente']['total'],2)); ?>&nbsp;</td>                    
+                </tr>
+                <?php $ttalCreditos += $ccl['Cuentascliente']['total']; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <th colspan="4" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalCreditos,2)); ?>&nbsp;</th>
+                </tr>                  
+                </table>
+            </div>
+        </div>        
+
+        <legend><h2><b><?php echo __('Detalle Compras a Crédito: ' . $fechaCierre); ?></b></h2></legend>        
+        <div class="table-responsive">
+            <div class="container">        
+                <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
+                <tr>
+                    <th><?php echo ('Proveedor'); ?></th>
+                    <th><?php echo ('Usuario'); ?></th>
+                    <th><?php echo ('Factura'); ?></th>
+                    <th class="text-right"><?php echo ('Total Obligación'); ?></th>
+                </tr>
+                <?php $ttalCompCreditos = 0; ?> 
+                <?php foreach ($ctasPendientes as $ccp): ?> 
+                <tr>
+                    <td><?php echo h($ccp['P']['nombre']); ?>&nbsp;</td>
+                    <td><?php echo h($ccp['U']['nombre']); ?>&nbsp;</td>                    
+                    <td><?php echo h($ccp['Cuentaspendiente']['numerofactura']); ?>&nbsp;</td>                    
+                    <td align="right"><?php echo h('$' . number_format($ccp['Cuentaspendiente']['total'],2)); ?>&nbsp;</td>                    
+                </tr>
+                <?php $ttalCompCreditos += $ccp['Cuentaspendiente']['total']; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <th colspan="3" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalCompCreditos,2)); ?>&nbsp;</th>
+                </tr>                  
+                </table>
+            </div>
+        </div> <br><br>                
         
         <legend><h2><b><?php echo __('Detalle de Estado por Caja'); ?></b></h2></legend>  
         
