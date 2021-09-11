@@ -66,6 +66,13 @@ class Tipopago extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Cuenta' => array(
+			'className' => 'Cuenta',
+			'foreignKey' => 'cuenta_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 

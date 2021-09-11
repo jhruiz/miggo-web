@@ -158,4 +158,22 @@ class Facturasdetalle extends AppModel {
 
             return $infoDetFact;
         }
+
+		/**
+		 * Retorna el total de una factura sumando la información en el detalle
+		 */
+		public function totalFactura($facturaId) {
+			$total = $this->find('all', array(
+				'fields' => array(
+					'Facturasdetalle.id',
+					'sum(Facturasdetalle.costototal) AS ctotal'
+				), 
+				'conditions' => array(
+					'Facturasdetalle.factura_id' => $facturaId
+				)
+			));
+
+			return $total;
+
+		}
 }

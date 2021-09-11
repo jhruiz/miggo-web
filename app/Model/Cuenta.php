@@ -76,7 +76,6 @@ class Cuenta extends AppModel {
 			}
         }
         
-        
         public function obtenerCuentasDestino($empresaId){
             $filter = [];            
             $filter['Cuenta.empresa_id'] = $empresaId;

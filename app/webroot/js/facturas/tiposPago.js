@@ -119,6 +119,7 @@ var calcularRestanteFactura = function(){
             if(ttalFact > parseFloat($('#totalVentaTipos').val())){
                 alert('El valor ingresado supera el total de la factura');
                 $(this).val('');
+                calcularRestante();
             }else{
                 var ttalRest = ($('#totalVentaTipos').val() - ttalFact).toLocaleString();
                 $('#restante').html(ttalRest);
@@ -131,6 +132,9 @@ var calcularRestanteFactura = function(){
     }
 };
 
+/**
+ * Calcula el valor restante de la factura
+ */
 var calcularRestante = function(){
    var ttalFact = 0;
    //recorre los inputs de tipo de pago agregados al formulario para verificar cuantos se han ingresado del mismo tipo

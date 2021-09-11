@@ -36,9 +36,7 @@ function fnObtenerDatosProducto(e){
                url: $('#url-proyecto').val() + 'cotizaciones/addProductoBarCode',
                data: {usuarioId: usuarioId, descProducto: $('#CotizacioneProducto').val(), fechaActual: fechaActual, fechaVencCot: fechaVencCot, empresaId: empresaId, nombreCliente: nombreCliente, identCliente: identCliente, FechaVencCot: FechaVencCot},
                type: "POST",
-               success: function(data) {   
-               alert(data);
-               die();            
+               success: function(data) {            
                     var prefactura = JSON.parse(data);
                     if(prefactura.valido){
                         $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 

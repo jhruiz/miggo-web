@@ -133,7 +133,6 @@ class DocumentosController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            echo "Holaaa"; die();
             /*se reagistra la actividad del uso de la aplicacion*/
             $usuariosController = new UsuariosController();
             $usuarioAct = $this->Auth->user('id');
@@ -153,7 +152,6 @@ class DocumentosController extends AppController {
 			$options = array('conditions' => array('Documento.' . $this->Documento->primaryKey => $id));
 			$this->request->data = $this->Documento->find('first', $options);
 		}
-                echo "Hola"; die();
 		$tiposdocumentos = $this->Documento->Tiposdocumento->find('list');
 		$empresas = $this->Documento->Empresa->find('list');
 		$usuarios = $this->Documento->Usuario->find('list');

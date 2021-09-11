@@ -377,8 +377,10 @@ class FacturasController extends AppController
  * @param string $id
  * @return void
  */
-    public function delete($id = null)
+    public function delete()
     {
+        $this->autoRender = false;
+        $id = $this->request->data['facturaId'];
 
         $this->loadModel('Documento');
         $this->loadModel('Cargueinventario');
@@ -418,38 +420,16 @@ class FacturasController extends AppController
                 $existFinal = $infoCargueInventario['Cargueinventario']['existenciaactual'] + $detFact['cantidad'];
                 $this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal);
             }
-
-            // Se obtiene el detalle de la factura para obtener el id de la cuenta y el saldo a devolver.*/
-            $facDetalle = $this->FacturaCuentaValore->obtenerPagosFactura($id);
-
-            /**Se eliminan los pagos realizados a la factura*/
-            $this->FacturaCuentaValore->deleteAll(array('FacturaCuentaValore.factura_id' => $id), false);
-
-            for ($i = 0; $i < count($facDetalle); $i++) {
-                $array[$i]['cuenta'] = $facDetalle[$i]['FacturaCuentaValore']['cuenta_id']; 
-                $array[$i]['valor'] = $facDetalle[$i]['FacturaCuentaValore']['valor']; 
-            }
-
-            // Se calcula el saldo nuevo de la cuentay se actualiza el registro
-            for ($i = 0; $i < count($array); $i++) { 
-                $arrayValor[$i]['valor']= $this->Cuenta->obtenerDatosCuentaId($array[$i]['cuenta']);; 
-                $arraySaldoCuenta[$i]['saldo'] = $arrayValor[$i]['valor']['Cuenta']['saldo'];
-                $arraySaldoNuevo[$i]['Nuevo valor'] = $arraySaldoCuenta[$i]['saldo'] - $array[$i]['valor'];
-
-                // enviamos el id y el saldo final de la cuenta para actualizar su valor
-                $this->Cuenta->actualizarSaldoCuenta($array[$i]['cuenta'],$arraySaldoNuevo[$i]['Nuevo valor']);
-            }
             
             if ($this->Factura->actualizarEstadoFacturaEliminar($id)) {
-                $this->Session->setFlash(__('La nota crédito ha sido registrada.'));
+                echo json_encode(array('resp' => 'La nota crédito ha sido registrada.'));
             } else {
-                $this->Session->setFlash(__('La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
+                echo json_encode(array('resp' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
             }
 
         } else {
-            $this->Session->setFlash(__('La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
+            echo json_encode(array('resp' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
         }
-        return $this->redirect(array('action' => 'index'));
     }
 
     public function pagofactura()
@@ -1598,6 +1578,25 @@ class FacturasController extends AppController
         $resp = $this->Observacionescierre->gestionObservacion($data);
 
         echo json_encode(array('resp' => $resp));
+    }
+
+    /**
+     * Genera una vista con el listado de tipo de pago y el valor para la nota credito
+     */
+    public function datosnotacredito() {
+        $this->loadModel('Tipopago');
+        $this->loadModel('Facturasdetalle');
+
+        $facturaId = $this->request->data['facturaId'];
+        $empresaId = $this->Auth->user('empresa_id');
+                
+        //obtiene los tipos de pago de una empresa
+        $lstTipPagos = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+
+        //obtiene el valor total de la factura
+        $infoFactura = $this->Facturasdetalle->totalFactura($facturaId);
+
+        $this->set(compact('lstTipPagos', 'infoFactura', 'facturaId'));
     }
 
     public function searchFacCli()

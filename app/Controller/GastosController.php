@@ -275,93 +275,160 @@ class GastosController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
         
-        public function descontarSaldoCuenta($valor,$cuentaId){
-            $this->loadModel('Cuenta');
-            
-            //Se obtienen los datos de la cuenta por id
-            $datosCuenta = $this->Cuenta->obtenerDatosCuentaId($cuentaId);
-            $saldoFinal = $datosCuenta['Cuenta']['saldo'] - $valor;
-            
-            //Se actualiza el saldo de la cuenta
-            $this->Cuenta->actualizarSaldoCuenta($cuentaId,$saldoFinal);
+    public function descontarSaldoCuenta($valor,$cuentaId){
+        $this->loadModel('Cuenta');
+        
+        //Se obtienen los datos de la cuenta por id
+        $datosCuenta = $this->Cuenta->obtenerDatosCuentaId($cuentaId);
+        $saldoFinal = $datosCuenta['Cuenta']['saldo'] - $valor;
+        
+        //Se actualiza el saldo de la cuenta
+        $this->Cuenta->actualizarSaldoCuenta($cuentaId,$saldoFinal);
+    }
+        
+    /**
+     * se realiza incremento de saldo por cuenta del traslado
+     * @param type $valor
+     * @param type $cuentadestino
+     */
+    public function trasladarSaldo($valor, $cuentadestino){
+        $this->loadModel('Cuenta');
+        
+        //Se obtienen los datos de la cuenta por id
+        $datosCuenta = $this->Cuenta->obtenerDatosCuentaId($cuentadestino);
+        $saldoFinal = $datosCuenta['Cuenta']['saldo'] + $valor;
+        
+        //Se actualiza el saldo de la cuenta
+        $this->Cuenta->actualizarSaldoCuenta($cuentadestino,$saldoFinal);
+    }
+        
+    public function search() {
+        $url = array();
+        $url['action'] = 'index';
+
+        foreach ($this->data as $kk => $vv) {
+            $url[$kk] = $vv;
+        }
+
+        // redirect the user to the url
+        $this->redirect($url, null, true);
+    }  
+    
+    public function actualizargasto(){
+        $this->autoRender = false;
+        $this->loadModel('Usuario');
+        $this->loadModel('Cuenta');
+        $posData = $this->request->data;         
+
+        $valorActual = str_replace(",", "", $posData['valor_actual']);
+        
+        //se obtiene la información del usuario que realiza el registro
+        $usuario = $this->Usuario->obtenerUsuarioPorId($posData['usuarioregistra_id']);
+        $date = date('Y-m-d H:i:s');
+        
+        $restante = $valorActual - $posData['valor_nuevo'];
+        
+        //se obtiene la información de la cuenta
+        $cuenta = $this->Cuenta->obtenerDatosCuentaId($posData['cuenta_id']);            
+        
+        if($restante < 0){
+            $valNuevoSaldo = $cuenta['Cuenta']['saldo'] - ($restante * -1);
+        }else{
+            $valNuevoSaldo = $cuenta['Cuenta']['saldo'] + $restante;
+        }            
+        
+        //actualiza el saldo de la cuenta
+        $this->Cuenta->actualizarSaldoCuenta($posData['cuenta_id'],$valNuevoSaldo);
+        
+        $data = [];
+        $descripcion = $posData['descripcion'] . ". ";
+
+        if($valorActual != $posData['valor_nuevo']) {
+            $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
+            $descripcion .= ", realizó cambio de valor del gasto el día " . $date . ". ";
+            $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
+            $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
         }
         
-        /**
-         * se realiza incremento de saldo por cuenta del traslado
-         * @param type $valor
-         * @param type $cuentadestino
-         */
-        public function trasladarSaldo($valor, $cuentadestino){
-            $this->loadModel('Cuenta');
-            
-            //Se obtienen los datos de la cuenta por id
-            $datosCuenta = $this->Cuenta->obtenerDatosCuentaId($cuentadestino);
-            $saldoFinal = $datosCuenta['Cuenta']['saldo'] + $valor;
-            
-            //Se actualiza el saldo de la cuenta
-            $this->Cuenta->actualizarSaldoCuenta($cuentadestino,$saldoFinal);
-        }
+        $data['id'] = $posData['gasto_id'];
+        $data['usuario_id'] = $posData['usuarioregistra_id'];
+        $data['valor'] = $posData['valor_nuevo'];           
+        $data['usuario_id'] = $posData['nuevo_usuario'];            
+        $data['itemsgasto_id'] = $posData['item_id'];            
+        $data['descripcion'] = $descripcion;            
         
-        public function search() {
-            $url = array();
-            $url['action'] = 'index';
 
-            foreach ($this->data as $kk => $vv) {
-                $url[$kk] = $vv;
-            }
 
-            // redirect the user to the url
-            $this->redirect($url, null, true);
-        }  
+        $result  = $this->Gasto->actualizarGasto($data);
         
-        public function actualizargasto(){
-            $this->autoRender = false;
-            $this->loadModel('Usuario');
-            $this->loadModel('Cuenta');
-            $posData = $this->request->data;         
+        echo json_encode(array('resp' => $result)); 
+        
+    }
 
-            $valorActual = str_replace(",", "", $posData['valor_actual']);
-            
-            //se obtiene la información del usuario que realiza el registro
-            $usuario = $this->Usuario->obtenerUsuarioPorId($posData['usuarioregistra_id']);
-            $date = date('Y-m-d H:i:s');
-            
-            $restante = $valorActual - $posData['valor_nuevo'];
-            
-            //se obtiene la información de la cuenta
-            $cuenta = $this->Cuenta->obtenerDatosCuentaId($posData['cuenta_id']);            
-            
-            if($restante < 0){
-                $valNuevoSaldo = $cuenta['Cuenta']['saldo'] - ($restante * -1);
-            }else{
-                $valNuevoSaldo = $cuenta['Cuenta']['saldo'] + $restante;
-            }            
-            
-            //actualiza el saldo de la cuenta
-            $this->Cuenta->actualizarSaldoCuenta($posData['cuenta_id'],$valNuevoSaldo);
-            
-            $data = [];
-            $descripcion = $posData['descripcion'] . ". ";
+    /**
+     * Crea un gasto de tipo nota credito
+     */
+    public function crearGastoNotaCredito($valor, $cuentaId) {
+        $this->loadModel('Itemsgasto');
+        
+        $idItem = "";
+        $descNC = 'NOTA CREDITO';
 
-            if($valorActual != $posData['valor_nuevo']) {
-                $descripcion .= "El usuario " . $usuario['Usuario']['nombre'] . " - " . $usuario['Usuario']['identificacion'];
-                $descripcion .= ", realizó cambio de valor del gasto el día " . $date . ". ";
-                $descripcion .= "Valor anterior $" . number_format($valorActual,2) . ". ";
-                $descripcion .= "Valor nuevo $" . number_format($posData['valor_nuevo'],2) . ".";
-            }
-            
-            $data['id'] = $posData['gasto_id'];
-            $data['usuario_id'] = $posData['usuarioregistra_id'];
-            $data['valor'] = $posData['valor_nuevo'];           
-            $data['usuario_id'] = $posData['nuevo_usuario'];            
-            $data['itemsgasto_id'] = $posData['item_id'];            
-            $data['descripcion'] = $descripcion;            
-            
+        $empresaId = $this->Auth->user('empresa_id');
 
+        $infoItem = $this->Itemsgasto->obtenerItemGastoProv($empresaId, $descNC);
 
-            $result  = $this->Gasto->actualizarGasto($data);
-            
-            echo json_encode(array('resp' => $result)); 
-            
+        // valida que exista el item de gasto nota credito para la empresa, sino, lo crea
+        if( empty( $infoItem ) ) {
+            $idItem = $this->Itemsgasto->crearItemGasto($empresaId, $descNC);
+        } else {
+            $idItem = $infoItem['Itemsgasto']['id'];
         }
+
+        $data = array(
+            'descripcion' => 'Devolucion por nota credito',
+            'usuario_id' => $this->Auth->user('id'),
+            'empresa_id' => $empresaId,
+            'fechagasto' => date('Y-m-d H:i:s'),
+            'created' => date('Y-m-d  H:i:s'),
+            'valor' => $valor,
+            'cuenta_id' => $cuentaId,
+            'traslado' => '0',
+            'itemsgasto_id' => $idItem,
+            'tipoempresa' => 'P',
+            'empresaasg_id' => $empresaId
+        );
+
+        $this->Gasto->create();
+        $this->Gasto->save($data);
+
+    }
+
+    /**
+     * Genera el gasto de las notas credito
+     */
+    public function gastoNotaCredito() {
+
+        $this->loadModel('Tipopago');
+
+        $this->autoRender = false;
+
+        $resp = true;
+
+        $payMeth = $this->request->data['arrPayMeth'];
+
+        foreach($payMeth as $pm) {
+            
+            //se obtiene la informacion del tipo de pago
+            $infoTipoPago = $this->Tipopago->obtenerTipoPagoPorId($pm['payment_type']);
+            
+            //restar el valor de la caja
+            $this->descontarSaldoCuenta($pm['val_pay_meth'], $infoTipoPago['Cuenta']['id']);
+
+            //crear gasto
+            $this->crearGastoNotaCredito($pm['val_pay_meth'], $infoTipoPago['Cuenta']['id']);
+        }
+
+        echo json_encode(array('resp' => true));
+    }
 }

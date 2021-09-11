@@ -1,5 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
+<?php echo ($this->Html->script('Facturas/notacredito')); ?>
 
 <div class="container body">
 <div class="main_container">
@@ -155,14 +156,7 @@
                         <td class="actions">
                             <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $factura['Factura']['id']))); ?>
                             <?php echo $this->Html->image('png/list-3.png', array('title' => 'Ver Detalle Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'detalleventa', $factura['Factura']['id']))); ?>
-                            <?php
-                                    echo $this->Form->postLink(
-                                        $this->Html->image('png/list-2.png', array('title' => 'Nota crédito', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-                                        array('action' => 'delete', $factura['Factura']['id']), //url
-                                        array('escape' => false), //el escape
-                                        __('Está seguro que desea generar la nota crédito?') //la confirmacion
-                                    );
-                            ?>
+                            <?php echo $this->Html->image('png/list-2.png', array('title' => 'Nota crédito', 'alt' => __('Brownies'), 'width' => '20px', 'onclick' => "generarNotaCredito(" . $factura['Factura']['id'] . ")", 'class' => 'nota_credito'));?>
                         </td>
                 </tr>
     <?php endforeach;?>
@@ -200,3 +194,4 @@ echo $this->Paginator->counter(array(
 
 </div> <!-- class="container body -->
 </div> <!-- class="main_container" -->
+<div id="div_notacredito"></div>

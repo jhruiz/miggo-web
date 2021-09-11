@@ -37,4 +37,22 @@ class Itemsgasto extends AppModel {
             return $itemGasto;
         }
 
+        /**
+         * Crea un item gasto especifico para una empresa y retorna el id
+         */
+        public function crearItemGasto($empresaId, $desc) {
+            $data = array();
+            $itemsgasto = new Itemsgasto();
+
+            $data['descripcion'] = $desc;
+            $data['empresa_id'] = $empresaId;
+
+            if ($itemsgasto->save($data)) {
+                return $itemsgasto->id;
+            } else {
+                return '0';
+            }
+      
+        }
+
 }

@@ -488,37 +488,19 @@ function facturarProductos(){
     }else{
         var tipoPago = $('#PrefacturaTipopago').val();
         var ttalAbonos = $('.ttalAbonos').val();
-         var contado = totalCrediContado();
+        var contado = totalCrediContado();
          
          $('#pagocontado').val(contado);  
-         
-//        //funcion detallar el pago entre credito y contado
-//        if(tipoPago == '5'){
-            var valorCompra = totalCrediContado() - ttalAbonos;
-            $("#div_facturar").load(
-                $('#url-proyecto').val() + "facturas/pagofactura",
-                {valorCompra: valorCompra},
-                function(){                                                            
-                    dialogCrediContado=$("#div_facturar").dialog(opcCrediContado);
-                    dialogCrediContado.dialog('open');
-                }
-            );        
-//        }else if(tipoPago == '4'){
-//            var credito = totalCrediContado();
-//            $('#pagocredito').val(credito);
-//            $('#pagocontado').val('0');
-//            submitForm();
-//        }else if(tipoPago == '2'){
-//            var contado = totalCrediContado();
-//            $('#pagocontado').val(contado);
-//            $('#pagocredito').val('0');
-//            submitForm();
-//        }else{
-//            var contado = totalCrediContado();
-//            $('#pagocontado').val(contado);
-//            $('#pagocredito').val('0');
-//            submitForm();            
-//        }  
+
+        var valorCompra = totalCrediContado() - ttalAbonos;
+        $("#div_facturar").load(
+            $('#url-proyecto').val() + "facturas/pagofactura",
+            {valorCompra: valorCompra},
+            function(){                                                            
+                dialogCrediContado=$("#div_facturar").dialog(opcCrediContado);
+                dialogCrediContado.dialog('open');
+            }
+        );        
     }
         
 }
