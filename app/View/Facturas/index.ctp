@@ -1,5 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
+<?php echo ($this->Html->script('facturas/notacredito.js')); ?>
 
 <div class="container body">
 <div class="main_container">
@@ -193,5 +194,4 @@ echo $this->Paginator->counter(array(
 
 </div> <!-- class="container body -->
 </div> <!-- class="main_container" -->
-<?php echo ($this->Html->script('Facturas/notacredito.js')); ?>
 <div id="div_notacredito"></div>
