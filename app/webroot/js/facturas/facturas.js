@@ -19,8 +19,8 @@ var dialogDialogSeleccionProducto;
 var opcCrediContado = {
         autoOpen: false,
         modal: true,
-        width: 700,
-        height: 650,
+        width: 900,
+        height: 550,
         position: [400, 50],
         show: {
             duration: 400    
