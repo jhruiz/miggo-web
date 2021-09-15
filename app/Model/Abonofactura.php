@@ -82,7 +82,7 @@ class Abonofactura extends AppModel {
         array_push($arr_join, array(
             'table' => 'clientes', 
             'alias' => 'CL', 
-            'type' => 'INNER',
+            'type' => 'LEFT',
             'conditions' => array(
                 'PF.cliente_id=CL.id'
                 )                
