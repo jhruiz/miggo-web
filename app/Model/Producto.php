@@ -105,7 +105,8 @@ class Producto extends AppModel {
             $arrProductos = $this->find('all', array(
                 'conditions' => array(
                     'Producto.empresa_id' => $empresaId, 
-                    'Producto.mostrarencatalogo' => '1'
+                    'Producto.mostrarencatalogo' => '1',
+                    'Producto.estado' => '1'
                 ), 'recursive' => '-1',
                 'limit' => '100'
             ));            
@@ -168,9 +169,10 @@ class Producto extends AppModel {
                 'conditions' => array(
                     'OR' => array(
                         'LOWER(Producto.descripcion) LIKE' => '%'. strtolower($descripcionProd) . '%',
-                        'Producto.codigo LIKE' => '%'. $descripcionProd . '%',
+                        'Producto.codigo LIKE' => '%'. $descripcionProd . '%',                        
                         ),
-                    'Producto.empresa_id' => $empresaId),
+                    'Producto.empresa_id' => $empresaId,
+                    'Producto.estado' => '1'),
                 'recursive' => '-1'));
             
             return $arrProducto;        
@@ -204,7 +206,8 @@ class Producto extends AppModel {
                         'LOWER(Producto.descripcion) LIKE' => '%'. $descProducto . '%',
                         'LOWER(Producto.codigo) LIKE' => '%'. $descProducto . '%',
                         ),
-                    'Producto.empresa_id' => $empresaId),
+                    'Producto.empresa_id' => $empresaId,
+                    'Producto.estado' => '1'),
                 'recursive' => '-1'));
             
             return $arrProducto;             
@@ -233,7 +236,7 @@ class Producto extends AppModel {
          * @return string
          */
         public function obtenerProductoPorCodigo($codigo, $empresaId){
-            $result = $this->find('first', array('conditions' => array('Producto.codigo' => $codigo, 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
+            $result = $this->find('first', array('conditions' => array('Producto.codigo' => $codigo, 'Producto.estado' => '1', 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
             return $result;
         }
         
@@ -243,9 +246,13 @@ class Producto extends AppModel {
          * @return type
          */
         public function obtenerProductoPorReferencia($referencia, $empresaId){
-            $result = $this->find('first', array('conditions' => array('Producto.referencia' => $referencia, 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
+            $result = $this->find('first', array('conditions' => array('Producto.referencia' => $referencia, 'Producto.estado' => '1', 'Producto.empresa_id' => $empresaId), 'recursive' => '-1'));
             return $result;
         }
+
+        /**
+         * Obtener productos para reporte
+         */
         public function obtenerProductosReporte($empresaId, $filtros)
         {
             $arr_join = array();
@@ -273,5 +280,23 @@ class Producto extends AppModel {
     
             return $arrProductos;
     
+        }
+
+        /**
+         * Actualiza el estado del producto a inactivo
+         */
+        public function actualizarEstadoProducto($id) {
+            $data = array();         
+         
+            $producto = new Producto();
+            
+            $data['id'] = $id;
+            $data['estado'] = '0';
+            
+            if($producto->save($data)){
+                return true;
+            }else{
+                return false;
+            }
         }
 }

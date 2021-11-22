@@ -62,6 +62,11 @@
             </div>
 
             <div class="row">
+                <label>Vender con inventario</label>
+                <?php echo $this->Form->input('inventario', array('label' => '', 'type' => 'checkbox', 'class' => 'form-control')); ?>
+            </div>            
+
+            <div class="row">
                 <?php echo $this->Form->input('imagen', array('type' => 'file')); ?>
                 <p class="help-block">Máximo 1MB</p>
             </div>

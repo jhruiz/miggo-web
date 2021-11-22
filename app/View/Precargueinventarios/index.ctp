@@ -30,7 +30,9 @@
                                     <th><?php echo ('Factura'); ?></th>
                                     <th>&nbsp;</th>
                     </tr>
+                    <?php $disabled = ''; ?>
                     <?php foreach ($arrInfoPreCargue as $datCarg): ?>
+                    <?php $disabled = $datCarg['Producto']['inventario'] == '0' ? 'disabled' : ''; ?>
                     <tr>
                         <td><br><?php echo h($datCarg['Producto']['descripcion']); ?> <input type="hidden" name="prod_<?php echo $datCarg['Precargueinventario']['id']; ?>"></td>
                             <td> <?php                             
@@ -47,7 +49,7 @@
                                             );
                                          ?> </td>
                             <td><br><input type="text" size="5" name="costprod_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="costprod_<?php echo $datCarg['Precargueinventario']['id']?>" class="form-control input-sm numericPrice" size="20" value="<?php echo $datCarg['Precargueinventario']['costoproducto'];?>" onblur="actualizarValor(this);"></td>
-                            <td><br><input type="text" size="2" name="cant_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="cant_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm" value="<?php echo $datCarg['Precargueinventario']['cantidad']; ?>" onblur="actualizarCantidad(this);"></td>
+                            <td><br><input type="text" size="2" name="cant_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="cant_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm" value="<?php echo $disabled != '' ? 'N/A' : $datCarg['Precargueinventario']['cantidad']; ?>" onblur="actualizarCantidad(this);" <?php echo $disabled; ?>></td>
                             <td><br><input type="text" size="8" name="costTot_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="cosTot_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm numericPrice" value="$<?php echo $datCarg['Precargueinventario']['costototal'];?>" readonly="readonly"></td>
                             <td><br><input type="text" size="5" name="precioMax_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="precioMax_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form_control input-sm numericPrice" value="<?php echo $datCarg['Precargueinventario']['preciomaximo']; ?>" onblur="actualizarValorMaximo(this);"></td>
                             <td><br><input type="text" size="5" name="precioMin_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="precioMin_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form_control input-sm numericPrice" value="<?php echo $datCarg['Precargueinventario']['preciominimo']; ?>" onblur="actualizarValorMinimo(this);"></td>
@@ -74,7 +76,8 @@
                                                         'options'=>$listTipoPago,
                                                         'class' => 'form-control',
                                                         'default' => $datCarg['Tipopago']['id'],
-                                                        'onchange' => 'actualizarTipoPago(this);'
+                                                        'onchange' => 'actualizarTipoPago(this);',
+                                                        'disabled' => $disabled
                                                     )
                                             );
                                          ?> </td>

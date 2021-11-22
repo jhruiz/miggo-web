@@ -17,7 +17,7 @@ $this->layout='inicio';
                             <label>Producto</label><br>               
                                 <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
                                 <?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $usuarioId)); ?>
-                                <?php echo $this->Form->input('buscarproducto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Ingresar Nombre o C¨®digo del Producto', 'onkeyup' => 'fnObtenerDatosProducto(event);')); ?>
+                                <?php echo $this->Form->input('buscarproducto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Ingresar Nombre o Codigo del Producto', 'onkeyup' => 'fnObtenerDatosProducto(event);')); ?>
                             <div id="datosProducto" style="position:absolute; z-index:1;"></div> <br>                               
                         </div>  
                     </div>              

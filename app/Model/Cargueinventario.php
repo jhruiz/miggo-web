@@ -151,22 +151,23 @@ class Cargueinventario extends AppModel {
                 'alias' => 'P', 
                 'type' => 'INNER',
                 'conditions' => array(
-                    'P.id=Cargueinventario.producto_id',
-                    'OR' => array(
-                        'LOWER(P.descripcion) LIKE' => '%'. strtolower($descripcionProd) . '%',
-                        'P.codigo LIKE' => '%'. $descripcionProd . '%',
-                        'P.referencia LIKE' => '%'. $descripcionProd . '%'
-                    ),                    
+                    'P.id=Cargueinventario.producto_id'                   
                     )                
             ));
             
             $infoInventario = $this->find('all', array(
                 'joins' => $arr_join,                  
                 'conditions' => array(
-                    'Cargueinventario.deposito_id' => $depositosIdx
+                    'Cargueinventario.deposito_id' => $depositosIdx,
+                    'Producto.estado' => '1',
+                    'OR' => array(
+                        'LOWER(P.descripcion) LIKE' => '%'. strtolower($descripcionProd) . '%',
+                        'P.codigo LIKE' => '%'. $descripcionProd . '%',
+                        'P.referencia LIKE' => '%'. $descripcionProd . '%'
+                    ),                     
                     ),
                 'recursive' => '0'                
-                ));            
+                ));                    
             
             return $infoInventario;
         }
@@ -306,7 +307,8 @@ class Cargueinventario extends AppModel {
                 'recursive' => '0',
                 'conditions' => array(
                     'Cargueinventario.existenciaactual < P.existenciaminima',
-                    'Cargueinventario.empresa_id' => $empresaId
+                    'Cargueinventario.empresa_id' => $empresaId,
+                    'Producto.estado' => '1'
                 ),
                 'fields' => array(
                     'count(Cargueinventario.id) as contador'

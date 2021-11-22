@@ -417,8 +417,12 @@ class FacturasController extends AppController
             foreach ($infoFact['Facturasdetalle'] as $detFact) {
                 /*se obtiene el id del cargue inventario*/
                 $infoCargueInventario = $this->Cargueinventario->obtenerCargueInventarioProdDep($detFact['producto_id'], $detFact['deposito_id']);
-                $existFinal = $infoCargueInventario['Cargueinventario']['existenciaactual'] + $detFact['cantidad'];
-                $this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal);
+                
+                if($infoCargueInventario['Producto']['inventario'] == '1') {
+                    $existFinal = $infoCargueInventario['Cargueinventario']['existenciaactual'] + $detFact['cantidad'];
+                    $this->Cargueinventario->actalizarExistenciaStock($infoCargueInventario['Cargueinventario']['id'], $existFinal);
+                }
+
             }
             
             if ($this->Factura->actualizarEstadoFacturaEliminar($id)) {
@@ -756,8 +760,12 @@ class FacturasController extends AppController
         $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
         $existFinal = $cantStock - $cantidadventa;
 
-        /*se actualiza la cantidad en stock tras la prefactura*/
-        $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+        // valida que el producto este configurado para venta con inventario
+        if($inventActual['Producto']['inventario'] == '1'){
+            /*se actualiza la cantidad en stock tras la prefactura*/
+            $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+        }
+        
         $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefacturaId,
             $valorDescuento, $porcentajeDescuento, $impuesto);
         if ($detalleId != '0' && $detalleId != "") {
@@ -1021,6 +1029,7 @@ class FacturasController extends AppController
     public function repOrdenesPorMecanico()
     {
         $this->loadModel('Usuario');
+        $this->loadModel('Marcavehiculo');
         $this->loadModel('Estadopagomecanico');
 
         $filter = array();
@@ -1041,10 +1050,6 @@ class FacturasController extends AppController
             $filter['Factura.created BETWEEN ? AND ?'] = array($this->passedArgs['fecha_inicio'] . " 00:00:01", $this->passedArgs['fecha_fin'] . " 23:59:59");
         }
 
-        if (!empty($this->passedArgs['estadopagomecanico'])) {
-            $filter['Factura.estadopagomecanico_id'] = $this->passedArgs['estadopagomecanico'];
-        }
-
         $empresaId = $this->Auth->user('empresa_id');
 
         $filter['Factura.empresa_id'] = $empresaId;
@@ -1054,10 +1059,12 @@ class FacturasController extends AppController
         if (!empty($filter)) {
             $arrFactOrdenes = $this->Factura->obtenerFacturasOrdenesServicios($filter);
         }
-
         
         //se obtiene el listado de mecanicos
         $listMecanicos = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+
+        //se obtiene el listado de marcas de vehiculos
+        $listMarcasVeh = $this->Marcavehiculo->obtenerListaMarcavehiculos();
 
         $estadoPago = $this->Estadopagomecanico->obtenerListaEstadoPago();
 
@@ -1066,7 +1073,7 @@ class FacturasController extends AppController
         $subTot = 0;
         $total = 0;
 
-        $this->set(compact('arrFactOrdenes', 'listMecanicos', 'totServ', 'subTot', 'total', 'estadoPago'));
+        $this->set(compact('arrFactOrdenes', 'listMecanicos', 'totServ', 'subTot', 'total', 'estadoPago', 'listMarcasVeh'));
     }
 
     public function searchOrdMec()

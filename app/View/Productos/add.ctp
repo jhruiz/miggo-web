@@ -60,7 +60,12 @@
                     <label>Mostrar en Catálogo</label>
                     <?php echo $this->Form->input('mostrarencatalogo', array('label' => '', 'type' => 'checkbox', 'class' => 'form-control')); ?>
                     <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)) ?>
-                </div>
+                </div><br>
+
+                <div class="form-group">
+                    <label>Vender con inventario</label>
+                    <?php echo $this->Form->input('inventario', array('label' => '', 'type' => 'checkbox', 'class' => 'form-control')); ?>
+                </div>                
 
                 <div class="row">
                     <div class="form-group">

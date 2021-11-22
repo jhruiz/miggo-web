@@ -401,12 +401,13 @@ class OrdentrabajosController extends AppController {
         //se obtiene la informacion cargue inventario por id
         $arrCarInv = $this->Cargueinventario->obtenerInventarioId($carInvId);
         
-        //se obtiene la cantidad actual
-        $cantFinal = intval($arrCarInv['Cargueinventario']['existenciaactual']) + intval($cantidad);
-        
-        //se actualiza la cantidad actual del cargue inventario
-        $this->Cargueinventario->actalizarExistenciaStock($carInvId, $cantFinal);
-        
+        if($arrCarInv['Producto']['inventario'] == '1'){
+            //se obtiene la cantidad actual
+            $cantFinal = intval($arrCarInv['Cargueinventario']['existenciaactual']) + intval($cantidad);
+            
+            //se actualiza la cantidad actual del cargue inventario
+            $this->Cargueinventario->actalizarExistenciaStock($carInvId, $cantFinal);            
+        }
     }
     
     /**

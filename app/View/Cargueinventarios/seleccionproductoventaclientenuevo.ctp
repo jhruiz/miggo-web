@@ -34,7 +34,8 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
         <input type="hidden" id="nombreProducto" value="<?php echo $arrProducto['Producto']['descripcion'];?>">
         <input type="hidden" id="codigoProducto" value="<?php echo $arrProducto['Producto']['codigo'];?>">
         <input type="hidden" id="impuesto" value="<?php echo !empty($arrImpuestos) ? $arrImpuestos['0']['Impuesto']['valor'] : '0';?>">
-        <input type="hidden" id="prcImpuesto" value="<?php echo $prcImpuesto;?>">        
+        <input type="hidden" id="prcImpuesto" value="<?php echo $prcImpuesto;?>">   
+        <input type="hidden" id="vtaInventario" value="<?php echo $arrProducto['Producto']['inventario'];?>">     
         
         <div class="form-group form-inline"> 
             <label>Cantidad</label><br>

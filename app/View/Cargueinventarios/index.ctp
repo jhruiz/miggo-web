@@ -81,14 +81,14 @@ $this->layout = 'inicio';
                                 <?php echo $this->Html->link($cargueinventario['Deposito']['descripcion'], array('controller' => 'depositos', 'action' => 'view', $cargueinventario['Deposito']['id'])); ?>
                         </td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['costoproducto'], 2)); ?>&nbsp;</td>
-                        <td><?php echo h($cargueinventario['Cargueinventario']['existenciaactual']); ?>&nbsp;</td>
+                        <td><?php echo h($cargueinventario['Producto']['inventario'] == '1' ? $cargueinventario['Cargueinventario']['existenciaactual'] : 'N/A'); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['prefacturas']); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['ordeninsumos']); ?>&nbsp;</td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['precioventa'], 2)); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['created']); ?>&nbsp;</td>
-		<td class="actions">
-                    <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'viewmovements', 'controller' => 'detalledocumentos', $cargueinventario['Producto']['id']))); ?>
-		</td>
+                        <td class="actions">
+                                    <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'viewmovements', 'controller' => 'detalledocumentos', $cargueinventario['Producto']['id']))); ?>
+                        </td>
 
                     </tr>
                 <?php endforeach;?>

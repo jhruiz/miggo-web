@@ -87,7 +87,8 @@
                                 array(
                                     'label' => '',
                                     'class' => 'form-control', 
-                                    'placeholder' => 'Cliente'
+                                    'placeholder' => 'Cliente',
+                                    'autocomplete' => 'off'
                                     )
                                 ); 
                         ?>

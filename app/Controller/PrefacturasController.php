@@ -68,10 +68,10 @@ class PrefacturasController extends AppController {
                         $impuesto = floatval("1." . $pf['Prefacturasdetalle']['impuesto']);                        
                         
                         //se calcula el valor base menos el descuento
-                        $valBase = (ceil((floatval($pf['Prefacturasdetalle']['costoventa'])/$impuesto))) - floatval($pf['Prefacturasdetalle']['descuento']);                        
+                        $valBase = (ceil((floatval($pf['Prefacturasdetalle']['costoventa'] * $pf['Prefacturasdetalle']['cantidad'])/$impuesto))) - floatval($pf['Prefacturasdetalle']['descuento']);                        
                         $prefactValor += ceil($valBase * $impuesto);
                     }else{
-                        $prefactValor += (floatval($pf['Prefacturasdetalle']['costoventa']) - floatval($pf['Prefacturasdetalle']['descuento']));
+                        $prefactValor += (floatval($pf['Prefacturasdetalle']['costoventa'] * $pf['Prefacturasdetalle']['cantidad']) - floatval($pf['Prefacturasdetalle']['descuento']));
                     }
                 }
             }
@@ -174,25 +174,22 @@ class PrefacturasController extends AppController {
             $prefactId = $posData['prefactId'];
             $arrPrefactId = $this->Prefactura->obtenerPrefacturaPorId($prefactId);
         }else{
-            /*Se valida si existe la prefactura*/
-//            $arrPrefactId = $this->Prefactura->obtenerPrefacturaId($clienteId);
-//            if(isset($arrPrefactId['Prefactura'])){
-//                $prefactId = $arrPrefactId['Prefactura']['id'];
-//            }else{
-                /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
-                $prefactId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId);                 
-//            }             
+            /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
+            $prefactId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId);                 
         }
             
-
         /*se descuenta la cantidad del producto prefacturado del inventario*/
         /*se obtiene la cantidad existente en el stock*/
         $inventActual = $this->Cargueinventario->obtenerInventarioId($cargueinventarioId);
         $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
         $existFinal = $cantStock - $cantidadventa;
 
-        /*se actualiza la cantidad en stock tras la prefactura*/
-        $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+        // se valida si el producto está configurado para vender con inventario
+        if($inventActual['Producto']['inventario'] == '1') {
+            /*se actualiza la cantidad en stock tras la prefactura*/
+            $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+        }
+
         if($prefactId != '0'){
             $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,
                     $prefactId, $valorDescuento, $porcentajeDescuento, $impuesto);
@@ -410,19 +407,25 @@ class PrefacturasController extends AppController {
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
             $this->loadModel('Prefactura');
+            $this->loadModel('Producto');
             
             /*se obtiene el detalle de la prefactura que se va eliminar*/
             $prefactDet = $this->Prefacturasdetalle->obtenerProductosPrefacturaPrefactId($id);
-
+        
             /*se recorren los detalles de la factura para actualizar el stock y eliminar el registro*/
             for( $i = 0; $i < count($prefactDet); $i++){ 
+
+                //se obtiene la información del producto
+                $producto = $this->Producto->obtenerInfoProducto($prefactDet[$i]['Cargueinventario']['producto_id']);
                 
-                /*se restaura la cantidad en el inventario*/
-                $cantFinal = $prefactDet[$i]['Prefacturasdetalle']['cantidad'] + $prefactDet[$i]['Cargueinventario']['existenciaactual'];
-                
-                if(empty($prefactDet['0']['Prefactura']['ordentrabajo_id'])){
-                    /*se actualiza la cantidad en el stock*/
-                    $this->Cargueinventario->actalizarExistenciaStock($prefactDet[$i]['Prefacturasdetalle']['cargueinventario_id'], $cantFinal);
+                if($producto['Producto']['inventario'] == '1') {
+                    /*se restaura la cantidad en el inventario*/
+                    $cantFinal = $prefactDet[$i]['Prefacturasdetalle']['cantidad'] + $prefactDet[$i]['Cargueinventario']['existenciaactual'];
+                    
+                    if(empty($prefactDet['0']['Prefactura']['ordentrabajo_id'])){
+                        /*se actualiza la cantidad en el stock*/
+                        $this->Cargueinventario->actalizarExistenciaStock($prefactDet[$i]['Prefacturasdetalle']['cargueinventario_id'], $cantFinal);
+                    }
                 }
 
                 /*una vez actualizado el inventario, se elimina el registro del detalle de la factura*/

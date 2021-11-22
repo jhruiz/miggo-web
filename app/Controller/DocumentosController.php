@@ -86,9 +86,13 @@ class DocumentosController extends AppController {
                 if($detalleDoc[$i]['Detalledocumento']['depositodestino_id'] != ""){
                     $detalleDoc[$i]['Detalledocumento']['depositodestino_id'] = $this->Deposito->obtenerDepositoPorId($detalleDoc[$i]['Detalledocumento']['depositodestino_id']);
                 } 
+
+                // valida que el producto esté habilitado para contar en el inventario
+                if($detalleDoc[$i]['Producto']['inventario'] == '1'){
+                    $cantProd = $cantProd +  $detalleDoc[$i]['Detalledocumento']['cantidad'];
+                    $total += ($detalleDoc[$i]['Detalledocumento']['cantidad'] * $detalleDoc[$i]['Detalledocumento']['costoproducto']); 
+                }
                 
-                $cantProd = $cantProd +  $detalleDoc[$i]['Detalledocumento']['cantidad'];
-                $total += ($detalleDoc[$i]['Detalledocumento']['cantidad'] * $detalleDoc[$i]['Detalledocumento']['costoproducto']); 
             }
             
             /*Se obtienen las nostas del documento*/

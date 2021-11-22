@@ -103,9 +103,7 @@
             ?>
         </div>    
         
-        <?php if($infoFact['Factura']['factura']){ ?>
         <div style="width:100%; float:left; margin-top: 5px;"><?php echo $infoEmpresa['Empresa']['texto1']?></div>
-        <?php } ?>
         
         <!--informacion del cliente y moto-->
         <div style="margin:0px; width:100%; float:left;">

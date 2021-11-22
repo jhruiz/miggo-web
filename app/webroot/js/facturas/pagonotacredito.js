@@ -57,10 +57,6 @@ function generarNotaCreditoFactura() {
                 arrPayMeth.push(objOptPayMet);  
 
                 valFacturado += parseFloat($(this).first().find('.valueFact').val());            
-            // }else{
-            //     alert('El valor del método de pago no puede ser cero (0) o estar vacio.');
-            //     return false;
-            // }
         });
 
         if(valFacturado == $('#totalFactura').val()){

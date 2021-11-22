@@ -130,16 +130,16 @@ class Precargueinventario extends AppModel {
             $data['producto_id'] = $infoPreCargue['Cargueinventario']['producto_id'];
             $data['deposito_id'] = $infoPreCargue['depositos'];
             $data['costoproducto'] = $infoPreCargue['Cargueinventario']['costoproducto'];
-            $data['cantidad'] = $infoPreCargue['Cargueinventario']['cantidad'];
+            $data['cantidad'] = $infoPreCargue['Cargueinventario']['inventario'] == '0' ? '1' : $infoPreCargue['Cargueinventario']['cantidad'];
             $data['preciomaximo'] = $infoPreCargue['Cargueinventario']['preciomaximo'];
             $data['preciominimo'] = $infoPreCargue['Cargueinventario']['preciominimo'];
             $data['precioventa'] = $infoPreCargue['Cargueinventario']['precioventa'];
             $data['usuario_id'] = $infoPreCargue['Cargueinventario']['usuario_id'];
-            $data['estado_id'] = $infoPreCargue['estados'];
+            $data['estado_id'] = $infoPreCargue['Cargueinventario']['inventario'] == '0' ? '1' : $infoPreCargue['estados'];
             $data['proveedore_id'] = $infoPreCargue['proveedores'];
-            $data['tipopago_id'] = $infoPreCargue['tipopago'];
-            $data['numerofactura'] = $infoPreCargue['Cargueinventario']['numerofactura'];         
-            
+            $data['tipopago_id'] = $infoPreCargue['Cargueinventario']['inventario'] == '0' ? '1' : $infoPreCargue['tipopago'];
+            $data['numerofactura'] = $infoPreCargue['Cargueinventario']['numerofactura'];
+
             if($preCargueInventario->save($data)){
                 return $preCargueInventario->id;
             }else{

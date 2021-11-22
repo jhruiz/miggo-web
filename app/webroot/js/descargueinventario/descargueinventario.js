@@ -101,6 +101,10 @@ function seleccionarProducto(producto){
                 $('#datosProducto').hide();                 
             }else if(productos.boolResp === '3'){
                 bootbox.alert('No se pudo agregar el producto al descargue del inventario. Por favor, inténtelo de nuevo');
+            }else if(productos.boolResp === '4'){
+                bootbox.alert('Producto configurado para venta sin inventario. No es posible realizar descarga.');
+                $('#buscarproducto').val("");
+                $('#datosProducto').hide();                  
             }else{
                 bootbox.alert('No se pudo agregar el producto al descargue del inventario. Por favor, inténtelo de nuevo');
             }                

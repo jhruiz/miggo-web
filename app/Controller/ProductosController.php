@@ -51,8 +51,9 @@ public function index()
         $paginate['LOWER(Producto.referencia) LIKE'] = '%' . strtolower($this->passedArgs['referencia']) . '%';
     }
 
-    $empresaId = $this->Auth->user('empresa_id');
+    $empresaId = $this->Auth->user('empresa_id');    
     $paginate['Producto.empresa_id'] = $empresaId;
+    $paginate['Producto.estado'] = '1';
     $this->Producto->recursive = 0;
 
     
@@ -110,15 +111,12 @@ public function index()
             $usuariosController->registraractividad($usuarioAct);
             	
 		if ($this->request->is('post')) { 
-                    $posData = $this->request->data;
-                    
-                    /*Se obtiene el id de la empresa a la que pertenece el usuario que realiza la gestion*/
-                    $arrEmpresa = $this->Auth->user('Empresa');
-                    $empresaId = $arrEmpresa['id'];                     
-                    
-                    /*Se eliminan las comas del valor*/
-//                    $this->request->data['Producto']['costopromedio'] = str_replace(',', '', $this->request->data['Producto']['costopromedio']);
-                                  
+                $posData = $this->request->data;
+                
+                /*Se obtiene el id de la empresa a la que pertenece el usuario que realiza la gestion*/
+                $arrEmpresa = $this->Auth->user('Empresa');
+                $empresaId = $arrEmpresa['id'];                     
+                             
 	            if($posData['Producto']['imagen']['name'] != ""){
 	                    //Se obtiene la extension del archivo
 	                    $arrExt = split("\.", $posData['Producto']['imagen']['name']);                                              
@@ -227,8 +225,8 @@ public function index()
 		if (!$this->Producto->exists()) {
 			throw new NotFoundException(__('El producto no existe.'));
 		}
-		$this->request->onlyAllow('post', 'delete');
-		if ($this->Producto->delete()) {
+		
+		if ($this->Producto->actualizarEstadoProducto($id)) {
 			$this->Session->setFlash(__('El producto ha sido eliminado.'));
 		} else {
 			$this->Session->setFlash(__('El producto no pudo ser eliminado. Por favor, inténtelo de nuevo.'));

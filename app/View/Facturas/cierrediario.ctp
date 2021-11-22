@@ -123,7 +123,7 @@
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                    <th><?php echo ('usuario'); ?></th>
+                    <th><?php echo ('Cliente'); ?></th>
                     <th><?php echo ('Fecha del Abono'); ?></th>                    
                     <th><?php echo ('Cuenta'); ?></th>                    
                     <th class="text-right"><?php echo ('Valor Abono'); ?></th>

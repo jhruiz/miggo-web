@@ -104,7 +104,7 @@ class PrefacturasdetallesController extends AppController {
             
             /*se obtiene la informacion del detalle de la prefactura para actualizar el stock*/
             $arrDetPrefact = $this->Prefacturasdetalle->obtenerPrefacturaDetalleId($prefactId);
-            
+
             /*se actualiza el stock con el registro eliminado*/
             if($this->actalizarcantidadpredelete($arrDetPrefact)){
                 $detalleId['Prefacturasdetalle.id'] = $prefactId;
@@ -118,7 +118,7 @@ class PrefacturasdetallesController extends AppController {
                     //si existe el suministro, se elimina
                     if(!empty($arrOrdSum)){
                         $this->OrdentrabajosSuministro->eliminarSuministroOrden($arrOrdSum['OrdentrabajosSuministro']['id']);
-                    }                    
+                    }
                 }
                 
                 if($this->Prefacturasdetalle->delete($detalleId)){
@@ -152,14 +152,17 @@ class PrefacturasdetallesController extends AppController {
             $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
 
             $existFinal = ($cantStock + $cantPreFact) - $cantidad;
-            
-            if($existFinal < '0'){
+
+            //valida si el producto cuenta con configuración para venta con inventario   
+            if($existFinal < '0' && $inventActual['Producto']['inventario'] == '1'){
                 /*si la cantidad final es menor a cero, no se realiza el cambio*/
                 echo json_encode(array('resp' => false, 'cantStock' => $cantStock, 'cantidad' => $cantPreFact));
             }else{
-                /*se actualiza la cantidad en stock tras la prefactura*/
-                $this->Cargueinventario->actalizarExistenciaStock($preFactDet['Prefacturasdetalle']['cargueinventario_id'], $existFinal); 
-                
+
+                if($inventActual['Producto']['inventario'] == '1') {
+                    /*se actualiza la cantidad en stock tras la prefactura*/
+                    $this->Cargueinventario->actalizarExistenciaStock($preFactDet['Prefacturasdetalle']['cargueinventario_id'], $existFinal);                     
+                }
                 //se actualiza la cantidad del producto en la orden de trabajo si esta relacionada a una
                 $this->actualizarSumOrdenTrabajo($preFactDet['Prefacturasdetalle']['prefactura_id'], $preFactDet['Prefacturasdetalle']['cargueinventario_id'], $cantidad);
 
@@ -173,6 +176,7 @@ class PrefacturasdetallesController extends AppController {
                 }
                 echo json_encode(array('resp' => $resp));                   
             }
+
         }
         
         public function actualizarcostoventa(){
@@ -240,11 +244,17 @@ class PrefacturasdetallesController extends AppController {
             
             /*se obtiene la informacion actual del cargue de inventario del producto en gestion*/
             $arrCargueInv = $this->Cargueinventario->obtenerInventarioId($cargInvId);
-            $cantFinal = $arrCargueInv['Cargueinventario']['existenciaactual'] + $cantProd;
-            if($this->Cargueinventario->actalizarExistenciaStock($cargInvId, $cantFinal)){
-                return true;
+            
+            //valida si el producto esta configurado para ventas con inventario
+            if($arrCargueInv['Producto']['inventario'] == '1'){
+                $cantFinal = $arrCargueInv['Cargueinventario']['existenciaactual'] + $cantProd;
+                if($this->Cargueinventario->actalizarExistenciaStock($cargInvId, $cantFinal)){
+                    return true;
+                }else{
+                    return false;
+                }
             }else{
-                return false;
+                return true;
             }
             
         }

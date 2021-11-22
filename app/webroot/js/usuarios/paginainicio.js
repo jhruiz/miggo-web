@@ -14,12 +14,16 @@ function obtenerDatosGraficos(){
     url: $('#url-proyecto').val() + 'reportes/estadisticastortas',
     data: dates,
     success: function(data) {
-      var respuesta = JSON.parse(data);      
+      var respuesta = JSON.parse(data);     
 
       for(const prop in respuesta.resp){
-        var divTorta = generarDiv(respuesta.resp[prop].titulo);
-        $('#graficos').append(divTorta);
-        generarGraficoTorta(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
+        
+        if(respuesta.resp[prop].legend_data.length > 0){
+          var divTorta = generarDiv(respuesta.resp[prop].titulo);
+          $('#graficos').append(divTorta);
+          generarGraficoTorta(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
+        }
+
       }
     }
   });    

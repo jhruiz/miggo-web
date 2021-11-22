@@ -170,26 +170,33 @@ class DescargueinventariosController extends AppController {
             
             /*Se obtienen los productos id que se encuentran en el stock*/            
             $arrProductos = $this->Cargueinventario->obtenerCargueInventarioProdDep($productoId, $depositoId);
-            $cantidadProd = '1';
-            
-            /*Se resta la cantidad del stock*/
-            $cantidadActual = $arrProductos['Cargueinventario']['existenciaactual']; 
-            
-            if($cantidadActual <= '0'){
-                echo json_encode(array('boolResp' => '1'));
-            }else{
-                
-                $cantidadFinal = $cantidadActual - $cantidadProd;
-                $this->Cargueinventario->actalizarExistenciaStock($arrProductos['Cargueinventario']['id'], $cantidadFinal);
-                
-                /*Se registra el producto a descargar del inventario*/
-                $descId = $this->Descargueinventario->guardarProductoDescargue($productoId,$arrProductos['Cargueinventario']['deposito_id'],$cantidadProd,$usuarioId,$arrProductos['Cargueinventario']['empresa_id']);
 
-                if($descId != '0'){
-                    echo json_encode(array('boolResp' => '2', 'resp' => $arrProductos, 'descId' => $descId));             
+            // valida que el producto no este configurado para venta sin inventario
+            if($arrProductos['Producto']['inventario'] == '1') {
+                
+                $cantidadProd = '1';
+                
+                /*Se resta la cantidad del stock*/
+                $cantidadActual = $arrProductos['Cargueinventario']['existenciaactual']; 
+                
+                if($cantidadActual <= '0'){
+                    echo json_encode(array('boolResp' => '1'));
                 }else{
-                    echo json_encode(array('boolResp' => '3'));
-                }                   
+                    
+                    $cantidadFinal = $cantidadActual - $cantidadProd;
+                    $this->Cargueinventario->actalizarExistenciaStock($arrProductos['Cargueinventario']['id'], $cantidadFinal);
+                    
+                    /*Se registra el producto a descargar del inventario*/
+                    $descId = $this->Descargueinventario->guardarProductoDescargue($productoId,$arrProductos['Cargueinventario']['deposito_id'],$cantidadProd,$usuarioId,$arrProductos['Cargueinventario']['empresa_id']);
+    
+                    if($descId != '0'){
+                        echo json_encode(array('boolResp' => '2', 'resp' => $arrProductos, 'descId' => $descId));             
+                    }else{
+                        echo json_encode(array('boolResp' => '3'));
+                    }                   
+                }
+            } else {
+                echo json_encode(array('boolResp' => '4'));
             }
         }
         

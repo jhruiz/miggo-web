@@ -173,7 +173,7 @@ function validarProductosPrefacturados(){
 }
 
 /*funciones de la tabla prefactura*/
-function actualizarCantidadPrefact(dato){  
+function actualizarCantidadPrefact(dato){
     var arrName = dato.name.split('_');
     var cantidad = $('#' + dato.name).val();
     if(typeof(cantidad) == "undefined" || cantidad == ""){

@@ -98,7 +98,8 @@
                                     'label' => '',
                                     'class' => 'form-control', 
                                     'placeholder' => 'Cliente',
-                                    'value' => !empty($arrOrdenT['0']['CL']['id']) ? $arrOrdenT['0']['CL']['nombre'] . " - " . $arrOrdenT['0']['CL']['nit'] : ""
+                                    'value' => !empty($arrOrdenT['0']['CL']['id']) ? $arrOrdenT['0']['CL']['nombre'] . " - " . $arrOrdenT['0']['CL']['nit'] : "",
+                                    'autocomplete' => 'off'
                                     )
                                 ); 
                         ?>

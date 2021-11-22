@@ -52,6 +52,7 @@ class CargueinventariosController extends AppController {
             }
             
             $data['Cargueinventario.empresa_id'] = $empresaId;
+            $data['Producto.estado'] = '1';
 
             $this->Paginator->settings['order'] = array('Cargueinventario.existenciaactual' => 'ASC');
             
@@ -254,20 +255,29 @@ class CargueinventariosController extends AppController {
                 /*Se obtienen los tipos de pago por empresa*/
                 $tipopagos = $this->Tipopagopago->obtenerListaTiposPagos();
                 
-                /*Se obtiene la información básica del producto en el Stock actual*/
-                
-                $cargueInventario = $this->Cargueinventario->obtenerProductoPorId($producto_id);
-                if(count($cargueInventario) <= '0'){
-                    $existenciaActual = '0';
-                }else{
-                    $existenciaActual = $cargueInventario['Cargueinventario']['existenciaactual'];
+                /*Se obtiene la información básica del producto en el Stock actual*/  
+                if($producto['Producto']['inventario'] == '0') {
+                    $existenciaActual = 'N/A';
+                    $disabled = 'disabled';
+                } else {
+                    $disabled = '';
+                    $cargueInventario = $this->Cargueinventario->obtenerProductoPorId($producto_id);
+                    if(count($cargueInventario) <= '0'){
+                        $existenciaActual = '0';
+                    }else{
+                        $existenciaActual = $cargueInventario['Cargueinventario']['existenciaactual'];
+                    }                    
                 }
                 
                 /*Se obtiene la url de las imagenes*/
                 $datConf = "urlImgProducto";
-                $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($datConf) . '/' . $empresa_id . '/';                
+                $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($datConf) . '/' . $empresa_id . '/';   
                 
-                $this->set(compact('depositos', 'producto', 'estados', 'impuestos', 'proveedores', 'tipopagos', 'producto_id', 'usuario_id', 'empresa_id', 'urlImg', 'existenciaActual'));
+                $this->set(compact('depositos', 'producto', 'estados'));
+                $this->set(compact('impuestos', 'proveedores', 'tipopagos'));
+                $this->set(compact('producto_id', 'usuario_id', 'empresa_id'));
+                $this->set(compact('urlImg', 'existenciaActual', 'disabled'));
+                $this->set(compact('cargueInventario'));
             }
         }   
         
@@ -519,14 +529,35 @@ class CargueinventariosController extends AppController {
             //se valida si hay producto en stock
             $arrCargueInv = $this->Cargueinventario->obtenerProductoStock($idProducto, $cargueInvId);
 
-            $cantStock = $arrCargueInv['Cargueinventario']['existenciaactual'];
-            
-            if($cantStock != '0'){
-                $existFinal = intval($cantStock) - $cantidadventa;
+            if($arrCargueInv['Producto']['inventario'] == '1'){
 
-                /*se actualiza la cantidad en stock tras la prefactura*/
-                $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $existFinal);  
-
+                $cantStock = $arrCargueInv['Cargueinventario']['existenciaactual'];
+                
+                if($cantStock != '0'){
+                    $existFinal = intval($cantStock) - $cantidadventa;
+    
+                    /*se actualiza la cantidad en stock tras la prefactura*/
+                    $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $existFinal);  
+    
+                    //se guarda el suministro relacionandolo a la orden de trabajo
+                    $resp = $this->relacionarSuministroOrden($arrCargueInv['Cargueinventario']['id'], $ordenId, $cantidadventa); 
+                    
+                    //se valida si existe una prefactura que tenga relacionada la orden en tramite
+                    $arrPrefact = $this->Prefactura->obtenerPrefactPorOrden($ordenId);
+                    if(!empty($arrPrefact)){//se agrega el producto al detalle de al prefactura
+                        
+                        $ciImpuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueInvId);
+                        $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$arrCargueInv['Cargueinventario']['precioventa'],
+                                $arrCargueInv['Cargueinventario']['id'],$arrPrefact['Prefactura']['id'], null, null, $ciImpuesto['0']['Impuesto']['valor']);
+                    }
+                    
+                    if($resp){
+                        echo json_encode(array('resp' => '1', 'prod' => $arrCargueInv));
+                    }
+                }else{
+                    echo json_encode(array('resp' => '0'));
+                }    
+            } else {
                 //se guarda el suministro relacionandolo a la orden de trabajo
                 $resp = $this->relacionarSuministroOrden($arrCargueInv['Cargueinventario']['id'], $ordenId, $cantidadventa); 
                 
@@ -542,9 +573,8 @@ class CargueinventariosController extends AppController {
                 if($resp){
                     echo json_encode(array('resp' => '1', 'prod' => $arrCargueInv));
                 }
-            }else{
-                echo json_encode(array('resp' => '0'));
-            }                                                
+            }
+                                            
         }
         
         /**
@@ -581,14 +611,35 @@ class CargueinventariosController extends AppController {
             
             //se obtiene el registro de cargue inventarios por id
             $arrCargueInv = $this->Cargueinventario->obtenerInventarioId($cargueInvId);
-            
-            $cantStock = $arrCargueInv['Cargueinventario']['existenciaactual'] + $arrSumOrd['OrdentrabajosSuministro']['cantidad'];
-            
-            if($cantStock > $cantNueva){
-                $existFinal = $cantStock - $cantNueva;
-                $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $existFinal);
-                $resp = $this->OrdentrabajosSuministro->actualizarCantidadSuministro($arrSumOrd['OrdentrabajosSuministro']['id'], $cantNueva);
+
+            if($arrCargueInv['Producto']['inventario'] == '1'){
+                $cantStock = $arrCargueInv['Cargueinventario']['existenciaactual'] + $arrSumOrd['OrdentrabajosSuministro']['cantidad'];
                 
+                if($cantStock > $cantNueva){
+                    $existFinal = $cantStock - $cantNueva;
+                    $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $existFinal);
+                    $resp = $this->OrdentrabajosSuministro->actualizarCantidadSuministro($arrSumOrd['OrdentrabajosSuministro']['id'], $cantNueva);
+                    
+                    //se valida si existe una prefactura que tenga relacionada la orden en tramite
+                    $arrPrefact = $this->Prefactura->obtenerPrefactPorOrden($ordenId);
+                    if(!empty($arrPrefact)){//se modifica la cantidad solicitada en la orden de trabajo                    
+                        //se obtiene la informacion del detalle de la prefactura
+                        $arrPrefactD = $this->Prefacturasdetalle->obtenerCarguePrefact($arrPrefact['Prefactura']['id'], $arrCargueInv['Cargueinventario']['id']);
+                        //se actualiza la cantidad solicitada en la orden de trabajo
+                        $this->Prefacturasdetalle->actualizarCantidadUnidades($arrPrefactD['Prefacturasdetalle']['id'], $cantNueva);
+                    }                
+                    
+                    if($resp){
+                         echo json_encode(array('resp' => '1'));
+                    }else{
+                         echo json_encode(array('resp' => '2', 'cant' => $arrSumOrd['OrdentrabajosSuministro']['cantidad']));
+                    }
+                }else{
+                    //no hay la cantidad suficiente en stock
+                    echo json_encode(array('resp' => '0', 'cant' => $arrSumOrd['OrdentrabajosSuministro']['cantidad']));
+                }           
+            } else {
+                $resp = $this->OrdentrabajosSuministro->actualizarCantidadSuministro($arrSumOrd['OrdentrabajosSuministro']['id'], $cantNueva);
                 //se valida si existe una prefactura que tenga relacionada la orden en tramite
                 $arrPrefact = $this->Prefactura->obtenerPrefactPorOrden($ordenId);
                 if(!empty($arrPrefact)){//se modifica la cantidad solicitada en la orden de trabajo                    
@@ -599,14 +650,11 @@ class CargueinventariosController extends AppController {
                 }                
                 
                 if($resp){
-                     echo json_encode(array('resp' => '1'));
+                        echo json_encode(array('resp' => '1'));
                 }else{
-                     echo json_encode(array('resp' => '2', 'cant' => $arrSumOrd['OrdentrabajosSuministro']['cantidad']));
-                }
-            }else{
-                //no hay la cantidad suficiente en stock
-                echo json_encode(array('resp' => '0', 'cant' => $arrSumOrd['OrdentrabajosSuministro']['cantidad']));
-            }           
+                        echo json_encode(array('resp' => '2', 'cant' => $arrSumOrd['OrdentrabajosSuministro']['cantidad']));
+                }                
+            }
         }       
         
         /**
@@ -628,11 +676,13 @@ class CargueinventariosController extends AppController {
             //se obtiene el registro de cargue inventarios por id
             $arrCargueInv = $this->Cargueinventario->obtenerInventarioId($cargueInvId);
             
-            $cantFinal = $arrCargueInv['Cargueinventario']['existenciaactual'] + $arrSumOrd['OrdentrabajosSuministro']['cantidad'];
+            if($arrCargueInv['Producto']['inventario'] == '1') {
+                $cantFinal = $arrCargueInv['Cargueinventario']['existenciaactual'] + $arrSumOrd['OrdentrabajosSuministro']['cantidad'];
             
-            //se restaura la cantidad en el inventario
-            $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $cantFinal);
-            
+                //se restaura la cantidad en el inventario
+                $this->Cargueinventario->actalizarExistenciaStock($arrCargueInv['Cargueinventario']['id'], $cantFinal);    
+            }
+
             //se elimina el registro del suministro para la orden
             $resp = $this->OrdentrabajosSuministro->eliminarSuministroOrden($arrSumOrd['OrdentrabajosSuministro']['id']);
             

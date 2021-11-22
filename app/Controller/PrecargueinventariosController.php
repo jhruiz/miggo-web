@@ -205,6 +205,7 @@ class PrecargueinventariosController extends AppController {
             $this->loadModel('PrecargueinventariosImpuesto');            
             $this->autoRender = false;            
             $posData = $this->request->data;  
+
             $posData['Cargueinventario']['costoproducto'] = str_replace(",", "", $posData['Cargueinventario']['costoproducto']); 
             $posData['Cargueinventario']['preciomaximo'] = str_replace(",", "", $posData['Cargueinventario']['preciomaximo']); 
             $posData['Cargueinventario']['preciominimo'] = str_replace(",", "", $posData['Cargueinventario']['preciominimo']); 

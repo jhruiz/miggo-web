@@ -15,12 +15,14 @@ var calcularTotales = function(){
 
 //se valida si hay existencia en el stock del producto que se desea
 function validarCantidadStock(){   
-    var cantidadActual = $('#cantidadProducto').val();
-    var cantidadVenta = $('#cantidadventa').val();
-    if(Number(cantidadVenta) > Number(cantidadActual)){
-        $('#cantidadventa').val(cantidadActual);
-        bootbox.alert('Ha excedido la cantidad actual del Stock');        
-    }    
+    if($('#vtaInventario').val() == '1'){
+        var cantidadActual = $('#cantidadProducto').val();
+        var cantidadVenta = $('#cantidadventa').val();
+        if(Number(cantidadVenta) > Number(cantidadActual)){
+            $('#cantidadventa').val(cantidadActual);
+            bootbox.alert('Ha excedido la cantidad actual del Stock');        
+        }    
+    }
     calcularTotales();
     calcularDescuentoPorPorcentaje();
 }

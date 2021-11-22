@@ -46,7 +46,12 @@
                         <label>Cantidad</label><br>
                         <div class="input-group">
                             <span class="input-group-addon">#</span>                        
-                                <?php echo $this->Form->input('cantidad', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Cantidad del Producto')); ?>
+                                <?php echo $this->Form->input('cantidad', array(
+                                    'label' => '', 
+                                    'class' => 'form-control', 
+                                    'placeholder' => 'Cantidad del Producto', 
+                                    'onblur' => 'calcularValorTotal();',
+                                    'disabled' => $disabled)); ?>
                         </div>                        
                     </div>
                     
@@ -61,7 +66,8 @@
                                             'type' => 'select',
                                             'options'=>$depositos,
                                             'empty'=>'Seleccione Uno',
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'default' => $cargueInventario['Cargueinventario']['deposito_id']
                                         )
                                 );
                             ?>
@@ -74,7 +80,7 @@
                             <select name="proveedores" id="proveedore_id" class="form-control">
                                 <option value="">Seleccione uno</option>
                                 <?php foreach($proveedores as $prov){ ?>
-                                    <option value="<?php echo $prov['Proveedore']['id']; ?>" data-type="<?php echo $prov['Proveedore']['regimene_id']; ?>">
+                                    <option value="<?php echo $prov['Proveedore']['id']; ?>" <?php echo $prov['Proveedore']['id'] == $cargueInventario['Cargueinventario']['proveedore_id'] ? 'selected' : '' ?> data-type="<?php echo $prov['Proveedore']['regimene_id']; ?>">
                                         <?php echo $prov['Proveedore']['nombre']; ?>
                                     </option>
                                 <?php } ?>
@@ -92,7 +98,8 @@
                                             'label' => "",
                                             'type' => 'select',
                                             'options'=> $tipopagos,
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'disabled' => $disabled
                                         )
                                 );
                             ?>
@@ -108,7 +115,8 @@
                                             'label' => "",
                                             'type' => 'select',
                                             'options'=> $estados, 
-                                            'class' => 'form-control'
+                                            'class' => 'form-control',
+                                            'disabled' => $disabled
                                         )
                                 );
                             ?>
@@ -125,7 +133,14 @@
                         <label><span id="val_prod">Costo Unitario</span></label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>                    
-                            <?php echo $this->Form->input('costoproducto', array('label' => '', 'class' => 'form-control numericPrice', 'placeholder' => 'Valor Unitario', 'onblur' => 'calcularValorTotal();')); ?>
+                            <?php echo $this->Form->input('costoproducto', array(
+                                'label' => '', 
+                                'class' => 'form-control numericPrice', 
+                                'placeholder' => 'Valor Unitario', 
+                                'onblur' => 'calcularValorTotal();',
+                                'value' => $cargueInventario['Cargueinventario']['costoproducto']
+                                )
+                                ); ?>
                         </div>
                     </div>  
                     <div class="form-group form-inline"> 
@@ -139,21 +154,39 @@
                         <label>Precio Máximo</label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>                    
-                            <?php echo $this->Form->input('preciomaximo', array('label' => '', 'class' => 'form-control numericPrice', 'placeholder' => 'Precio Máximo')); ?>
+                            <?php echo $this->Form->input('preciomaximo', array(
+                                'label' => '', 
+                                'class' => 'form-control numericPrice', 
+                                'placeholder' => 'Precio Máximo',
+                                'value' => $cargueInventario['Cargueinventario']['preciomaximo']
+                                )
+                                ); ?>
                         </div>
                     </div> 
                     <div class="form-group form-inline"> 
                         <label>Precio Mínimo</label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>                    
-                            <?php echo $this->Form->input('preciominimo', array('label' => '', 'class' => 'form-control numericPrice', 'placeholder' => 'Precio Mínimo')); ?>
+                            <?php echo $this->Form->input('preciominimo', array(
+                                'label' => '', 
+                                'class' => 'form-control numericPrice', 
+                                'placeholder' => 'Precio Mínimo',
+                                'value' => $cargueInventario['Cargueinventario']['preciominimo']
+                                )
+                                ); ?>
                         </div>
                     </div> 
                     <div class="form-group form-inline"> 
                         <label>Precio Venta</label>
                         <div class="input-group">
                             <span class="input-group-addon">$</span>                    
-                            <?php echo $this->Form->input('precioventa', array('label' => '', 'class' => 'form-control numericPrice', 'placeholder' => 'Precio de Venta')); ?>
+                            <?php echo $this->Form->input('precioventa', array(
+                                'label' => '', 
+                                'class' => 'form-control numericPrice', 
+                                'placeholder' => 'Precio de Venta',
+                                'value' => $cargueInventario['Cargueinventario']['precioventa']
+                                )
+                                ); ?>
                         </div>
                     </div>  
                     <div class="form-group form-inline"> 
@@ -169,6 +202,7 @@
                         echo $this->Form->input("producto_id",array('id' => "producto_id",'type' => 'hidden','value'=>$producto_id));
                         echo $this->Form->input("empresa_id",array('id' => "empresa_id",'type' => 'hidden','value'=>$empresa_id));
                         echo $this->Form->input("usuario_id",array('id' => "usuario_id",'type' => 'hidden','value'=>$usuario_id));                            
+                        echo $this->Form->input("inventario",array('id' => "inventario",'type' => 'hidden','value'=>$producto['Producto']['inventario']));                            
 
                     ?>
             <div class="container-fluid">

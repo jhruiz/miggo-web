@@ -77,6 +77,7 @@
                             <th><?php echo ('Mecánico'); ?></th>
                             <th><?php echo ('Servicio'); ?></th>
                             <th><?php echo ('Placa'); ?></th>
+                            <th><?php echo ('Marca'); ?></th>
                             <th><?php echo ('cantidad'); ?></th>
                             <th><?php echo ('Costo'); ?></th>
                             <th><?php echo ('Total'); ?></th>
@@ -97,6 +98,7 @@
                                 <td><?php echo h($FO['US']['nombre'] . " - " . $FO['US']['identificacion']); ?>&nbsp;</td>
                                 <td><?php echo h($FO['PR']['descripcion']); ?>&nbsp;</td>
                                 <td><?php echo h($FO['VH']['placa']); ?>&nbsp;</td>
+                                <td><?php echo h($listMarcasVeh[$FO['VH']['marcavehiculo_id']]); ?>&nbsp;</td>
                                 <td class="text-right"><?php echo (number_format($FO['FD']['cantidad'], '0', '.', ',')); ?>&nbsp;</td>
                                 <td class="text-right">$ <?php echo (number_format($FO['FD']['costoventa'], '0', '.', ',')); ?>&nbsp;</td>
                                 <td class="text-right">$ <?php echo (number_format($FO['FD']['costototal'], '0', '.', ',')); ?>&nbsp;</td>
@@ -113,7 +115,7 @@
                             <?php endforeach; ?>
                         <?php } ?>
                         <tr>
-                            <td colspan="5">&nbsp;</td>
+                            <td colspan="6">&nbsp;</td>
                             <td><b>TOTAL</b></td>
                             <td class="text-right"><b><?php echo (number_format($totServ, '0', '.', ',')); ?></b></td>
                             <td class="text-right"><b>$ <?php echo (number_format($subTot, '0', '.', ',')); ?></b></td>
