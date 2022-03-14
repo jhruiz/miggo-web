@@ -1,7 +1,7 @@
 <?php echo ($this->Html->script('bandeja/gestionBandejas'));  ?>
 <?php $this->layout='inicio'; ?>
 <div class="licenciasUsuarios form">
-<?php echo $this->Form->create('LicenciasUsuario'); ?>
+<?php echo $this->Form->create('LicenciasUsuario', array('type' => 'post')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Asignar Licencia a Usuario'); ?></b></h2></legend>
             <?php echo $this->Form->input('id'); ?>

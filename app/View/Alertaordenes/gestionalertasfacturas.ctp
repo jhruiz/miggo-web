@@ -1,7 +1,7 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('alertaordenes/alertaordenes'));?>
 <div class="ordentrabajos form">
-<?php echo $this->Form->create('Ordentrabajo', array('type' => 'file', 'class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Ordentrabajo', array('type' => 'post', 'class' => 'form-inline')); ?>
 <fieldset>                    
 <?php echo $this->Form->input('empresa', array('type' => 'hidden', 'value' => $empresa_id, 'id' => 'empresaId'));?>
 <?php echo $this->Form->input('ordentrabajo', array('type' => 'hidden', 'value' => $ordenTrabajoId, 'id' => 'ordenTId'));?>

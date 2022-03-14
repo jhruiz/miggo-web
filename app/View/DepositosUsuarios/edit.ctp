@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="depositosUsuarios form">
-<?php echo $this->Form->create('DepositosUsuario', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('DepositosUsuario', array('type' => 'post', 'class' => 'form-inline')); ?>
         <legend><h2><b><?php echo __('Editar Usuario - Depósito'); ?></b></h2></legend>
         <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '17', 'id' => 'menuvert')) ?>
         <?php echo $this->Form->input('id'); ?>

@@ -1,7 +1,7 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('alertaordenes/edit'));?>
 <div class="ordentrabajos form">
-<?php echo $this->Form->create('Ordentrabajo', array('type' => 'file', 'class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Ordentrabajo', array('type' => 'post', 'class' => 'form-inline')); ?>
 <fieldset>                    
 <?php echo $this->Form->input('km_actual', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['O']['kilometraje'], 'id' => 'km_actual'));?>
 <?php echo $this->Form->input('alerta_id', array('type' => 'hidden', 'value' => $alertasOrdenes['0']['Alertaordene']['id'], 'id' => 'alerta_id'));?>

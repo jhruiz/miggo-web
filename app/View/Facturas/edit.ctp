@@ -1,5 +1,5 @@
 <div class="facturas form">
-<?php echo $this->Form->create('Factura'); ?>
+<?php echo $this->Form->create('Factura', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Factura'); ?></legend>
 	<?php

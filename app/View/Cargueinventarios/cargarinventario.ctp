@@ -18,7 +18,7 @@
 
         <div class="paquetes form" id="divAsignaUsuario" text-align: center>   
             <legend><center><h4><?php echo __('Información del Producto'); ?></h4></center></legend><br><br>
-            <?php echo $this->Form->create(null, array('id' => 'formCargarProductoInventario', 'default' => false)); ?>            
+            <?php echo $this->Form->create(null, array('id' => 'formCargarProductoInventario', 'type' => 'post', 'default' => false)); ?>            
             <section class="main row">
                 <div class="col-md-4">
                     <div class="panel panel-default">

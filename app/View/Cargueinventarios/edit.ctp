@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="cargueinventarios form">
-<?php echo $this->Form->create('Cargueinventario'); ?>
+<?php echo $this->Form->create('Cargueinventario', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Cargueinventario'); ?></legend>
 	<?php

@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="licencias form">
-<?php echo $this->Form->create('Licencia'); ?>
+<?php echo $this->Form->create('Licencia', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Licencia'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

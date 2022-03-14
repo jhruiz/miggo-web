@@ -3,7 +3,7 @@ $this->layout = 'inicio';
 echo ($this->Html->script('cargarinventario/cargarinvplano.js'));
 ?>
 
-<?php echo $this->Form->create('Cargueplano', array('type' => 'file')); ?>
+<?php echo $this->Form->create('Cargueplano', array('type' => 'post')); ?>
 <div class="cargueiplano">
     <legend><h2><?php echo __('Cargue de Inventario'); ?></h2></legend>
     	<!--Enlaces de acción -->

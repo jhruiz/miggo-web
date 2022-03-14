@@ -99,7 +99,7 @@ class CloudmenusController extends AppController {
                     $productos = new ProductosController();
                     
                     //Se obtiene la extension del archivo
-                    $arrExt = split("\.", $posData['Cloudmenu']['imagen']['name']);   
+                    $arrExt = explode(".", $posData['Cloudmenu']['imagen']['name']);   
                     
                     $rutaMenu = "imgMenu";                        
                     

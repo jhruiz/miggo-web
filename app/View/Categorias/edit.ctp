@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="categorias form">
-<?php echo $this->Form->create('Categoria', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Categoria', array('class' => 'form-inline', 'type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Categoría'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '12', 'id' => 'menuvert')) ?>

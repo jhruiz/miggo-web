@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="regimenes form">
-<?php echo $this->Form->create('Regimene'); ?>
+<?php echo $this->Form->create('Regimene', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Régimen'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

@@ -1,5 +1,5 @@
 <div class="prefacturasdetalles form">
-<?php echo $this->Form->create('Prefacturasdetalle'); ?>
+<?php echo $this->Form->create('Prefacturasdetalle', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Prefacturasdetalle'); ?></legend>
 	<?php

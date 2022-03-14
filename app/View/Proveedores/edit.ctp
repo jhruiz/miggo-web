@@ -1,7 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('proveedores/proveedores.js')); ?>
 <div class="proveedores form">
-<?php echo $this->Form->create('Proveedore', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Proveedore', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Proveedor'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '27', 'id' => 'menuvert')) ?>

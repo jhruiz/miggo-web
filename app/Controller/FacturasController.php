@@ -820,6 +820,7 @@ class FacturasController extends AppController
 
         /*se obtienen las facturas generadas durante la fecha actual o la seleccionada*/
         $detFacts = $this->Factura->obtenerFacturasTipoPagos($fechaCierre . ' 00:00:00', $fechaCierre . ' 23:59:59', $empresaId, $cuenta);
+
         $ventasFactura = [];
         $estadoCuentas = [];
         if (!empty($detFacts)) {

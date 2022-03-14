@@ -1,5 +1,5 @@
 <div class="utilidades form">
-<?php echo $this->Form->create('Utilidade'); ?>
+<?php echo $this->Form->create('Utilidade', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Utilidade'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '34', 'id' => 'menuvert'))?>

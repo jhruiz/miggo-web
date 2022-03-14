@@ -1,7 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('vehiculos/vehiculos.js')); ?>
 <div class="vehiculos form">
-<?php echo $this->Form->create('Vehiculo', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Vehiculo', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Editar Vehículo'); ?></b></h2></legend>
             <?php echo $this->Form->input('id', array('type' => 'hidden', 'value' => $id)); ?>

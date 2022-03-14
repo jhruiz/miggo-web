@@ -119,7 +119,7 @@ public function index()
                              
 	            if($posData['Producto']['imagen']['name'] != ""){
 	                    //Se obtiene la extension del archivo
-	                    $arrExt = split("\.", $posData['Producto']['imagen']['name']);                                              
+	                    $arrExt = explode(".", $posData['Producto']['imagen']['name']);                                              
 	                    
 	                    $confDato = "dirImgProducto";
 	                    $nombreImg = "lgPr_" . $posData['Producto']['codigo'];
@@ -175,7 +175,7 @@ public function index()
                                         
 	            if($posData['Producto']['imagen']['name']){
 	                    //Se obtiene la extension del archivo
-	                    $arrExt = split("\.", $posData['Producto']['imagen']['name']);                         
+	                    $arrExt = explode(".", $posData['Producto']['imagen']['name']);                         
 	                    
 	                    $confDato = "dirImgProducto";
 	                    $nombreImg = "lgPr_" . $posData['Producto']['codigo'];
@@ -301,7 +301,7 @@ public function index()
             
             if(isset($posData['Producto']['imagen']['name']) && !empty($posData['Producto']['imagen']['name'])){
                 //Se obtiene la extension del archivo
-                $arrExt = split("\.", $posData['Producto']['imagen']['name']);                  
+                $arrExt = explode(".", $posData['Producto']['imagen']['name']);                  
                 
                 $confDato = "dirImgProducto";
                 $nombreImg = "lgPr_" . $posData['Producto']['codigo'];

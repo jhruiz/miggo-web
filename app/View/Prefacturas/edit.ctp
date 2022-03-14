@@ -1,5 +1,5 @@
 <div class="prefacturas form">
-<?php echo $this->Form->create('Prefactura'); ?>
+<?php echo $this->Form->create('Prefactura', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Prefactura'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '30', 'id' => 'menuvert'))?>

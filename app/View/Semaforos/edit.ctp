@@ -4,7 +4,7 @@
 <?php $this->layout = 'inicio';?>
 
 <div class="semaforos form">
-<?php echo $this->Form->create('Semaforo', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Semaforo', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Editar Semáforo'); ?></b></h2></legend>
             <?php echo $this->Form->input('id', array('type' => 'hidden')); ?>

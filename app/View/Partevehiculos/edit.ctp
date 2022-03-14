@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="partevehiculos form">
-<?php echo $this->Form->create('Partevehiculo', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Partevehiculo', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Parte Vehículo'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

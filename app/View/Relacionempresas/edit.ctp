@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="relacionempresas form">
-<?php echo $this->Form->create('Relacionempresa', array('type' => 'file', 'class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Relacionempresa', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Empresa Relacionada'); ?></b></h2></legend>  
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '37', 'id' => 'menuvert'))?> 

@@ -3,7 +3,7 @@
     echo $this->Html->script('eventos/edit.js');
 ?>
 <div class="eventos form">
-<?php echo $this->Form->create('Evento', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Evento', array('type' => 'post', 'class' => 'form-inline')); ?>
     <fieldset>
     <legend><h2><b><?php echo __('Editar Evento'); ?></b></h2></legend>
     <section class="main row">

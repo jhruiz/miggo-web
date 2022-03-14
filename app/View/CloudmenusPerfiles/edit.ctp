@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="cloudmenusPerfiles form">
-<?php echo $this->Form->create('CloudmenusPerfile'); ?>
+<?php echo $this->Form->create('CloudmenusPerfile', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Menú - Perfil'); ?></b></h2></legend>
 		<?php echo $this->Form->input('id'); ?>

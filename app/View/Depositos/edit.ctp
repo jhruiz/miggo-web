@@ -2,7 +2,7 @@
 <?php $this->layout='inicio'; ?>
 <div class="depositos form">
 <div class="container-fluid">
-<?php echo $this->Form->create('Deposito', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Deposito', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Depósito'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '15', 'id' => 'menuvert'))?>

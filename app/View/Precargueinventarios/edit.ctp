@@ -1,5 +1,5 @@
 <div class="precargueinventarios form">
-<?php echo $this->Form->create('Precargueinventario'); ?>
+<?php echo $this->Form->create('Precargueinventario', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Precargueinventario'); ?></legend>
 	<?php

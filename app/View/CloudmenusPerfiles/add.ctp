@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="cloudmenusPerfiles form">
-<?php echo $this->Form->create('CloudmenusPerfile'); ?>
+<?php echo $this->Form->create('CloudmenusPerfile', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Agregar Menú - Perfil'); ?></b></h2></legend>
                 <div class="form-group form-inline"> 

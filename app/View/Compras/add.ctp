@@ -1,7 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('compras/add')); ?>
 <div class="compras form">
-<?php echo $this->Form->create('Compra', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Compra', array('class' => 'form-inline', 'type' => 'post')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Agregar Compra'); ?></b></h2></legend>
             <input type="hidden" name="usuario_id" id="usuario_id" value="<?php echo $userId; ?>">

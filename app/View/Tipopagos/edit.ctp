@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="tipopagos form">
-<?php echo $this->Form->create('Tipopago', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Tipopago', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Tipo de Pago'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

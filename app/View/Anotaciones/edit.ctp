@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="anotaciones form">
-<?php echo $this->Form->create('Anotacione'); ?>
+<?php echo $this->Form->create('Anotacione', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Nota'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

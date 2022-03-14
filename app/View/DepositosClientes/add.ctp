@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="depositosClientes form">
-<?php echo $this->Form->create('DepositosCliente', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('DepositosCliente', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Agregar Depósito'); ?></b></h2></legend>
                 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '16', 'id' => 'menuvert')) ?>

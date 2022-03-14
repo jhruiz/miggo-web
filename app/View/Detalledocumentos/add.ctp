@@ -1,5 +1,5 @@
 <div class="detalledocumentos form">
-<?php echo $this->Form->create('Detalledocumento'); ?>
+<?php echo $this->Form->create('Detalledocumento', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Add Detalledocumento'); ?></legend>
 	<?php

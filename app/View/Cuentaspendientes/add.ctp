@@ -1,5 +1,5 @@
 <div class="cuentaspendientes form">
-<?php echo $this->Form->create('Cuentaspendiente'); ?>
+<?php echo $this->Form->create('Cuentaspendiente', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><?php echo __('Add Cuentaspendiente'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '29', 'id' => 'menuvert'))?>

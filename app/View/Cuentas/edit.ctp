@@ -1,7 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('cuentas/cuentas.js')); ?>
 <div class="cuentas form">
-<?php echo $this->Form->create('Cuenta', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Cuenta', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Editar Cuenta'); ?></b></h2></legend>
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '39', 'id' => 'menuvert')) ?>

@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="estados form">
-<?php echo $this->Form->create('Estado'); ?>
+<?php echo $this->Form->create('Estado', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Estado'); ?></legend>
 	<?php

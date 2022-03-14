@@ -1,5 +1,5 @@
 <div class="trasladoinventarios form">
-<?php echo $this->Form->create('Trasladoinventario'); ?>
+<?php echo $this->Form->create('Trasladoinventario', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Trasladoinventario'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '38', 'id' => 'menuvert'))?>

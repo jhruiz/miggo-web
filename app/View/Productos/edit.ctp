@@ -1,7 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('productos/productos.js')); ?>
 <div class="productos form">
-<?php echo $this->Form->create('Producto', array('type' => 'file', 'class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Producto', array('type' => 'post', 'class' => 'form-inline')); ?>
 
 	<fieldset>
             <legend><h2><b><?php echo __('Editar Producto'); ?></b></h2></legend>

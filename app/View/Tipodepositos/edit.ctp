@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="tipodepositos form">
-<?php echo $this->Form->create('Tipodeposito', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Tipodeposito', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Tipo de Depósito'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '8', 'id' => 'menuvert')) ?>

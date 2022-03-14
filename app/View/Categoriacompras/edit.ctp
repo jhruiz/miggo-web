@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="categoriacompras form">
-<?php echo $this->Form->create('Categoriacompra', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Categoriacompra', array('class' => 'form-inline', 'type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Editar Categoría Compra'); ?></legend>
 	<?php

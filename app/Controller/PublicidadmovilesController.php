@@ -27,7 +27,7 @@ class PublicidadmovilesController extends AppController {
 		    $posData = $this->request->data;
 		    
             //Se obtiene la extension del archivo
-            $arrExt = split("\.", $posData['Publicidadmovile']['imagen']['name']); 	
+            $arrExt = explode(".", $posData['Publicidadmovile']['imagen']['name']); 	
             
             $nameImg = date('Ymdhis');
 		    $pubMovil['url_img'] = $nameImg . "." . $arrExt['1'];
@@ -69,7 +69,7 @@ class PublicidadmovilesController extends AppController {
 		    $posData = $this->request->data;
 		    
             //Se obtiene la extension del archivo
-            $arrExt = split("\.", $posData['Publicidadmovile']['imagen']['name']); 	
+            $arrExt = explode(".", $posData['Publicidadmovile']['imagen']['name']); 	
             
             $nameImg = date('Ymdhis');
 		    $pubMovil['url_img'] = $nameImg . "." . $arrExt['1'];

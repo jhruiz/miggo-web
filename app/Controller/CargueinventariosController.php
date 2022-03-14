@@ -425,7 +425,7 @@ class CargueinventariosController extends AppController {
             }
         }
         
-        public function ajaxProductoCargueInventario(){ 
+        public function ajaxProductoCargueInventario(){         
             $this->loadModel('Producto');            
             $this->autoRender = false;
             $posData = $this->request->data;

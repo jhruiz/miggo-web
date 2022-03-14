@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="notafacturas form">
-<?php echo $this->Form->create('Notafactura'); ?>
+<?php echo $this->Form->create('Notafactura', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Nota Factura'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '36', 'id' => 'menuvert'))?>

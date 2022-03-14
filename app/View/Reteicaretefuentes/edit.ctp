@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="reteicaretefuentes form">
-<?php echo $this->Form->create('Reteicaretefuente', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Reteicaretefuente', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Reteica - Retefuente'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

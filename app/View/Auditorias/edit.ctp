@@ -1,5 +1,5 @@
 <div class="auditorias form">
-<?php echo $this->Form->create('Auditoria'); ?>
+<?php echo $this->Form->create('Auditoria', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Auditoria'); ?></legend>
 	<?php

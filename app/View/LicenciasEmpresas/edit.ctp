@@ -1,7 +1,7 @@
 <?php echo ($this->Html->script('bandeja/gestionBandejas'));  ?>
 <?php $this->layout='inicio'; ?>
 <div class="licenciasEmpresas form">
-<?php echo $this->Form->create('LicenciasEmpresa'); ?>
+<?php echo $this->Form->create('LicenciasEmpresa', array('type' => 'post')); ?>
 	<fieldset>
 	<legend><h2><b><?php echo __('Editar la Licencia de la Empresa'); ?></b></h2></legend>
 	<?php echo $this->Form->input('id'); ?>

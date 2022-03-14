@@ -1,5 +1,5 @@
 <div class="cuentasclientes form">
-<?php echo $this->Form->create('Cuentascliente'); ?>
+<?php echo $this->Form->create('Cuentascliente', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Cuentascliente'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '35', 'id' => 'menuvert'))?>

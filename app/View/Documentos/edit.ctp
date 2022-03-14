@@ -1,5 +1,5 @@
 <div class="documentos form">
-<?php echo $this->Form->create('Documento'); ?>
+<?php echo $this->Form->create('Documento', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Documento'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '28', 'id' => 'menuvert'))?>

@@ -89,7 +89,7 @@ class EmpresasController extends AppController {
                     $productos = new ProductosController();
                     
                     //Se obtiene la extension del archivo
-                    $arrExt = split("\.", $posData['Empresa']['imagen']['name']);                
+                    $arrExt = explode(".", $posData['Empresa']['imagen']['name']);                
                     
                     $confDato = "dirImgEmpresa";
                     $nombreImg = "imgEmp_" . $posData['Empresa']['nit'];
@@ -128,14 +128,16 @@ class EmpresasController extends AppController {
 			throw new NotFoundException(__('La empresa no existe.'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-                    
+
                     $posData = $this->request->data;
                     
                     $productos = new ProductosController();
                     
                     if(!empty($posData['Empresa']['imagen']['name'])){
+                        
                         //Se obtiene la extension del archivo
-                        $arrExt = split("\.", $posData['Empresa']['imagen']['name']);                         
+                        $arrExt = explode(".", $posData['Empresa']['imagen']['name']);
+
                         /*Se obtiene el id de la empresa*/
                         $empresaId = $id;
                         

@@ -190,7 +190,7 @@ class UsuariosController extends AppController {
 
             if($posData['Usuario']['imagen']['name'] != ""){
                 //Se obtiene la extension del archivo
-                $arrExt = split("\.", $posData['Usuario']['imagen']['name']);  
+                $arrExt = explode(".", $posData['Usuario']['imagen']['name']);  
 
                 $confDato = "dirImgUsuario";
                 $nombreImg = "ImUsr_" . $posData['Usuario']['identificacion'];

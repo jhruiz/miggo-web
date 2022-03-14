@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="descargueinventarios form">
-<?php echo $this->Form->create('Descargueinventario'); ?>
+<?php echo $this->Form->create('Descargueinventario', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><?php echo __('Add Descargueinventario'); ?></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '18', 'id' => 'menuvert'))?>

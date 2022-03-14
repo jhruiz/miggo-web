@@ -2,7 +2,7 @@
 <?php echo ($this->Html->script('clientes/clientes.js')); ?>
 <?php $this->layout = 'inicio';?>
 <div class="clientes form">
-<?php echo $this->Form->create('Cliente'); ?>
+<?php echo $this->Form->create('Cliente', array('type' => 'post')); ?>
     <fieldset>
     <legend><h2><b><?php echo __('Agregar Cliente'); ?></b></h2></legend>
     <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '14', 'id' => 'menuvert')) ?>

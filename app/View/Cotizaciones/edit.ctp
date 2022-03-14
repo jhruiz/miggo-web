@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('cotizaciones/cotizaciones.js')); ?>
-<?php echo $this->Form->create('Cotizacione'); ?>
+<?php echo $this->Form->create('Cotizacione', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
             <legend><h2><b><?php echo __('Cotización'); ?></b></h2></legend>
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '51', 'id' => 'menuvert'))?>

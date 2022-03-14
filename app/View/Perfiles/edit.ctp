@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="perfiles form">
-<?php echo $this->Form->create('Perfile'); ?>
+<?php echo $this->Form->create('Perfile', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Perfil'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

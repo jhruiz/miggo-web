@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="partevehiculos form">
-<?php echo $this->Form->create('PartevehiculosTipovehiculo'); ?>
+<?php echo $this->Form->create('PartevehiculosTipovehiculo', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Parte Vehículo'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id', array('type'=> 'hidden', 'value' => $id)); ?>

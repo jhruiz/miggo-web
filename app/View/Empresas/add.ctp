@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="empresas form">
-<?php echo $this->Form->create('Empresa', array('type' => 'file', 'class' => 'form-horizontal')); ?>
+<?php echo $this->Form->create('Empresa', array('type' => 'post', 'class' => 'form-horizontal')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Agregar Empresa'); ?></b></h2></legend>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '41', 'id' => 'menuvert')) ?>

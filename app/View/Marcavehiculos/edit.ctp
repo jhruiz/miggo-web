@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="marcavehiculos form">
-<?php echo $this->Form->create('Marcavehiculo', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Marcavehiculo', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Marca de Vehículo'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="cloudmenus form">
-<?php echo $this->Form->create('Cloudmenu', array('type' => 'file', 'class' => 'form-horizontal')); ?>
+<?php echo $this->Form->create('Cloudmenu', array('type' => 'post', 'class' => 'form-horizontal')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Menú'); ?></b></h2></legend>
 	

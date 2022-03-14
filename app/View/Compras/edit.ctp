@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="ciudades form">
-<?php echo $this->Form->create('Ciudade'); ?>
+<?php echo $this->Form->create('Ciudade', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Ciudad'); ?></b></h2></legend>
 	<?php

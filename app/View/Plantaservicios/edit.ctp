@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="plantaservicios form">
-<?php echo $this->Form->create('Plantaservicio', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Plantaservicio', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Planta de Servicios'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

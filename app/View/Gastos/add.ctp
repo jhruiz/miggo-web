@@ -2,7 +2,7 @@
 <?php echo ($this->Html->script('gastos/gastos')); ?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
 <div class="gastos form">
-<?php echo $this->Form->create('Gasto', array('class' => 'form-inline')); ?>
+<?php echo $this->Form->create('Gasto', array('type' => 'post', 'class' => 'form-inline')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Agregar Gasto'); ?></b></h2></legend>
                 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '40', 'id' => 'menuvert')) ?>

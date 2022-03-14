@@ -1,6 +1,6 @@
 <?php $this->layout='inicio'; ?>
 <div class="paises form">
-<?php echo $this->Form->create('Paise'); ?>
+<?php echo $this->Form->create('Paise', array('type' => 'post')); ?>
 	<fieldset>
 		<legend><h2><b><?php echo __('Editar Pais'); ?></b></h2></legend>
                 <?php echo $this->Form->input('id'); ?>

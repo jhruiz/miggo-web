@@ -2,7 +2,7 @@
 <?php echo ($this->Html->script('cargueinventario/nuevoproducto.js')); ?>
     <div class="productos form">
 
-    <?php echo $this->Form->create(null, array('type' => 'file', 'class' => 'form-horizontal', 'default' => false)); ?>
+    <?php echo $this->Form->create(null, array('type' => 'post', 'class' => 'form-horizontal', 'default' => false)); ?>
     <section class="main row">
         <legend><center><h4><?php echo __('Agregar Producto'); ?></h4></center></legend>
             <div class="col-md-1"></div>
