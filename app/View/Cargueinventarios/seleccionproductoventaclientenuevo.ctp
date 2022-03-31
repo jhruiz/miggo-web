@@ -88,6 +88,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'value' => '0',
                     'min' => '0',
                     'max' => '100',
+                    'disabled' => 'disabled',
                     'onblur' => 'calcularDescuentoPorPorcentaje();')); ?>
             </div>
         </div>
@@ -100,7 +101,8 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'label' => '', 
                     'class' => 'form-control numericPrice val_discount', 
                     'placeholder' => 'Valor Descuento', 
-                    'value' => '0',                     
+                    'value' => '0',    
+                    'disabled' => 'disabled',                 
                     'onblur' => 'calcularDescuentoPorValor();')); ?>
             </div>
         </div>       

@@ -87,6 +87,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'value' => '0',
                     'min' => '0',
                     'max' => '100',
+                    'disabled' => 'disabled',
                     'onblur' => 'calcularDescuentoPorPorcentaje();')); ?>
             </div>
         </div>
