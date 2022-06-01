@@ -351,6 +351,7 @@ class Cuentascliente extends AppModel {
                 'conditions' => array(
                     'Cuentascliente.empresa_id' => $empresaId,
                     'Cuentascliente.fechapago < ' => $fecha,
+                    'Cuentascliente.eliminar = 0'
                 )    
             )); 
 

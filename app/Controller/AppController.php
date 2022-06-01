@@ -79,6 +79,7 @@ class AppController extends Controller
         $this->loadModel('Evento');
         $this->loadModel('Cuentascliente');
         $this->loadModel('Cuentaspendiente');
+        $this->loadModel('Empresa');
 
         $empresaId = $this->Auth->user('empresa_id');
         $ordenTrabajos = $this->Ordentrabajo->obtenerEstadistacasOrdenes($empresaId);
@@ -93,6 +94,9 @@ class AppController extends Controller
         );
         //obtienen todas las alertas pendientes
         $arlerts = count($this->Alertaordene->obtenerInfoAlertaOrden($filtros));
+
+        //se obtiene la informacion de la empresa
+        $infoEmp = $this->Empresa->obtenerEmpresaPorId($empresaId);
 
         //obtiene todos los eventos previos a una fecha y que no se hayan finalizado aun
         $eventos = $this->Evento->obtenerEventosVencidos($empresaId, date('Y-m-d 23:59:59'));
@@ -117,6 +121,7 @@ class AppController extends Controller
         $this->set('eventos', $eventos);
         $this->set('ctasXCobrar', $ctasXCobrar);
         $this->set('ctasXPagar', $ctasXPagar);
+        $this->set('infoEmp', $infoEmp);
 
     }
 

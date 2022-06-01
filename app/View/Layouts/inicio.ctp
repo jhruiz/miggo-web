@@ -274,26 +274,28 @@ if ($logged_in) {
               </div>
             </div>
 
-            <!-- <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-              <div class="left"></div>
-              <div class="right">
-                <span class="count_top"> -->
+            <?php if($infoEmp['Empresa']['vercuentasdb'] == '1') { ?>
+              <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+                <div class="left"></div>
+                <div class="right">
+                  <span class="count_top">
 
-                <!-- Listado de cuentas -->
-                <?php 
-                // echo $this->Form->input('accounts', array(
-                //     'label' => '',
-                //     'type' => 'select',
-                //     'options' => $listCuentas,
-                //     'id' => 'account',
-                //     'style' => 'width:150px;',
-                // )); 
-                ?>
+                  <!-- Listado de cuentas -->
+                  <?php 
+                  echo $this->Form->input('accounts', array(
+                      'label' => '',
+                      'type' => 'select',
+                      'options' => $listCuentas,
+                      'id' => 'account',
+                      'style' => 'width:150px;',
+                  )); 
+                  ?>
 
-                <!-- </span>
-                <b><div style="font-size:30px;" class="value_account number">0</div></b>
+                  </span>
+                  <b><div style="font-size:30px;" class="value_account number">0</div></b>
+                </div>
               </div>
-            </div>  -->
+            <?php } ?>
 
             <?php for ($i = 0; $i < $arrColMd; $i++) {?>
               <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
