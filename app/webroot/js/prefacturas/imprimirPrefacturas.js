@@ -32,10 +32,11 @@ var imprimirPrefacturaFactura = function() {
 
             mywindow.document.write('<body>');
             mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
+            mywindow.document.write($('#dv_img_emp').html());
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-            mywindow.document.write('<h4><b>' + prefact.resp['0'].EM.nombre + '</b></h4></div>');
+            mywindow.document.write('<b>' + prefact.resp['0'].EM.nombre + '</b></div>');
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-            mywindow.document.write('<h4><b>PREFACTURA No. ' + zfill(prefactId, 6) + ' </b></h4></div>');
+            mywindow.document.write('<b>PREFACTURA No. ' + zfill(prefactId, 6) + ' </b></div>');
 
             //informacion de la empres
             mywindow.document.write('<div><b>Nit:</b>' + prefact.resp['0'].EM.nit + '</div>');
@@ -233,12 +234,13 @@ var imprimirPrefacturaDocumentoEquivalente = function() {
 
             mywindow.document.write('<body>');
             mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
+            mywindow.document.write($('#dv_img_emp').html());
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-            mywindow.document.write('<h4><b>' + prefact.resp['0'].RE.nombre + '</b></h4></div>');
+            mywindow.document.write('<b>' + prefact.resp['0'].RE.nombre + '</b></div>');
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-            mywindow.document.write('<h4><b>' + prefact.resp['0'].RE.representantelegal + '</b></h4></div>');
+            mywindow.document.write('<b>' + prefact.resp['0'].RE.representantelegal + '</b></div>');
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-            mywindow.document.write('<h4><b>PREFACTURA No. ' + zfill(prefactId, 6) + ' </b></h4></div>');
+            mywindow.document.write('<b>PREFACTURA No. ' + zfill(prefactId, 6) + ' </b></div>');
 
             //informacion de la empres
             mywindow.document.write('<div><b>Nit:</b>' + prefact.resp['0'].RE.nit + '</div>');
@@ -442,4 +444,5 @@ function zfill(number, width) {
 $(function() {
     $("#imprimirCot").click(imprimir);
     $(".wppSendPF").click(enviarPrefactura);
+    $("#dv_emp").hide();
 });

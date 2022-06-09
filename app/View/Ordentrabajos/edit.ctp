@@ -340,6 +340,12 @@
 </div>
 
 <div id="dv_emp">
+    <div id="dv_img_emp">
+        <div style="float:center;" align="center">
+            <img src="<?php echo $urlImg . $arrEmprea['Empresa']['id'] . '/' . $arrEmprea['Empresa']['imagen'];?>" 
+                    class="img-responsive img-thumbnail center-block" width="200">  
+        </div>
+    </div>   
     <div id="dv_info_emp">
         <div style="margin:0px; width:100%; float:left;">            
             <div style="float:left; margin-top: 10px;" align="left">
@@ -360,11 +366,7 @@
                         <b>Dirección: </b><?php echo h($arrEmprea['Empresa']['direccion']);?>
                     </div>                           
                 </div>
-            </div>
-            <div style="float:right; margin-right:30px;">
-                <img src="<?php echo $urlImg . $arrEmprea['Empresa']['id'] . '/' . $arrEmprea['Empresa']['imagen'];?>" 
-                     class="img-responsive img-thumbnail center-block" width="200">  
-            </div>            
+            </div>         
         </div> 
 
         <div style="width:100%; float:left; margin-top: 20px;">
@@ -385,9 +387,7 @@
 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        En el momento de la entrada del vechículo se debe cancelar el total del valor de los repuestos. Si la orden
-                        de trabajo se encuentra terminada y su vehículo no ha sido recogido en los proximos 4 días posterior a esta,
-                        al día 5 se le procedera a efetuar un cobro de parqueadero de valor de $5.500 pesos diarios
+                    <?php echo $arrEmprea['Empresa']['texto4']; ?>
                     </div>                 
                 </div>
             </div>             
@@ -395,14 +395,7 @@
     </div>
     <div id="conditions_ot">    
         <div id="p_condCont_ot"><small>
-            <b>Condiciones del Contrato: 1</b>. El cliente autoriza a quien firma en el presente contrato a ordenar y contratar con el centro de servicio, la ejecución de los respectivos trabajos y por tanto
-            da fe que conoce y acepta en su totalidad las condiciones que son parte integrante del contrato que se celebra y consta en el presente documento. <b>2</b>. El centro de servicio queda
-            facultado para realizar las pruebas que requiera el vehiculó por fuera del taller. <b>3</b>. El centro de servicio no se hacer responsable por objetos dejados dentro del vehiculo. <b>4</b>. El cliente o la
-            persona autorizada. Faculta expresamente al taller. <?php echo $arrEmprea['Empresa']['nombre']; ?>, a ejercer el derecho de retención del vehiculo. <b>5</b>. El centro de servicio no se hace responsable por daños o
-            deterioro del vehiculo. Si estos se presentan por causas de fuerza mayor o extensión de tiempo causado por el cliente. <b>6</b>. El propietario o autorizado firmante del presente contrato, se
-            comprometen a reconocer un valor de cinco mil pesos m/cte. ($ 5.000) por concepto de parqueo, por cada día que transcurra desde que finalice los trabajos hasta el momento de
-            retiro del vehiculo. <b>7</b>. Aclaraciones: En el momento de la entrada del vehículo se debe cancelar el total del valor de los repuestos. Si la orden de trabajo se encuentra terminada y su
-            vehículo no ha sido recogido en los próximos 4 días posterior a esta, al día 5 se le procedera a efectuar un cobro de parqueadero de valor de $5.500 pesos diario.                 
+        <?php echo $arrEmprea['Empresa']['texto3']; ?>                 
         </small></div>
     </div>
 </div>

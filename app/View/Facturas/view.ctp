@@ -35,18 +35,24 @@
     </div>
     <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '33', 'id' => 'menuvert'))?> 
     <div id="dvFacturas" style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">    
+        <div style="float:center;" align="center">
+            <img src="<?php 
+                echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];                        
+            ?>" 
+            class="img-responsive img-thumbnail center-block" width="200">
+        </div>  
         <?php if(!empty($infoRemision)){?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></h4></div>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></h4></div>
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></h4></div>
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
         <?php }?>
        
         <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></h4></div> 
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></h4></div>    
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
         
@@ -88,13 +94,7 @@
                         ?>
                     </div>                           
                 </div>
-            </div>
-            <div style="float:right; margin-right:30px;">
-                <img src="<?php 
-                        echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];                        
-                    ?>" 
-                     class="img-responsive img-thumbnail center-block" width="200">
-            </div>            
+            </div>          
         </div> 
         
         <div style="width:100%; float:left; margin-top: 5px;">
@@ -115,7 +115,7 @@
                 </div>
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Teléfono: </b><?php echo $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular']; ?>
+                        <b>Teléfono: </b><?php echo h(!empty($infoFact['Cliente']['telefono']) ? $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular'] : $infoFact['Cliente']['celular']); ?>
                     </div>                 
                 </div>
                 
@@ -138,7 +138,7 @@
                 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Dirección: </b><?php $infoFact['Cliente']['direccion']; ?>
+                        <b>Dirección: </b><?php echo $infoFact['Cliente']['direccion']; ?>
                     </div>                 
                 </div>
                 
@@ -386,14 +386,7 @@
         
         <div id="conditions_ot">
             <div id="p_condCont_ot"><small>
-                <b>Condiciones del Contrato: 1</b>. El cliente autoriza a quien firma en el presente contrato a ordenar y contratar con el centro de servicio, la ejecución de los respectivos trabajos y por tanto
-                da fe que conoce y acepta en su totalidad las condiciones que son parte integrante del contrato que se celebra y consta en el presente documento. <b>2</b>. El centro de servicio queda
-                facultado para realizar las pruebas que requiera el vehiculó por fuera del taller. <b>3</b>. El centro de servicio no se hacer responsable por objetos dejados dentro del vehiculo. <b>4</b>. El cliente o la
-                persona autorizada. Faculta expresamente al taller. <?php echo $infoEmpresa['Empresa']['nombre']; ?>, a ejercer el derecho de retención del vehiculo. <b>5</b>. El centro de servicio no se hace responsable por daños o
-                deterioro del vehiculo. Si estos se presentan por causas de fuerza mayor o extensión de tiempo causado por el cliente. <b>6</b>. El propietario o autorizado firmante del presente contrato, se
-                comprometen a reconocer un valor de cinco mil pesos m/cte. ($ 5.000) por concepto de parqueo, por cada día que transcurra desde que finalice los trabajos hasta el momento de
-                retiro del vehiculo. <b>7</b>. Aclaraciones: En el momento de la entrada del vehículo se debe cancelar el total del valor de los repuestos. Si la orden de trabajo se encuentra terminada y su
-                vehículo no ha sido recogido en los próximos 4 días posterior a esta, al día 5 se le procedera a efectuar un cobro de parqueadero de valor de $5.500 pesos diario.                 
+                <?php echo $infoEmpresa['Empresa']['texto3']?>
             </small></div>
         </div>  
         
@@ -412,14 +405,20 @@
     </div>
     
     <div id="ordenTrabajo" style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">
-        
-        <div style="width:100%; float:left; margin:0px" align="center"><h4><b><?php 
+
+        <div style="float:center;" align="center">
+            <img src="<?php 
+                echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];                        
+            ?>" 
+            class="img-responsive img-thumbnail center-block" width="200">
+        </div> 
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php 
         if(!empty($infoRemision)){
             echo __($infoRemision['Relacionempresa']['nombre']); 
         }else{
             echo __($infoEmpresa['Empresa']['nombre']); 
         }        
-        ?></b></h4></div>
+        ?></b></div>
         <div style="width:100%; float:left; margin:0px" align="center"><h4><b>Orden de Trabajo</b></h4></div>
         
         <!--informacion e imagen de empresa-->
@@ -463,11 +462,7 @@
                         ?>
                     </div>                           
                 </div>
-            </div>
-            <div style="float:right; margin-right:30px;">
-                <img src="<?php echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];?>" 
-                     class="img-responsive img-thumbnail center-block" width="200">
-            </div>            
+            </div>           
         </div>
         
         <div style="width:100%; float:left; margin-top: 5px;">
@@ -487,7 +482,7 @@
                 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Teléfono: </b><?php $infoFact['Cliente']['telefono']; ?>
+                    <b>Teléfono: </b><?php echo h(!empty($infoFact['Cliente']['telefono']) ? $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular'] : $infoFact['Cliente']['celular']); ?>
                     </div>                 
                 </div>
                 
@@ -507,7 +502,7 @@
                 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        <b>Dirección: </b><?php $infoFact['Cliente']['direccion']; ?>
+                        <b>Dirección: </b><?php echo $infoFact['Cliente']['direccion']; ?>
                     </div>                 
                 </div>
                 
@@ -704,7 +699,7 @@
             </div>
             <div style="margin: 2px; float: left; width: 100%;">
                 <div style="margin: 0px; float: left; width: 100%;">
-                    <b>Telefono: </b><?php echo $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular']; ?>
+                <b>Teléfono: </b><?php echo h(!empty($infoFact['Cliente']['telefono']) ? $infoFact['Cliente']['telefono'] . " / " . $infoFact['Cliente']['celular'] : $infoFact['Cliente']['celular']); ?>
                 </div>                 
             </div>
             
@@ -727,7 +722,7 @@
             
             <div style="margin: 2px; float: left; width: 100%;">
                 <div style="margin: 0px; float: left; width: 100%;">
-                    <b>Direccion: </b><?php $infoFact['Cliente']['direccion']; ?>
+                    <b>Direccion: </b><?php echo $infoFact['Cliente']['direccion']; ?>
                 </div>                 
             </div>
             

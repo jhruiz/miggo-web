@@ -33,7 +33,8 @@
                                 <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
                 <?php $ttalventasFact = 0; ?>
-                <?php foreach ($ventasFactura as $dFact): ?>                
+                <?php foreach ($ventasFactura as $dFact): ?>   
+                <?php if($dFact['fact_eliminada'] == '0') {?>             
                 <tr>
                     <td><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
                     <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta An��nima');?></td>
@@ -43,6 +44,7 @@
                     <td align="right"><?php echo h('$' . number_format($dFact['fcv_valor'],2)); ?>&nbsp;</td>
                 </tr>
                 <?php $ttalventasFact += $dFact['fcv_valor']; ?>
+                <?php } ?>
                 <?php endforeach; ?>
                 <tr>
                     <th colspan="5" align="right">TOTAL</th>
@@ -51,6 +53,40 @@
                 </table>
             </div>
         </div>
+
+        <legend><h2><b><?php echo __('Detalle Notas Crédito: ' . $fechaCierre); ?></b></h2></legend>        
+        <div class="table-responsive">
+            <div class="container">        
+                <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
+                <tr>
+                                <th><?php echo ('# Factura'); ?></th>
+                                <th><?php echo ('Cliente'); ?></th>
+                                <th><?php echo ('Vendedor'); ?></th>
+                                <th><?php echo ('Cuenta'); ?></th>                                
+                                <th><?php echo ('Tipo Pago'); ?></th>                                
+                                <th class="text-right"><?php echo ('Valor'); ?></th>
+                </tr>
+                <?php $ttalventasFact = 0; ?>
+                <?php foreach ($ventasFactura as $dFact): ?>   
+                <?php if($dFact['fact_eliminada'] == '1') {?>             
+                <tr>
+                    <td><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+                    <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta An��nima');?></td>
+                    <td><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?>&nbsp;</td>
+                    <td><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?>&nbsp;</td>
+                    <td><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?>&nbsp;</td>
+                    <td align="right"><?php echo h('$' . number_format($dFact['fcv_valor'],2)); ?>&nbsp;</td>
+                </tr>
+                <?php $ttalventasFact += $dFact['fcv_valor']; ?>
+                <?php } ?>
+                <?php endforeach; ?>
+                <tr>
+                    <th colspan="5" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalventasFact,2)); ?>&nbsp;</th>
+                </tr>
+                </table>
+            </div>
+        </div>        
         
         
 	<legend><h2><b><?php echo __('Detalle Gastos: ' . $fechaCierre); ?></b></h2></legend>        

@@ -318,9 +318,7 @@
 
                 <div style="margin: 2px; float: left; width: 100%;">
                     <div style="margin: 0px; float: left; width: 100%;">
-                        En el momento de la entrada del vechículo se debe cancelar el total del valor de los repuestos. Si la orden
-                        de trabajo se encuentra terminada y su vehículo no ha sido recogido en los proximos 4 días posterior a esta,
-                        al día 5 se le procedera a efetuar un cobro de parqueadero de valor de $5.500 pesos diarios
+                    <?php echo $arrEmprea['Empresa']['texto4']; ?>
                     </div>                 
                 </div>
             </div>             

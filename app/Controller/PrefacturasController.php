@@ -103,6 +103,7 @@ class PrefacturasController extends AppController {
             $this->loadModel('Cuenta');
             $this->loadModel('Configuraciondato');
             $this->loadModel('Estadosprefactura');
+            $this->loadModel('Empresa');
             
             if (!$this->Prefactura->exists($id)) {
                     throw new NotFoundException(__('La orden de compra no existe.'));
@@ -116,6 +117,7 @@ class PrefacturasController extends AppController {
             $notaFactura = $this->Notafactura->obtenerNotasFacturasEmpresa($empresaId);
             $vendedor = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
             $relacionEmpresa = $this->Relacionempresa->obtenerListaEmpresasRelacion($empresaId);
+            $arrEmprea = $this->Empresa->obtenerEmpresaPorId($empresaId);
                         
             $prefactura = $this->Prefactura->find('first', $options);
             $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId); 
@@ -128,7 +130,11 @@ class PrefacturasController extends AppController {
             
             //se obtiene la url de la imagend e whatsapp
             $strDatoWP = "ulrImgWP";
-            $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);              
+            $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);  
+            
+            /*Se obtiene la url de las imagenes de las empresas*/
+            $strDato = "urlImgEmpresa";
+            $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
             
             //se obtienen los abonos realizados a la prefactura
             $abonos = $this->Abonofactura->obtenerAbonosPrefactura($prefactura['Prefactura']['id']);
@@ -141,7 +147,7 @@ class PrefacturasController extends AppController {
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
             
-            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados'));
+            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg'));
             $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP')); 
 	}
 
@@ -483,6 +489,7 @@ class PrefacturasController extends AppController {
          */
         public function ajaxObtenerDetallesPrefactura(){
             $this->loadModel('Prefacturasdetalle');
+            $this->loadModel('Configuraciondato');
 
             $this->autoRender = false;
             $prefactId = $this->request->data['prefactId'];
@@ -490,7 +497,11 @@ class PrefacturasController extends AppController {
             //se obtiene el detalle de la prefactura
             $arrPrefactDet = $this->Prefactura->obtenerPrefacturaDetalle($prefactId);
 
-            echo json_encode(array('resp' => $arrPrefactDet));   
+            //se obtiene la ruta de la imagen de la empresa
+            $strDato = "urlImgEmpresa";
+            $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+            echo json_encode(array('resp' => $arrPrefactDet, 'urlImg' => $urlImg));   
         }
         
         /**

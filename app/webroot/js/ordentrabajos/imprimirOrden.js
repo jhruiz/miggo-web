@@ -23,10 +23,11 @@ var imprimirOrdenTrabajo = function() {
                 mywindow.document.write('</head>');
                 mywindow.document.write('<body>');
                 mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
+                mywindow.document.write($('#dv_img_emp').html());
                 mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>' + $('#nombre_empresa').val() + '</b></h4></div>');
+                mywindow.document.write('<b>' + $('#nombre_empresa').val() + '</b></div>');
                 mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>Orden de Trabajo</b></h4></div>');
+                mywindow.document.write('<b>Orden de Trabajo</b></div>');
                 mywindow.document.write($('#dv_info_emp').html());
 
                 mywindow.document.write('<div style="margin:0px; width:100%; float:left;">');
@@ -187,10 +188,11 @@ var imprimirOrdenEntrada = function() {
                 mywindow.document.write('</head>');
                 mywindow.document.write('<body>');
                 mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
+                mywindow.document.write($('#dv_img_emp').html());
                 mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>' + $('#nombre_empresa').val() + '</b></h4></div>');
+                mywindow.document.write('<b>' + $('#nombre_empresa').val() + '</b></div>');
                 mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>Remisión de Entrada</b></h4></div>');
+                mywindow.document.write('<b>Remisión de Entrada</b></div>');
                 mywindow.document.write($('#dv_info_emp').html());
 
                 mywindow.document.write('<div style="margin:0px; width:100%; float:left;">');

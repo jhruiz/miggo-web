@@ -399,5 +399,13 @@
 <div id="div_producto"></div>
 <div id="div_facturar"></div>
 <div id="div_abono"></div>
+<div id="dv_emp">
+    <div id="dv_img_emp">
+        <div style="float:center;" align="center">
+            <img src="<?php echo $urlImg . $arrEmprea['Empresa']['id'] . '/' . $arrEmprea['Empresa']['imagen'];?>" 
+            class="img-responsive img-thumbnail center-block" width="200">  
+        </div>
+    </div>  
+</div>
 </div><!-- container body -->
 </div><!-- main_container -->

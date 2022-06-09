@@ -312,6 +312,8 @@ class FacturasController extends AppController
         $this->loadModel('Relacionempresa');
         $this->loadModel('Cuenta');
         $this->loadModel('Configuraciondato');
+        $this->loadModel('Empresa');
+
         if ($this->request->is('post')) {
             $this->Factura->create();
             if ($this->Factura->save($this->request->data)) {
@@ -328,12 +330,17 @@ class FacturasController extends AppController
         $vendedor = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         $relacionEmpresa = $this->Relacionempresa->obtenerListaEmpresasRelacion($empresaId);
         $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+        $arrEmprea = $this->Empresa->obtenerEmpresaPorId($empresaId);
 
         //se obtiene la url de la imagend e whatsapp
         $strDatoWP = "ulrImgWP";
         $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);
 
-        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP'));
+        /*Se obtiene la url de las imagenes de las empresas*/
+        $strDato = "urlImgEmpresa";
+        $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg'));
     }
 
 /**
@@ -840,6 +847,7 @@ class FacturasController extends AppController
                     'fcv_cuenta' => $df['FCV']['cuenta_id'],
                     'fcv_tipopago' => $df['FCV']['tipopago_id'],
                     'fcv_valor' => $df['FCV']['valor'],
+                    'fact_eliminada' => $df['Factura']['eliminar']
                 ];
 
                 //se obtiene el ingreso por venta en cada cuenta
