@@ -247,7 +247,7 @@ class Factura extends AppModel
         ));
 
         array_push($arr_join, array(
-            'table' => 'categorias',
+           'table' => 'categorias',
             'alias' => 'CT',
             'type' => 'INNER',
             'conditions' => array(
@@ -283,12 +283,12 @@ class Factura extends AppModel
         ));
 
         array_push($arr_join, array(
-            'table' => 'estadopagomecanicos',
-            'alias' => 'EPM',
+            'table' => 'marcavehiculos',
+            'alias' => 'MV',
             'type' => 'LEFT',
             'conditions' => array(
-                'Factura.estadopagomecanico_id' => 'EPM.id',
-            ),
+                'MV.id' => 'VH.marcavehiculo_id'
+            )
         ));
 
         $ordenesT = $this->find('all', array(
@@ -308,8 +308,9 @@ class Factura extends AppModel
                 'VH.id',
                 'VH.placa',
                 'VH.marcavehiculo_id',
-                'EPM.*',
-                'Factura.*',
+                'MV.id',
+                'MV.descripcion',
+                'Factura.*'
             ),
             'conditions' => array('CT.servicio' => '1', $filter),
             'recursive' => '-1',

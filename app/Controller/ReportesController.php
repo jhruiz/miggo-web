@@ -690,6 +690,7 @@ class ReportesController extends AppController
             'Referencia',
             'Deposito',
             'Proveedor',
+            'Vendedor',
             'Costo del Producto',
             'Costo Total',
             'Cantidad',
@@ -1515,6 +1516,91 @@ class ReportesController extends AppController
         $this->set(compact('usuariosReporte'));
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');
+    }
+
+    /**
+     * Se genera el reporte de ordenes de trabajo para su descarga
+     */
+    public function descargarOrdenes() {
+
+        $this->loadModel('Ordentrabajo');
+
+        $usuario = $_POST['rpusuario'];
+        $cliente = $_POST['rpcliente'];
+        $planta = $_POST['rpplanta'];
+        $estado = $_POST['rpestado'];
+        $vehiculo = $_POST['rpvehiculo'];
+        $empresaId = $this->Auth->user('empresa_id');
+        
+        if(!empty($usuario)){ $filter['Ordentrabajo.usuario_id'] = $usuario; }
+        
+        if(!empty($cliente)){ $filter['Ordentrabajo.cliente_id'] = $cliente; }
+        
+        if(!empty($planta)){ $filter['Ordentrabajo.plantaservicio_id'] = $planta; }
+
+        if(!empty($estado)){ $filter['Ordentrabajo.ordenestado_id'] = $estado; }
+        
+        if(!empty($vehiculo)){ $filter['Ordentrabajo.vehiculo_id'] = $vehiculo; }  
+
+        $arrOrdenesT = $this->Ordentrabajo->obtenerOrdenesTrabajo($filter, $empresaId);
+
+        $texto_tit = "Ordenes";
+        $this->set(compact('arrOrdenesT'));
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows',$arrOrdenesT);
+        $arr_titulos = array(
+            'Codigo',
+            'Tecnico',
+            'Cliente',
+            'Vehiculo',
+            'Estado',
+                );
+        $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');
+
+    }
+
+    /**
+     * Generar reporte de ordenes por mecánico
+     */
+    public function descargarOrdenesMecanicos() {
+
+        $this->loadModel('Factura');
+
+        $fechaIni = $_POST['rpcreatedIni'];
+        $fechaFin = $_POST['rpcreatedFin'];
+        $usuario = $_POST['rpusuario'];
+        $empresa = $_POST['empresaId'];
+
+        $filter['Factura.empresa_id'] = $this->Auth->user('empresa_id');;
+
+        if (!empty($usuario)) { $filter['OT.usuario_id'] = $usuario; }
+
+        if (!empty($fechaIni) && empty($fechaFin)) { $filter['Factura.created >'] = $fechaIni . " 00:00:01"; }
+        else if (empty($fechaIni) && !empty($fechaFin)) { $filter['Factura.created <'] = $fechaFin . " 23:59:59"; }
+        else { $filter['Factura.created BETWEEN ? AND ?'] = array($fechaIni . " 00:00:01", $fechaFin . " 23:59:59"); }
+
+        $arrFactOrdenes = $this->Factura->obtenerFacturasOrdenesServicios($filter);
+
+        $texto_tit = "Ordenes por Tecnico";
+        $this->set(compact('arrFactOrdenes'));
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows',$arrFactOrdenes);
+        $arr_titulos = array(
+            'Orden',
+            'Factura',
+            'Fecha Factura',
+            'Tecnico',
+            'Servicio',
+            'Placa',
+            'Cantidad',
+            'Costo',
+            'Costo Total',
+            'Fecha de Pago'
+                );
+        $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');
+
     }
 
 }

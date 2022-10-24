@@ -29,24 +29,34 @@ class OrdentrabajosController extends AppController {
         }
 
         //filtros del index
+        $rpusuario = '';
         if(!empty($this->passedArgs['usuario'])){
             $paginate['Ordentrabajo.usuario_id'] = $this->passedArgs['usuario'];
+            $rpusuario = $this->passedArgs['usuario'];
         }
         
+        $rpcliente = '';
         if(!empty($this->passedArgs['cliente'])){
             $paginate['Ordentrabajo.cliente_id'] = $this->passedArgs['cliente'];
+            $rpcliente = $this->passedArgs['cliente'];
         }
         
+        $rppanta = '';
         if(!empty($this->passedArgs['plantaservicio'])){
             $paginate['Ordentrabajo.plantaservicio_id'] = $this->passedArgs['plantaservicio'];
+            $rppanta = $this->passedArgs['plantaservicio'];
         }
         
+        $rpestado = '';
         if(!empty($this->passedArgs['ordenestado'])){
             $paginate['Ordentrabajo.ordenestado_id'] = $this->passedArgs['ordenestado'];
+            $rpestado = $this->passedArgs['ordenestado'];
         }
         
+        $rpvehiculo = '';
         if(!empty($this->passedArgs['vehiculo'])){
             $paginate['Ordentrabajo.vehiculo_id'] = $this->passedArgs['vehiculo'];
+            $rpvehiculo = $this->passedArgs['vehiculo'];
         }        
                 
         //se obtienen los estados de las ordenes
@@ -66,6 +76,7 @@ class OrdentrabajosController extends AppController {
         $this->set('arrOrdenT', $this->Paginator->paginate('Ordentrabajo', $paginate));
 
         $this->set(compact('arrUsr', 'arrPlantas', 'arrClientes', 'arrOrdenEst', 'arrOrdenT','estFin', 'flgE'));
+        $this->set(compact('rpusuario', 'rpcliente', 'rppanta', 'rpestado', 'rpvehiculo'));
         
     }
 

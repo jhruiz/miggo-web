@@ -163,6 +163,7 @@ endforeach;
             <td class="tableTdContent" ><?php echo h($utilidade['P']['referencia']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['DP']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['PV']['nombre']); ?></td>
+            <td class="tableTdContent" ><?php echo h($utilidade['US']['nombre']); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad'])); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['cantidad']); ?></td>
@@ -302,6 +303,45 @@ endforeach;
     endforeach;
 }
 
+else if(isset($arrOrdenesT)) {
+
+    foreach ($arrOrdenesT as $ordenes):
+        ?>
+        <tr>
+            <th class="tableTdContent"><?php echo h($ordenes['Ordentrabajo']['codigo']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['US']['nombre']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['CL']['nombre']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['VH']['placa']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['OE']['descripcion']) ?></th>
+        </tr>
+        <?php
+    endforeach;
+
+}
+
+else if(isset($arrFactOrdenes)) {
+
+    foreach ($arrFactOrdenes as $ordenes):
+
+        $consec = !empty($ordenes['Factura']['consecutivodian']) ? $ordenes['Factura']['consecutivodian'] : $ordenes['Factura']['codigo'];
+
+        ?>
+        <tr>
+            <th class="tableTdContent"><?php echo h($ordenes['OT']['codigo']) ?></th>
+            <th class="tableTdContent"><?php echo h($consec) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['Factura']['created']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['US']['nombre']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['PR']['descripcion'] . '(' . $ordenes['PR']['codigo'] . ')') ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['VH']['placa']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['FD']['cantidad']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['FD']['costoventa']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['FD']['costototal']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['Factura']['fechapagoservicio']) ?></th>
+        </tr>
+        <?php
+    endforeach;
+
+}
 
 // Tabla excel vista /productos/index
 else if (isset($productos)) {

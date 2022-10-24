@@ -534,6 +534,13 @@
             echo __($arrInfoOrd['0']['PS']['descripcion']);
             ?>
         </div>
+
+        <!--tecnico-->
+        <div style="width:100%; float:left; margin-top: 5px;"><b>Técnico: </b>
+            <?php
+            echo __($arrInfoOrd['0']['US']['nombre']);
+            ?>
+        </div>
         
         <!--informacion de la fecha de ingreso y salida del vehiculo-->
         <div style="margin-top:0px; width:100%; float:left;">

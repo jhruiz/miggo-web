@@ -129,8 +129,8 @@ echo $this->Form->input("ordenestado_id",
                             <td>
                                 <center>
                                     <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
-echo $ot['semaforo']['color'];
-    ?>; "><?php echo $ot['semaforo']['dias']; ?>
+                                     echo $ot['semaforo']['color'];
+                            ?>; "><?php echo $ot['semaforo']['dias']; ?>
                                     </div>
                                 </center>
                             </td>
@@ -148,13 +148,13 @@ echo $ot['semaforo']['color'];
                                 <?php }?>
                                 <?php if (!array_key_exists($ot['OE']['id'], $estFin) && $flgE) {?>
                                     <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Orden Trabajo', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $ot['Ordentrabajo']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar la orden de trabajo?') //la confirmacion
-);
-    ?>
+                                        echo $this->Form->postLink(
+                                            $this->Html->image('png/list-2.png', array('title' => 'Eliminar Orden Trabajo', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                                            array('action' => 'delete', $ot['Ordentrabajo']['id']), //url
+                                            array('escape' => false), //el escape
+                                            __('Está seguro que desea eliminar la orden de trabajo?') //la confirmacion
+                                        );
+                                    ?>
                                 <?php }?>
                             </td>
                     </tr>
@@ -174,4 +174,15 @@ echo $this->Paginator->counter(array(
 	<?php echo $this->Paginator->next(__(' Siguiente') . ' >', array(), null, array('class' => 'next disabled')); ?>
 
 	</div>
-</div>
+</div><br><br>
+<?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarOrdenes')); ?>
+    <fieldset>
+        <?php echo $this->Form->input('rpusuario', array('type' => 'hidden', 'name' => 'rpusuario', 'value' => $rpusuario)) ?>
+        <?php echo $this->Form->input('rpcliente', array('type' => 'hidden', 'name' => 'rpcliente', 'value' => $rpcliente)) ?>
+        <?php echo $this->Form->input('rpplanta', array('type' => 'hidden', 'name' => 'rpplanta', 'value' => $rpplanta)) ?>
+        <?php echo $this->Form->input('rpestado', array('type' => 'hidden', 'name' => 'rpestado', 'value' => $rpestado)) ?>
+        <?php echo $this->Form->input('rpvehiculo', array('type' => 'hidden', 'name' => 'rpvehiculo', 'value' => $rpvehiculo)) ?>
+
+        <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
+    </fieldset>
+</form><br><br>

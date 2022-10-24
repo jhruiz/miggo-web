@@ -1043,26 +1043,34 @@ class FacturasController extends AppController
 
         $filter = array();
         //se buscan los servicios por mecanico
+        $rpusuario = null;
         if (isset($this->passedArgs['usuario']) && !empty($this->passedArgs['usuario'])) {
             $filter['OT.usuario_id'] = $this->passedArgs['usuario'];
+            $rpusuario = $this->passedArgs['usuario'];
         }
 
+        $rpcreatedIni = null;
+        $rpcreatedFin = null;
         if (!empty($this->passedArgs['fecha_inicio']) && empty($this->passedArgs['fecha_fin'])) {
             $filter['Factura.created >'] = $this->passedArgs['fecha_inicio'] . " 00:00:01";
-        }
-
-        if (empty($this->passedArgs['fecha_inicio']) && !empty($this->passedArgs['fecha_fin'])) {
+            $rpcreatedIni = $this->passedArgs['fecha_inicio'] . " 00:00:01";
+        }else if (empty($this->passedArgs['fecha_inicio']) && !empty($this->passedArgs['fecha_fin'])) {
             $filter['Factura.created <'] = $this->passedArgs['fecha_fin'] . " 23:59:59";
-        }
-
-        if (!empty($this->passedArgs['fecha_inicio']) && !empty($this->passedArgs['fecha_fin'])) {
+            $rpcreatedFin = $this->passedArgs['fecha_fin'] . " 00:00:01";
+        }else if (!empty($this->passedArgs['fecha_inicio']) && !empty($this->passedArgs['fecha_fin'])) {
             $filter['Factura.created BETWEEN ? AND ?'] = array($this->passedArgs['fecha_inicio'] . " 00:00:01", $this->passedArgs['fecha_fin'] . " 23:59:59");
+            $rpcreatedIni = $this->passedArgs['fecha_inicio'] . " 00:00:01";
+            $rpcreatedFin = $this->passedArgs['fecha_fin'] . " 23:59:59";
+        } else {
+            $filter['Factura.created BETWEEN ? AND ?'] = array(date('Y-m-d') . " 00:00:01", date('Y-m-d') . " 23:59:59");
+            $rpcreatedIni = date('Y-m-d') . " 00:00:01";
+            $rpcreatedFin = date('Y-m-d') . " 23:59:59";
         }
 
         $empresaId = $this->Auth->user('empresa_id');
 
         $filter['Factura.empresa_id'] = $empresaId;
-
+        
         //se obtiene la informacion de las facturas que tienen relacionada una orden de trabajo con productos catalogados como servicios
         $arrFactOrdenes = null;
         if (!empty($filter)) {
@@ -1082,7 +1090,7 @@ class FacturasController extends AppController
         $subTot = 0;
         $total = 0;
 
-        $this->set(compact('arrFactOrdenes', 'listMecanicos', 'totServ', 'subTot', 'total', 'estadoPago', 'listMarcasVeh'));
+        $this->set(compact('arrFactOrdenes', 'listMecanicos', 'totServ', 'subTot', 'total', 'estadoPago', 'listMarcasVeh', 'rpusuario', 'rpcreatedIni', 'rpcreatedFin'));
     }
 
     public function searchOrdMec()

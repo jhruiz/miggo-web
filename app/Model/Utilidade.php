@@ -135,6 +135,15 @@ class Utilidade extends AppModel {
                 'conditions' => array(
                     'PV.id=CI.proveedore_id'
                     )                
+            )); 
+                        
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'US', 
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'US.id=F.usuario_id'
+                    )                
             ));  
             
             $utilidades = $this->find('all', array(
@@ -152,6 +161,8 @@ class Utilidade extends AppModel {
                     'PV.nombre',
                     'CI.costoproducto',
                     'Utilidade.*',
+                    'US.id',
+                    'US.nombre'
                 ),
                 'conditions' => array(
                     'Utilidade.empresa_id' => $empresaId, 

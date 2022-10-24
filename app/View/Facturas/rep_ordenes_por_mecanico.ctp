@@ -125,5 +125,14 @@
                 </table>              
             </div>
         </div>
-</div>
+</div><br><br>
+<?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarOrdenesMecanicos')); ?>
+    <fieldset>
+        <?php echo $this->Form->input('rpcreatedIni', array('type' => 'hidden', 'name' => 'rpcreatedIni', 'value' => $rpcreatedIni)) ?>
+        <?php echo $this->Form->input('rpcreatedFin', array('type' => 'hidden', 'name' => 'rpcreatedFin', 'value' => $rpcreatedFin)) ?>
+        <?php echo $this->Form->input('rpusuario', array('type' => 'hidden', 'name' => 'rpusuario', 'value' => $rpusuario)) ?>
+
+        <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
+    </fieldset>
+</form><br><br>
 

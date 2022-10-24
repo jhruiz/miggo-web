@@ -8,7 +8,7 @@ class Ordentrabajo extends AppModel {
      * @param type $arrFilter
      * @return type
      */
-    public function obtenerOrdenesTrabajo($arrFilter){
+    public function obtenerOrdenesTrabajo($arrFilter, $empresaId = null){
 
         $arr_join = array(); 
         array_push($arr_join, array(
@@ -37,6 +37,18 @@ class Ordentrabajo extends AppModel {
                 'US.id=Ordentrabajo.usuario_id'
                 )                
         ));
+
+        if(!empty($empresaId)) {
+            array_push($arr_join, array(
+                'table' => 'empresas',
+                'alias' => 'EMP',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'EMP.id = US.empresa_id',
+                    'EMP.id' => $empresaId
+                )
+            ));        
+        }
         
         array_push($arr_join, array(
             'table' => 'plantaservicios', 
