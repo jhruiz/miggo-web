@@ -158,9 +158,7 @@ echo $this->Html->script('template/js/bootstrap.min.js');
           <?php
 if ($logged_in) {
     ?>
-                        <div id='menuUsr' style="margin-top: 60px;">
-                        </div>
-
+                        <div id='menuUsr' style="margin-top: 60px;"></div>
                     <?php
 }
     ?>

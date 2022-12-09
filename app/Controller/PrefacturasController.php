@@ -222,6 +222,7 @@ class PrefacturasController extends AppController {
 	public function addProductoBarCode() {
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
+            $this->loadModel('CargueinventariosImpuesto');
             $this->loadModel('Deposito');
             
             $this->autoRender = false;
@@ -265,31 +266,46 @@ class PrefacturasController extends AppController {
 
                 /*Se valida si existe la prefactura*/
                 $arrPrefactId = $this->Prefactura->obtenerPrefacturaId($clienteId);
+
                 if(isset($arrPrefactId['Prefactura'])){
                     $prefactId = $arrPrefactId['Prefactura']['id'];
                 }else{
                     /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
                     $prefactId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId);                 
-                }             
+                }   
 
-                /*se descuenta la cantidad del producto prefacturado del inventario*/
-                /*se obtiene la cantidad existente en el stock*/
-                $inventActual = $this->Cargueinventario->obtenerInventarioId($cargueinventarioId);
-                $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
-                $existFinal = $cantStock - $cantidadventa;
+                /*Se obtiene el impuesto del producto */
+                $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
+                if(empty($impuesto)){
+                    $impto = 0;
+                }else{
+                    $impto = $impuesto['0']['Impuesto']['valor'];
+                }
+                
+                if($produtoInfo['0']['Producto']['inventario'] == '1'){
+                    /*se descuenta la cantidad del producto prefacturado del inventario*/
+                    /*se obtiene la cantidad existente en el stock*/
+                    $inventActual = $this->Cargueinventario->obtenerInventarioId($cargueinventarioId);
+                    $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
+                    $existFinal = $cantStock - $cantidadventa;
+                }
 
                 /*se valida la disponibilidad del producto*/
                 if($existFinal < 0){
                     $mensaje = "Por favor valide la disponibilidad del producto en stock";
                     echo json_encode(array('valido' => false, 'mensaje' => $mensaje));
                 }else{
-                    /*se actualiza la cantidad en stock tras la prefactura*/
-                    $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+
+                    if($produtoInfo['0']['Producto']['inventario'] == '1'){
+                        /*se actualiza la cantidad en stock tras la prefactura*/
+                        $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+                    }
 
                     if($prefactId != '0'){
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId);
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId,0,0,$impto);
+
                         if($detalleId != '0' && $detalleId != ""){
-                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo));
+                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefactId));
                         }else{
                             echo json_encode(array('resp' => $detalleId, 'valido' => false));
                         }
@@ -302,8 +318,8 @@ class PrefacturasController extends AppController {
 	public function addProductoClienteNuevoBarCode() {
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Cargueinventario');
+            $this->loadModel('CargueinventariosImpuesto');
             $this->loadModel('Deposito');
-            $this->loadModel('Prefactura');
             
             $this->autoRender = false;
             $posData = $this->request->data;
@@ -343,27 +359,42 @@ class PrefacturasController extends AppController {
                 if($prefacturaId == "" || $prefacturaId == NULL){
                     /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
                     $prefacturaId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId = null); 
-                }             
+                }      
+                
+                /*Se obtiene el impuesto del producto */
+                $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
+                if(empty($impuesto)){
+                    $impto = 0;
+                }else{
+                    $impto = $impuesto['0']['Impuesto']['valor'];
+                }
 
-                /*se descuenta la cantidad del producto prefacturado del inventario*/
-                /*se obtiene la cantidad existente en el stock*/
-                $inventActual = $this->Cargueinventario->obtenerInventarioId($cargueinventarioId);
-                $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
-                $existFinal = $cantStock - $cantidadventa;
+                if($produtoInfo['0']['Producto']['inventario'] == '1'){
+                    /*se descuenta la cantidad del producto prefacturado del inventario*/
+                    /*se obtiene la cantidad existente en el stock*/
+                    $inventActual = $this->Cargueinventario->obtenerInventarioId($cargueinventarioId);
+                    $cantStock = $inventActual['Cargueinventario']['existenciaactual'];
+                    $existFinal = $cantStock - $cantidadventa;
+                }
 
                 /*se valida la disponibilidad del producto*/
                 if($existFinal < 0){
                     $mensaje = "Por favor valide la disponibilidad del producto en stock";
                     echo json_encode(array('valido' => false, 'mensaje' => $mensaje));
                 }else{
-                    /*se actualiza la cantidad en stock tras la prefactura*/
-                    $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+                    if($produtoInfo['0']['Producto']['inventario'] == '1'){
+                        /*se actualiza la cantidad en stock tras la prefactura*/
+                        $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
+                    }
 
-                    $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefacturaId);
-                    if($detalleId != '0' && $detalleId != ""){
-                        echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'prefact' => $prefacturaId));
-                    }else{
-                        echo json_encode(array('resp' => $detalleId, 'valido' => false));
+                    if($prefactId != '0') {
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefacturaId,0,0,$impto);
+                        
+                        if($detalleId != '0' && $detalleId != ""){
+                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefacturaId));
+                        }else{
+                            echo json_encode(array('resp' => $detalleId, 'valido' => false));
+                        }
                     }
                 }                
             }            

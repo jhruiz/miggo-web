@@ -1566,6 +1566,7 @@ class ReportesController extends AppController
     public function descargarOrdenesMecanicos() {
 
         $this->loadModel('Factura');
+        $this->loadModel('Marcavehiculo');
 
         $fechaIni = $_POST['rpcreatedIni'];
         $fechaFin = $_POST['rpcreatedFin'];
@@ -1581,6 +1582,11 @@ class ReportesController extends AppController
         else { $filter['Factura.created BETWEEN ? AND ?'] = array($fechaIni . " 00:00:01", $fechaFin . " 23:59:59"); }
 
         $arrFactOrdenes = $this->Factura->obtenerFacturasOrdenesServicios($filter);
+        $marcas = $this->Marcavehiculo->obtenerListaMarcavehiculos();
+
+        foreach($arrFactOrdenes as $key => $val) {
+            $arrFactOrdenes[$key]['VH']['marca'] = $marcas[$val['VH']['marcavehiculo_id']];
+        }
 
         $texto_tit = "Ordenes por Tecnico";
         $this->set(compact('arrFactOrdenes'));
@@ -1592,7 +1598,8 @@ class ReportesController extends AppController
             'Fecha Factura',
             'Tecnico',
             'Servicio',
-            'Placa',
+            'Placa', 
+            'Marca', 
             'Cantidad',
             'Costo',
             'Costo Total',

@@ -282,15 +282,6 @@ class Factura extends AppModel
             ),
         ));
 
-        array_push($arr_join, array(
-            'table' => 'marcavehiculos',
-            'alias' => 'MV',
-            'type' => 'LEFT',
-            'conditions' => array(
-                'MV.id' => 'VH.marcavehiculo_id'
-            )
-        ));
-
         $ordenesT = $this->find('all', array(
             'joins' => $arr_join,
             'fields' => array(
@@ -308,8 +299,6 @@ class Factura extends AppModel
                 'VH.id',
                 'VH.placa',
                 'VH.marcavehiculo_id',
-                'MV.id',
-                'MV.descripcion',
                 'Factura.*'
             ),
             'conditions' => array('CT.servicio' => '1', $filter),

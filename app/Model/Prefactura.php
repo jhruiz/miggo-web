@@ -105,7 +105,12 @@ class Prefactura extends AppModel {
         }
         
         public function obtenerPrefacturaId($clienteId){
-            $arrPrefactura = $this->find('first', array('conditions' => array('Prefactura.cliente_id' => $clienteId), 'recursive' => '-1'));
+            $arrPrefactura = $this->find('first', array(
+                'conditions' => array(
+                    'Prefactura.cliente_id' => $clienteId,
+                    'Prefactura.eliminar' => '0'
+                ), 
+                'recursive' => '-1'));
             return $arrPrefactura;
         }
         
