@@ -309,6 +309,7 @@ else if(isset($arrOrdenesT)) {
         ?>
         <tr>
             <th class="tableTdContent"><?php echo h($ordenes['Ordentrabajo']['codigo']) ?></th>
+            <th class="tableTdContent"><?php echo h($ordenes['Ordentrabajo']['fecha_ingreso']) ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['US']['nombre']) ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['CL']['nombre']) ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['VH']['placa']) ?></th>
@@ -334,6 +335,7 @@ else if(isset($arrFactOrdenes)) {
             <th class="tableTdContent"><?php echo h($ordenes['PR']['descripcion'] . '(' . $ordenes['PR']['codigo'] . ')') ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['VH']['placa']) ?></th> 
             <th class="tableTdContent"><?php echo h($ordenes['VH']['marca']) ?></th> 
+            <th class="tableTdContent"><?php echo h($ordenes['VH']['linea']) ?></th> 
             <th class="tableTdContent"><?php echo h($ordenes['FD']['cantidad']) ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['FD']['costoventa']) ?></th>
             <th class="tableTdContent"><?php echo h($ordenes['FD']['costototal']) ?></th>

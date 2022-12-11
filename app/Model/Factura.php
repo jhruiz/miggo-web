@@ -299,6 +299,7 @@ class Factura extends AppModel
                 'VH.id',
                 'VH.placa',
                 'VH.marcavehiculo_id',
+                'VH.linea',
                 'Factura.*'
             ),
             'conditions' => array('CT.servicio' => '1', $filter),

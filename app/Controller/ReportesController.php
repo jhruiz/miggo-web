@@ -1550,6 +1550,7 @@ class ReportesController extends AppController
         $this->set('rows',$arrOrdenesT);
         $arr_titulos = array(
             'Codigo',
+            'Fecha Ingreso',
             'Tecnico',
             'Cliente',
             'Vehiculo',
@@ -1600,6 +1601,7 @@ class ReportesController extends AppController
             'Servicio',
             'Placa', 
             'Marca', 
+            'Linea', 
             'Cantidad',
             'Costo',
             'Costo Total',
