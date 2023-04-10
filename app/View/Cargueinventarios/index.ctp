@@ -61,6 +61,7 @@ $this->layout = 'inicio';
                                 <th><?php echo h('Producto'); ?></th>
                                 <th><?php echo h('Código'); ?></th>
                                 <th><?php echo h('Depósito'); ?></th>
+                                <th><?php echo h('Proveedor'); ?></th>
                                 <th><?php echo h('Valor'); ?></th>
                                 <th><?php echo h('Existencia Actual'); ?></th>
                                 <th><?php echo h('En Prefacturas'); ?></th>
@@ -80,6 +81,7 @@ $this->layout = 'inicio';
                         <td>
                                 <?php echo $this->Html->link($cargueinventario['Deposito']['descripcion'], array('controller' => 'depositos', 'action' => 'view', $cargueinventario['Deposito']['id'])); ?>
                         </td>
+                        <td><?php echo h($cargueinventario['Proveedore']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['costoproducto'], 2)); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Producto']['inventario'] == '1' ? $cargueinventario['Cargueinventario']['existenciaactual'] : 'N/A'); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['prefacturas']); ?>&nbsp;</td>

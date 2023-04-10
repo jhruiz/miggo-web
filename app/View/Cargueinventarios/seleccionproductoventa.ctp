@@ -6,11 +6,6 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
 <section class="main row">
     <div class="col-md-6">                
         <div class="thumbnail">
-            <?php if($arrProducto['Producto']['imagen'] == ""){ ?>
-                <?php echo $this->Html->image('png/image-4.png', array('alt' => 'CakePHP', 'style' => 'max-width: 250px; max-height: 250px;')); ?>  
-            <?php }else{?>
-            <img src="<?php echo $urlImgProducto . $arrProducto['Producto']['empresa_id'] . "/" . $arrProducto['Producto']['imagen'];?>" class="img-responsive img-rounded center-block" style="max-width: 250px; max-height: 250px;" />
-            <?php }?>     
         <div class="caption">
             <legend><h4><b><?php echo $arrProducto['Producto']['descripcion'] . " - " . $arrProducto['Producto']['codigo']; ?></b></h4></legend>
             Existencia Actual: <?php echo $arrProducto['Cargueinventario']['existenciaactual']; ?> <br>
