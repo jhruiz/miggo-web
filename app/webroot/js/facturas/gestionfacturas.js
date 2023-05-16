@@ -13,6 +13,9 @@ function imprimirTicket() {
     mywindow.document.write('<div style="font-family:sans-serif; font-size:10px;">');
     mywindow.document.write($('#dvTicket').html());
     mywindow.document.write('</div>');
+    mywindow.document.write('<div style="font-family:sans-serif; font-size:10px; margin-top: 5px;">');
+    mywindow.document.write($('#dvResolucion').html());
+    mywindow.document.write('</div>');    
     mywindow.document.write('</body></html>');
     mywindow.document.title = $('#cliName').val() + tipoVenta;
     mywindow.document.close();
