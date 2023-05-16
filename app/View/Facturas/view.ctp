@@ -49,10 +49,10 @@
         <?php }?>
        
         <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
         
@@ -642,10 +642,10 @@
     <?php }?>
     
     <?php if($infoFact['Factura']['factura']){ ?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('FACTURA DE VENTA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
     <input id="tipoVenta" type="hidden" value="1">
     <?php }else{?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO EQUIVALENTE No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
+    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
     <input id="tipoVenta" type="hidden" value="2">
     <?php }?>
     

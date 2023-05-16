@@ -251,9 +251,11 @@ class FacturasController extends AppController
 
         //se obtiene el prefijo del consecutivo
         $prefijo = '';
+        $nombreDocumento = '';
         $infoDepositos = $this->Deposito->obtenerDepositoConsecutivo($infoFact['Factura']['empresa_id']);
         if(!empty($infoDepositos)) {
             $prefijo = $infoDepositos['Deposito']['prefijo'];
+            $nombreDocumento = $infoDepositos['Deposito']['nombredocumentoventa'];
         }
 
         $arrInfoOrd = array();
@@ -291,7 +293,7 @@ class FacturasController extends AppController
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
         $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
-        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'prefijo'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'prefijo', 'nombreDocumento'));
     }
 
 /**
