@@ -207,6 +207,7 @@ var imprimirFactura = function() {
             mywindow.document.write('<b>Nota: </b>' + nota + '</div></div></div>');
 
             mywindow.document.write('</div>');
+            mywindow.document.write('<div>Miggo Solutions S.A.S</div>');
             mywindow.document.write('</body></html>');
             mywindow.document.title = prefact.resp['0'].C.nombre + " - PREFACTURA";
             mywindow.document.close();
