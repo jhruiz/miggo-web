@@ -395,6 +395,9 @@
                 <small>
                 <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
                 </small>
+                <small>
+                <br><br><b>Miggo Solutions S.A.S</b>
+                </small>
             </div>
         </div>
     </div>  
@@ -938,6 +941,9 @@
             <div id='nota_factura' align="center">
                 <small>
                 <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
+                </small>
+                <small>
+                <br><br><b>Miggo Solutions S.A.S</b>
                 </small>
             </div>
         </div> 

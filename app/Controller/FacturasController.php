@@ -1382,6 +1382,9 @@ class FacturasController extends AppController
         $anio = date("Y", $fechaEntera);
         $mes = date("m", $fechaEntera);
         $dia = date("d", $fechaEntera);
+        $hora = date("H", $fechaEntera);
+        $min = date("i", $fechaEntera);
+        $seg = date("s", $fechaEntera);
 
         //array meses
         $meses = array(
@@ -1398,7 +1401,7 @@ class FacturasController extends AppController
             '11' => 'Noviembre',
             '12' => 'Diciembre');
 
-        $fechaActual = $meses[$mes] . " " . $dia . ", " . $anio;
+        $fechaActual = $meses[$mes] . " " . $dia . ", " . $anio . " " . $hora . ":" . $min . ":" . $seg;
 
         return $fechaActual;
     }
