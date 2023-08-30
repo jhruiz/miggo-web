@@ -196,7 +196,7 @@ var imprimirFactura = function() {
             mywindow.document.write('<div style="float:left; margin-top:10px; width:100%" align="left">');
             mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;">');
             mywindow.document.write('<div style="margin: 0px; float: left; width: 100%;">');
-            mywindow.document.write('*Mano de obra es ingreso para terceros - No genera IVA.</div></div></div>');
+            mywindow.document.write('</div></div></div>');
 
             //OBSERVACION
             var nota = prefact.resp['0'].Prefactura.observacion != null && prefact.resp['0'].Prefactura.observacion != "" ?
