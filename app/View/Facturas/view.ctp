@@ -947,6 +947,14 @@
                 </small>
             </div>
         </div> 
+    <?php } else { ?>
+        <div id="dvNota">
+            <div id='nota_factura' align="center">
+                <small>
+                <br><br><b>Miggo Solutions S.A.S</b>
+                </small>
+            </div>
+        </div>  
     <?php } ?>  
 </div>
 
