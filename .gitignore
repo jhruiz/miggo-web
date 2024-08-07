@@ -1,3 +1,4 @@
 app/tmp/
 app/webroot/excelInventario/
 app/webroot/imagenesCloud/
+app/Config/database.php
