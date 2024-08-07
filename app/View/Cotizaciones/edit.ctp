@@ -307,8 +307,11 @@
         </fieldset>
         <div class="container-fluid">            
             <div class="row">
-                <div class="col-md-6" >
+                <div class="col-md-4" >
                     <a href="#" class="btn btn-primary btn-sm active pull-lefth" role="button" aria-pressed="true" id="imprimirCot">Imprimir Cotización</a>
+                </div>
+                                <div class="col-md-4" >
+                    <a href="#" class="btn btn-primary btn-sm active pull-lefth" role="button" aria-pressed="true" id="generarPrefac">Generar Prefactura</a>
                 </div>
                 <div class="col-md-6">
                     <?php if(!empty($cliTel)){?>        

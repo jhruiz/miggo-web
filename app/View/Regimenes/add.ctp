@@ -14,7 +14,7 @@
 	<ul>
 
 		<li><?php echo $this->Html->link(__('Lista Régimen'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('Lista Depósitos'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Depósito'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Lista Bodegas'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Nuevo Bodega'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

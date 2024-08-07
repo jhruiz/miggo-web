@@ -1,6 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="depositos view">
-<legend><h2><b><?php echo __('Depósito'); ?></b></h2></legend>
+<legend><h2><b><?php echo __('Bodega'); ?></b></h2></legend>
 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '15', 'id' => 'menuvert')) ?>
 	<dl>
 <section class="main row">
@@ -72,7 +72,7 @@
                 <?php echo $this->Html->link($deposito['Usuario']['nombre'], array('controller' => 'usuarios', 'action' => 'view', $deposito['Usuario']['id'])); ?>
                 &nbsp;
         </dd><br>
-        <dt class="text-info"><?php echo __('Tipo Depósito'); ?></dt>
+        <dt class="text-info"><?php echo __('Tipo Bodega'); ?></dt>
         <dd>
                 <?php echo $this->Html->link($deposito['Tipodeposito']['descripcion'], array('controller' => 'tipodepositos', 'action' => 'view', $deposito['Tipodeposito']['id'])); ?>
                 &nbsp;

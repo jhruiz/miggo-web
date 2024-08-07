@@ -268,6 +268,18 @@
                                 </tr>
                                 </thead>
                                 <tbody id="productosFacturas"></tbody>
+                                <tbody id="propinas">
+                                    <tr>
+                                        <th class="text-right"><input id="tienePropina" type="checkbox"></th>
+                                        <th colspan="2"><b>PROPINA</b></th>
+                                        <th class="text-right"><input class="propina" type="text"></input></th>
+                                        <th>&nbsp</th>
+                                        <th>&nbsp;</th>
+                                        <th class="text-right"></th>
+                                        <th class="text-right"></th>
+                                        <th class="text-right"></th>
+                                    </tr>
+                                </tbody>
                                 <tbody id="totalFacturas">
                                     <tr>
                                         <th>&nbsp</th>
@@ -328,4 +340,3 @@
         </div>
     </div>  
 </div>
-

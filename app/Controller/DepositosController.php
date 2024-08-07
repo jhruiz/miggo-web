@@ -75,7 +75,7 @@ class DepositosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Deposito->exists($id)) {
-			throw new NotFoundException(__('El depósito no existe.'));
+			throw new NotFoundException(__('La bodega no existe.'));
 		}
 		$options = array('conditions' => array('Deposito.' . $this->Deposito->primaryKey => $id));
 		$this->set('deposito', $this->Deposito->find('first', $options));
@@ -96,10 +96,10 @@ class DepositosController extends AppController {
                     $this->request->data['Deposito']['numresolucionactual'] = $this->request->data['Deposito']['resolucioninicia'];
                     $this->Deposito->create();
                     if ($this->Deposito->save($this->request->data)) {
-                            $this->Session->setFlash(__('El depósito ha sido guardado.'));
+                            $this->Session->setFlash(__('La bodega ha sido guardado.'));
                             return $this->redirect(array('action' => 'index'));
                     } else {
-                            $this->Session->setFlash(__('El depósito no pudo ser guardado. Por favor, inténtelo de nuevo.'));
+                            $this->Session->setFlash(__('La bodega no pudo ser guardado. Por favor, inténtelo de nuevo.'));
                     }
 		}
                 /*Se obtiene la empresa del usuario logueado*/
@@ -129,14 +129,14 @@ class DepositosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Deposito->exists($id)) {
-			throw new NotFoundException(__('El depósito no existe.'));
+			throw new NotFoundException(__('La bodega no existe.'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Deposito->save($this->request->data)) {
-				$this->Session->setFlash(__('El depósito ha sido guardado.'));
+				$this->Session->setFlash(__('El bodega ha sido guardado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('El depósito no ha sido guardado. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('La bodega no ha sido guardado. Por favor, inténtelo de nuevo.'));
 			}
 		} else {
 			$options = array('conditions' => array('Deposito.' . $this->Deposito->primaryKey => $id));
@@ -166,13 +166,13 @@ class DepositosController extends AppController {
 	public function delete($id = null) {
 		$this->Deposito->id = $id;
 		if (!$this->Deposito->exists()) {
-			throw new NotFoundException(__('El depósito no existe.'));
+			throw new NotFoundException(__('La bodega no existe.'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Deposito->delete()) {
-			$this->Session->setFlash(__('El depósito ha sido eliminado.'));
+			$this->Session->setFlash(__('La bodega ha sido eliminado.'));
 		} else {
-			$this->Session->setFlash(__('El depósito no ha sido eliminado. Por favor, inténtelo de nuevo.'));
+			$this->Session->setFlash(__('La bodega no ha sido eliminado. Por favor, inténtelo de nuevo.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

@@ -257,6 +257,7 @@ function totalCrediContado(){
 }
 
 function eliminarProductoPrefactura(dato){
+        console.log("prefac"+dato);
         $.ajax({
             url: $('#url-proyecto').val() + 'prefacturasdetalles/delete',
             data: {detalleId: dato.id},
@@ -1030,10 +1031,12 @@ var sumarTotales = function (){
     var ttalUnit = 0;
     var ttalTotal = 0;
     var ttalValDtto = 0;
-    var ttalesFinal = 0;        
+    var ttalesFinal = 0;
     var ttalesIva = 0;
-    var ttalesConIva = 0;    
-    
+    var ttalesConIva = 0;
+    var propina=0;
+
+
     //se suman todos los valores unitarios
     $( ".ttalUnit" ).each(function( index, val ) {
         ttalUnit += parseInt($(this).val());
@@ -1041,13 +1044,15 @@ var sumarTotales = function (){
     
     $('.thTUnit').html(formatNumber(ttalUnit));
 
-    //se suman todos los valores totales
+    //se suman todos los valores subtotales
     $( ".ttalTotal" ).each(function( index, val ) {
         ttalTotal += parseInt($(this).val());
-    });        
-    
-    $('.thTTotal').html(formatNumber(ttalTotal));
-    
+    }); 
+    if ($('#tienePropina').prop('checked')){
+        propina=ttalTotal*(0.1);
+    }       
+    $('.propina').val(formatNumber(propina));
+    $('.thTTotal').html(formatNumber(ttalTotal+propina));
     //se suman todos los valores de descuento
     $( ".ttalValDtto" ).each(function( index, val ) {
         ttalValDtto += parseInt($(this).val());
@@ -1060,7 +1065,7 @@ var sumarTotales = function (){
         ttalesFinal += parseInt($(this).val());
     });        
     
-    $('.thTFinal').html(formatNumber(ttalesFinal)); 
+    $('.thTFinal').html(formatNumber(ttalesFinal));
     
     //se suman los totales del iva
     $(".valor_iva").each(function(index, val){
@@ -1071,11 +1076,10 @@ var sumarTotales = function (){
     
     //se suman los totales con iva incluido
     $('.valor_con_iva').each(function(index, val){
-        ttalesConIva += parseInt($(this).val());
+        ttalesConIva += parseInt($(this).val())+propina;
     });
     
     $('.thTFCIVA').html(formatNumber(ttalesConIva));
-    
 };
 
 /**
@@ -1259,5 +1263,3 @@ $( function() {
     $('#obs_fact').blur(guardarObsFactura);
     $('#btn_alerta').click(generarAlertaPreFactura);
 });
-
-

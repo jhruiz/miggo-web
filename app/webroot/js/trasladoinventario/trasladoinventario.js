@@ -44,7 +44,7 @@ function habilitarBuscarProducto(){
     var depDestino = $('#depositodestino_id').val();
 
     if(depOrigen === depDestino){
-        bootbox.alert('El depósito origen y el depósito destino no pueden ser el mismo.');        
+        bootbox.alert('La Bodega origen y la Bodega destino no pueden ser el mismo.');        
         $('#buscarproducto').prop('disabled', true);
         $('#depositoorigen_id').val("");
         $('#depositodestino_id').val("");

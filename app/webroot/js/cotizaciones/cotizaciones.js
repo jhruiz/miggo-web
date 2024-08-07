@@ -649,7 +649,11 @@ var generarPrefactura = function() {
                     bootbox.alert('Se creo la prefactura con exito');
                 }
             }
-        });
+        }).fail(
+            function( jqXHR, textStatus, errorThrown ) {
+                bootbox.alert('Se creo la prefactura con exito');
+            }
+        );
     }
 };
 

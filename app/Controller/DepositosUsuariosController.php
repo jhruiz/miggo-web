@@ -66,7 +66,7 @@ class DepositosUsuariosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->DepositosUsuario->exists($id)) {
-			throw new NotFoundException(__('La relación Usuario - Depósito no existe.'));
+			throw new NotFoundException(__('La relación Usuario - bodega no existe.'));
 		}
 		$options = array('conditions' => array('DepositosUsuario.' . $this->DepositosUsuario->primaryKey => $id));
 		$this->set('depositosUsuario', $this->DepositosUsuario->find('first', $options));
@@ -86,10 +86,10 @@ class DepositosUsuariosController extends AppController {
 		if ($this->request->is('post')) {
 			$this->DepositosUsuario->create();
 			if ($this->DepositosUsuario->save($this->request->data)) {
-				$this->Session->setFlash(__('La relación Usuario - Depósito ha sido guardada.'));
+				$this->Session->setFlash(__('La relación Usuario - bodega ha sido guardada.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('La relación Usuario - Depósito no pudo ser guardada. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('La relación Usuario - bodega no pudo ser guardada. Por favor, inténtelo de nuevo.'));
 			}
 		}
                 $empresaId = $this->Auth->user('empresa_id');
@@ -112,14 +112,14 @@ class DepositosUsuariosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->DepositosUsuario->exists($id)) {
-			throw new NotFoundException(__('La relación Usuario - Depósito no existe.'));
+			throw new NotFoundException(__('La relación Usuario - bodega no existe.'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->DepositosUsuario->save($this->request->data)) {
-				$this->Session->setFlash(__('La relación Usuario - Depósito ha sido guardada.'));
+				$this->Session->setFlash(__('La relación Usuario - bodega ha sido guardada.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('La relación Usuario - Depósito no pudo ser guardada. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('La relación Usuario - bodega no pudo ser guardada. Por favor, inténtelo de nuevo.'));
 			}
 		} else {
 			$options = array('conditions' => array('DepositosUsuario.' . $this->DepositosUsuario->primaryKey => $id));
@@ -141,13 +141,13 @@ class DepositosUsuariosController extends AppController {
 	public function delete($id = null) {
 		$this->DepositosUsuario->id = $id;
 		if (!$this->DepositosUsuario->exists()) {
-			throw new NotFoundException(__('La relación Usuario - Depósito no existe.'));
+			throw new NotFoundException(__('La relación Usuario - bodega no existe.'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->DepositosUsuario->delete()) {
-			$this->Session->setFlash(__('La relación Usuario - Depósito ha sido eliminada.'));
+			$this->Session->setFlash(__('La relación Usuario - bodega ha sido eliminada.'));
 		} else {
-			$this->Session->setFlash(__('La relación Usuario - Depósito no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
+			$this->Session->setFlash(__('La relación Usuario - bodega no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

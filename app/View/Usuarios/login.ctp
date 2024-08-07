@@ -87,7 +87,7 @@
 
 
                     <div class="form-group"> 
-                        <?php echo $this->Form->input('password',array('label' => 'Contraseña: ', 'class' => "form-control", 'autocomplete' => 'off', 'placeholder' => 'Password'));?>
+                        <?php echo $this->Form->input('password',array('label' => 'Contraseña ', 'class' => "form-control", 'autocomplete' => 'off', 'placeholder' => 'Password'));?>
                     </div>
 
                     <div class="form-group">            
@@ -110,11 +110,11 @@
 <div class="container bg">
      <?php echo $this->Session->flash('auth'); ?>
             <?php echo $this->Form->create('Usuario',array('class' => 'form-horizontal', 'controller' => 'usuarios','action'=>'login')); ?>
-    <div class="row vertical-offset-100 " >
-        <div class="col-md-4 col-md-offset-5">
-            <div class="panel panel-default cac">
+    <div class="row" >
+        <div class="col-md-4">
+            <div class="panel panel-default login">
                 <div class="panel-heading cac_title">
-                    <img src="/img/png/torqueracingp.png" >
+                    <img src="/img/png/miggo.png" >
                 </div>
                 <div class="panel-body">
                     <form accept-charset="UTF-8" role="form">
@@ -123,7 +123,7 @@
                             <?php echo $this->Form->input('username',array('label' => 'Usuario', 'class' => "form-control", 'autocomplete' => 'off', 'placeholder' => 'Usuario'));?>
                         </div>
                         <div class="form-group">
-                           <?php echo $this->Form->input('password',array('label' => 'Contraseña: ', 'class' => "form-control", 'autocomplete' => 'off', 'placeholder' => 'Password'));?>
+                           <?php echo $this->Form->input('password',array('label' => 'Clave', 'class' => "form-control", 'autocomplete' => 'off', 'placeholder' => 'Password'));?>
                         </div>
                        
                           <?php echo $this->Form->submit('Ingresar',array('class'=>'btn btn-primary'));?>   

@@ -45,8 +45,8 @@
                     <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                         <tr class="info">
                                         <th><?php echo ('Producto'); ?></th>
-                                        <th><?php echo ('Depósito Origen'); ?></th>
-                                        <th><?php echo ('Depósito Destino'); ?></th>
+                                        <th><?php echo ('Bodega Origen'); ?></th>
+                                        <th><?php echo ('Bodega Destino'); ?></th>
                                         <th><?php echo ('Costo Unitario'); ?></th>
                                         <th><?php echo ('Cantidad'); ?></th>
                                         <th><?php echo ('Precio Máximo'); ?></th>

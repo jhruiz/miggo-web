@@ -66,7 +66,7 @@ class DepositosClientesController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->DepositosCliente->exists($id)) {
-			throw new NotFoundException(__('La relación cliente - depósito no existe.'));
+			throw new NotFoundException(__('La relación cliente - bodega no existe.'));
 		}
 		$options = array('conditions' => array('DepositosCliente.' . $this->DepositosCliente->primaryKey => $id));
 		$this->set('depositosCliente', $this->DepositosCliente->find('first', $options));
@@ -86,10 +86,10 @@ class DepositosClientesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->DepositosCliente->create();
 			if ($this->DepositosCliente->save($this->request->data)) {
-				$this->Session->setFlash(__('La relación cliente - depósito ha sido guardada.'));
+				$this->Session->setFlash(__('La relación cliente - bodega ha sido guardada.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('La relación cliente - depósito no pudo ser guardada. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('La relación cliente - bodega no pudo ser guardada. Por favor, inténtelo de nuevo.'));
 			}
 		}
                 $empresaId = $this->Auth->user('empresa_id');
@@ -113,14 +113,14 @@ class DepositosClientesController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->DepositosCliente->exists($id)) {
-			throw new NotFoundException(__('La relación cliente - depósito no existe.'));
+			throw new NotFoundException(__('La relación cliente - bodega no existe.'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->DepositosCliente->save($this->request->data)) {
-				$this->Session->setFlash(__('La relación cliente - depósito ha sido guardada.'));
+				$this->Session->setFlash(__('La relación cliente - bodega ha sido guardada.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('La relación cliente - depósito no pudo ser guardada. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('La relación cliente - bodega no pudo ser guardada. Por favor, inténtelo de nuevo.'));
 			}
 		} else {
 			$options = array('conditions' => array('DepositosCliente.' . $this->DepositosCliente->primaryKey => $id));
@@ -143,13 +143,13 @@ class DepositosClientesController extends AppController {
 	public function delete($id = null) {
 		$this->DepositosCliente->id = $id;
 		if (!$this->DepositosCliente->exists()) {
-			throw new NotFoundException(__('La relación cliente - depósito no existe.'));
+			throw new NotFoundException(__('La relación cliente - bodega no existe.'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->DepositosCliente->delete()) {
-			$this->Session->setFlash(__('La relación cliente - depósito ha sido eliminada.'));
+			$this->Session->setFlash(__('La relación cliente - bodega ha sido eliminada.'));
 		} else {
-			$this->Session->setFlash(__('La relación cliente - depósito no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
+			$this->Session->setFlash(__('La relación cliente - bodega no pudo ser eliminada. Por favor, inténtelo de nuevo.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

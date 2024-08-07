@@ -3,7 +3,7 @@
 
     <?php echo $this->Form->create('Depositos', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
     <legend>
-        <h2><b><?php echo __('Buscar Depósitos'); ?></b></h2>
+        <h2><b><?php echo __('Buscar Bodegas'); ?></b></h2>
     </legend>
 
     <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '15', 'id' => 'menuvert')) ?>
@@ -12,7 +12,7 @@
             <div class="form-group ">
                 <label>Nombre</label><br>
             </div>
-                <?php echo $this->Form->input('nombre', array('label' => '', 'name' => 'nombre', 'placeholder' => 'Nombre del Depósito', 'type' => 'text','class' => 'form-control' , 'value' => $nombre)); ?>
+                <?php echo $this->Form->input('nombre', array('label' => '', 'name' => 'nombre', 'placeholder' => 'Nombre de la Bodega', 'type' => 'text','class' => 'form-control' , 'value' => $nombre)); ?>
         </div>
 
 
@@ -48,13 +48,13 @@
     </form><br><br>
 
     <legend>
-        <h2><b><?php echo __('Depósitos'); ?></b></h2>
+        <h2><b><?php echo __('Bodegas'); ?></b></h2>
     </legend>
 
     <div class="row justify-content-md-center">
         <div class="col col-lg-2">
             <button type="button" class="btn btn-primary">
-                <?php echo $this->Html->link(__('Nuevo Depósito'), array('action' => 'add'), ["style" => "color:white;"]); ?>
+                <?php echo $this->Html->link(__('Nuevo bodega'), array('action' => 'add'), ["style" => "color:white;"]); ?>
             </button>
         </div>
         <div class="col-md-auto">
@@ -100,14 +100,14 @@
                         <?php echo h($deposito['Deposito']['empresa_id'] . $deposito['Deposito']['ciudade_id'] . '-' . $deposito['Deposito']['id']) ?>
                     </td>
                     <td class="actions">
-                        <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $deposito['Deposito']['id']))); ?>
-                        <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $deposito['Deposito']['id']))); ?>
+                        <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $deposito['Deposito']['id']))); ?>
+                        <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $deposito['Deposito']['id']))); ?>
                         <?php
 echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Depósito', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Bodega', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
     array('action' => 'delete', $deposito['Deposito']['id']), //url
     array('escape' => false), //el escape
-    __('Está seguro que desea eliminar el depósito %s?', $deposito['Deposito']['descripcion']) //la confirmacion
+    __('Está seguro que desea eliminar la Bodega %s?', $deposito['Deposito']['descripcion']) //la confirmacion
 );
 ?>
                     </td>

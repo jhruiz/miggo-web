@@ -46,7 +46,7 @@ var facturarMediosPagos = function(){
 
                 valFacturado += parseFloat($(this).first().find('.valueFact').val());            
             }else{
-                alert('El valor del método de pago no puede ser cero (0) o estar vacio.');
+                bootbox.alert('El valor del método de pago no puede ser cero (0) o estar vacio.');
                 return false;
             }
         });
@@ -54,7 +54,7 @@ var facturarMediosPagos = function(){
         if(valFacturado == $('#totalVentaTipos').val()){
             guardarMetodosValores(arrPayMeth);
         }else{
-            alert('El valor ingresado es menor al facturado. Cantidad faltante $' + (parseFloat($('#totalVentaTipos').val() - valFacturado)));
+            bootbox.alert('El valor ingresado es menor al facturado. Cantidad faltante $' + (parseFloat($('#totalVentaTipos').val() - valFacturado)));
         }      
     }
     
@@ -67,7 +67,9 @@ var facturarMediosPagos = function(){
 var duplicarMediosPago = function(){
     var dvContainer = $(this).parents().find('.dv_tip_val_pago').first().clone(true);
     dvContainer.find('.valueFact').val("");
-    
+    let tipoPago=dvContainer.find('.method_fact');
+    tipoPago.val(0);
+    mostrarCamposDevoluciones(tipoPago);
     $( ".contenedor_pagos").append(dvContainer);
 };
 
@@ -117,15 +119,15 @@ var calcularRestanteFactura = function(){
             });
 
             if(ttalFact > parseFloat($('#totalVentaTipos').val())){
-                alert('El valor ingresado supera el total de la factura');
+                bootbox.alert('El valor ingresado supera el total de la factura');
                 $(this).val('');
                 calcularRestante();
             }else{
                 var ttalRest = ($('#totalVentaTipos').val() - ttalFact).toLocaleString();
                 $('#restante').html(ttalRest);
-            }   
+            }
         }else{
-           alert('Ya existe el método de pago ' + sPayMet);
+           bootbox.alert('Ya existe el método de pago ' + sPayMet);
            $(this).val('');
         }
         
@@ -147,10 +149,60 @@ var calcularRestante = function(){
     
 };
 
+const calcularDevolucion = function(){
+    let valorFactura=$(this).parents('.dv_tip_val_pago').find(".valueFact");
+    let devolucion=$(this).parents('.dv_tip_val_pago').find('.devolution');
+    if ($(this).val()!=0 && (valorFactura.val()==null || valorFactura.val()=="" || valorFactura.val()=="0")) {
+        bootbox.alert('Se debe especificar el valor a pagar.');
+        $(this).val(0);
+    }
+    if (parseFloat($(this).val())<parseFloat(valorFactura.val())) {
+        bootbox.alert('No le alcanza para pagar el valor especificado.');
+        devolucion.html(0);
+        return;
+    }
+    devolucion.html($(this).val()-valorFactura.val());
+ };
+
+ const tipoPagoChange=function(){
+    var sPayMet = "";
+    var vPayMet = "";
+    var cPayMet = 0;
+
+    //se obtiene el metodo de pago seleccionado
+    sPayMet = $(this).parents('.dv_tip_val_pago').first().find('.method_fact option:selected').text();
+    vPayMet = $(this).parents('.dv_tip_val_pago').first().find('.method_fact').val();
+
+    //recorre los inputs de tipo de pago agregados al formulario para verificar cuantos se han ingresado del mismo tipo
+    $(this).parents('.contenedor_pagos').first().find('.method_fact').each(function(){
+        if($(this).val() == vPayMet){
+            cPayMet ++;
+        }
+    }); 
+     if(cPayMet > 1){
+        bootbox.alert('Ya existe el método de pago ' + sPayMet);
+        $(this).val(0);
+    }
+    mostrarCamposDevoluciones($(this));
+ }
+
+ const mostrarCamposDevoluciones = function(tipoPago){
+    if (tipoPago.first().find('option:selected').text()!="EFECTIVO" && tipoPago.val()!=0 ) {
+        tipoPago.parents('.dv_tip_val_pago').first().find('.divValueClientPaid').hide()
+        tipoPago.parents('.dv_tip_val_pago').first().find('.divDevolution').hide();
+    }else{
+        tipoPago.parents('.dv_tip_val_pago').first().find('.divValueClientPaid').show()
+        tipoPago.parents('.dv_tip_val_pago').first().find('.divDevolution').show();
+    }
+ }
+
+
 $( function() {
     $('.numericPrice').number(true);    
     $('#btn_agregar').click(duplicarMediosPago);
     $('#btn_facturar_m').click(facturarMediosPagos);
     $('.del_pay_meth').click(deletePaymentMethod);
     $('.valueFact').blur(calcularRestanteFactura);
+    $('.valueClientPaid').blur(calcularDevolucion);
+    $('.method_fact').on("change",tipoPagoChange);
 });

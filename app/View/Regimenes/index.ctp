@@ -47,7 +47,7 @@
 <legend><h2><b><?php echo __('Acciones'); ?></b></h3></legend>
 	<ul>
 		<li><?php echo $this->Html->link(__('Nuevo Régimen'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('Lista Depósitos'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Deposito'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Lista Bodegas'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Nuevo Bodega'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

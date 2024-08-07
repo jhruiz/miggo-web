@@ -18,7 +18,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="CuentaspendientesDeposito">Depósito</label>
+                            <label for="CuentaspendientesDeposito">Bodega</label>
                             <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'depositos', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
                         </div>
                     </div>

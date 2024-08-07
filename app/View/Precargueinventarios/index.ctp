@@ -18,7 +18,7 @@
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                     <tr>
                                     <th><?php echo ('Producto'); ?></th>
-                                    <th><?php echo ('Depósito'); ?></th>
+                                    <th><?php echo ('Bodega'); ?></th>
                                     <th><?php echo ('Valor Unitario'); ?></th>
                                     <th><?php echo ('Cantidad'); ?></th>
                                     <th><?php echo ('Valor Total');?></th>

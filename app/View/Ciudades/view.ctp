@@ -24,7 +24,7 @@
 		<li><?php echo $this->Html->link(__('Nuevo País'), array('controller' => 'paises', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('Lista Clientes'), array('controller' => 'clientes', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('Nuevo Cliente'), array('controller' => 'clientes', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Lista Depósitos'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('Nuevo Depósito'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Lista Bodegas'), array('controller' => 'depositos', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Nuevo Bodega'), array('controller' => 'depositos', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

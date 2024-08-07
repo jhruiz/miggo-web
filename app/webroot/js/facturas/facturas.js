@@ -539,10 +539,10 @@ function facturarProductos(){
     }else{
         var tipoPago = $('#FacturaTipopago').val();
         var ttalAbonos = $('.ttalAbonos').val();
-        var contado = totalCrediContado();
+        var contado = parseInt($('.thTFCIVA').text().replace( /,/g, ""));
         $('#pagocontado').val(contado);        
         
-        var valorCompra = totalCrediContado() - ttalAbonos;
+        var valorCompra = contado - ttalAbonos;
         $("#div_facturar").load(
             $('#url-proyecto').val() + "facturas/pagofactura",
             {valorCompra: valorCompra},
@@ -920,7 +920,9 @@ var sumarTotales = function (){
     var ttalesFinal = 0;
     var ttalesIva = 0;
     var ttalesConIva = 0;
-    
+    var propina=0;
+
+
     //se suman todos los valores unitarios
     $( ".ttalUnit" ).each(function( index, val ) {
         ttalUnit += parseInt($(this).val());
@@ -931,10 +933,18 @@ var sumarTotales = function (){
     //se suman todos los valores subtotales
     $( ".ttalTotal" ).each(function( index, val ) {
         ttalTotal += parseInt($(this).val());
-    });        
-    
-    $('.thTTotal').html(formatNumber(ttalTotal));
-    
+    }); 
+    if ($('#tienePropina').prop('checked')){
+        propina=ttalTotal*(0.1);
+        const isNumeric =!isNaN($('.propina').val());
+        if (!isNumeric || parseInt($('.propina').val())>propina){
+            propina=ttalTotal*(0.1);
+        }else{
+            propina=parseInt($('.propina').val());
+        }
+    }       
+    $('.propina').val(formatNumber(propina));
+    $('.thTTotal').html(formatNumber(ttalTotal+propina));
     //se suman todos los valores de descuento
     $( ".ttalValDtto" ).each(function( index, val ) {
         ttalValDtto += parseInt($(this).val());
@@ -961,8 +971,10 @@ var sumarTotales = function (){
         ttalesConIva += parseInt($(this).val());
     });
     
-    $('.thTFCIVA').html(formatNumber(ttalesConIva));
+    $('.thTFCIVA').html(formatNumber(ttalesConIva+propina));
 };
+
+
 
 /**
  * Separadores de miles para los valores de la cotizacion que se van a imprimir
@@ -1132,4 +1144,6 @@ $( function() {
     $('#FacturaNuevolimitecredito').number(true);
     $('.numberPrice').number(true);
     $('#obs_fact').blur(guardarObsFactura);
+    $('#tienePropina').click(sumarTotales);
+    $('.propina').change(sumarTotales);
 });

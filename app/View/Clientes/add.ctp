@@ -77,7 +77,7 @@
 <div class="row">
 
 <div class="form-group col-md-3">
-        <label for="ClienteDepositoId">Depósito</label>
+        <label for="ClienteDepositoId">Bodega</label>
          <?php echo $this->Form->input('deposito_id', array('label' => '', 'class' => 'form-control')); ?>
     </div>
     <div class="form-group col-md-3">

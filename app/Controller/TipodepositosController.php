@@ -47,7 +47,7 @@ class TipodepositosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Tipodeposito->exists($id)) {
-			throw new NotFoundException(__('El tipo de depósito no existe.'));
+			throw new NotFoundException(__('El tipo de bodega no existe.'));
 		}
 		$options = array('conditions' => array('Tipodeposito.' . $this->Tipodeposito->primaryKey => $id));
 		$this->set('tipodeposito', $this->Tipodeposito->find('first', $options));
@@ -67,10 +67,10 @@ class TipodepositosController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Tipodeposito->create();
 			if ($this->Tipodeposito->save($this->request->data)) {
-				$this->Session->setFlash(__('El tipo de depósito ha sido guardado.'));
+				$this->Session->setFlash(__('El tipo de bodega ha sido guardado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('El tipo de depósito no pudo ser guardado. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('El tipo de bodega no pudo ser guardado. Por favor, inténtelo de nuevo.'));
 			}
 		}
                 /*Se obtiene la información de la empresa a la cual pertenece el usuario en sesion*/
@@ -92,14 +92,14 @@ class TipodepositosController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Tipodeposito->exists($id)) {
-			throw new NotFoundException(__('El tipo de depósito no existe.'));
+			throw new NotFoundException(__('El tipo de bodega no existe.'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Tipodeposito->save($this->request->data)) {
-				$this->Session->setFlash(__('El tipo de depósito ha sido guardado.'));
+				$this->Session->setFlash(__('El tipo de bodega ha sido guardado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('El tipo de depósito no ha sido guardado. Por favor, inténtelo de nuevo.'));
+				$this->Session->setFlash(__('El tipo de bodega no ha sido guardado. Por favor, inténtelo de nuevo.'));
 			}
 		} else {
 			$options = array('conditions' => array('Tipodeposito.' . $this->Tipodeposito->primaryKey => $id));
@@ -122,13 +122,13 @@ class TipodepositosController extends AppController {
 	public function delete($id = null) {
 		$this->Tipodeposito->id = $id;
 		if (!$this->Tipodeposito->exists()) {
-			throw new NotFoundException(__('El tipo de depósito no existe.'));
+			throw new NotFoundException(__('El tipo de bodega no existe.'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tipodeposito->delete()) {
-			$this->Session->setFlash(__('El tipo de depósito ha sido eliminado'));
+			$this->Session->setFlash(__('El tipo de bodega ha sido eliminado'));
 		} else {
-			$this->Session->setFlash(__('El tipo de depósito no pudo ser eliminado. Por favor, inténtelo de nuevo.'));
+			$this->Session->setFlash(__('El tipo de bodega no pudo ser eliminado. Por favor, inténtelo de nuevo.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}}

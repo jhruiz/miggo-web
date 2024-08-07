@@ -1,10 +1,10 @@
 <?php $this->layout = 'inicio';?>
 <div class="tipodepositos index">
-    <legend><h2><b><?php echo __('Tipos de Depósitos'); ?></b></h2></legend>
+    <legend><h2><b><?php echo __('Tipos de Bodegas'); ?></b></h2></legend>
     <!--Enlaces de acción -->
 		<div class="actions">
             <button type="button" class="btn btn-primary">
-            <?php echo $this->Html->link(__('Nuevo Tipo de Depósito'), array('action' => 'add'), ["style" => "color:white;"]); ?>
+            <?php echo $this->Html->link(__('Nuevo Tipo de Bodega'), array('action' => 'add'), ["style" => "color:white;"]); ?>
             </button>
         </div>
 
@@ -20,14 +20,14 @@
                 <tr>
                         <td><?php echo h($tipodeposito['Tipodeposito']['descripcion']); ?>&nbsp;</td>
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Tipo Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $tipodeposito['Tipodeposito']['id']))); ?>
-                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Tipo Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $tipodeposito['Tipodeposito']['id']))); ?>
+                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Tipo Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $tipodeposito['Tipodeposito']['id']))); ?>
+                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Tipo Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $tipodeposito['Tipodeposito']['id']))); ?>
                             <?php
 echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Tipo Depósito', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Tipo Bodega', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
     array('action' => 'delete', $tipodeposito['Tipodeposito']['id']), //url
     array('escape' => false), //el escape
-    __('Está seguro que desea eliminar el tipo depósito %s?', $tipodeposito['Tipodeposito']['descripcion']) //la confirmacion
+    __('Está seguro que desea eliminar el tipo Bodega %s?', $tipodeposito['Tipodeposito']['descripcion']) //la confirmacion
 );
 ?>
                         </td>

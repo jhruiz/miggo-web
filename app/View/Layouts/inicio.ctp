@@ -105,6 +105,17 @@ echo $this->Html->script('template/js/bootstrap.min.js');
   background-color: rgba(0,0,0,0.5) !important;
 }
 
+.login{
+  color: rgb(255,255,255) !important;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 400px;
+  border-color: 000000;
+  background-color: rgb(0,0,0) !important;
+  height: 100vh;
+  overflow:hidden;
+}
+
 .bg {
   /* The image used */
   background-image: url("/img/login.jpg");

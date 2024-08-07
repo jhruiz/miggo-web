@@ -2,7 +2,7 @@
 <div class="depositosUsuarios index">
 
             <?php echo $this->Form->create('DepositosUsuarios', array('action' => 'search', 'method' => 'post')); ?>
-            <legend><h2><b><?php echo __('Buscar Depósitos - Usuarios'); ?></b></h2></legend>
+            <legend><h2><b><?php echo __('Buscar Bodegas - Usuarios'); ?></b></h2></legend>
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '17', 'id' => 'menuvert')) ?>
             <div class="row">
                 <div class="col-md-3">
@@ -14,7 +14,7 @@
 
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Depósitos</label><br>
+                        <label>Bodegas</label><br>
                         <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'depositos', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
                     </div>
                 </div>
@@ -36,11 +36,11 @@
 
         </form><br><br>
 
-    <legend><h2><b><?php echo __('Usuarios - Depósitos'); ?></b></h2></legend>
+    <legend><h2><b><?php echo __('Usuarios - Bodegas'); ?></b></h2></legend>
     <!--Enlaces de acción -->
 		<div class="actions">
             <button type="button" class="btn btn-primary">
-            <?php echo $this->Html->link(__('Nuevo Usuario - Depósito'), array('action' => 'add'), ["style" => "color:white;"]); ?>
+            <?php echo $this->Html->link(__('Nuevo Usuario - Bodega'), array('action' => 'add'), ["style" => "color:white;"]); ?>
             </button>
         </div>
 
@@ -57,14 +57,14 @@
                         <td><?php echo h($depositosUsuario['Usuario']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h($depositosUsuario['Deposito']['descripcion']); ?>&nbsp;</td>
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Relación Usuario - Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $depositosUsuario['DepositosUsuario']['id']))); ?>
-                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Relación Usuario - Depósito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $depositosUsuario['DepositosUsuario']['id']))); ?>
+                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Relación Usuario - Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $depositosUsuario['DepositosUsuario']['id']))); ?>
+                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Relación Usuario - Bodega', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $depositosUsuario['DepositosUsuario']['id']))); ?>
                             <?php
 echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Relación Usuario - Depósito', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Relación Usuario - Bodega', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
     array('action' => 'delete', $depositosUsuario['DepositosUsuario']['id']), //url
     array('escape' => false), //el escape
-    __('Está seguro que desea eliminar la relación Usuario - Depósito?') //la confirmacion
+    __('Está seguro que desea eliminar la relación Usuario - Bodega?') //la confirmacion
 );
 ?>
                         </td>
