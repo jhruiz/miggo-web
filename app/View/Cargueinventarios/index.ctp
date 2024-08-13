@@ -21,7 +21,7 @@ $this->layout = 'inicio';
 
                 <div class="col-md-3">
                     <div class="form-group ">
-                        <label>Depósito</label><br>
+                        <label>Bodega</label><br>
                         <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'deposito', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ $this->layout = 'inicio';
                 <tr>
                                 <th><?php echo h('Producto'); ?></th>
                                 <th><?php echo h('Código'); ?></th>
-                                <th><?php echo h('Depósito'); ?></th>
+                                <th><?php echo h('Bodega'); ?></th>
                                 <th><?php echo h('Proveedor'); ?></th>
                                 <th><?php echo h('Valor'); ?></th>
                                 <th><?php echo h('Existencia Actual'); ?></th>
