@@ -649,7 +649,7 @@
         <?php }else{?>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
 
-            <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; font-size:13px; float:center;" align="center">
+            <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; float:center;" align="center">
                 <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
                 <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['resolucion']); ?></div>
                 <div>
