@@ -157,7 +157,10 @@ class FacturasController extends AppController
         $factCV = $this->FacturaCuentaValore->obtenerPagosFactura($id);
 
         //se obtiene la informacion de los abonos
-        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id);              
+        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id); 
+        
+        // obtiene el pago a credito asociado al cliente
+        $factCredit = $this->Cuentascliente->obtenerCuentaPendienteFact($id);
 
         if ($infoFact['Factura']['relacionempresa'] == "") {
             /*se obtiene la información de la empresa*/
@@ -291,7 +294,7 @@ class FacturasController extends AppController
         }
 
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
-        $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd'));
+        $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
         $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'prefijo', 'nombreDocumento'));
     }
@@ -1352,13 +1355,14 @@ class FacturasController extends AppController
         $arrResolucion = [];
         foreach ($depositos as $dp) {
             if (!empty($dp['Deposito']['resolucionfacturacion'])) {
-
                 $fechaRes = explode(" ", $dp['Deposito']['fecharesolucion']);
+                $fechaFin = explode(" ", $dp['Deposito']['fechafin']);
 
                 $arrResolucion = [
                     'nombreDoc' => $dp['Deposito']['nombredocumentoventa'],
                     'resolucion' => $dp['Deposito']['resolucionfacturacion'],
                     'fechaRes' => $fechaRes['0'],
+                    'fechaFin' => $fechaFin['0'],
                     'prefijo' => $dp['Deposito']['prefijo'],
                     'resInicial' => $dp['Deposito']['resolucioninicia'],
                     'resFin' => $dp['Deposito']['resolucionfin'],

@@ -139,7 +139,6 @@ var generarAlertaFactura = function() {
 
 $(function() {
     $('#conditions').hide();
-    $('#contResol').hide();
     $('#conditions_ot').hide();
     $('#dvNota').hide();
     $('#dvTicket').hide();

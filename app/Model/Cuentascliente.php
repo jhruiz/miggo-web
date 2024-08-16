@@ -358,6 +358,35 @@ class Cuentascliente extends AppModel {
             return $cuentas;
         }
 
+        public function obtenerCuentaPendienteFact($facturaId) {
+
+                $arr_join = [];     
+        
+                array_push($arr_join, array(
+                    'table' => 'tipopagos',
+                    'alias' => 'TP',
+                    'type' => 'LEFT',
+                    'conditions' => array(
+                        'TP.id=Cuentascliente.tipopago_id',
+                    ),
+                ));  
+        
+                $cuentasPend = $this->find('all',array(
+                    'joins' => $arr_join,
+                    'fields' => array(
+                        'TP.*',
+                        'Cuentascliente.*',
+                    ),            
+                    'conditions' => array(
+                        'Cuentascliente.factura_id' => $facturaId
+                    ), 
+                    'recursive' => '-1')
+                );
+        
+                return $cuentasPend; 
+
+        }
+
         /**
          * Obtiene las ventas a credito para el reporte de cierre diario
          */

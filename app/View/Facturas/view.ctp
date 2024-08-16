@@ -20,7 +20,6 @@
             <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="imprimirFactura();">Imprimir</button>            
             <button id="butImprimirTk" class="btn btn-primary hidden-print" onclick="imprimirTicket();">Imprimir Ticket</button>
             <button id="butImprimirFactT" class="btn btn-primary hidden-print" onclick="generarAlertaFactura();">Generar Alerta</button>        
-            <a class="btn btn-primary" href="https://catalogo-vpfe.dian.gov.co/User/Login" role="button" target="_blank">Facturacion Electronica</a>
 
             <?php if(!empty($infoFact['Cliente']['celular'])){?>        
                 <a href="https://wa.me/57<?php echo $infoFact['Cliente']['celular']; ?>?text=adjuntamos%20información%20de%20su%20interés" target="_blank">
@@ -46,10 +45,26 @@
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
+
+        <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; font-size:13px; float:center;" align="center">
+            <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
+            <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['resolucion']); ?></div>
+            <div>
+                de <?php echo h($infoResolucion['fechaRes'] . ", Prefijo: " . $prefijo . ", Rango " . $infoResolucion['resInicial'] . " al " . $infoResolucion['resFin']); ?> -
+                Vigencia Desde: <?php echo h($infoResolucion['fechaRes'] . " Hasta: " . $infoResolucion['fechaFin'])?>
+            </div>
+            <div>REPRESENTACIÓN GRÁFICA DE FACTURA ELECTRÓNICA</div>
+            <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudade']['descripcion'] . " - " . $arrUbicacion['0']['P']['descripcion'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
+            <div>E-mail: <?php echo h($infoEmpresa['Empresa']['email']);?></div>
+        </div>
+
         <?php }?>
        
         <?php if($infoFact['Factura']['factura']){ ?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+        <div style="width:100%; float:left; margin:0px; margin-top:10px;" align="center">
+            <div><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+            <div> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
+        </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
@@ -57,6 +72,7 @@
         <?php }?>
         
         <!--informacion e imagen de empresa-->
+        <?php if(!$infoFact['Factura']['factura']){ ?>
         <div style="margin:0px; width:100%; float:left;">
             <div style="float:left; margin-top: 10px;" align="left">
                 <div style="margin: 2px; float: left; width: 100%;">
@@ -95,15 +111,8 @@
                     </div>                           
                 </div>
             </div>          
-        </div> 
-        
-        <div style="width:100%; float:left; margin-top: 5px;">
-            <?php
-            echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual);
-            ?>
-        </div>    
-        
-        <div style="width:100%; float:left; margin-top: 5px;"><?php echo $infoEmpresa['Empresa']['texto1']?></div>
+        </div>  
+        <?php } ?>
         
         <!--informacion del cliente y moto-->
         <div style="margin:0px; width:100%; float:left;">
@@ -153,7 +162,7 @@
         </div> 
         <div style="margin: 2px; float: left; width: 100%;">
             <div style="margin: 0px; float: left; width: 100%;">
-                <b>Método de Pago: </b> <br>
+                <b>Método(s) de Pago: </b> <br>
                 <?php if(count($factCV) > 0 ){ ?>
                     <?php foreach($factCV as $fvcv):?>
                         <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;<br>
@@ -163,6 +172,9 @@
                     <?php foreach($factAbonos as $fab):?>
                         <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;<br>
                     <?php endforeach; ?>
+                <?php } ?>                                  
+                <?php if(count($factCredit) > 0 ){ ?>
+                    <?php echo h($factCredit['0']['TP']['descripcion'] . ": $ " . number_format($factCredit['0']['Cuentascliente']['totalobligacion'], 2)); ?>&nbsp;<br>
                 <?php } ?>                                  
             </div>                           
         </div>
@@ -366,16 +378,6 @@
             </dl>
         <?php }?>
     
-        
-        <div id="contResol">
-            <div id="dvResolucion" style="font-family:sans-serif; font-size:15px;"><small><b>
-                        <?php if($infoFact['Factura']['factura']){?>
-                            Resolución <?php echo ($infoResolucion['resolucion'])?>. Fecha de Resolución <?php echo ($infoResolucion['fechaRes'])?>.
-                            Numeración habilitada del <?php echo ($infoResolucion['resInicial']);?> al <?php echo ($infoResolucion['resFin']);?>. <?php echo ($infoResolucion['nota']);?>. 
-                        <?php } ?>
-            </b></small></div>
-        </div>
-    
         <div id="conditions">
             <div id="p_condCont" style="font-family:sans-serif; font-size:15px;"><small>
                     <?php if($infoFact['Factura']['factura']){?>
@@ -395,9 +397,10 @@
                 <small>
                 <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
                 </small>
-                <div align="center">
+                <div style="margin-top:30px;" align="center">
                     <small>
-                    <br><br><b>Miggo Solutions S.A.S</b>
+                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
+                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
                     </small>
                 </div>
             </div>
@@ -639,67 +642,39 @@
             ?>" 
                 class="img-responsive img-thumbnail center-block" width="200">
     </div>     
-    <?php if(!empty($infoRemision)){?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
-    <?php }else{?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
-    <?php }?>
-    
-    <?php if($infoFact['Factura']['factura']){ ?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
-    <input id="tipoVenta" type="hidden" value="1">
-    <?php }else{?>
-    <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
-    <input id="tipoVenta" type="hidden" value="2">
-    <?php }?>
-    
-    <!--informacion e imagen de empresa-->
-    <div style="margin:0px; width:100%; float:left;">
-        <div style="float:left; margin-top: 10px;" align="left">
-            <div style="margin: 2px; float: left; width: 100%;">
-                <div style="margin: 0px; float: left; width: 100%;">
-                    <b>Nit: </b><?php 
-                    if(!empty($infoRemision)){
-                        echo h($infoRemision['Relacionempresa']['nit']);
-                    }else
-                        echo h($infoEmpresa['Empresa']['nit']);
-                    ?>
-                </div>          
+
+        <?php if(!empty($infoRemision)){?>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
+        <?php }else{?>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
+
+            <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; font-size:13px; float:center;" align="center">
+                <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
+                <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['resolucion']); ?></div>
+                <div>
+                    de <?php echo h($infoResolucion['fechaRes'] . ", Prefijo: " . $prefijo . ", Rango " . $infoResolucion['resInicial'] . " al " . $infoResolucion['resFin']); ?>
+                </div>
+                <div>
+                    Vigencia Desde: <?php echo h($infoResolucion['fechaRes'] . " Hasta: " . $infoResolucion['fechaFin'])?>
+                </div>
+                <div>REPRESENTACIÓN GRÁFICA DE FACTURA ELECTRÓNICA</div>
+                <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudade']['descripcion'] . " - " . $arrUbicacion['0']['P']['descripcion'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
+                <div>E-mail: <?php echo h($infoEmpresa['Empresa']['email']);?></div>
             </div>
-            
-            <div style="margin: 2px; float: left; width: 100%;">
-                <div style="margin: 0px; float: left; width: 100%;">
-                    <b>Telefono: </b><?php 
-                    if(!empty($infoRemision)){
-                        echo h($infoRemision['Relacionempresa']['telefono1']);
-                    }else{
-                        echo h($infoEmpresa['Empresa']['telefono1'] . " / " . $infoEmpresa['Empresa']['telefono2']);
-                    }
-                                
-                    ?>
-                </div>                 
+
+        <?php }?>
+       
+        <?php if($infoFact['Factura']['factura']){ ?>
+            <div style="width:100%; float:left; margin:0px; margin-top:10px;" align="center">
+                <div><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+                <div> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
             </div>
-            
-            <div style="margin: 2px; float: left; width: 100%;">
-                <div style="margin: 0px; float: left; width: 100%;">
-                    <b>Direccion: </b><?php 
-                    if(!empty($infoRemision)){
-                        echo h($infoRemision['Relacionempresa']['direccion']);
-                    }else{
-                        echo h($infoEmpresa['Empresa']['direccion']);
-                    }                                                           
-                    ?>
-                </div>                           
-            </div>
-        </div>           
-    </div> 
-    
-    <div style="width:100%; float:left; margin-top: 5px;">
-        <?php
-        echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual);
-        ?>
-    </div>    
+        <input id="tipoVenta" type="hidden" value="1">
+        <?php }else{?>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
+            <input id="tipoVenta" type="hidden" value="2">
+        <?php }?>
     
     <!--informacion del cliente y moto-->
     <div style="margin:0px; width:100%; float:left;">
@@ -753,7 +728,7 @@
         </div>                           
     </div>
     <div style="margin: 0px; float: left; width: 100%;">
-        <b>Método de Pago: </b> <br>
+        <b>Método(s) de Pago: </b> <br>
         <?php if(count($factCV) > 0 ){ ?>
             <?php foreach($factCV as $fvcv):?>
                 <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 0)); ?>&nbsp;<br>
@@ -764,6 +739,9 @@
             <?php foreach($factAbonos as $fab):?>
                 <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 0)); ?>&nbsp;<br>
             <?php endforeach; ?>
+        <?php } ?> 
+        <?php if(count($factCredit) > 0 ){ ?>
+            <?php echo h($factCredit['0']['TP']['descripcion'] . ": $ " . number_format($factCredit['0']['Cuentascliente']['totalobligacion'], 2)); ?>&nbsp;<br>
         <?php } ?>                                  
     </div>      
 
@@ -945,16 +923,18 @@
                 <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
                 </small>
                 <small>
-                <br><br><b>Miggo Solutions S.A.S</b>
+                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
+                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
                 </small>
             </div>
         </div> 
     <?php } else { ?>
         <div id="dvNota">
             <div id='nota_factura' align="center">
-                <small>
-                <br><br><b>Miggo Solutions S.A.S</b>
-                </small>
+            <small>
+                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
+                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
+            </small>
             </div>
         </div>  
     <?php } ?>  
