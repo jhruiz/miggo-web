@@ -331,6 +331,7 @@ var eliminarPrdCot = function(data) {
  * @returns {undefined}
  */
 var seleccionarProductoCotizacion = function(data) {
+
     var nomProduct = "";
     var idProd = "";
     if (typeof(data.name) != "undefined") {
@@ -351,7 +352,6 @@ var seleccionarProductoCotizacion = function(data) {
                 var resp = JSON.parse(response);
                 var inf = "";
                 if (resp.valid == '1') {
-                    console.log('tamaño del array', resp.prod.length);
                     var valProd = resp.prod.length == 0 ? '0' : resp.prod.Cargueinventario.precioventa;
 
                     inf += "<tr id='tr_" + resp.resp + "'>";
@@ -381,6 +381,7 @@ var seleccionarProductoCotizacion = function(data) {
  * @returns {undefined}
  */
 var fnObtenerProductoCotizacion = function() {
+
     var cotizacionId = $('#cotizacionId').val();
     var usuarioId = $('#CotizacioneVendedor').val();
     var descProd = $(this).val();
@@ -388,7 +389,32 @@ var fnObtenerProductoCotizacion = function() {
     if (cotizacionId == "") {
         bootbox.alert("No se ha creado la cotización.");
         $(this).val("");
-    } else {
+    } else if(event.key === 'Enter' && cotizacionId != ""){
+
+        $.ajax({
+            url: $('#url-proyecto').val() + 'cargueinventarios/ajaxObtenerProductoCotizacion',
+            data: { descProducto: descProd, usuarioId: usuarioId },
+            type: "POST",
+            success: function(data) {
+                var producto = JSON.parse(data);
+
+                if( producto.resp[0] ) {
+
+                    var prod = {
+                        'text': producto.resp[0].Producto.descripcion,
+                        'name': producto.resp[0].Cargueinventario.id
+                    }
+
+                    seleccionarProductoCotizacion(prod)
+                } else {
+                    bootbox.alert("No se encontró un producto con el código " + descProd, ()=>{
+                        $("#CotizacioneProducto").val("");
+                    });
+                }
+            }
+        });
+
+    }else {
         if (descProd.length > 3) {
             $.ajax({
                 url: $('#url-proyecto').val() + 'cargueinventarios/ajaxObtenerProductoCotizacion',

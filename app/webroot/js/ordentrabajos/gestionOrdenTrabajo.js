@@ -731,6 +731,7 @@ function seleccionarSuministro(data) {
             type: "POST",
             success: function(data) {
                 var resp = JSON.parse(data);
+
                 var uls = "";
                 if (resp.resp = '1') {
                     uls += '<tr id="tr_' + resp.prod.Cargueinventario.id + '">';
@@ -758,12 +759,37 @@ function seleccionarSuministro(data) {
  * @returns {undefined}
  */
 var obtenerDatosSuministro = function() {
+
     var ordenId = $('#ordentrabajo_id').val();
     var prod = $(this).val();
     var usuarioId = $('#usuarioId').val();
 
     if (ordenId != "") {
-        if (prod.length > 3) {
+        if( event.key === 'Enter' ){
+
+            $.ajax({
+                url: $('#url-proyecto').val() + 'cargueinventarios/ajaxProductosVenta',
+                data: { usuarioId: usuarioId, descProducto: prod },
+                type: "POST",
+                success: function(data) {
+                    var producto = JSON.parse(data);
+
+                    if(producto.resp[0]) {
+                        var prd = {
+                            'name': producto.resp[0].Producto.id,
+                            'id': producto.resp[0].Cargueinventario.id
+                        }
+                        seleccionarSuministro(prd);
+                    } else {
+                        bootbox.alert('No se encontró el producto con código ' + prod, ()=>{
+                            $("#OrdentrabajoProducto").val("");
+                        });
+                    }
+        
+                }
+            });            
+    
+        } else if (prod.length > 3) {
             $.ajax({
                 url: $('#url-proyecto').val() + 'cargueinventarios/ajaxProductosVenta',
                 data: { usuarioId: usuarioId, descProducto: prod },
@@ -787,7 +813,7 @@ var obtenerDatosSuministro = function() {
                     $('#datosProducto').html(uls);
                 }
             });
-        } else {
+        }else {
             $('#datosProducto').hide();
             $('#datosProducto').html("");
         }
@@ -846,7 +872,6 @@ var verDatosVehiculo = function() {
 };
 
 var verDatosCliente = function() {
-    console.log('da clic hasta aqui');
     var idCliente = $('#cliente_id').val();
 
     if (idCliente == "") {

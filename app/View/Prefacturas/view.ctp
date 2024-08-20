@@ -378,22 +378,24 @@
                     </form>
        
         <div class="nav nav-pills">  
-                  <div class="col-md-6">
-                      <div class="col-md-2"><button id="btn_abonos" class="btn btn-primary active center-block" type="button">Abonar</button></div>
-            <div class="col-md-2"><button type='button' id="btn_facturar" class="btn btn-primary active center-block" onclick="facturarProductos();">Facturar</button></div>
-            <div class="col-md-2"><a href="#" class="btn btn-primary active pull-lefth" role="button" aria-pressed="true" id="imprimirCot">Imprimir</a></div>
-            <div class="col-md-2">                        
-                <a href="#" class="wppSendPF" target="">
-                    <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">            
-                </a>
-            </div>
-           
-                  <div class="col-md-1">
-        <button id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
-        
-        </div>
-        </div>  
-    </div><!-- termina x_content-->
+            <div class="col-md-6">
+                <div class="col-md-2">
+                    <button id="btn_abonos" class="btn btn-primary active center-block" type="button">Abonar</button>
+                </div>
+                <div class="col-md-2">
+                    <button type='button' id="btn_facturar" class="btn btn-primary active center-block" onclick="facturarProductos();">Facturar</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="#" class="btn btn-primary active pull-lefth" role="button" aria-pressed="true" id="imprimirCot">Imprimir</a>
+                </div>
+                <div class="col-md-2">                        
+                    <a href="#" class="wppSendPF" target=""><img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35"></a>
+                </div>
+                <div class="col-md-1">
+                    <button type='button' id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
+                </div>
+            </div>  
+        </div><!-- termina x_content-->
     </div> <!--Termina x_panel-->
        </div> <!-- Termina COL -->
 <div id="div_producto"></div>

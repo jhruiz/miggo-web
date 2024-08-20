@@ -1,12 +1,13 @@
 function fnObtenerDatosProducto(e){    
-    var key = (document.all) ? e.keyCode : e.which;
-    if(key == 13){ 
+
+    if(event.key === 'Enter'){ 
         $.ajax({
            url: $('#url-proyecto').val() + 'cargueinventarios/ajaxProductoCargueIndexBarcode',
            data: {descProducto: $('#buscarproducto').val(), empresaId: $('#empresa_id').val()},
            type: "POST",
            success: function(data) {
-               var respuesta = JSON.parse(data);              
+               var respuesta = JSON.parse(data);  
+               
                if(respuesta.resp == '1'){
                     $('#buscarproducto').val("");
                     $('#datosProducto').hide();

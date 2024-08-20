@@ -17,8 +17,7 @@ var opcDialogNotaDescargueInventario = {
 var dialogNotaDescargueInventario;
 
 function fnObtenerDatosProducto(e){ 
-    var key = (document.all) ? e.keyCode : e.which;
-    if(key == 13){ 
+    if(event.key === 'Enter'){ 
         $.ajax({
            url: $('#url-proyecto').val() + 'descargueinventarios/ajaxProductoDesargueBarcode',
            data: {descProducto: $('#buscarproducto').val(), depositoId: $('#deposito_id').val(), usuarioId: $('#usuario_id').val()},

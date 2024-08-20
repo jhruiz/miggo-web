@@ -213,8 +213,8 @@ function fnObtenerDatosProducto(e){
     console.log('entra por aqu');
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
-    var key = (document.all) ? e.keyCode : e.which;
-    if(key == 13){        
+
+    if(event.key === 'Enter'){        
         if(typeof(clienteId) != "undefined" && clienteId != ""){
             $.ajax({
                url: $('#url-proyecto').val() + 'prefacturas/addProductoBarCode',
@@ -647,8 +647,7 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
     var prefacturaId = $('#prefacturaId').val();    
     
     var mensaje = "";
-    var key = (document.all) ? e.keyCode : e.which;
-    if(key == 13){      
+    if(event.key === 'Enter'){      
         mensaje = validarDatosUsuarioNuevo();
         if(mensaje == ""){
             $.ajax({
@@ -768,8 +767,7 @@ function fnObtenerDatosProductoVentaRapida(e){
     var usuarioId = $('#usuarioId').val();       
     var mensaje = "";
 
-    var key = (document.all) ? e.keyCode : e.which;
-    if(key == 13){      
+    if(event.key === 'Enter'){      
         mensaje = validarDatosVentaRapida();
         if(mensaje == ""){
             $.ajax({
@@ -777,26 +775,38 @@ function fnObtenerDatosProductoVentaRapida(e){
                data: {usuarioId: usuarioId, descProducto: $('#FacturaProductoventarapida').val(), prefacturaId: null},
                type: "POST",
                success: function(data) {
-                    var prefactura = JSON.parse(data);
-                    if(prefactura.valido){
-                        $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
-                        '<td>' + prefactura.producto['0']['Producto']['descripcion'] + '</td>' + 
-                        '<td>' + prefactura.producto['0']['Producto']['codigo'] + '</td>' +                                
+
+                var prefactura = JSON.parse(data);
+                if(prefactura.valido){
+
+                    var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
+                    var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
+
+                    $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
+                        '<td>' + prefactura.producto['0'].Producto.descripcion + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((prefactura.impuesto/100) + 1) + '">' + '</td>' + 
+                        '<td>' + prefactura.producto['0'].Producto.codigo + '</td>' +                         
                         '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + prefactura.producto['0']['Cargueinventario']['precioventa'] + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="precio_' + prefactura.resp + '" class="form-control numericPrice ttalUnit" id="precio_' + prefactura.resp + '" value="' + prefactura.producto['0'].Cargueinventario.precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + valAntesIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="0" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="0" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
+                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + prefactura.producto['0'].Cargueinventario.precioventa + '" readonly>&nbsp;</td>' +
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                         $('#FacturaProductoventarapida').val("");
-                        $('#datosProductoventarapida').hide(); 
-                        $('#prefacturaId').val(prefactura.prefact); 
+                        $('#prefacturaId').val(prefactura.prefactId);
                         $('.numericPrice').number(true);
-                   }else{
-                        $('#FacturaProductousuarionuevo').val("");
-                        $('#FacturaProductoventarapida').val("");
                         $('#datosProductoventarapida').hide(); 
-                        bootbox.alert(prefactura.mensaje);                        
-                    }
-                    sumarTotales();
+                        calcularTotalConAbonos();
+                        dialogDialogSeleccionProducto.dialog('close');
+
+                }else{                        
+                    $('#FacturaProductousuarionuevo').val("");
+                    $('#FacturaProductoventarapida').val("");
+                    $('#datosProductoventarapida').hide(); 
+                    bootbox.alert(prefactura.mensaje);  
+                }
+                sumarTotales();
                }
            });                
         }else{
