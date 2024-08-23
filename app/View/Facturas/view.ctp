@@ -67,7 +67,8 @@
         </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>  
+        <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
         
@@ -672,7 +673,8 @@
             </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>    
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>   
+            <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
             <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
     
