@@ -99,6 +99,22 @@
 </div>
 
 <div class="row">
+    <div class="form-group col-md-6">
+        <label for="TipoIdentificacionId">Tipo Identificación</label>
+        <?php echo $this->Form->input("tipoidentificacione_id",
+            array(
+                'name' => "data[Cliente][tipoidentificacione_id]",
+                'label' => "",
+                'type' => 'select',
+                'options' => $tipoIdent,
+                'class' => 'form-control',
+            )
+        );
+        ?>
+    </div>
+</div>
+
+<div class="row">
 
 <div class="form-group col-md-6">
 <label for="ClienteObservaciones">Observaciones</label><br>

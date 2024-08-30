@@ -73,6 +73,7 @@
                     <th><?php echo $this->Paginator->sort('limitecredito', 'Límite de Crédito'); ?></th>
                     <th><?php echo $this->Paginator->sort('estado_id'); ?></th>
                     <th><?php echo $this->Paginator->sort('clasificacioncliente_id', 'Clasificación'); ?></th>
+                    <th><?php echo $this->Paginator->sort('clasificacioncliente_id', 'Clasificación'); ?></th>
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($clientes as $cliente): ?>
@@ -88,9 +89,10 @@
                     <td><?php echo h($cliente['Estado']['descripcion']); ?>&nbsp;</td>
                     <td>
                         <?php echo h(!empty($cliente['Cliente']['clasificacioncliente_id'])
-    ? $clasificacion[$cliente['Cliente']['clasificacioncliente_id']]
-    : ''); ?>&nbsp;
+                        ? $clasificacion[$cliente['Cliente']['clasificacioncliente_id']]
+                        : ''); ?>&nbsp;
                     </td>
+                    <td><?php echo h($tipoIdent[$cliente['Cliente']['tipoidentificacione_id']]); ?>&nbsp;</td>
 
                     <td class="actions">
                         <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Cliente', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $cliente['Cliente']['id']))); ?>

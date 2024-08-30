@@ -27,6 +27,7 @@ class ClientesController extends AppController
         $nit = "";
         $nombre= "";
         $this->loadModel('Clasificacioncliente');
+        $this->loadModel('Tipoidentificacione');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -48,7 +49,8 @@ class ClientesController extends AppController
         $this->set('clientes', $this->Paginator->paginate('Cliente', $paginate));
         $nit = $this->passedArgs['nit'];
         $nombre= $this->passedArgs['nombre'];
-        $this->set(compact('clasificacion', 'nombre','nit   '));
+        $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
+        $this->set(compact('clasificacion', 'nombre','nit', 'tipoIdent'));
     }
 
 /**
@@ -116,6 +118,7 @@ class ClientesController extends AppController
     public function edit($id = null)
     {
         $this->loadModel('Clasificacioncliente');
+        $this->loadModel('Tipoidentificacione');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -142,7 +145,8 @@ class ClientesController extends AppController
         $depositos = $this->Cliente->Deposito->obtenerDepositoEmpresa($empresaId);
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
         $usuarioId = $this->Auth->user('id');
-        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion'));
+        $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
+        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
     }
 
 /**
