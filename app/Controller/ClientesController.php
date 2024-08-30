@@ -81,6 +81,7 @@ class ClientesController extends AppController
     public function add()
     {
         $this->loadModel('Clasificacioncliente');
+        $this->loadModel('Tipoidentificacione');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -101,7 +102,8 @@ class ClientesController extends AppController
         $depositos = $this->Cliente->Deposito->obtenerDepositoEmpresa($empresaId);
         $usuarioId = $this->Auth->user('id');
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
-        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion'));
+        $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
+        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
     }
 
 /**
