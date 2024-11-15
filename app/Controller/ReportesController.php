@@ -14,12 +14,12 @@ class ReportesController extends AppController
 
         $posData = $this->request->data;
 
-        $fechaIncial = '';
-        $fechaFinal = '';
+        $fechaIncial = date('Y-m-01') . ' 00:00:00';
+        $fechaFinal = date('Y-m-t') . ' 23:59:59';
         if (!empty($posData)) {
             $fechaIncial = $posData['fechaInicial'] . ' 00:00:00';
             $fechaFinal = $posData['fechaFinal'] . ' 23:59:59';
-        }
+        } 
 
         $tortas = [];
 
@@ -1153,7 +1153,7 @@ class ReportesController extends AppController
         $FDesde = $_POST['FDesde'];
         $FHasta = $_POST['FHasta'];
         $typeTax = $_POST['type_tax'];
-
+        
         $empresaId = $this->Auth->user('empresa_id');
 
         //se obtiene el listado de proveedores
@@ -1161,9 +1161,12 @@ class ReportesController extends AppController
 
         //se obtiene el listado de usuarios
         $listUsr = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+        $keysArray = array_keys($listUsr);
+
+        $user = !empty($usuarioId) ? $usuarioId : $keysArray;
 
         //se obtiene la informacion de las compras
-        $compras = $this->Compra->obtenerCompras($proveedorId, $usuarioId, $numFactura, $FDesde, $FHasta, $empresaId);
+        $compras = $this->Compra->obtenerCompras($proveedorId, $user, $numFactura, $FDesde, $FHasta, $empresaId);
 
         //se obtiene las categorias de compras
         $productos = $this->Producto->obtenerListaProductosEmpresa($empresaId);
@@ -1185,7 +1188,7 @@ class ReportesController extends AppController
                     'usuario' => $listUsr[$cmp['Compra']['usuario_id']],
                     'categoria' => $productos[$cmp['CCC']['producto_id']],
                     'valor' => $cmp['CCC']['costottal'],
-                    'iva_prc' => $ivaCompra,
+                    'iva_prc' => $cmp['CCC']['prciva'], //$ivaCompra,
                     'iva_vlr' => $cmp['CCC']['vlriva'],
                     'retefuente_prc' => !empty($cmp['Compra']['prcretefuente']) ? ($cmp['Compra']['prcretefuente'] - 1) * 100 : 0,
                     'retefuente_vlr' => $cmp['Compra']['prcretefuente'] != 0 ? ($cmp['CCC']['valor'] * $cmp['Compra']['prcretefuente']) - $cmp['CCC']['valor'] : 0,

@@ -69,6 +69,11 @@ class ComprasController extends AppController {
         
         //se obtiene el listado de usuarios
         $listUsr = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+        
+        
+        //se obtienen los ids de los usuarios 
+        $keysArray = array_keys($listUsr);
+        $paginate['Compra.usuario_id'] = $keysArray;
 
         $this->Compra->recursive = 0;
         $this->set('compras', $this->Paginator->paginate('Compra', $paginate));

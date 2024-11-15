@@ -379,22 +379,6 @@
                     </div>                 
                 </div>
             </div>           
-        </div>
-        
-        <div style="margin-top:50px; width:100%; float:left;">            
-            <div style="float:left; margin-top: 10px;" align="left">
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <small>*Precios sujetos a cambios sin previo aviso</small>
-                    </div>          
-                </div>
-
-                <div style="margin: 2px; float: left; width: 100%;">
-                    <div style="margin: 0px; float: left; width: 100%;">
-                        <small>*Se debe anticipar el 50%</small>
-                    </div>                 
-                </div>
-            </div>           
-        </div>        
+        </div>       
     </div>
 </div>
