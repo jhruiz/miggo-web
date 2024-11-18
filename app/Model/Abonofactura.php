@@ -96,6 +96,15 @@ class Abonofactura extends AppModel {
                 'C.id=Abonofactura.cuenta_id'
             )
         ));
+
+        array_push($arr_join, array(
+            'table' => 'tipopagos',
+            'alias' => 'TP',
+            'type' => 'INNER',
+            'conditions' => array(
+                'TP.id=Abonofactura.tipopago_id'
+            )
+        ));
       
         $abonos = $this->find('all', array(
             'joins' => $arr_join,
@@ -104,7 +113,7 @@ class Abonofactura extends AppModel {
                 'Abonofactura.empresa_id' => $empresaId,
                 $tipoAbono
             ),
-            'fields' => array('Abonofactura.*', 'CL.*', 'C.*'),
+            'fields' => array('Abonofactura.*', 'CL.*', 'C.*', 'TP.*'),
             'recursive' => '-1'
             ));
         
@@ -361,4 +370,84 @@ class Abonofactura extends AppModel {
         
         return $abonos;          
     }
+
+    public function reporteAbonosPrefacturas($empresa_id) {
+
+        array_push($arr_join, array(
+            'table' => 'prefacturas',
+            'alias' => 'PF',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'PF.id=Abonofactura.prefactura_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'clientes',
+            'alias' => 'C',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'C.id=PF.cliente_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'usuarios',
+            'alias' => 'U',
+            'type' => 'INNER',
+            'conditions' => array(
+                'U.id=Abonofactura.usuario_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'cuentas',
+            'alias' => 'CU',
+            'type' => 'INNER',
+            'conditions' => array(
+                'CU.id=Abonofactura.cuenta_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'tipopagos',
+            'alias' => 'TP',
+            'type' => 'INNER',
+            'conditions' => array(
+                'TP.id=Abonofactura.tipopago_id'
+            )
+        ));    
+
+
+        $abonos = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'Abonofactura.*',
+                'F.*',
+                'PF.*',
+                'C.*',
+                'U.*',
+                'CU.*',
+                'TP.*'
+                ),
+            'recursive' => '-1'
+            ));        
+        
+        return $abonos; 
+
+
+
+
+    }
 }
+
+
+
+            #factura
+            #prefactura
+            #fecha
+            #cliente
+            #usuario
+            #valor
+            #cuenta
+            #tipo pago

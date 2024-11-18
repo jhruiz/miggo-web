@@ -911,6 +911,8 @@ class FacturasController extends AppController
                     'valor' => $abnpf['Abonofactura']['valor'],
                     'cliente' => $abnpf['CL']['nombre'],
                     'cuenta' => $abnpf['C']['descripcion'],
+                    'prefactura' => $abnpf['Abonofactura']['prefactura_id'],
+                    'factura' => $abnpf['Abonofactura']['factura_id']
                 ];
 
                 $estadoCuentas[$abnpf['Abonofactura']['cuenta_id']]['abono_prefact'] += $abnpf['Abonofactura']['valor'];
@@ -919,6 +921,7 @@ class FacturasController extends AppController
         }
 
         $abonosFactura = $this->Abonofactura->obtenerAbonosCierreDiario($fechaCierre . ' 00:00:00', $fechaCierre . ' 23:59:59', $empresaId, "0");
+
         if (!empty($abonosFactura)) {
             foreach ($abonosFactura as $abnf) {
 
@@ -931,12 +934,19 @@ class FacturasController extends AppController
                     'valor' => $abnf['Abonofactura']['valor'],
                     'cliente' => $abnf['CL']['nombre'],
                     'cuenta' => $abnf['C']['descripcion'],
+                    'prefactura' => $abnf['Abonofactura']['prefactura_id'],
+                    'factura' => $abnf['Abonofactura']['factura_id']
                 ];
 
                 $estadoCuentas[$abnf['Abonofactura']['cuenta_id']]['abono_fact'] += $abnf['Abonofactura']['valor'];
 
             }
         }
+
+        // echo "<pre>";
+        // print_r($arrAbonos); 
+        // echo "</pre>";
+        // die();
 
         //se obtiene el estado actual de las cuentas
         $ctasEstAct = $this->Cuenta->obtenerInfoCuentas($empresaId);

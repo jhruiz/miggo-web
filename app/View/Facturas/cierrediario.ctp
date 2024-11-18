@@ -160,14 +160,19 @@
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
                     <th><?php echo ('Cliente'); ?></th>
+                    <th><?php echo ('Prefactura'); ?></th>
+                    <th><?php echo ('Factura'); ?></th>
                     <th><?php echo ('Fecha del Abono'); ?></th>                    
                     <th><?php echo ('Cuenta'); ?></th>                    
                     <th class="text-right"><?php echo ('Valor Abono'); ?></th>
                 </tr>
                 <?php $ttalAbonos = 0; ?> 
+
                 <?php foreach ($arrAbonos as $abn): ?> 
                 <tr>
                     <td><?php echo h($abn['cliente']); ?>&nbsp;</td>
+                    <td><?php echo h($abn['prefactura']); ?>&nbsp;</td>
+                    <td><?php echo h($abn['factura']); ?>&nbsp;</td>
                     <td><?php echo h($abn['fecha']); ?>&nbsp;</td>                    
                     <td><?php echo h($abn['cuenta']); ?>&nbsp;</td>                    
                     <td align="right"><?php echo h('$' . number_format($abn['valor'],2)); ?>&nbsp;</td>                    
@@ -175,7 +180,7 @@
                 <?php $ttalAbonos += $abn['valor']; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="3" align="right">TOTAL</th>
+                    <th colspan="5" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalAbonos,2)); ?>&nbsp;</th>
                 </tr>                  
                 </table>

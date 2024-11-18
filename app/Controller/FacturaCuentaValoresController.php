@@ -123,7 +123,8 @@ class FacturaCuentaValoresController extends AppController
         for ($i = 0; $i < count($pagosFacturas); $i++) {
             $totalValor += $pagosFacturas[$i]['FacturaCuentaValore']['valor'];
         }
-        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor', 'numeroFactura', 'codigoDian', 'fechaInicio', 'fechaFin', 'numeroFactura', 'tipocuentas', 'tipopagos'));}
+        $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor', 'numeroFactura', 'codigoDian', 'fechaInicio', 'fechaFin', 'numeroFactura', 'tipocuentas', 'tipopagos'));
+    }
 
     public function search()
     {

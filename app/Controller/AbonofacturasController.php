@@ -5,6 +5,68 @@ App::uses('AppController', 'Controller');
 class AbonofacturasController extends AppController {
     /** obtiene las cuentas de la empresa */
 	public $components = array('Paginator');
+
+        public function index(){
+            $this->loadModel('Abonofactua');
+            // $this->loadModel('Tipopago');
+    
+            $empresaId = $this->Auth->user('empresa_id');
+
+            #factura
+            #prefactura
+            #fecha
+            #cliente
+            #usuario
+            #valor
+            #cuenta
+            #tipo pago
+    
+            // if (!empty($this->passedArgs['tipocuentas'])) {
+            //     $filter['Abonofactura.cuenta_id'] = $this->passedArgs['tipocuentas'];
+            // }
+    
+            // if (!empty($this->passedArgs['tipopagos'])) {
+            //     $filter['FacturaCuentaValore.tipopago_id'] = $this->passedArgs['tipopagos'];
+            // }
+    
+            // if (!empty($this->passedArgs['fechaInicio']) && !empty($this->passedArgs['fechaFin'])) {
+            //     $filter['F.created BETWEEN ? AND ?'] = array($this->passedArgs['fechaInicio'] . ' 00:00:01', $this->passedArgs['fechaFin'] . ' 23:23:59');
+            // }
+    
+            // if (!empty($this->passedArgs['codigoDian'])) {
+            //     $filter = null;
+            //     $filter['F.consecutivodian'] = $this->passedArgs['codigoDian'];
+            // }
+            
+            // if (!empty($this->passedArgs['numeroFactura'])) {
+            //     $filter = null;
+            //     $filter['F.codigo'] = $this->passedArgs['numeroFactura'];
+            // }
+            
+            // if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])
+            //     && empty($this->passedArgs['fechaInicio']) && empty($this->passedArgs['fechaFin'])) {
+            //     $filter['F.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
+            // }
+    
+            // $filter['F.empresa_id'] = $empresaId;
+    
+            // //se obtiene el listado de cuentas
+            // $tipoCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+    
+            // //se obtiene el listado de tipos de pago
+            // $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+    
+            // //se obtienen los metodos de pago usados para cancelar las facturas
+            $pagosFacturas = $this->Abonofactura->reporteAbonosPrefacturas($empresaId);
+            print_rU($pagosFacturas); die();
+    
+            // // Se obtiene el valor total sumando el valor de cada factura atributo pagocontado
+            // $totalValor = 0;
+            // for ($i = 0; $i < count($pagosFacturas); $i++) {
+            //     $totalValor += $pagosFacturas[$i]['FacturaCuentaValore']['valor'];
+            // }
+            // $this->set(compact('pagosFacturas', 'tipoCuentas', 'tipoPago', 'totalValor', 'numeroFactura', 'codigoDian', 'fechaInicio', 'fechaFin', 'numeroFactura', 'tipocuentas', 'tipopagos'));
+        }
         
         public function abonofactura(){
             $this->loadModel('Tipopago');

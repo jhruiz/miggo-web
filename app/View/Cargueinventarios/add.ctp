@@ -40,7 +40,7 @@ echo $this->Html->script('utilsjs/utilArchivos.js');
                                     <div class="container">
                                         <div class="btn-group">
                                             <button id="butCargarInventarioUp" class="btn btn-primary" onclick="cargueInventarioCuadro();" disabled="disabled">Cargar Inventario</button>
-                                            <button id="butNuevoProducto" class="btn btn-primary" onclick="nuevoProducto();">Nuevo Producto</button>
+                                            <!-- <button id="butNuevoProducto" class="btn btn-primary" onclick="nuevoProducto();">Nuevo Producto</button> -->
                                             <button id="butCargueParcial" class="btn btn-primary" onclick="verCargueParcial();">Ver Cargue Parcial</button>
                                             <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
                                         </div><br><br>
