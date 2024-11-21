@@ -1,10 +1,10 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas.js')); ?>
-<div class="facturas-cuentas-valores index">
+<div class="abonofacturas index">
 
+<?php $totalValor = 0; ?>
 
-
-    <?php echo $this->Form->create('FacturaCuentaValore', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
+    <?php echo $this->Form->create('Abonofactura', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
     <legend><h2><b><?php echo __('Buscar de pagos por factura'); ?></b></h2></legend>
     <div class="row">
         <div class="col-md-3"> 
@@ -74,75 +74,65 @@
     </form><br><br>
 
     <!-- Inicio zona descargue reporte excel-->
-    <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarFacturaCuentaValores')); ?>
+    <?php echo $this->Form->create('Reporte', array('controller' => 'reportes', 'action' => 'descargarAbonosFacturasCuentas')); ?>
     <fieldset>
         <?php echo $this->Form->input('codigoDian', array('type' => 'hidden', 'name' => 'codigoDian', 'value' => $codigoDian)) ?>
         <?php echo $this->Form->input('numeroFactura', array('type' => 'hidden', 'name' => 'numeroFactura', 'value' => $numeroFactura)) ?>
         <?php echo $this->Form->input('fechaInicio', array('type' => 'hidden', 'name' => 'fechaInicio', 'value' => $fechaInicio)) ?>
         <?php echo $this->Form->input('fechaFin', array('type' => 'hidden', 'name' => 'fechaFin', 'value' => $fechaFin)) ?>
-        <?php echo $this->Form->input('tipocuentas', array('type' => 'hidden', 'name' => 'tipocuentas', 'value' => $tipocuentas)) ?>
+        <?php echo $this->Form->input('tipocuentas', array('type' => 'hidden', 'name' => 'tipocuentas', 'value' => $tipocuenta)) ?>
         <?php echo $this->Form->input('tipopagos', array('type' => 'hidden', 'name' => 'tipopagos', 'value' => $tipopagos)) ?>
-
-
-
         <?php echo $this->Form->submit('Descargar', array('class' => 'btn btn-primary')); ?>
     </fieldset>
     </form><br><br>
     <!-- Fin zona descargue reporte excel -->
 
-
-
-	<legend><h2><b><?php echo __('Métodos de Pago por Factura'); ?></b></h2></legend>
+	<legend><h2><b><?php echo __('Métodos de Pago por Abonos'); ?></b></h2></legend>
         <div class="table-responsive">
             <div class="container">
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                 <tr>
-                                <th><?php echo $this->Paginator->sort('factura_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('created', 'Fecha'); ?></th>
-                                <th><?php echo $this->Paginator->sort('cuenta_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('tipopago_id'); ?></th>
-                                <th><?php echo $this->Paginator->sort('valor'); ?></th>
+                                <th><?php echo ('# Prefactura'); ?></th>
+                                <th><?php echo ('# Factura'); ?></th>
+                                <th><?php echo ('# Consecutivo Dian'); ?></th>
+                                <th><?php echo ('Usuario'); ?></th>
+                                <th><?php echo ('Fecha'); ?></th>
+                                <th><?php echo ('Tipo de Pago'); ?></th>
+                                <th><?php echo ('Cuenta'); ?></th>
+                                <th><?php echo ('Cliente'); ?></th>
+                                <th><?php echo ('Valor'); ?></th>
                 </tr>
-                <?php foreach ($pagosFacturas as $pagofact): ?>
-                    <?php if (!empty($pagofact['F']['id'])) {?>
+                <?php foreach ($abonos as $ab): ?>
                         <tr>
-                            <td><?php echo !empty($pagofact['F']['consecutivodian']) ? h($pagofact['F']['consecutivodian']) : $pagofact['F']['codigo']; ?>&nbsp;</td>
-                            <td><?php echo h($pagofact['F']['created']); ?>&nbsp;</td>
-                            <td><?php echo h($pagofact['C']['descripcion']); ?>&nbsp;</td>
-                            <td><?php echo h($pagofact['T']['descripcion']); ?>&nbsp;</td>
-                            <td><?php echo h("$" . number_format($pagofact['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;</td>
+                            <td><?php echo h($ab['Abonofactura']['prefactura_id']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['F']['codigo']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['F']['consecutivodian']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['U']['nombre']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['Abonofactura']['created']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['TP']['descripcion']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['CU']['descripcion']); ?>&nbsp;</td>
+                            <td><?php echo h($ab['C']['nombre']); ?>&nbsp;</td>
+                            <td><?php echo h("$" . number_format($ab['Abonofactura']['valor'], 2)); ?>&nbsp;</td>
                         </tr>
-                    <?php }?>
+                <?php $totalValor += $ab['Abonofactura']['valor'];?>
                 <?php endforeach;?>
                 </table>
             </div>
         </div>
-        <?php
-echo $this->Paginator->counter(array(
-    'format' => __('Página {:page} de {:pages}, mostrando {:current} registro de {:count} en total, iniciando en registro {:start}, finalizando en {:end}'),
-));
-?>
-        </p>
-	<div class="pagin">
-	<?php echo $this->Paginator->prev('< ' . __('Anterior '), array(), null, array('class' => 'prev disabled')); ?>
-	<?php echo $this->Paginator->numbers(array('separator' => ' || ')); ?>
-	<?php echo $this->Paginator->next(__(' Siguiente') . ' >', array(), null, array('class' => 'next disabled')); ?>
-    </div>
 
-    <div class="row">
-                    <div class="col-md-8">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-2">
-                        <dl>
-                            <dt class="text-left text-success"><?php echo h("Valor Total: "); ?></dt>
-                        </dl>
-                    </div>
-                    <div class="col-md-2">
-                        <dl>
-                            <dt class="text-right text-success"><?php echo h("$" . number_format($totalValor, 2)) ?></dt>
-
-                        </dl>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-8">
+                &nbsp;
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt class="text-left text-success"><?php echo h("Valor Total: "); ?></dt>
+                </dl>
+            </div>
+            <div class="col-md-2">
+                <dl>
+                    <dt class="text-right text-success"><?php echo h("$" . number_format($totalValor, 2)) ?></dt>
+                </dl>
+            </div>
+        </div>
 </div>

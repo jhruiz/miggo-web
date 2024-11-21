@@ -817,6 +817,75 @@ class ReportesController extends AppController
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');       
     }
+        /**
+     * Se genera el reporte de Factura Cuenta Valores
+     */
+    public function descargarAbonosFacturasCuentas()
+    {
+
+        $this->loadModel('Abonofactura');
+        $this->loadModel('Tipopago');
+        $this->loadModel('Cuenta');
+
+        $empresaId = $this->Auth->user('empresa_id');
+
+        if (!empty($_POST['codigoDian'])) {
+            $filter = null;
+            $codigoDian = $_POST['codigoDian'];
+            $filter['F.consecutivodian'] = $_POST['codigoDian'];
+        }
+
+        if (!empty($_POST['numeroFactura'])) {
+            $filter = null;
+            $numeroFactura = $_POST['numeroFactura'];
+            $filter['F.codigo'] = $_POST['numeroFactura'];
+        }
+
+        if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
+            $fechaInicio = $_POST['fechaInicio'];
+            $fechaFin = $_POST['fechaFin'];
+            $filter['Abonofactura.created BETWEEN ? AND ?'] = array($_POST['fechaInicio'] . ' 00:00:01', $_POST['fechaFin'] . ' 23:23:59');
+        }
+
+        if (!empty($_POST['tipocuentas'])) {
+            $filter = null;
+            $tipocuentas = $_POST['tipocuentas'];
+            $filter['Abonofactura.cuenta_id'] = $_POST['tipocuentas'];
+        }
+        if (!empty($_POST['tipopagos'])) {
+            $filter = null;
+            $tipopagos = $_POST['tipopagos'];
+            $filter['Abonofactura.tipopago_id'] = $_POST['tipopagos'];
+        }
+
+        $filter['Abonofactura.empresa_id'] = $empresaId;
+
+        //se obtienen los abonos realizados a prefacturas
+        $abonosPrefacturas = $this->Abonofactura->reporteAbonosPrefacturas($filter);
+
+        //se obtienen los abonos realizados a cuentas por cobrar
+        $abonosCuentas = $this->Abonofactura->reporteAbonosCuentas($filter);
+
+        $abonos = array_merge($abonosPrefacturas, $abonosCuentas);
+
+        $texto_tit = "Metodos de pago por abonos";
+        $this->set(compact('pagosAbonosCuentas'));
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $abonos);
+        $arr_titulos = array(
+            '# Prefactura',
+            '# Factura',
+            '# Consecutivo Dian',
+            'Usuario',
+            'Fecha',
+            'Tipo de Pago',
+            'Cuenta',
+            'Cliente',
+            'Valor'
+        );
+        $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');       
+    }
     /**
      * Se genera el reporte de Factura reporte facturas clientes
      */

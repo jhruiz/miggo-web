@@ -265,6 +265,22 @@ endforeach;
             </tr>
         <?php
     endforeach;
+}else if(isset($pagosAbonosCuentas)){
+    foreach ($pagosAbonosCuentas as $pagosAbonos):
+        ?>
+            <tr>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['Abonofactura']['prefactura_id']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['F']['codigo']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['F']['consecutivodian']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['U']['nombre']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['Abonofactura']['created']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['TP']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['CU']['descripcion']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['C']['nombre']); ?></td>
+                <td class="tableTdContent" ><?php echo h($pagosAbonos['Abonofactura']['valor']); ?></td>
+            </tr>
+        <?php
+    endforeach;
 }else if(isset($facturaClientes)){
 
         foreach ($facturaClientes as $fc): ?>

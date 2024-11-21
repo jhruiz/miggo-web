@@ -371,12 +371,15 @@ class Abonofactura extends AppModel {
         return $abonos;          
     }
 
-    public function reporteAbonosPrefacturas($empresa_id) {
+    // obtiene los abonos realizados a prefacrturas
+    public function reporteAbonosPrefacturas($filter) {
+
+        $arr_join = [];
 
         array_push($arr_join, array(
             'table' => 'prefacturas',
             'alias' => 'PF',
-            'type' => 'LEFT',
+            'type' => 'INNER',
             'conditions' => array(
                 'PF.id=Abonofactura.prefactura_id'
             )
@@ -416,28 +419,116 @@ class Abonofactura extends AppModel {
             'conditions' => array(
                 'TP.id=Abonofactura.tipopago_id'
             )
+        ));   
+        
+        array_push($arr_join, array(
+            'table' => 'facturas',
+            'alias' => 'F',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'F.id=Abonofactura.factura_id'
+            )
+        ));  
+
+        $abonos = $this->find('all', array(
+            'joins' => $arr_join,
+            'recursive' => '-1',
+            'fields' => array(
+                'Abonofactura.*',
+                'U.nombre',
+                'CU.descripcion',
+                'TP.descripcion',
+                'C.nombre',
+                'F.codigo',
+                'F.consecutivodian'
+            ),
+            'conditions' => array(
+                'Abonofactura.cuentacliente_id is null',
+                $filter
+            )
+            ));        
+        
+        return $abonos; 
+    }
+
+    // Obtiene los abonos realizados a cuentas por cobrar
+    public function reporteAbonosCuentas($filter) {
+
+        $arr_join = [];
+
+        array_push($arr_join, array(
+            'table' => 'cuentasclientes',
+            'alias' => 'CC',
+            'type' => 'INNER',
+            'conditions' => array(
+                'CC.id=Abonofactura.cuentacliente_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'clientes',
+            'alias' => 'C',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'C.id=CC.cliente_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'usuarios',
+            'alias' => 'U',
+            'type' => 'INNER',
+            'conditions' => array(
+                'U.id=Abonofactura.usuario_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'cuentas',
+            'alias' => 'CU',
+            'type' => 'INNER',
+            'conditions' => array(
+                'CU.id=Abonofactura.cuenta_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'tipopagos',
+            'alias' => 'TP',
+            'type' => 'INNER',
+            'conditions' => array(
+                'TP.id=Abonofactura.tipopago_id'
+            )
+        ));    
+
+        array_push($arr_join, array(
+            'table' => 'facturas',
+            'alias' => 'F',
+            'type' => 'LEFT',
+            'conditions' => array(
+                'F.id=Abonofactura.factura_id'
+            )
         ));    
 
 
         $abonos = $this->find('all', array(
             'joins' => $arr_join,
+            'recursive' => '-1',
             'fields' => array(
                 'Abonofactura.*',
-                'F.*',
-                'PF.*',
-                'C.*',
-                'U.*',
-                'CU.*',
-                'TP.*'
-                ),
-            'recursive' => '-1'
+                'U.nombre',
+                'CU.descripcion',
+                'TP.descripcion',
+                'C.nombre',
+                'F.codigo',
+                'F.consecutivodian'
+            ),
+            'conditions' => array(
+                $filter
+            )
             ));        
         
         return $abonos; 
-
-
-
-
     }
 }
 
