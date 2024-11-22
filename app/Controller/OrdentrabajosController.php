@@ -13,17 +13,20 @@ class OrdentrabajosController extends AppController {
         $this->loadModel('Plantaservicio');
         $this->loadModel('Cliente');
         $this->loadModel('Ordenestado');
+        $this->loadModel('Perfile');
         $paginate = array();
         
         //se obtienen los estados finalizados
         $estFin = $this->Ordenestado->obtenerEstadosFin();
+
+        $perfil = $this->Perfile->obtenerPerfilPorId($this->Auth->user('perfile_id'));
         
         $perfilId = $this->Auth->user('perfile_id');
         $usuarioId = $this->Auth->user('id');
         $arrFilter = array();
                
         $flgE = true;
-        if($perfilId != '1' && $perfilId != '4' && $perfilId != '5'){
+        if(!$perfil['0']['Perfile']['admin']){
             $paginate['Ordentrabajo.usuario_id'] = $usuarioId;
             $flgE = false;
         }

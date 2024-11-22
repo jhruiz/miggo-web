@@ -71,9 +71,13 @@ class Perfile extends AppModel {
 		)
 	);
         
-        public function obtenerListaPerfiles(){
-            $perfiles = $this->find('list', array('order' => 'Perfile.descripcion'));
-            return $perfiles;
-        }
+	public function obtenerListaPerfiles(){
+		$perfiles = $this->find('list', array('order' => 'Perfile.descripcion'));
+		return $perfiles;
+	}
+
+	public function obtenerPerfilPorId( $perfileId ) {
+		return $this->find('all', array('conditions' => array('Perfile.id' => $perfileId ), 'recursive' => '-1'));
+	}
 
 }
