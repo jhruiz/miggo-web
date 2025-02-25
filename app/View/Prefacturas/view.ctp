@@ -4,7 +4,8 @@
 <?php echo ($this->Html->script('facturas/abonos.js')); ?>
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js'));  ?>
 <?php echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
-<?php echo ($this->Html->script('prefacturas/view.js'));  ?>
+<?php echo ($this->Html->script('prefacturas/view.js')); ?>
+<?php echo ($this->Html->script('facturas/syncdian.js')); ?>
 <?php echo $this->Form->create('Prefactura'); ?>
 <input type="hidden" id="prefacturaId" value="<?php echo $prefactura['Prefactura']['id'];?>">
 <div class="container body">

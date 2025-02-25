@@ -55,12 +55,12 @@ class Cuenta extends AppModel {
 	);
         
         public function obtenerCuentasEmpresa($empresaId){
-			$cuentas = $this->find('list', array('conditions' => array('Cuenta.empresa_id' => $empresaId), 'recursive' => '-1'));
+			$cuentas = $this->find('list', array('conditions' => array('Cuenta.empresa_id' => $empresaId, 'Cuenta.deleted' => '0'), 'recursive' => '-1'));
             return $cuentas;
         }
         
         public function obtenerDatosCuentaId($cuentaId){
-            $cuenta = $this->find('first', array('conditions' => array('Cuenta.id' => $cuentaId), 'recursive' => '-1'));
+            $cuenta = $this->find('first', array('conditions' => array('Cuenta.id' => $cuentaId, 'Cuenta.deleted' => '0'), 'recursive' => '-1'));
             return $cuenta;
         }
         
@@ -79,12 +79,13 @@ class Cuenta extends AppModel {
         public function obtenerCuentasDestino($empresaId){
             $filter = [];            
             $filter['Cuenta.empresa_id'] = $empresaId;
+            $filter['Cuenta.deleted'] = '0';
             $cuentas = $this->find('list', array('conditions' => $filter, 'recursive' => '-1'));
             return $cuentas;
         }
         
         public function obtenerInfoCuentas($empresaId){
-            $cuentas = $this->find('all', array('conditions' => array('Cuenta.empresa_id' => $empresaId), 'recursive' => '-1'));
+            $cuentas = $this->find('all', array('conditions' => array('Cuenta.empresa_id' => $empresaId, 'Cuenta.deleted' => '0'), 'recursive' => '-1'));
             return $cuentas;
         }
 

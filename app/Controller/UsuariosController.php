@@ -50,6 +50,7 @@ class UsuariosController extends AppController {
             $paginate['Usuario.empresa_id'] = $empresaId;            
         }
 
+        $paginate['Usuario.deleted'] = '0'; 
 
         $this->Usuario->recursive = 0;
 

@@ -1,6 +1,7 @@
 <?php 
 $this->layout=false;
 echo ($this->Html->script('facturas/tiposPago.js'));
+echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'media' => 'all'));
 ?>
 <div class="form_contenedor_pagos">
     <div class="row contenedor_metodos_pagos"> 
@@ -41,10 +42,14 @@ echo ($this->Html->script('facturas/tiposPago.js'));
     </div>
     <div class="container-flui">
         <div class="col-md-6">
-            <button id="btn_facturar_m" class="btn btn-primary center-block">Facturar</button>
+            <button id="btn_facturar_m" class="btn btn-primary center-block" style="display: inline-block;">Facturar</button>
         </div>
         <div class="col-md-6">
-            <button id="btn_agregar" class="btn btn-primary center-block">Agregar Método</button>
+            <button id="btn_agregar" class="btn btn-primary center-block" style="display: inline-block;">Agregar Método</button>
         </div>    
+    </div>
+    <div class="icon-container" style="display: none;">
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+        <span class="icon-text" id="fact_status">Guardando los métodos de pago de la factura</span>
     </div>
 </div>

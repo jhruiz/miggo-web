@@ -453,4 +453,13 @@ class Cuentascliente extends AppModel {
             
         }
 
+
+        /**
+         * Obtiene la info del tipo pago a crédito para una factura específica
+         */
+        public function obtenerInfoTipoPagoCredito($facturaId){
+            $arrCuentaCliente = $this->find('all', array('conditions' => array('Cuentascliente.factura_id' => $facturaId), 'recursive' => '-1'));
+            return $arrCuentaCliente;
+        }
+
 }

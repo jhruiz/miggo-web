@@ -598,19 +598,6 @@ function calcularPagoCredito(){
     }
 }
 
-//esta funcion ya no se usa
-//function validarCrediContado(){
-//
-//    var mensaje = "";
-//    mensaje = validarDatosContadoCredito();
-//    
-//    if(mensaje != ""){
-//        bootbox.alert(mensaje);
-//    }else{
-//        submitForm();
-//    }
-//}
-
 function validarDatosContadoCredito(){
     var credito = $('#pagocredito').val();        
     var contado = $('#pagocontado').val(); 
@@ -627,7 +614,10 @@ function validarDatosContadoCredito(){
 
 
 function submitForm(arrData){
-    var formData = new FormData($('#FacturaAddForm')[0]);    
+
+    var formData = new FormData($('#FacturaAddForm')[0]);  
+
+    $('#fact_status').text('Guardando tu factura y sincronizando inventario.');
     
     $.ajax({
         url: $('#url-proyecto').val() + 'facturas/facturarProductos',
@@ -637,7 +627,15 @@ function submitForm(arrData){
         processData: false,
         success: function(data) {
             var respuesta = JSON.parse(data);
-            window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;
+
+            if($('#esfactura').prop('checked')) {
+                obtenerFacturaDian(null, respuesta.resp, 1);
+            } else {
+                window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;
+            }
+
+
+
         }
     });    
 }

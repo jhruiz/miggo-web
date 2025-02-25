@@ -1,6 +1,7 @@
 <?php $this->layout = 'inicio';?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
 <?php echo ($this->Html->script('facturas/notacredito.js')); ?>
+<?php echo ($this->Html->script('facturas/syncdian.js')); ?>
 
 <div class="container body">
 <div class="main_container">
@@ -135,6 +136,7 @@
             <div class="container">
             <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
+                    <th><?php echo ('Dian'); ?></th>
                     <th><?php echo $this->Paginator->sort('codigo'); ?></th>
                     <th><?php echo $this->Paginator->sort('consecutivodian', 'Consecutivo'); ?></th>
                     <th><?php echo $this->Paginator->sort('cliente_id'); ?></th>
@@ -145,7 +147,18 @@
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($facturas as $factura): ?>
+
+                    <?php
+                         $faType = $factura['Factura']['diancufe'] != '' ? 'fa-check text-success' : 'fa-times text-danger';
+                    ?>
                 <tr>
+                        <td>
+                            <?php if ($factura['Factura']['consecutivodian']) { ?>
+                                <i class="fa fa-spinner fa-pulse fa-lg fa-fw text-primary" style="display: none;" id="spinner_<?php echo($factura['Factura']['id']); ?>"></i>
+                                <i class="fa <?php echo($faType);?> fa-lg syncdian" title="Reenviar Factura" style="cursor: pointer;" data-id="<?php echo($factura['Factura']['id']); ?>" id="checksync_<?php echo($factura['Factura']['id']); ?>"></i> 
+                            <?php } ?>
+                        </td>
+
                         <td><?php echo h($factura['Factura']['codigo']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['consecutivodian']); ?>&nbsp;</td>
                         <td><?php echo h(!empty($factura['C']['nombre']) ? $factura['C']['nombre'] : "Anonimo"); ?>&nbsp;</td>

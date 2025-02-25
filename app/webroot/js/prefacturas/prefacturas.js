@@ -532,7 +532,9 @@ function facturarProductos(){
 
 function submitForm(){
     $('#btn_facturar').attr("disabled", true);
-    var formData = new FormData($('#PrefacturaViewForm')[0]);    
+    var formData = new FormData($('#PrefacturaViewForm')[0]);   
+    
+    $('#fact_status').text('Guardando tu factura y sincronizando inventario.');
     
     $.ajax({
         url: $('#url-proyecto').val() + 'facturas/facturarProductos',
@@ -542,7 +544,12 @@ function submitForm(){
         processData: false,
         success: function(data) { 
             var respuesta = JSON.parse(data);
-            window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;
+
+            if($('#esfactura').prop('checked')) {
+                obtenerFacturaDian(null, respuesta.resp, 1);
+            } else {
+                window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;
+            }
         }
     });    
 }

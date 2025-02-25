@@ -3,8 +3,10 @@
  * @param {type} arrPayMeth
  * @returns {undefined}
  */
-var guardarMetodosValores = function(arrPayMeth){
-    $('#btn_facturar_m').attr("disabled", true); 
+var guardarMetodosValores = function(arrPayMeth){ 
+    $('.icon-container').show();
+    $('#btn_facturar_m').css('display', 'none');
+    $('#btn_agregar').css('display', 'none');
     
     //se obtiene el id de la prefactura para realizar el abono
     var prefactId = "";

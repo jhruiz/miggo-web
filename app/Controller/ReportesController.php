@@ -14,7 +14,11 @@ class ReportesController extends AppController
 
         $posData = $this->request->data;
 
-        $fechaIncial = date('Y-m-01') . ' 00:00:00';
+        $fechaActual = new DateTime();    
+        // Restar 3 meses a la fecha actual
+        $fechaFormateada = $fechaActual->modify('-3 months')->format('Y-m-d');
+
+        $fechaIncial = $fechaFormateada;
         $fechaFinal = date('Y-m-t') . ' 23:59:59';
         if (!empty($posData)) {
             $fechaIncial = $posData['fechaInicial'] . ' 00:00:00';

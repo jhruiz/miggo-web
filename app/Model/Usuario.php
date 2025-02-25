@@ -232,22 +232,22 @@ class Usuario extends AppModel {
      * @return array
      */
      public function obtenerUsuarioPorUsername($username){
-         $arrInfoUsuario = $this->find('first', array('conditions' => array('Usuario.username' => $username), 'recursive' => '-1'));
+         $arrInfoUsuario = $this->find('first', array('conditions' => array('Usuario.username' => $username,'Usuario.deleted' => '0'), 'recursive' => '-1'));
          return $arrInfoUsuario;         
      }        
      
      public function obtenerUsuarioPorId($usuarioId){
-         $arrInfoUsuario = $this->find('first', array('conditions' => array('Usuario.id' => $usuarioId), 'recursive' => '-1'));
+         $arrInfoUsuario = $this->find('first', array('conditions' => array('Usuario.id' => $usuarioId, 'Usuario.deleted' => '0'), 'recursive' => '-1'));
          return $arrInfoUsuario;
      }
      
      public function obtenerUsuariosLogin($empresaId){
-         $arrUsrLogin = $this->find('all', array('conditions' => array('Usuario.empresa_id' => $empresaId, 'Usuario.estadologin' => '1'), 'recursive' => '-1'));
+         $arrUsrLogin = $this->find('all', array('conditions' => array('Usuario.empresa_id' => $empresaId, 'Usuario.estadologin' => '1', 'Usuario.deleted' => '0'), 'recursive' => '-1'));
          return $arrUsrLogin;
      }
      
      public function obtenerUsuarioEmpresa($empresaId){
-         $listUsuario = $this->find('list', array('conditions' => array('Usuario.empresa_id' => $empresaId), 'recursive' => '-1', 'order' => 'Usuario.nombre'));
+         $listUsuario = $this->find('list', array('conditions' => array('Usuario.empresa_id' => $empresaId, 'Usuario.deleted' => '0'), 'recursive' => '-1', 'order' => 'Usuario.nombre'));
          return $listUsuario;
      }
      
@@ -321,6 +321,7 @@ class Usuario extends AppModel {
 			 'conditions' => array(
 				 $filtros,
 				 'Usuario.empresa_id' => $empresaId,
+				 'Usuario.deleted' => '0'
 			 ),
 			 'recursive' => -1,
 		 ));

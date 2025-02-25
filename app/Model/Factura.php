@@ -757,6 +757,23 @@ class Factura extends AppModel
         }
     }
 
+    public function actualizarInfoDian( $facturaId, $statusCode, $cufe, $QR) {
+
+        $data = array();
+        $factura = new Factura();
+
+        $data['id'] = $facturaId;
+        $data['dianstatuscode'] = $statusCode;
+        $data['diancufe'] = $cufe;
+        $data['dianQRStr'] = $QR;
+
+        if ($factura->save($data)) {
+            return true;
+        } else {
+            return false;
+        }        
+    }
+
 
 
 }

@@ -4,6 +4,7 @@
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
 <?php echo ($this->Html->script('facturas/imprimirFactura')); ?>
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js')); ?>
+<?php echo ($this->Html->script('facturas/syncdian.js')); ?>
 <?php echo $this->Form->create('Factura'); ?>
 <div class="container body">
 <div class="main_container">

@@ -3,6 +3,7 @@
  * @returns {undefined}
  */
 function imprimirTicket() {
+
     var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
     var mywindow = window.open('', 'PRINT', 'height=400, width=600');
     mywindow.document.write('<html><head>');
@@ -11,11 +12,10 @@ function imprimirTicket() {
     mywindow.document.write('</head>');
     mywindow.document.write('<body>');
     mywindow.document.write('<div style="font-family:sans-serif; font-size:10px;">');
-    mywindow.document.write($('#dvTicket').html());
+    mywindow.document.write($('#dvTicket').html());   
+    mywindow.document.write('<div style="margin-top:5px; float:right; width:100%;">');
+    mywindow.document.write($('#dvNota').html());
     mywindow.document.write('</div>');
-    mywindow.document.write('<div style="font-family:sans-serif; font-size:10px; margin-top: 5px;">');
-    mywindow.document.write($('#dvResolucion').html());
-    mywindow.document.write('</div>');    
     mywindow.document.write('</body></html>');
     mywindow.document.title = $('#cliName').val() + tipoVenta;
     mywindow.document.close();
@@ -33,39 +33,68 @@ function imprimirFactura() {
     var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
 
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    // Escribir el contenido HTML en la nueva ventana
     mywindow.document.write('<html><head>');
-    mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
-    mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 10px; } </style>');
-    mywindow.document.write('</head>');
-    mywindow.document.write('<body>');
-    mywindow.document.write('<div style="font-family:sans-serif; font-size:15px;">');
-    mywindow.document.write($('#dvFacturas').html());
-    mywindow.document.write('<div style="margin-top:20px; float:left;">');
-    mywindow.document.write("<b>EMISOR: </b>" + $('#emisor').val() + "<br>");
-    mywindow.document.write("________________________________<br>");
-    mywindow.document.write("<b>Nit: </b>" + $('#emisorNit').val());
+    
+    // Estilos para ocultar el título y la URL en la impresión
+    mywindow.document.write('<style>');
+    mywindow.document.write('@page { size: auto; margin: 0; }'); // Eliminar márgenes de la página
+    mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }'); // Tamaño de fuente base
+    mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }'); // Tamaño de fuente para la tabla
+    mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }'); // Tamaño de fuente para celdas
+    mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 12px; }'); // Tamaño de fuente para celdas
+    mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }');
+    mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }');
+    mywindow.document.write('@media print {');
+    mywindow.document.write('  @page { margin: 0; }'); // Eliminar márgenes en la impresión
+    mywindow.document.write('  body { margin: 1cm; }'); // Ajustar márgenes del contenido
+    mywindow.document.write('  .no-print, .no-print * { display: none !important; }'); // Ocultar elementos no deseados
+    mywindow.document.write('}');
+    mywindow.document.write('</style>');
+    
+    // Configurar el título de la ventana (esto no se imprimirá)
+    mywindow.document.write('<title>' + $('#cliName').val() + tipoVenta + '</title>');
+    mywindow.document.write('</head><body>');
+    
+    // Contenido que deseas imprimir
+    mywindow.document.write('<div style="font-family: Arial, sans-serif; font-size: 12px;">');
+    mywindow.document.write($('#dvFacturas').html()); // Contenido de la tabla
     mywindow.document.write('</div>');
-    mywindow.document.write('<div style="margin-top:20px; float:right;">');
-    mywindow.document.write("<b>CLIENTE: </b>" + $('#cliName').val() + "<br>");
-    mywindow.document.write("________________________________<br>");
-    mywindow.document.write("C.C: " + $('#cliNit').val());
+    
+    mywindow.document.write('<div style="margin-top: 20px; margin-right: 3px; float: left; text-align: justify; width: 70%; font-size: 12px;">');
+    mywindow.document.write($('#p_condCont').html()); // Contenido adicional
     mywindow.document.write('</div>');
-    mywindow.document.write('<div style="margin-top:10px; margin-right:3px; float:left; text-align:justify; width:70%;">');
-    mywindow.document.write($('#p_condCont').html());
-    mywindow.document.write('</div>');
-    mywindow.document.write('<div style="margin-top:5px; float:right; width:25%;">');
-    mywindow.document.write($('#dvResolucion').html());
-    mywindow.document.write('</div>');
-    mywindow.document.write('<div style="margin-top:5px; float:right; width:100%;">');
-    mywindow.document.write($('#nota_factura').html());
-    mywindow.document.write('</div>');
-    mywindow.document.write('</div>');
+    
     mywindow.document.write('</body></html>');
-    mywindow.document.title = $('#cliName').val() + tipoVenta;
+    
+    // Cerrar el documento y enfocar la ventana
     mywindow.document.close();
     mywindow.focus();
+    
+    // Imprimir y cerrar la ventana
     mywindow.print();
     mywindow.close();
+
+    // var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
+    // var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    // mywindow.document.write('<html><head>');
+    // mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
+    // mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 10px; } </style>');
+    // mywindow.document.write('</head>');
+    // mywindow.document.write('<body>');
+    // mywindow.document.write('<div style="font-family:sans-serif; font-size:15px;">');
+    // mywindow.document.write($('#dvFacturas').html());
+    // mywindow.document.write('<div style="margin-top:10px; margin-right:3px; float:left; text-align:justify; width:70%;">');
+    // mywindow.document.write($('#p_condCont').html());
+    // mywindow.document.write('</div>');
+    // mywindow.document.write('</div>');
+    // mywindow.document.write('</body></html>');
+    // mywindow.document.title = $('#cliName').val() + tipoVenta;
+    // mywindow.document.close();
+    // mywindow.focus();
+    // mywindow.print();
+    // mywindow.close();
 }
 
 /**
@@ -73,6 +102,7 @@ function imprimirFactura() {
  * @returns {undefined}
  */
 function imprimirOrden() {
+
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
     mywindow.document.write('<html><head>');
     mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
@@ -136,12 +166,39 @@ var generarAlertaFactura = function() {
 
 }
 
+var generarQRDian = function() {
+    $('.qr_imp').qrcode({
+        render: 'image',
+        minVersion: 1,
+        maxVersion: 40,
+        ecLevel: 'L',
+        left: 0,
+        top: 0,
+        size: 150,
+        fill: '#000',
+        background: null,
+        text: $("#dianQRStr").val(),
+        radius: 0,
+        quiet: 0,
+        mode: 0,
+        mSize: 0.1,
+        mPosX: 0.5,
+        mPosY: 0.5,
+        label: 'no label',
+        fontname: 'sans',
+        fontcolor: '#000',
+        image: null,
+        download: 1
+    }); 
+}
 
 $(function() {
     $('#conditions').hide();
     $('#conditions_ot').hide();
-    $('#dvNota').hide();
+    // $('#dvNota').hide();
     $('#dvTicket').hide();
     $('#btn_alerta').click(generarAlerta);
     $('#btn_alertaFactura').click(generarAlertaFactura);
+
+    generarQRDian();
 });

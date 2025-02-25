@@ -144,4 +144,33 @@ class FacturaCuentaValore extends AppModel
         return $factCuentVal;
     }
 
+    /**
+     * Obtiene los pagos realizados a una factura
+     */
+    public function obtenerInfoTipoPagoEfectivo( $facturaId )
+    {
+        $arr_join = [];
+
+        array_push($arr_join, array(
+            'table' => 'tipopagos',
+            'alias' => 'T',
+            'type' => 'INNER',
+            'conditions' => array(
+                'T.id=FacturaCuentaValore.tipopago_id',
+            ),
+        ));
+
+        $data = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'T.*',
+                'FacturaCuentaValore.*',
+            ),
+            'conditions' => array(
+                'FacturaCuentaValore.factura_id' => $facturaId
+            ), 
+            'recursive' => '-1'));
+        return $data;
+    }
+
 }

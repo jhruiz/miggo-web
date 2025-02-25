@@ -1,0 +1,20 @@
+/* Centra el contenedor en la pantalla */
+.centered-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+/* Estilos para el ícono y el texto */
+.icon-container {
+    display: none; /* Oculta el contenedor por defecto */
+    text-align: center; /* Centra el contenido */
+}
+
+.icon-text {
+    display: block; /* Coloca el texto en una nueva línea */
+    margin-top: 10px; /* Espacio entre el ícono y el texto */
+    font-size: 16px;
+    color: #333; /* Color del texto */
+}

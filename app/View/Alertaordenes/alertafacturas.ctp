@@ -86,7 +86,7 @@ echo $color;
                         <td><?php echo h($alertOrd['Alertaordene']['cant_llamadas']); ?></td>
 
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editfacturas', $alertOrd['Alertaordene']['factura_id']))); ?>
+                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editfacturas', $alertOrd['Alertaordene']['id']))); ?>
                         </td>
                 </tr>
                 <?php endforeach;?>

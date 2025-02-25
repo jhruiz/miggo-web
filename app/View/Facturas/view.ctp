@@ -7,6 +7,7 @@
     <input type="hidden" id="facturaId" value="<?php echo $infoFact['Factura']['id'];?>">
     <input type="hidden" id="cliName" value="<?php echo $infoFact['Cliente']['nombre'];?>">
     <input type="hidden" id="cliNit" value="<?php echo $infoFact['Cliente']['nit'];?>">
+    <input type="hidden" id="dianQRStr" value="<?php echo $infoFact['Factura']['dianQRStr'];?>">
     <?php if($infoFact['Factura']['factura']){?>
     <input type="hidden" id="emisor" value="<?php echo $infoEmpresa['Empresa']['nombre'];?>">    
     <input type="hidden" id="emisorNit" value="<?php echo $infoEmpresa['Empresa']['nit'];?>">
@@ -334,6 +335,7 @@
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
                 </tr>                
+
                 <?php }else{ ?>
 
                 <tr>
@@ -365,19 +367,47 @@
                 <?php } ?>
 
             </table> 
+
         </div>
 
-        <?php if(count($notaFactura) > '0'){?>        
-            <dl>
-                <dt><?php echo __('Notas'); ?></dt>
-                    <?php foreach ($notaFactura as $nF): ?>
-                    <dd>
-                        <?php echo h($nF['FacturasNotafactura']['created'] . " " . $nF['Usuario']['nombre'] . ".  " . $nF['Notafactura']['descripcion']); ?>
-                        &nbsp;
-                    </dd>
-                    <?php endforeach;?>
-            </dl>
-        <?php }?>
+        <div id="dvNota" align="center" style="margin-top:10px;">
+
+            <?php if($infoFact['Factura']['diancufe']) { ?>
+                <div align="center">
+                    <small>
+                    <div><?php echo('CUFE ' . $infoFact['Factura']['diancufe']); ?></div>
+                    </small>
+                </div>
+
+                <div style="margin-top:10px;" align="center" class="qr_imp"></div>
+            <?php } ?>
+
+            <?php if($infoFact['Factura']['observacion'] != "") {?>
+                <div style="margin-top:10px;" align="center">
+                    <small>
+                    <b>Nota: </b><?php echo $infoFact['Factura']['observacion'];?>
+                    
+                </div>
+            <?php } ?>
+
+            <?php if(count($notaFactura) > '0'){?>        
+                <div style="margin-top:10px;" align="center">
+                    <small>
+                        <?php foreach ($notaFactura as $nF): ?>
+                            <small><?php echo h($nF['Notafactura']['descripcion']); ?></small>
+                        <?php endforeach;?>
+                    </small>
+                </div>
+            <?php }?>
+
+            <div style="margin-top:30px;" align="center" id="prop_intelectual">
+                        <small>
+                        <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
+                        <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
+                        </small>
+            </div>
+
+        </div> 
     
         <div id="conditions">
             <div id="p_condCont" style="font-family:sans-serif; font-size:15px;"><small>
@@ -393,19 +423,6 @@
             </small></div>
         </div>  
         
-        <div id="dvNota">
-            <div id='nota_factura'>
-                <small>
-                <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
-                </small>
-                <div style="margin-top:30px;" align="center">
-                    <small>
-                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
-                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
-                    </small>
-                </div>
-            </div>
-        </div>
     </div>  
     <?php if(!empty($arrInfoOrd)){ ?>
     
@@ -873,7 +890,8 @@
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),0));?></b></td>
-                </tr>                
+                </tr>
+                
                 <?php }else{ ?>
                     <tr>
                     <td colspan="2">&nbsp;</td>
@@ -901,45 +919,13 @@
                     <td  align="right"><b>TOTAL</b></td>
                     <td  align="right"><b><?php echo ("$". number_format(ceil($subTtalVenta - $ttalDtto),0));?></b></td>
                 </tr>                
+                
                 <?php } ?>
 
             </table> 
         </div>
 
-    <?php if(count($notaFactura) > '0'){?>        
-        <div align="center">
-            <?php foreach ($notaFactura as $nF): ?>
-            <div>
-                <?php echo h($nF['Notafactura']['descripcion']); ?>
-                &nbsp;
-            </div>
-            <?php endforeach;?>
-        </div>
-    <?php }?>    
-
-
-    <?php if($infoFact['Factura']['observacion'] != ""){?>
-        <div id="dvNota">
-            <div id='nota_factura' align="center">
-                <small>
-                <br><br><b>NOTA:</b><?php echo $infoFact['Factura']['observacion'];?>
-                </small>
-                <small>
-                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
-                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
-                </small>
-            </div>
-        </div> 
-    <?php } else { ?>
-        <div id="dvNota">
-            <div id='nota_factura' align="center">
-            <small>
-                    <div><b>Modalidad software propio fabricante Miggo Solutions S.A.S NIT 901629169</b></div>
-                    <div><b>www.miggo.com.co / WhatsApp 3116871320</b></div>
-            </small>
-            </div>
-        </div>  
-    <?php } ?>  
 </div>
+
 
 

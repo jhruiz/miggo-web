@@ -1654,4 +1654,363 @@ class FacturasController extends AppController
         // redirect the user to the url
         $this->redirect($url, null, true);
     }
+
+    /**
+     * Función para organizar datos de sincronización de factura a la DIAN
+     */
+    public function obtenerFacturaParaDian() {
+        $this->autoRender = false;
+        $this->loadModel('Factura');
+        $facturaId = $this->request->data['facturaId'];
+
+        $prevBalance = ['previous_balance' => '0'];
+
+        //Obtiene la información de la factura
+        $factura = $this->Factura->obtenerInfoFacturaPorId($facturaId);
+
+        //Genera y organiza la información para el apartado de resolución
+        $infoRes = $this->generarInfoResolucion( $factura );
+
+        //Obtiene la información del cliente de la factura
+        $infoCliente = $this->generarInfoCliente( $factura );
+
+        //Obtiene la información del tipo de pago
+        $infoTipoPago = $this->generarInfoTipoPago( $factura );
+        
+        //Obtiene los totales generales de la factura
+        $infoPagoGeneral = $this->generarInfoPagoGeneral( $factura );
+
+        //Valida que todos los resultados sean un array procesable
+        if ($this->validateArrays($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)) {
+
+            $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral));
+
+            echo json_encode(array(
+                'token' => $factura['Empresa']['tokendian'], 
+                'nitEmpresa' => $factura['Empresa']['nit'],
+                'prefijo' => $infoRes['prefix'],
+                'consecutivo' => $infoRes['number'],
+                array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)
+            ));
+
+        } else {
+            // Actualiza el estado de la factura
+            // $this->actualizarEstadoFactura( $val['id'], config('custom.DIAN_ESTADO_ERROR'), $conn );
+            // $this->actualizarMensajeFactura( $val['id'] , config('custom.MENSAJE_ERROR'), $conn );
+        }
+    }
+
+    /**
+     * Genera el arreglo con la información de la resolución de la empresa
+     */
+    public function generarInfoResolucion($factura) {
+        $this->loadModel('Deposito');
+
+        //Obtiene la información del deposito con la configuración de la resolución
+        $infoDep = $this->Deposito->obtenerInfoDepositosEmpresa($factura['Factura']['empresa_id']);
+
+        //Se obtiene la fecha de la factura
+        $date = date_create($factura['Factura']['created']);
+
+        return [
+            "number" => $factura['Factura']['consecutivodian'],
+            "prefix" => $infoDep['0']['Deposito']['prefijo'],
+            "type_document_id" =>  $factura['Empresa']['typedocument'],
+            "date" =>  date_format($date, 'Y-m-d'),
+            "time" =>  date_format($date, 'H:i:s'),
+            "resolution_number" =>  $infoDep['0']['Deposito']['resolucionfacturacion']
+        ];
+
+    }
+
+    /**
+     * Genera el arreglo con la información del cliente de la factura
+     */
+    public function generarInfoCliente( $factura ) {
+
+        if ( !isset( $factura['Cliente'] ) ) { 
+            return $this->formatearInfoCliente([
+                'nit' => '1234567890',
+                'nombre' => 'Cliente anónimo',
+                'celular' => '3101234567',
+                'direccion' => 'Calle 1 # 2 - 3',
+                'email' => 'noemail@hotmail.com',
+                'tipoidentificacione_id' => '3'
+            ], $factura['Empresa']['municipio_id']);
+        }
+    
+        return $this->formatearInfoCliente($factura['Cliente'], $factura['Empresa']['municipio_id']);
+
+    }
+
+    /**
+     * Genera la información del cliente siempre y cuando se encuentre relacionado 
+     * a la factura en la base de datos
+     */
+    private function formatearInfoCliente($infoCliente, $municipio_id) {
+
+        return [
+        "customer" => [
+            "identification_number" => !empty($infoCliente['nit']) ? $this->obtenerIdentificacion($infoCliente['nit']) : '1234567890',
+            "name" => !empty($infoCliente['nombre']) ? $infoCliente['nombre'] : 'Cliente anónimo',
+            "phone" => !empty($infoCliente['celular']) ? $infoCliente['celular'] : '3101234567',
+            "address" => !empty($infoCliente['direccion']) ? $infoCliente['direccion'] : 'Calle 1 # 2 - 3',
+            "email" => !empty($infoCliente['email']) ? $infoCliente['email'] : 'noemail@hotmail.comm',
+            "merchant_registration" => '0000-00',
+            "type_document_identification_id" => $infoCliente['tipoidentificacione_id'],
+            "type_organization_id" => $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id']),
+            "municipality_id" => $municipio_id,
+            "type_regime_id" => $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id'])
+        ]
+        ];
+    }
+
+    /**
+     * Obtiene el número de identificación del cliente
+     */
+    public function obtenerIdentificacion( $identificacion ) {
+        if (strpos($identificacion, '-') !== false) {
+            $identificacion = explode('-', $identificacion);
+            return str_replace(" ", "", $identificacion['0']);
+        } else {
+            return str_replace(" ", "", $identificacion);
+        } 
+    }
+
+    /**
+     * Obtiene el tipo de organización basado en su tipo de identificación
+     */
+    public function obtenerOrganizacion( $tipoIdentificacion ) {
+
+        if (in_array($tipoIdentificacion, [1, 2, 3, 4, 5, 7, 8])) {
+            return '2';
+        }
+        
+        if (in_array($tipoIdentificacion, [6, 9, 10, 11, 12])) {
+            return '1';
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Genera la información del tipo de pago de la factura
+     */
+    public function generarInfoTipoPago( $factura ) {
+        
+        $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Cuentascliente');
+
+        $infoTipoPago = $this->FacturaCuentaValore->obtenerInfoTipoPagoEfectivo( $factura['Factura']['id'] );
+  
+        if( isset( $infoTipoPago['0']['FacturaCuentaValore'] ) ){
+  
+          return [
+            "payment_form" => [
+              "payment_form_id" => '1',
+              "payment_method_id" => $infoTipoPago['0']['T']['transferencia'] ? '47' : '10' 
+            ]
+          ];
+  
+        } else {
+          
+          $infoTipoPago = $this->Cuentascliente->obtenerInfoTipoPagoCredito( $factura['Factura']['id'] );
+          
+          if( isset( $infoTipoPago['0']['Cuentascliente'] ) ) {
+
+            $duration_measure = isset($factura['Cliente']['id']) ? ($factura['Cliente']['diascredito'] ?? 30) : 30;
+  
+            $date = date_create($infoTipoPago['0']['Cuentascliente']['created']);
+
+            return [
+              "payment_form" => [
+                "payment_form_id" => '2',
+                "payment_method_id" => '30',
+                "payment_due_date" => $this->sumarDiasFecha(date_format($date, 'Y-m-d'), $duration_measure),
+                "duration_measure" => $duration_measure
+              ]
+            ];
+  
+          }
+  
+        }
+  
+        return [
+            "payment_form" => [
+              "payment_form_id" => '1',
+              "payment_method_id" => '10'
+            ]
+          ];
+  
+     }
+
+
+    /**
+     * Suma una cantidad de días a una fecha específica
+     */
+    public function sumarDiasFecha( $fecha, $dias ) {
+
+        $fecha = new DateTime($fecha);
+
+        $fecha->modify("+$dias days");
+
+        return $fecha->format('Y-m-d');
+
+    }
+
+
+    /**
+     * Genera la información general de la factura
+     */
+    public function generarInfoPagoGeneral( $factura ) {
+        $this->loadModel('Facturasdetalle');
+
+        if ( !isset( $factura['Facturasdetalle']['0'] ) ) {
+          return false;
+        }
+        
+        $sumValSinIva = 0;
+        $sumValConIva = 0;
+        $arrImpuestos = [];
+        $arrLineas = [];
+
+        //Obtiene la información del detalle de la factura
+        $facturaDetalle = $this->Facturasdetalle->obtenerFacturaDetalleFactId( $factura['Factura']['id'] );
+  
+        foreach ( $facturaDetalle as $val ) {
+            
+  
+          $costoTotal = $val['Facturasdetalle']['costototal'];
+          $descuento = $val['Facturasdetalle']['descuento'];
+          $impuesto = $val['Facturasdetalle']['impuesto'];
+  
+          list($valSinImp, $valIva) = $this->calcularValores($costoTotal, $descuento, $impuesto);
+  
+          // Suma de valores con y sin IVA
+          $sumValSinIva += $valSinImp;
+          $sumValConIva += round( ( $costoTotal - $descuento ), 2 );
+  
+          // Información de los impuestos por cada producto
+          $arrImpuestos[] = $this->obtenerImpuestoPorProducto( $valIva, $valSinImp, $val['Facturasdetalle']['impuesto'] );
+  
+          // Información detallada de las lineas
+          $arrLineas[] = $this->obtenerDetalleLineas( $val, $arrImpuestos[count($arrImpuestos) - 1] );
+          
+        }
+  
+        // Información de los totales de la venta con y sin iva
+        $arrTotales = $this->obtenerTotalesVenta( $sumValSinIva, $sumValConIva );
+  
+        return ['legal_monetary_totals' => $arrTotales, 'tax_totals' => $arrImpuestos, 'invoice_lines' => $arrLineas];
+  
+    }
+
+    /**
+     * Calcular los valores de impuestos y productos
+     */
+    private function calcularValores( $costoTotal, $descuento, $impuesto ) {
+
+        if ( $impuesto > 0 ) {
+
+            $impuesto /= 100;
+            $valSinImp = round( ( $costoTotal - $descuento ) / ( 1 + $impuesto ), 2 );
+            $valIva = round( ( $costoTotal - $descuento ) - $valSinImp, 2 );
+        
+        } else {
+            $valSinImp = round( ( $costoTotal - $descuento ), 2 );
+            $valIva = number_format( 0, 2 );
+        }
+
+        return [number_format($valSinImp, 2, '.', ''), number_format($valIva, 2, '.', '')];
+    }    
+
+    /**
+     * Retorna un arreglo con los totales de venta con y sin iva
+     */
+    public function obtenerTotalesVenta( $sumValSinIva, $sumValConIva ) {
+
+        return [
+        'line_extension_amount' => round( $sumValSinIva, 2),
+        'tax_exclusive_amount' => round( $sumValSinIva, 2),
+        'tax_inclusive_amount' => round( $sumValConIva, 2),
+        'payable_amount' => round( $sumValConIva, 2)
+        ];
+    }
+
+    /**
+     * Retorna un arreglo con el impuesto de un producto
+     */
+    public function obtenerImpuestoPorProducto( $valIva, $valSinImp, $impuesto){
+
+        return [
+        'tax_id' => '1',
+        'tax_amount' => $valIva,
+        'taxable_amount' => $valSinImp,
+        'percent' => number_format($impuesto, 2)
+        ];
+    }
+
+    /**
+     * Genera la información de las lineas de la factura
+     */
+    public function obtenerDetalleLineas($val, $arrImpuestos)
+    {
+        // Inicializa el array de productos con los valores proporcionados
+        $arrProductos = [
+            'unit_measure_id' => '70',
+            'invoiced_quantity' => $val['Facturasdetalle']['cantidad'],
+            'line_extension_amount' => $arrImpuestos['taxable_amount'],
+            'free_of_charge_indicator' => false,
+            'tax_totals' => [$arrImpuestos],
+            'description' => $val['P']['descripcion'],
+            'code' => $val['P']['codigo'],
+            'type_item_identification_id' => 4,
+            'price_amount' => $val['Facturasdetalle']['costoventa'],
+            'base_quantity' => $val['Facturasdetalle']['cantidad']
+        ];
+    
+        // Verifica si hay descuento y lo añade al array de productos si es necesario
+        if ($val['descuento'] > 0) {
+            $arrProductos['allowance_charges']['0'] = [
+                "discount_id" => '12',
+                "charge_indicator" => false,
+                "allowance_charge_reason" => "Descuento General",
+                "amount" => $val['descuento'],
+                "base_amount" => $val['costototal']
+            ];
+        }
+    
+        return $arrProductos;
+    }    
+
+    function validateArrays(...$arrays){
+        foreach ($arrays as $array) {
+            if (!is_array($array) || empty($array)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+        /**
+     * Consumir el servicio de facturación de la DIAN
+     */
+    public function guardarInfoDian( ) {
+
+        $this->autoRender = false;
+        $this->loadModel('Factura');
+        $facturaId = $this->request->data['facturaId'];
+        $statusCode = $this->request->data['statusCode'];
+        $cufe = $this->request->data['cufe'];
+        $QR = $this->request->data['QR'];
+        
+        $result = $this->Factura->actualizarInfoDian( $facturaId, $statusCode, $cufe, $QR );
+
+        echo json_encode(array(
+            'result' => $result
+        ));
+
+    }
 }

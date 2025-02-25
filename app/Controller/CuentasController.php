@@ -29,7 +29,8 @@ class CuentasController extends AppController {
             $usuariosController->registraractividad($usuarioAct);
             	            		
             $empresaId = $this->Auth->user('empresa_id');
-            $paginate['Cuenta.empresa_id'] = $empresaId;              
+            $paginate['Cuenta.empresa_id'] = $empresaId; 
+            $paginate['Cuenta.deleted'] = '0'; 
             $this->Cuenta->recursive = 0;
             $this->set('cuentas', $this->Paginator->paginate('Cuenta',$paginate));
 	}
