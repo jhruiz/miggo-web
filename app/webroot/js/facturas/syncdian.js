@@ -89,16 +89,10 @@ var enviarCorreoCliente = function(resp) {
         },
         data: JSON.stringify(body),
         success: function(response) {
-            // Manejar la respuesta exitosa
-            if (response) {
-                alert('Correo enviado correctamente.');
-            } else {
-                alert('No fue posible enviar el correo. Por favor, inténtelo nuevamente.');
-            }
         },
         error: function(xhr, status, error) {
             // Manejar errores
-            alert('Hubo un error al enviar el correo. Por favor, inténtelo nuevamente.');
+            //alert('Hubo un error al enviar el correo. Por favor, inténtelo nuevamente.');
         }
     });
 }
