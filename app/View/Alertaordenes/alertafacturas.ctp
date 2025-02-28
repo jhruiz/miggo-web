@@ -146,7 +146,7 @@ echo $color;
                         <td><?php echo h($alertPreFac['Alertaordene']['cant_llamadas']); ?></td>
 
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editprefacturas',$alertPreFac['Alertaordene']['prefactura_id']))); ?>
+                            <?php echo $this->Html->image('png/list-12.png', array('title' => 'Gestionar Alerta', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'editprefacturas',$alertPreFac['Alertaordene']['id']))); ?>
                         </td>
                 </tr>
                 <?php endforeach;?>
