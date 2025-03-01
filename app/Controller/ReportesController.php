@@ -845,11 +845,11 @@ class ReportesController extends AppController
             $filter['F.codigo'] = $_POST['numeroFactura'];
         }
 
-        if (!empty($_POST['numeroPrefactura'])) {
-            $filter = null;
-            $numeroPrefactura = $_POST['numeroPrefactura'];
-            $filter['Abonofactura.prefactura_id'] = $_POST['numeroPrefactura'];
-        }
+        // if (!empty($_POST['numeroPrefactura'])) {
+        //     $filter = null;
+        //     $numeroPrefactura = $_POST['numeroPrefactura'];
+        //     $filter['Abonofactura.prefactura_id'] = $_POST['numeroPrefactura'];
+        // }
 
         if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
             $fechaInicio = $_POST['fechaInicio'];
@@ -876,7 +876,7 @@ class ReportesController extends AppController
         //se obtienen los abonos realizados a cuentas por cobrar
         $abonosCuentas = $this->Abonofactura->reporteAbonosCuentas($filter);
 
-        $abonos = array_merge($abonosPrefacturas, $abonosCuentas);
+        $pagosAbonosCuentas = array_merge($abonosPrefacturas, $abonosCuentas);
 
         $texto_tit = "Metodos de pago por abonos";
         $this->set(compact('pagosAbonosCuentas'));
