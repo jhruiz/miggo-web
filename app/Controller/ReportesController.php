@@ -845,6 +845,12 @@ class ReportesController extends AppController
             $filter['F.codigo'] = $_POST['numeroFactura'];
         }
 
+        if (!empty($_POST['numeroPrefactura'])) {
+            $filter = null;
+            $numeroPrefactura = $_POST['numeroPrefactura'];
+            $filter['Abonofactura.prefactura_id'] = $_POST['numeroPrefactura'];
+        }
+
         if (!empty($_POST['fechaInicio']) && !empty($_POST['fechaFin'])) {
             $fechaInicio = $_POST['fechaInicio'];
             $fechaFin = $_POST['fechaFin'];

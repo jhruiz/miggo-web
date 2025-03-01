@@ -47,7 +47,14 @@ class AbonofacturasController extends AppController {
                 $numeroFactura = $this->passedArgs['numeroFactura'];
             }
             
-            if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura'])
+            $numeroPrefactura = '';
+            if (!empty($this->passedArgs['numeroPrefactura'])) {
+                $filter = null;
+                $filter['Abonofactura.prefactura_id'] = $this->passedArgs['numeroPrefactura'];
+                $numeroPrefactura = $this->passedArgs['numeroPrefactura'];
+            }
+            
+            if (empty($this->passedArgs['codigoDian']) && empty($this->passedArgs['numeroFactura']) && empty($this->passedArgs['numeroPrefactura'])
                 && empty($this->passedArgs['fechaInicio']) && empty($this->passedArgs['fechaFin'])) {
                 $filter['Abonofactura.created BETWEEN ? AND ?'] = array(date("Y-m-d") . ' 00:00:01', date("Y-m-d") . ' 23:23:59');
             } 
@@ -63,12 +70,13 @@ class AbonofacturasController extends AppController {
             //se obtienen los abonos realizados a prefacturas
             $abonosPrefacturas = $this->Abonofactura->reporteAbonosPrefacturas($filter);
 
+
             //se obtienen los abonos realizados a cuentas por cobrar
             $abonosCuentas = $this->Abonofactura->reporteAbonosCuentas($filter);
 
             $abonos = array_merge($abonosPrefacturas, $abonosCuentas);
 
-            $this->set(compact('tipoPago', 'abonos', 'tipoCuentas', 'tipocuenta', 'tipopagos', 'fechaInicio','fechaFin', 'codigoDian', 'numeroFactura'));
+            $this->set(compact('tipoPago', 'abonos', 'tipoCuentas', 'tipocuenta', 'tipopagos', 'fechaInicio','fechaFin', 'codigoDian', 'numeroFactura', 'numeroPrefactura'));
         }
         
         public function abonofactura(){

@@ -22,6 +22,13 @@
         </div>
 
         <div class="col-md-3">
+            <div class="form-group">
+                <label>Prefactura</label><br>
+                <input name="data[numeroPrefactura]" id="numeroPrefactura" autocomplete="off" class="form-control" placeholder="Código de prefactura" type="text">
+            </div>
+        </div>
+
+        <div class="col-md-3">
             <label>Cuentas</label>
             <?php
                 echo $this->Form->input("tipocuentas",
@@ -78,6 +85,7 @@
     <fieldset>
         <?php echo $this->Form->input('codigoDian', array('type' => 'hidden', 'name' => 'codigoDian', 'value' => $codigoDian)) ?>
         <?php echo $this->Form->input('numeroFactura', array('type' => 'hidden', 'name' => 'numeroFactura', 'value' => $numeroFactura)) ?>
+        <?php echo $this->Form->input('numeroPrefactura', array('type' => 'hidden', 'name' => 'numeroPrefactura', 'value' => $numeroPrefactura)) ?>
         <?php echo $this->Form->input('fechaInicio', array('type' => 'hidden', 'name' => 'fechaInicio', 'value' => $fechaInicio)) ?>
         <?php echo $this->Form->input('fechaFin', array('type' => 'hidden', 'name' => 'fechaFin', 'value' => $fechaFin)) ?>
         <?php echo $this->Form->input('tipocuentas', array('type' => 'hidden', 'name' => 'tipocuentas', 'value' => $tipocuenta)) ?>

@@ -1085,6 +1085,7 @@ class FacturasController extends AppController
         $empresaId = $this->Auth->user('empresa_id');
 
         $filter['Factura.empresa_id'] = $empresaId;
+        $filter['Factura.eliminar'] = 0;
         
         //se obtiene la informacion de las facturas que tienen relacionada una orden de trabajo con productos catalogados como servicios
         $arrFactOrdenes = null;
