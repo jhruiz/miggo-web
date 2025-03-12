@@ -1249,7 +1249,8 @@ function calcularTotalConAbonos(){
         });            
 
         var abn = "<tr><th colspan='8' class='text-right'>Abonos</th>";
-        abn += "<th class='text-right'>" + formatNumber(ttalAbonos) + "</th></tr>";
+        abn += "<th class='text-right'>" + formatNumber(ttalAbonos) + "</th>";
+        abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
         abn += "<tr><th colspan='8' class='text-right'>TOTAL</th>";
         abn += "<th class='text-right'>" + formatNumber(ttalCompras - parseInt(ttalAbonos)) + "</th></tr>";
         $('#tBodAbonos').html(abn);        

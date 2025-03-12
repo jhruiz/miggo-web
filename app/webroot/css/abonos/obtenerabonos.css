@@ -1,0 +1,24 @@
+.card-header {
+    background-color: #4caf50; /* Color verde */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+}
+.card-body {
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 15px;
+}
+.btn-icon {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn-icon:hover {
+    opacity: 0.8;
+}

@@ -190,9 +190,7 @@ function obtenerFacturaDian(elemento, facturaId, redirectTo) {
     
 }
 
-
 $(function(){
-
     // Usar la clase para manejar múltiples elementos
     $('.syncdian').click(function() {
         obtenerFacturaDian(this, null, 2);

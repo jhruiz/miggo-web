@@ -79,7 +79,8 @@ function realizarAbono(){
                     var ttalFinAbono = (parseInt(ttalAbono) + parseInt(abonosFact));
                     
                     abn += "<tr><th colspan='8' class='text-right'>Abonos</th>";
-                    abn += "<th class='text-right'>" + formatNumber(ttalFinAbono) + "</th></tr>";
+                    abn += "<th class='text-right'>" + formatNumber(ttalFinAbono) + "</th>";
+                    abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
                     abn += "<tr><th colspan='8' class='text-right'>TOTAL</th>";
                     abn += "<th class='text-right'>" + formatNumber(ttales - parseInt(ttalFinAbono)) + "</th></tr>";
                     $('#tBodAbonos').html(abn);                                        
@@ -94,7 +95,7 @@ function realizarAbono(){
     }else{
         alert("No ha ingresado un valor para el abono.");
     }    
-}
+} 
 
 $(function(){
     $('#btn_abonos').click(abonosPrefactura);

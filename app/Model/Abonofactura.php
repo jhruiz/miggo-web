@@ -38,11 +38,60 @@ class Abonofactura extends AppModel {
      * @return type
      */
     public function obtenerAbonosPrefactura($prefacturaId){
+
+        $arr_join = array();
+
+        array_push($arr_join, array(
+            'table' => 'usuarios', 
+            'alias' => 'U', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'U.id=Abonofactura.usuario_id'
+                )                
+        )); 
+
+        array_push($arr_join, array(
+            'table' => 'prefacturas', 
+            'alias' => 'PF', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'PF.id=Abonofactura.prefactura_id'
+                )                
+        )); 
+
+        array_push($arr_join, array(
+            'table' => 'clientes', 
+            'alias' => 'C', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'C.id=PF.cliente_id'
+                )                
+        )); 
+
+        array_push($arr_join, array(
+            'table' => 'cuentas', 
+            'alias' => 'CU', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'CU.id=Abonofactura.cuenta_id'
+                )                
+        )); 
+
         $abonos = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'U.nombre',
+                'C.nombre',
+                'C.nit',
+                'CU.id',
+                'CU.descripcion',
+                'Abonofactura.*',
+            ), 
             'conditions' => array(
                 'Abonofactura.prefactura_id' => $prefacturaId
-                )
-            ));
+            )
+            )             
+        );
         return $abonos;
     }
     
@@ -530,15 +579,33 @@ class Abonofactura extends AppModel {
         
         return $abonos; 
     }
+
+    /**
+     * Elimina un abono
+     */
+    public function eliminarAbono($id) {
+        if($this->deleteAll(['Abonofactura.id' => $id])){
+            return true;
+        }else{
+            return false;
+        }          
+    }
+
+    /**
+     * Actualiza el valor de un abono
+     */
+    public function ajustarAbono($idAbono, $valorFin) {
+        $data = array();
+            
+        $abono = new Abonofactura();
+        
+        $data['id'] = $idAbono;
+        $data['valor'] = $valorFin;
+        
+        if($abono->save($data)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
-
-
-
-            #factura
-            #prefactura
-            #fecha
-            #cliente
-            #usuario
-            #valor
-            #cuenta
-            #tipo pago

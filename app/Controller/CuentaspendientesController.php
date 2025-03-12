@@ -83,9 +83,10 @@ class CuentaspendientesController extends AppController {
                                 
                 $diff = $this->diffFechas($fechaActual, $cuentaspendientes[$i]['Cuentaspendiente']['fechalimitepago']);
                 
-                $costoTotal += ($cuentaspendientes[$i]['Cuentaspendiente']['totalobligacion']);
++               $limiteCredito = floatval($cuentaspendientes[$i]['Proveedore']['limitecredito']);
++               $totalObligacion = floatval($cuentaspendientes[$i]['Cuentaspendiente']['totalobligacion']);
                         
-                if($costoTotal > $cuentaspendientes[$i]['Proveedore']['limitecredito']){                    
+                if ($totalObligacion > $limiteCredito) {    
                     $cuentaspendientes[$i]['Cuentaspendiente']['limitecredito'] = 'text-danger';
                 }else{
                     $cuentaspendientes[$i]['Cuentaspendiente']['limitecredito'] = 'text';                    

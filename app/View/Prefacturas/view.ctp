@@ -6,6 +6,7 @@
 <?php echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
 <?php echo ($this->Html->script('prefacturas/view.js')); ?>
 <?php echo ($this->Html->script('facturas/syncdian.js')); ?>
+<?php echo ($this->Html->script('abonos/gestionabonos.js')); ?>
 <?php echo $this->Form->create('Prefactura'); ?>
 <input type="hidden" id="prefacturaId" value="<?php echo $prefactura['Prefactura']['id'];?>">
 <div class="container body">
@@ -402,6 +403,7 @@
 <div id="div_producto"></div>
 <div id="div_facturar"></div>
 <div id="div_abono"></div>
+<div id="div_gestionabono"></div>
 <div id="dv_emp">
     <div id="dv_img_emp">
         <div style="float:center;" align="center">
