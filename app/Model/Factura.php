@@ -130,7 +130,7 @@ class Factura extends AppModel
     );
 
     public function guardarfactura($clienteId, $empresaId, $usuarioId, $fechaVence, $tipoPagoId, $pagoContado, $pagoCredito,
-        $documentoId, $empRelacionada, $ordentrabajo, $esFactura, $cuenta_id, $observacion) {
+        $documentoId, $empRelacionada, $ordentrabajo, $esFactura, $cuenta_id, $observacion, $canalventa) {
         $data = array();
         $factura = new Factura();
 
@@ -145,6 +145,7 @@ class Factura extends AppModel
         }
 
         $data['usuario_id'] = $usuarioId;
+        $data['canalventa_id'] = $canalventa;
         $data['fechavence'] = $fechaVence;
         $data['tipopago_id'] = $tipoPagoId;
         $data['pagocontado'] = $pagoContado;

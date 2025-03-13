@@ -300,14 +300,23 @@
                     <legend>&nbsp;</legend>
 
                     <div class="row">
-                        <div class="col-md-2">
-                            <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId)); ?><br>
+                        <div class="col-md-1">
+                            <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId)); ?>
+                        </div>
+
+                        <div class="col-md-1">
+                            <?php echo $this->Form->input('canalventa', array('label' => 'Canal de ventas', 'type' => 'select', 'options' => $canalventas, 'class' => 'form-control',   'empty' => 'Seleccione una...')); ?>
+                        </div>
+                        
+                        <div class="col-md-1">
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...')); ?>
                         </div>
-                        <div class="col-md-2">
-                            <label>Factura</label><br>
-                            <input type="checkbox" id="esfactura" name="data[Factura][esfactura]" checked>
+                  
+                        <div class="col-md-1">
+                            <label>Factura</label>
+                            <input type="checkbox" id="esfactura" name="data[Factura][esfactura]" checked><br>
                         </div>
+                        
                         <div class="col-md-8">
                             <label for="obs_fact">Observaciones</label>
                             <textarea id="obs_fact" name="data[Factura][observacion]" class="md-textarea form-control" rows="3"></textarea>

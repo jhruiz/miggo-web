@@ -166,12 +166,19 @@ class AbonofacturasController extends AppController {
             $valor = $posData['valor'];
             $cuenta = $posData['cuenta'];
             $prefactura = $posData['prefactura'];
+            $factura = $posData['factura'];
 
             $empresaId = $this->Auth->user('empresa_id');
 
             if( $this->Abonofactura->eliminarAbono($idAbono) ) {
-                $this->gastoPorDevAbono($prefactura, $valor, $cuenta, $idItem);
+                $this->gastoPorDevAbono($prefactura, $valor, $cuenta, $idItem, $factura);
                 $this->ajustarSaldoCuenta($cuenta, $valor);
+
+                if( $factura != '' ) {
+                    //ajustar el saldo de la cuenta por cobrar
+                    $this->ajustarSaldoCXC($factura, $valor);
+                }
+
                 $resp = true;
             }
 
@@ -180,7 +187,7 @@ class AbonofacturasController extends AppController {
         }
 
         /**
-         * Ajusta el valor de un abono de una prefactura específica
+         * Ajusta el valor de un abono de una prefactura/factura específica
          */
         public function ajustarabono() {
             $this->autoRender = false;
@@ -192,13 +199,20 @@ class AbonofacturasController extends AppController {
             $valorFin = $posData['valorFin'];
             $cuenta = $posData['cuenta'];
             $prefactura = $posData['prefactura'];
+            $factura = $posData['factura'];
 
             if ( $this->Abonofactura->ajustarAbono($idAbono, $valorFin))  {
                 //Registrar el gasto
-                $this->gastoPorAjusteAbono( $prefactura, $cuenta, $valorIni, $valorFin );
+                $this->gastoPorAjusteAbono( $prefactura, $cuenta, $valorIni, $valorFin, $factura );
                 //ajustar saldo cuenta
                 $valor = $valorIni - $valorFin;
                 $this->ajustarSaldoCuenta($cuenta, $valor);
+
+                if( $factura != '' ) {
+                    //ajustar el saldo de la cuenta por cobrar
+                    $this->ajustarSaldoCXC($factura, $valor);
+                }
+
                 $resp = true;
             }
 
@@ -209,7 +223,7 @@ class AbonofacturasController extends AppController {
         /**
          * Registra el gasto generado por el ajuste del abono
          */
-        public function gastoPorAjusteAbono( $prefactura, $cuenta, $valorIni, $valorFin ) {
+        public function gastoPorAjusteAbono( $prefactura, $cuenta, $valorIni, $valorFin, $factura ) {
             $idItem = "";
             $this->loadModel('Itemsgasto');
             $this->loadModel('Gasto');
@@ -227,9 +241,11 @@ class AbonofacturasController extends AppController {
 
             $valor = $valorIni - $valorFin;
 
+            $descripcion = $prefactura != ''  ? 'Se ajusta el abono de la prefactura ' . $prefactura . ', cuyo valor era ' . $valorIni . ' y se deja en ' . $valorFin : 'Se ajusta el abono de la factura ' . $factura . ', cuyo valor era ' . $valorIni . ' y se deja en ' . $valorFin;
+
             //Crea el gasto por eliminación de abono
             $data = array(
-                'descripcion' => 'Se ajusta el abono de la prefactura ' . $prefactura . ', cuyo valor era ' . $valorIni . ' y se deja en ' . $valorFin,
+                'descripcion' => $descripcion,
                 'usuario_id' => $this->Auth->user('id'),
                 'empresa_id' => $empresaId,
                 'fechagasto' => date('Y-m-d H:i:s'),
@@ -249,7 +265,7 @@ class AbonofacturasController extends AppController {
         /**
          * Registra el gasto generado por la eliminación del abono
          */
-        public function gastoPorDevAbono($prefactura, $valor, $cuenta, $idItem) {
+        public function gastoPorDevAbono($prefactura, $valor, $cuenta, $idItem, $factura) {
             $idItem = "";
             $this->loadModel('Itemsgasto');
             $this->loadModel('Gasto');
@@ -265,9 +281,12 @@ class AbonofacturasController extends AppController {
                 $idItem = $itemGasto['Itemsgasto']['id'];
             }
 
+            // Se redacta la observaciono del gasto dependiendo si es un abono de una prefactura o de una cuenta por cobrar
+            $descripcion = $prefactura != ''  ? 'Se elimina abono de la prefactura ' . $prefactura : 'Se elimina abono de la factura ' . $factura;
+
             //Crea el gasto por eliminación de abono
             $data = array(
-                'descripcion' => 'Se elimina abono de la prefactura ' . $prefactura,
+                'descripcion' => $descripcion,
                 'usuario_id' => $this->Auth->user('id'),
                 'empresa_id' => $empresaId,
                 'fechagasto' => date('Y-m-d H:i:s'),
@@ -295,6 +314,19 @@ class AbonofacturasController extends AppController {
             $saldoFinal = floatval($infoCuenta['Cuenta']['saldo']) - floatval($valor);
 
             $this->Cuenta->actualizarSaldoCuenta($cuenta, $saldoFinal);
+        }
+
+        /**
+         * Se ajusta el saldo de la cuenta por cobrar tras la eliminación de un abono
+         */
+        public function ajustarSaldoCXC($facturaId, $valor) {
+            $this->loadModel('Cuentascliente');
+            $cxc = $this->Cuentascliente->obtenerCuentaPendienteFact($facturaId);
+
+            $saldo = floatval($valor) + floatval($cxc['0']['Cuentascliente']['totalobligacion']);
+            $cxcId = $cxc['0']['Cuentascliente']['id'];
+
+            $this->Cuentascliente->actualizarCuentaCliente($cxcId,$saldo);
         }
 
         public function search() {

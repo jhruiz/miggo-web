@@ -357,18 +357,27 @@
                     <legend>&nbsp;</legend>            
             
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId, 'name' => 'data[Factura][vendedor]'));?><br>
+                        </div>
+
+                        <div class="col-md-1">
+                            <?php echo $this->Form->input('canalventa', array('label' => 'Canal de ventas', 'type' => 'select', 'options' => $canalventas, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][canalventa]'));?><br>
+                        </div>                
+
+                        <div class="col-md-1">    
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][notafactura]'));?><br>
-                        </div>                      
+                        </div>
+                        
+                        <div class="col-md-1">
+                            <?php $estadoAct = !empty($prefactura['Prefactura']['estadoprefactura_id']) ? $prefactura['Prefactura']['estadoprefactura_id'] : "";?>
+                            <?php echo $this->Form->input('estados', array('label' => 'Estados', 'type' => 'select', 'options' => $estados, 'class' => 'form-control', 'default' => $estadoAct));?>
+                        </div>   
+                        
                         <div class="col-md-1">
                             <label>Factura</label><br>
                             <input type="checkbox" id="esfactura" name="data[Factura][esfactura]" checked>                        
-                        </div>
-                        <div class="col-md-2">
-                            <?php $estadoAct = !empty($prefactura['Prefactura']['estadoprefactura_id']) ? $prefactura['Prefactura']['estadoprefactura_id'] : "";?>
-                            <?php echo $this->Form->input('estados', array('label' => 'Estados', 'type' => 'select', 'options' => $estados, 'class' => 'form-control', 'default' => $estadoAct));?>
-                        </div>                      
+                        </div>                   
                         
                         <div class="col-md-7">
                             <label for="obs_fact">Observaciones</label>

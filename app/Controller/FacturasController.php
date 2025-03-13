@@ -318,6 +318,7 @@ class FacturasController extends AppController
         $this->loadModel('Cuenta');
         $this->loadModel('Configuraciondato');
         $this->loadModel('Empresa');
+        $this->loadModel('Canalventa');
 
         if ($this->request->is('post')) {
             $this->Factura->create();
@@ -345,7 +346,10 @@ class FacturasController extends AppController
         $strDato = "urlImgEmpresa";
         $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
 
-        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg'));
+        // Se obtiene el listado de canal de ventas
+        $canalventas = $this->Canalventa->obtenerCanalVentas();
+
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas'));
     }
 
 /**
@@ -531,7 +535,7 @@ class FacturasController extends AppController
         /*Se crea la factura*/
         $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $datFact['vendedor'], $fechaVence,
             null, $datFact['pagocontado'], $datFact['pagocredito'], $documentoId, $datFact['empresaRelacionada'],
-            $ordenTrabajo, $esFactura, null, $datFact['observacion']);
+            $ordenTrabajo, $esFactura, null, $datFact['observacion'], $datFact['canalventa']);
 
         /*Se actualiza el codigo de la factura con el id de la factura ya que MySql solo acepta un autoincrement*/
         $this->Factura->actualizarCodigoFactura($facturaId);

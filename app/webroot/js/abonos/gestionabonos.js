@@ -92,13 +92,14 @@ function eliminarAbono(elemento) {
     var valor = $(elemento).data('valor');
     var cuenta = $(elemento).data('cuenta');
     var prefactura = $(elemento).data('prefactura');
+    var factura = $(elemento).data('factura');
 
     // Confirmar si el usuario realmente quiere eliminar el registro
     if (confirm('¿Estás seguro de que deseas eliminar este abono?')) {
 
             $.ajax({
                 url: $('#url-proyecto').val() + 'abonofacturas/eliminarabono',
-                data: {idAbono: idAbono, valor: valor, cuenta: cuenta, prefactura: prefactura},
+                data: {idAbono: idAbono, valor: valor, cuenta: cuenta, prefactura: prefactura, factura: factura},
                 type: "POST",
                 async: false,
                 success: function(data) {
@@ -108,13 +109,13 @@ function eliminarAbono(elemento) {
                             // Eliminar la fila de la tabla
                             var fila = document.getElementById('fila-' + idAbono);
                             if (fila) {
-                            var valAbonoElim = parseFloat(fila.querySelector('.valor').textContent.replace('$', '').replace(/,/g, ''));
-                            fila.remove();
-    
-                            // Recalcular el total
-                            recalcularTotal(valAbonoElim);
+                                var valAbonoElim = parseFloat(fila.querySelector('.valor').textContent.replace('$', '').replace(/,/g, ''));
+                                fila.remove();
+        
+                                // Recalcular el total
+                                recalcularTotal(valAbonoElim);
+                            }
                         }
-                    }
 
                 },
                 error: function(xhr, status, error) {
@@ -151,10 +152,11 @@ var actualizarMontoAbono = function() {
         var idAbono = $('#idAbono').val(); 
         var cuenta = $('#cuenta').val();
         var prefactura = $('#idPrefactura').val();
+        var factura = $('#idFactura').val();
 
         $.ajax({
             url: $('#url-proyecto').val() + 'abonofacturas/ajustarabono',
-            data: {idAbono: idAbono, valorIni: valorIni, valorFin: valorFin, cuenta: cuenta, prefactura: prefactura},
+            data: {idAbono: idAbono, valorIni: valorIni, valorFin: valorFin, cuenta: cuenta, prefactura: prefactura, factura: factura},
             type: "POST",
             async: false,
             success: function(data) {
@@ -162,7 +164,11 @@ var actualizarMontoAbono = function() {
 
                 if(resp) {
                     alert('La actualización del abono se realizó de manera correcta');
-                    obtenerAbonos();
+                    if(factura == undefined){
+                        obtenerAbonos();
+                    } else {
+                        location.reload();
+                    }
                 }
 
             },

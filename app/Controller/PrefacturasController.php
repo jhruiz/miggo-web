@@ -104,6 +104,7 @@ class PrefacturasController extends AppController {
             $this->loadModel('Configuraciondato');
             $this->loadModel('Estadosprefactura');
             $this->loadModel('Empresa');
+            $this->loadModel('Canalventa');
             
             if (!$this->Prefactura->exists($id)) {
                     throw new NotFoundException(__('La orden de compra no existe.'));
@@ -142,13 +143,16 @@ class PrefacturasController extends AppController {
             //se obtiene el listado de las prefacturas
             $estados = $this->Estadosprefactura->obtenerListaEstados();
 
+            // Se obtiene el listado de canal de ventas
+            $canalventas = $this->Canalventa->obtenerCanalVentas();
+
             $ttalAbonos = 0;
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
             
             $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg'));
-            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP')); 
+            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas')); 
 	}
 
 /**

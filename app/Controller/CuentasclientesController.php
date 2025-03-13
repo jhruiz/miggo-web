@@ -249,6 +249,9 @@ class CuentasclientesController extends AppController {
         public function verabonos($id = null){
             $this->loadModel('Abonofactura');
             $this->loadModel('Configuraciondato');
+            $this->loadModel('Cuenta');
+
+            $empresaId = $this->Auth->user('empresa_id');
             
             //se obtiene la url de la imagend e whatsapp
             $strDatoWP = "ulrImgWP";
@@ -256,7 +259,11 @@ class CuentasclientesController extends AppController {
             
             //se obtiene el abono por cuenta cliente id
             $abonos = $this->Abonofactura->obtenerAbonosCuentasCliente($id);
-            $this->set(compact('abonos', 'id', 'urlImgWP'));
+
+            //se obtienen las cuentas de la empresa
+            $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+
+            $this->set(compact('abonos', 'id', 'urlImgWP', 'cuentas'));
         }
         
         public function ajaxobtenerabonos(){
