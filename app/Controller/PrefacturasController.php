@@ -144,7 +144,7 @@ class PrefacturasController extends AppController {
             $estados = $this->Estadosprefactura->obtenerListaEstados();
 
             // Se obtiene el listado de canal de ventas
-            $canalventas = $this->Canalventa->obtenerCanalVentas();
+            $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
             $ttalAbonos = 0;
             foreach ($abonos as $abn){

@@ -34,8 +34,8 @@ class Canalventa extends AppModel {
 		)
 	);
 
-    public function obtenerCanalVentas() {
-        return $this->find('list', array('recursive' => '-1'));
+    public function obtenerCanalVentas($empresa_id) {
+        return $this->find('list', array('conditions' => array('Canalventa.empresa_id' => $empresa_id), 'recursive' => '-1'));
     }
 
 }

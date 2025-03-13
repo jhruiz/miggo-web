@@ -347,7 +347,7 @@ class FacturasController extends AppController
         $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
 
         // Se obtiene el listado de canal de ventas
-        $canalventas = $this->Canalventa->obtenerCanalVentas();
+        $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
         $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas'));
     }
