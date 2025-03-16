@@ -192,7 +192,7 @@ $mdfechaalerta = date('m-d',strtotime($fechaCumple));
                             <input class="date form-control" placeholder="Fecha de Alerta" type="text" id="fecha_alerta">
                         </div>
 
- <div class="col-md-3">
+                    <div class="col-md-3">
                         <label>Responsable</label><br>
                         <?php 
                             echo $this->Form->input("usuario_id",
@@ -208,6 +208,23 @@ $mdfechaalerta = date('m-d',strtotime($fechaCumple));
                             );
                         ?>
                     </div>
+
+                    <div class="col-md-3">
+                        <label>Canal de ventas</label><br>
+                        <?php 
+                            echo $this->Form->input("canal_id",
+                                    array(
+                                        'name'=>"canal_id",
+                                        'id'=>"canalId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$canalventas,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                        </div>                    
                     
                 </div>
       

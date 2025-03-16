@@ -48,21 +48,21 @@ function obtenerParametros (){
     params.kmxDia = $('#OrdentrabajoKmxdia').val();
     params.kmProxMantto = $('#OrdentrabajoKmproxmant').val();
     params.observaciones = $('#OrdentrabajoObservacionesCliente').val();
-  // campos formulario alerta factura vista gestionalertasfac
-  params.clienteId = $('#cliente_idadd').val();
-  params.facturaId = $('#factura_idadd').val();
-  // campos formulario alerta prefactura vista gestionalertasprefac
-  params.prefacturaId = $('#prefacturaId').val(); 
-// campos formulario alerta generak vista gestionalertasgeneral
-  params.usuarioId = $('#usuarioId').val(); 
-  params.cliente = $('#clienteId').val();
+    // campos formulario alerta factura vista gestionalertasfac
+    params.clienteId = $('#cliente_idadd').val();
+    params.facturaId = $('#factura_idadd').val();
+    // campos formulario alerta prefactura vista gestionalertasprefac
+    params.prefacturaId = $('#prefacturaId').val(); 
+    // campos formulario alerta generak vista gestionalertasgeneral
+    params.usuarioId = $('#usuarioId').val(); 
+    params.cliente = $('#clienteId').val();
+    params.canalventas = $('#canalId').val();
     return params;
 }
 
 var guardaralerta = function(){
 
     var mensaje = validarFormulario();
-    console.log(mensaje);
 
     if(mensaje == ''){
         var params = obtenerParametros();

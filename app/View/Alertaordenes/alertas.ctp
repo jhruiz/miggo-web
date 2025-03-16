@@ -46,6 +46,7 @@
                             <th>&nbsp;</th>
                             <th><?php echo ('Tipo Alerta'); ?></th>
                             <th><?php echo ('Responsable'); ?></th>
+                            <th><?php echo ('Canal de Ventas'); ?></th>
                             <th><?php echo ('Cliente'); ?></th>
                             <th><?php echo ('Vehículo'); ?></th>
                             <th><?php echo ('Técnico'); ?></th>
@@ -60,26 +61,27 @@
 
                         <?php
 
-$dateAct = new DateTime($fechaAct);
-$dateAlert = new DateTime($alertOrd['Alertaordene']['fecha_alerta']);
-$diff = $dateAct->diff($dateAlert);
-$days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
-$color = $days < 0 ?  'f23c3c' : '00ff44';
-?>
+                            $dateAct = new DateTime($fechaAct);
+                            $dateAlert = new DateTime($alertOrd['Alertaordene']['fecha_alerta']);
+                            $diff = $dateAct->diff($dateAlert);
+                            $days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
+                            $color = $days < 0 ?  'f23c3c' : '00ff44';
+                            ?>
 
                         <tr>
                        
                             <td>
                                 <center>
                                     <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
-echo $color;
-?>; ">
+                                        echo $color;
+                                        ?>; ">
                                         <div style="color:white ;"> <?php echo $days; ?> </div>
                                     </div>
                                 </center>
                             </td>
                             <td><?php echo h($alertOrd['AL']['descripcion']); ?></td>
                             <td><?php echo h($alertOrd['US']['nombre']); ?></td>
+                            <td><?php echo h($alertOrd['CV']['descripcion']); ?></td>
                             <td><?php echo h($alertOrd['CL']['nombre']); ?></td>
                             <td><?php echo h($alertOrd['VH']['placa'] . ' - ' . $alertOrd['VH']['linea']); ?></td>
                             <td><?php echo h($alertOrd['US']['nombre']); ?></td>
@@ -136,6 +138,7 @@ echo $color;
 
                         <th><?php echo ('Tipo Alerta'); ?></th>
                         <th><?php echo ('Responsable'); ?></th>
+                        <th><?php echo ('Canal de Ventas'); ?></th>
                         <th><?php echo ('Cliente'); ?></th>
                         <th><?php echo ('Fecha de cumpleaños'); ?></th>
                         <!-- <th><//s?php echo ('Técnico'); ?></th> -->
@@ -150,20 +153,20 @@ echo $color;
 
                     <?php
 
-$dateAct = new DateTime($fechaAct);
-$dateAlert = new DateTime($alertFac['Alertaordene']['fecha_alerta']);
-$diff = $dateAct->diff($dateAlert);
-$days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
-$color = $days < 0 ?  'f23c3c' : '00ff44';
-?>
+                        $dateAct = new DateTime($fechaAct);
+                        $dateAlert = new DateTime($alertFac['Alertaordene']['fecha_alerta']);
+                        $diff = $dateAct->diff($dateAlert);
+                        $days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
+                        $color = $days < 0 ?  'f23c3c' : '00ff44';
+                        ?>
 
                     <tr>
                     
                         <td>
                             <center>
                                 <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
-echo $color;
-?>; ">
+                                echo $color;
+                                ?>; ">
                                     <div style="color:white ;"> <?php echo $days; ?> </div>
                                 </div>
                             </center>
@@ -171,6 +174,7 @@ echo $color;
 
                         <td><?php echo h($alertFac['AL']['descripcion']); ?></td>
                         <td><?php echo h($alertFac['US']['nombre']); ?></td>
+                        <td><?php echo h($alertFac['CV']['descripcion']); ?></td>
                         <td><?php echo h($alertFac['CL']['nombre']); ?></td>
                         <td><?php echo h($alertFac['CL']['cumpleanios']); ?></td>
                         <td><?php echo h($alertFac['Alertaordene']['fecha_alerta']); ?></td>
@@ -209,6 +213,7 @@ echo $color;
                                 <th>&nbsp;</th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Responsable'); ?></th>
+                                <th><?php echo ('Canal de Ventas'); ?></th>
                                 <th><?php echo ('Cliente'); ?></th>
                                 <th><?php echo ('Fecha de cumpleaños'); ?></th>
                                 <!-- <th><//s?php echo ('Técnico'); ?></th> -->
@@ -223,26 +228,27 @@ echo $color;
 
                 <?php
 
-$dateAct = new DateTime($fechaAct);
-$dateAlert = new DateTime($alertPreFac['Alertaordene']['fecha_alerta']);
-$diff = $dateAct->diff($dateAlert);
-$days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
-$color = $days < 0 ? 'f23c3c' : '00ff44';
-?>
+                    $dateAct = new DateTime($fechaAct);
+                    $dateAlert = new DateTime($alertPreFac['Alertaordene']['fecha_alerta']);
+                    $diff = $dateAct->diff($dateAlert);
+                    $days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
+                    $color = $days < 0 ? 'f23c3c' : '00ff44';
+                    ?>
 
                 <tr>
                 
                 <td>
                     <center>
                         <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
-echo $color;
-?>; "> <div style="color:white ;">  <?php echo $days; ?> </div>
+                        echo $color;
+                        ?>; "> <div style="color:white ;">  <?php echo $days; ?> </div>
                         </div>
                     </center>
                 </td>
                        
                         <td><?php echo h($alertPreFac['AL']['descripcion']); ?></td>
                         <td><?php echo h($alertPreFac['US']['nombre']); ?></td>
+                        <td><?php echo h($alertPreFac['CV']['descripcion']); ?></td>
                         <td><?php echo h($alertPreFac['CL']['nombre']); ?></td>
                         <td><?php echo h($alertPreFac['CL']['cumpleanios']); ?></td>
                         <!-- <td><//?php echo h($alertOrd['VH']['placa'] . ' - ' . $alertOrd['VH']['linea']); ?></td> -->
@@ -284,6 +290,7 @@ echo $color;
                                 <th>&nbsp;</th>
                                 <th><?php echo ('Tipo Alerta'); ?></th>
                                 <th><?php echo ('Usuario responsable'); ?></th>
+                                <th><?php echo ('Canal de Ventas'); ?></th>
                                 <th><?php echo ('Cliente '); ?></th>
                                 <th><?php echo ('Fecha de cumpleaños'); ?></th>
                                 <!-- <th><//s?php echo ('Técnico'); ?></th> -->
@@ -298,20 +305,20 @@ echo $color;
 
                 <?php
 
-$dateAct = new DateTime($fechaAct);
-$dateAlert = new DateTime($alertGen['Alertaordene']['fecha_alerta']);
-$diff = $dateAct->diff($dateAlert);
-$days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
-$color = $days < 0 ? 'f23c3c' : '00ff44';
-?>
+                $dateAct = new DateTime($fechaAct);
+                $dateAlert = new DateTime($alertGen['Alertaordene']['fecha_alerta']);
+                $diff = $dateAct->diff($dateAlert);
+                $days = $diff->invert == 0 ? $diff->days : $diff->days * -1;
+                $color = $days < 0 ? 'f23c3c' : '00ff44';
+                ?>
 
                 <tr>
                
                 <td>
                     <center>
                         <div style="border-width: 4px; border-radius: 25px; width: 35px;  background: #<?php
-echo $color;
-?>; "> <div style="color:white ;">  <?php echo $days; ?> </div>
+                        echo $color;
+                        ?>; "> <div style="color:white ;">  <?php echo $days; ?> </div>
                         </div>
                     </center>
                 </td>
@@ -320,6 +327,7 @@ echo $color;
                         <!-- <td><//?php echo h($alertOrd['VH']['placa'] . ' - ' . $alertOrd['VH']['linea']); ?></td> -->
                         <!-- <td><//?php echo h($alertOrd['US']['nombre']); ?></td> -->
                         <td><?php echo h($alertGen['US']['nombre']); ?></td>
+                        <td><?php echo h($alertGen['CV']['descripcion']); ?></td>
                         <td><?php echo h($alertGen['CL']['nombre']); ?></td>
                         <td><?php echo h($alertGen['CL']['cumpleanios']); ?></td>
                         <td><?php echo h($alertGen['Alertaordene']['fecha_alerta']); ?></td>

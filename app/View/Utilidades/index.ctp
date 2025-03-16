@@ -37,6 +37,7 @@
                     <th><?php echo h('Deposito'); ?></th>
                     <th><?php echo h('Proveedor'); ?></th>
                     <th><?php echo h('Vendedor'); ?></th>
+                    <th><?php echo h('Canal de Ventas'); ?></th>
                     <th><?php echo h('Costo del Producto'); ?></th>
                     <th><?php echo h('Costo Total'); ?></th>
                     <th><?php echo h('cantidad'); ?></th>
@@ -55,6 +56,7 @@
                     <td><?php echo h($utilidade['DP']['descripcion']); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['PV']['nombre']) ? $utilidade['PV']['nombre'] : "Sin Proveedor"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['US']['nombre']) ? $utilidade['US']['nombre'] : "Sin Vendedor"); ?>&nbsp;</td>
+                    <td><?php echo h(!empty($utilidade['CV']['descripcion']) ? $utilidade['CV']['descripcion'] : "Sin Canal"); ?>&nbsp;</td>
                     <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['costo_producto']),2)); ?>&nbsp;</td>
                     <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>
                     <td class="text-right"><?php echo h($utilidade['Utilidade']['cantidad']); ?>&nbsp;</td>

@@ -695,6 +695,7 @@ class ReportesController extends AppController
             'Deposito',
             'Proveedor',
             'Vendedor',
+            'Canal de Ventas',
             'Costo del Producto',
             'Costo Total',
             'Cantidad',

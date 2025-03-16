@@ -17,7 +17,7 @@ class Alertaordene extends AppModel {
             $data['km_mantenimiento'] = $params['kmProxMantto'];
             $data['observaciones'] = $params['observaciones'];
             $data['cliente_id'] = $params['clienteId'];
-            
+            $data['canalventa_id'] = $params['canalventas'];
 
             // parametros crear alerta factura
             $data['factura_id'] = $params['facturaId'];
@@ -25,7 +25,6 @@ class Alertaordene extends AppModel {
             $data['prefactura_id'] = $params['prefacturaId'];
             // parametros crear alerta General
             $data['usuario_id'] = $params['usuarioId'];
-            $data['cliente_id'] = $params['cliente'];
             
             if($alertaorden->save($data)){                
                 return '1';
@@ -101,6 +100,13 @@ class Alertaordene extends AppModel {
                 'conditions' => array('O.ordenestado_id=OE.id')                
             ));
             
+            array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'LEFT',
+                'conditions' => array('CV.id=Alertaordene.canalventa_id')                
+            ));
+            
             $alertasOrdenes = $this->find('all', array(                
                 'joins' => $arr_join, 
                 'fields' => array(
@@ -126,6 +132,7 @@ class Alertaordene extends AppModel {
                     'VH.modelo',
                     'US.id',
                     'US.nombre',
+                    'CV.descripcion',
                     'CL.id',
                     'CL.nit',
                     'CL.nombre',
@@ -147,12 +154,6 @@ class Alertaordene extends AppModel {
         public function obtenerInfoAlertaFactura($filtros){
 
             $arr_join = array(); 
-            // array_push($arr_join, array(
-            //     'table' => 'facturas', 
-            //     'alias' => 'F', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('Alertaordene.factura_id=F.id')                
-            // ));
 
             array_push($arr_join, array(
                 'table' => 'usuarios', 
@@ -189,6 +190,13 @@ class Alertaordene extends AppModel {
                 'conditions' => array('Alertaordene.alerta_id=AL.id')                
             ));
             
+            array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'LEFT',
+                'conditions' => array('CV.id=Alertaordene.canalventa_id')                
+            ));
+            
             
             $alertasFacturas = $this->find('all', array(                
                 'joins' => $arr_join, 
@@ -198,6 +206,7 @@ class Alertaordene extends AppModel {
                     'Alertaordene.*',
                     'US.id',
                     'US.nombre',
+                    'CV.descripcion',
                     'CL.id',
                     'CL.nit',
                     'CL.nombre',
@@ -224,8 +233,6 @@ class Alertaordene extends AppModel {
                 'conditions' => array('F.id=Alertaordene.prefactura_id')                
             ));
 
-           
-
             array_push($arr_join, array(
                 'table' => 'usuarios', 
                 'alias' => 'US', 
@@ -261,7 +268,12 @@ class Alertaordene extends AppModel {
                 'conditions' => array('Alertaordene.alerta_id=AL.id')                
             ));
             
-          
+            array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'LEFT',
+                'conditions' => array('CV.id=Alertaordene.canalventa_id')                
+            ));          
             
             $alertasPreFacturas = $this->find('all', array(                
                 'joins' => $arr_join, 
@@ -271,6 +283,7 @@ class Alertaordene extends AppModel {
                     'EA.descripcion',
                     'Alertaordene.*',
                     'US.nombre',
+                    'CV.descripcion',
                     'CL.id',
                     'CL.nit',
                     'CL.nombre',
@@ -860,10 +873,17 @@ class Alertaordene extends AppModel {
                 'conditions' => array('O.ordenestado_id=OE.id')                
             ));
             
+            array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'LEFT',
+                'conditions' => array('CV.id=Alertaordene.canalventa_id')                
+            ));
+            
             $alertasOrdenes = $this->find('all', array(                
                 'joins' => $arr_join, 
                 'fields' => array(
-                   'EA.id',
+                    'EA.id',
                     'EA.descripcion',
                     'Alertaordene.*',
                     'CL.id',
@@ -872,6 +892,7 @@ class Alertaordene extends AppModel {
                     'CL.direccion',
                     'CL.celular',
                     'CL.cumpleanios',
+                    'CV.descripcion',
                     'UM.*',
                     'AL.*',
                     'PS.*',
@@ -924,7 +945,12 @@ class Alertaordene extends AppModel {
                 'conditions' => array('Alertaordene.alerta_id=AL.id')                
             ));
             
-           
+            array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'INNER',
+                'conditions' => array('CV.id=Alertaordene.canalventa_id')                
+            ));
             
             $alertasGeneral = $this->find('all', array(                
                 'joins' => $arr_join, 
@@ -940,7 +966,8 @@ class Alertaordene extends AppModel {
                     'CL.cumpleanios',
                     'UM.*',
                     'AL.*',
-                    'US.nombre'
+                    'US.nombre',
+                    'CV.descripcion'
                 ),                             
                 'conditions' => $filtros,
                 'recursive' => '-1',

@@ -211,6 +211,23 @@
                             );
                         ?>
                     </div>
+
+                    <div class="col-md-2">
+                        <br><label>Canal de ventas</label><br>
+                        <?php 
+                            echo $this->Form->input("canal_id",
+                                    array(
+                                        'name'=>"canal_id",
+                                        'id'=>"canalId",
+                                        'label' => "",
+                                        'type' => 'select',
+                                        'options'=>$canalventas,
+                                        'empty'=>'Seleccione Una',
+                                        'class' => 'form-control'
+                                    )
+                            );
+                        ?>
+                    </div>
                    
                 </div>
       

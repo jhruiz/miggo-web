@@ -13,6 +13,7 @@ class AlertaordenesController extends AppController
         $this->loadModel('Estadoalerta');
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Usuario');
+        $this->loadModel('Canalventa');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
@@ -34,7 +35,10 @@ class AlertaordenesController extends AppController
         //se obtiene el listado de usuarios
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresa_id);
 
-        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
+        // Se obtiene el listado de canal de ventas
+        $canalventas = $this->Canalventa->obtenerCanalVentas($empresa_id);
+
+        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas', 'canalventas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'infoOrdenCliV','usuarios'));
     }
     
@@ -724,6 +728,7 @@ class AlertaordenesController extends AppController
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Factura');
         $this->loadModel('Usuario');
+        $this->loadModel('Canalventa');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
@@ -745,8 +750,11 @@ class AlertaordenesController extends AppController
         $infoFacturaCli = $this->Factura->obtenerInfoAlertaFacturaGenerate($filter);
         $id_factura = "";
         $id_factura = $facturaId;
+
+        // Se obtiene el listado de canal de ventas
+        $canalventas = $this->Canalventa->obtenerCanalVentas($empresa_id);
     
-        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
+        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas', 'canalventas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'infoFacturaCli','id_factura','usuarios'));
     }
     public function gestionalertasprefac($facturaId)
@@ -757,6 +765,7 @@ class AlertaordenesController extends AppController
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Prefactura');
         $this->loadModel('Usuario');
+        $this->loadModel('Canalventa');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
@@ -777,11 +786,14 @@ class AlertaordenesController extends AppController
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresa_id);
         $fechaActual = date('Y-m-d');
 
+        // Se obtiene el listado de canal de ventas
+        $canalventas = $this->Canalventa->obtenerCanalVentas($empresa_id);
+
         $filter['Prefactura.id'] = $facturaId;
         $id_pre_factura= "";
         $id_pre_factura= $facturaId;
         $infoFacturaCli = $this->Prefactura->obtenerInfoAlertaFacturaGenerate($filter);
-        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
+        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas', 'canalventas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual', 'id_pre_factura','infoFacturaCli','id_factura','usuarios'));
     }
     public function gestionalertasgeneral()
@@ -793,6 +805,7 @@ class AlertaordenesController extends AppController
         $this->loadModel('Prefactura');
         $this->loadModel('Usuario');
         $this->loadModel('Cliente');
+        $this->loadModel('Canalventa');
 
         //id de la empresa
         $empresa_id = $this->Auth->user('empresa_id');
@@ -816,8 +829,11 @@ class AlertaordenesController extends AppController
 
          //se obtiene el listado de clientes
          $clientes = $this->Cliente->obtenerClienteEmpresa($empresa_id);
+
+        // Se obtiene el listado de canal de ventas
+        $canalventas = $this->Canalventa->obtenerCanalVentas($empresa_id);         
    
-        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas'));
+        $this->set(compact('ordenTrabajoId', 'empresa_id', 'alertas', 'canalventas'));
         $this->set(compact('unidadesMed', 'estadoAlertas', 'fechaActual','usuarios', 'id_pre_factura','infoFacturaCli','id_factura','clientes'));
     }
   
@@ -897,8 +913,10 @@ class AlertaordenesController extends AppController
      
         //se obtiene el listado de alertas por orden de trabajo
         $alertasOrdenes = $this->Alertaordene->obtenerInfoAlertaOrden($filtrosOrdenes);
+
         //se obtiene el listado de alertas por factura
         $alertasFacturas = $this->Alertaordene->obtenerInfoAlertaFactura($filtrosFactura);
+
         //se obtiene el listado de alertas por Pre factura
         $alertasPreFacturas = $this->Alertaordene->obtenerInfoAlertaPreFactura($filtrosPrefactura);
        

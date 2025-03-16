@@ -164,6 +164,7 @@ endforeach;
             <td class="tableTdContent" ><?php echo h($utilidade['DP']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['PV']['nombre']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['US']['nombre']); ?></td>
+            <td class="tableTdContent" ><?php echo h($utilidade['CV']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad'])); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['cantidad']); ?></td>

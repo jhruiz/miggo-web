@@ -111,6 +111,15 @@ class Utilidade extends AppModel {
             ));  
             
             array_push($arr_join, array(
+                'table' => 'canalventas', 
+                'alias' => 'CV', 
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'CV.id=F.canalventa_id'
+                    )                
+            ));  
+            
+            array_push($arr_join, array(
                 'table' => 'depositos', 
                 'alias' => 'DP', 
                 'type' => 'INNER',
@@ -156,6 +165,7 @@ class Utilidade extends AppModel {
                     'F.factura',
                     'F.codigo',
                     'F.consecutivodian',
+                    'CV.descripcion',
                     'DP.id',
                     'DP.descripcion',
                     'PV.nombre',
