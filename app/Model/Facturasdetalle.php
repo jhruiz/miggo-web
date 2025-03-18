@@ -165,6 +165,7 @@ class Facturasdetalle extends AppModel {
 		public function totalFactura($facturaId) {
 			$total = $this->find('all', array(
 				'fields' => array(
+					'Facturasdetalle.*',
 					'Facturasdetalle.id',
 					'sum(Facturasdetalle.costototal) AS ctotal'
 				), 

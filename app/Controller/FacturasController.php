@@ -1634,17 +1634,29 @@ class FacturasController extends AppController
     public function datosnotacredito() {
         $this->loadModel('Tipopago');
         $this->loadModel('Facturasdetalle');
+        $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Abonofactura');
 
         $facturaId = $this->request->data['facturaId'];
         $empresaId = $this->Auth->user('empresa_id');
                 
         //obtiene los tipos de pago de una empresa
         $lstTipPagos = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+        $ttalFact = 0;
 
-        //obtiene el valor total de la factura
-        $infoFactura = $this->Facturasdetalle->totalFactura($facturaId);
+        //obtiene los pagos de la factura en factura_cuenta_valores
+        $fcv = $this->FacturaCuentaValore->obtenerPagosFactura($facturaId);
+        foreach($fcv as $val) {
+            $ttalFact += floatval($val['FacturaCuentaValore']['valor']);
+        }
 
-        $this->set(compact('lstTipPagos', 'infoFactura', 'facturaId'));
+        //obtiene los pagos de la factura en abonos
+        $abonos = $this->Abonofactura->obtenerAbonosFactura($facturaId);
+        foreach($abonos as $valA) {
+            $ttalFact += floatval($valA['Abonofactura']['valor']);
+        }
+
+        $this->set(compact('lstTipPagos', 'facturaId', 'ttalFact'));
     }
 
     public function searchFacCli()

@@ -5,12 +5,12 @@ echo ($this->Html->script('facturas/pagonotacredito.js'));
 <div class="form_contenedor_pagos">
     <div class="row contenedor_metodos_pagos"> 
         <div class="col-md-12">                                
-            <?php echo $this->Form->input('totalFactura', array('id' => 'totalFactura', 'value' => $infoFactura['0']['0']['ctotal'], 'type' => 'hidden'))?><br>
+            <?php echo $this->Form->input('totalFactura', array('id' => 'totalFactura', 'value' => $ttalFact, 'type' => 'hidden'))?><br>
             <?php echo $this->Form->input('factura_id', array('id' => 'facturaId', 'value' => $facturaId, 'type' => 'hidden'))?><br>
             <div class="col-md-6"><label>TOTAL</label></div>
-            <div class="col-md-6"><label id="ttalFactura"><?php echo h(number_format($infoFactura['0']['0']['ctotal'], 2));?></label></div><br>
+            <div class="col-md-6"><label id="ttalFactura"><?php echo h(number_format($ttalFact, 2));?></label></div><br>
             <div class="col-md-6"><label>RESTANTE</label></div>
-            <div class="col-md-6"><label id="restante"><?php echo h(number_format($infoFactura['0']['0']['ctotal'], 2));?></label></div><br><br>
+            <div class="col-md-6"><label id="restante"><?php echo h(number_format($ttalFact, 2));?></label></div><br><br>
         </div>
 
         <div class="contenedor_pagos">
