@@ -562,8 +562,22 @@ var imprimirCotizacion = function() {
                 var productos = JSON.parse(data);
                 var mywindow = window.open('', 'PRINT', 'height=400,width=600');
                 mywindow.document.write('<html><head>');
-                mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
-                mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 10px; } </style>');
+                mywindow.document.write('<style>');
+                mywindow.document.write('@page { size: auto; margin: 0; }'); // Eliminar márgenes de la página
+                mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }'); // Tamaño de fuente base
+                mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }'); // Estilo de la tabla
+                mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }'); // Estilo de las celdas de encabezado
+                mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; font-size: 12px; }'); // Estilo de las celdas
+                mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }'); // Fondo del encabezado
+                mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }'); // Fondo alterno para filas
+                mywindow.document.write('.align-left { text-align: left; }'); // Clase para alinear a la izquierda
+                mywindow.document.write('.align-right { text-align: right; }'); // Clase para alinear a la derecha
+                mywindow.document.write('@media print {');
+                mywindow.document.write('  @page { margin: 0; }'); // Eliminar márgenes en la impresión
+                mywindow.document.write('  body { margin: 1cm; }'); // Ajustar márgenes del contenido
+                mywindow.document.write('  .no-print, .no-print * { display: none !important; }'); // Ocultar elementos no deseados
+                mywindow.document.write('}');
+                mywindow.document.write('</style>');
                 mywindow.document.write('</head>');
                 mywindow.document.write('<body>');
                 mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
@@ -574,7 +588,7 @@ var imprimirCotizacion = function() {
                 mywindow.document.write($('#dv_info_emp').html());
                 mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
                 mywindow.document.write('<b>Vendedor: </b>' + $('#CotizacioneVendedor option:selected').text() + '</div>');
-
+                
                 if ($('#CotizacioneDatoscliente').val() != "") {
                     mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
                     mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
@@ -609,33 +623,33 @@ var imprimirCotizacion = function() {
                     mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
                     mywindow.document.write('<b>Dirección: </b>' + $('#CotizacioneRapidadireccion').val() + '</div></div></div></div>');
                 }
-
+                
                 if ($('#CotizacionePlaca').val() != "") {
                     mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
                     mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
                     mywindow.document.write('<b>Placa Vehículo: </b>' + $('#CotizacionePlaca').val() + '</div></div></div></div>');
                 }
-
+                
                 mywindow.document.write('<div style="margin-top: 30px; float: left; width: 100%; aling-items: center; justify-content: center">');
                 mywindow.document.write('<table style="font-family:sans-serif; font-size:15px; border-collapse: collapse; width: 100%;"><thead>');
-                mywindow.document.write('<tr><th align="left">Detalle</th><th align="left">Cantidad</th><th align="right">Valor Unitario</th><th align="right">Valor Total</th></tr>');
+                mywindow.document.write('<tr><th class="align-left">Detalle</th><th class="align-left">Cantidad</th><th class="align-right">Valor Unitario</th><th class="align-right">Valor Total</th></tr>');
                 mywindow.document.write('</thead>');
                 if (productos.resp.length > 0) {
                     mywindow.document.write('<tbody>');
                     if (productos.resp.length > 0) {
                         $.each(productos.resp, function(k, val) {
                             mywindow.document.write('<tr>');
-                            mywindow.document.write('<td align="left">' + val.Cotizacionesdetalle.nombreproducto + '</td>');
-                            mywindow.document.write('<td align="left">' + val.Cotizacionesdetalle.cantidad + '</td>');
-                            mywindow.document.write('<td align="right">' + formatNumber(val.Cotizacionesdetalle.costoventa) + '</td>');
-                            mywindow.document.write('<td align="right">' + formatNumber(val.Cotizacionesdetalle.costototal) + '</td>');
+                            mywindow.document.write('<td class="align-left">' + val.Cotizacionesdetalle.nombreproducto + '</td>'); // Alineado a la izquierda
+                            mywindow.document.write('<td class="align-left">' + val.Cotizacionesdetalle.cantidad + '</td>'); // Alineado a la izquierda
+                            mywindow.document.write('<td class="align-right">' + formatNumber(val.Cotizacionesdetalle.costoventa) + '</td>'); // Alineado a la derecha
+                            mywindow.document.write('<td class="align-right">' + formatNumber(val.Cotizacionesdetalle.costototal) + '</td>'); // Alineado a la derecha
                             mywindow.document.write('</tr>');
                         });
                     }
                     mywindow.document.write('</tbody>');
                 }
-                mywindow.document.write('<tr><td colspan="2"></td><td align="right"><b>TOTAL</b></td>');
-                mywindow.document.write('<td align="right">' + $('#resultCot').html() + '</td>');
+                mywindow.document.write('<tr><td colspan="2"></td><td class="align-right"><b>TOTAL</b></td>');
+                mywindow.document.write('<td class="align-right">' + $('#resultCot').html() + '</td>');
                 mywindow.document.write('</tr></table></div>');
                 if ($('#observacion').val() != "") {
                     mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:100%" align="left">');

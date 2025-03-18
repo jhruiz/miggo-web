@@ -76,24 +76,24 @@
             </div>
     </div>
     <legend>&nbsp;</legend>
-    <section class="main row">
-        <div class="col-md-8">
-            &nbsp;
-        </div>              
-        <div class="col-md-2">
-                <dt><?php echo h("Total de Productos: ");?></dt>
-                <dt><?php echo h("Total de Unidades: ");?></dt>
-                <dt><?php echo h("Total: ");?></dt>                
-        </div>  
-        <div class="col-md-1">
-            <dt class="text-right"><?php echo h($totalProductos);?></dt>
-            <dt class="text-right"><?php echo h($cantProd);?></dt>
-            <dt class="text-right"><?php echo h("$" . number_format($total,2));?></dt>   
-        </div>
-        <div class="col-md-1">
-            &nbsp;
-        </div>
-    </section>
+    <div class="table-responsive" style="max-width: 300px; margin: auto;">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <th>Total de Productos:</th>
+                <td class="text-right"><?php echo h($totalProductos); ?></td>
+            </tr>
+            <tr>
+                <th>Total de Unidades:</th>
+                <td class="text-right"><?php echo h($cantProd); ?></td>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <td class="text-right"><?php echo h("$" . number_format($total, 2)); ?></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
     <legend>&nbsp;</legend>
 
     <div class="container">

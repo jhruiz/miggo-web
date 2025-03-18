@@ -55,17 +55,31 @@ function guardarCargueInventario(dato){
 function imprimirDocumento() {
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
     mywindow.document.write('<html><head>');
-    mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
-    mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 10px; } </style>');
+    mywindow.document.write('<style>');
+    mywindow.document.write('@page { size: auto; margin: 0; }'); // Eliminar márgenes de la página
+    mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }'); // Tamaño de fuente base
+    mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }'); // Estilo de la tabla
+    mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }'); // Estilo de las celdas de encabezado
+    mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; font-size: 12px; }'); // Estilo de las celdas
+    mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }'); // Fondo del encabezado
+    mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }'); // Fondo alterno para filas
+    mywindow.document.write('.align-left { text-align: left; }'); // Clase para alinear a la izquierda
+    mywindow.document.write('.align-right { text-align: right; }'); // Clase para alinear a la derecha
+    mywindow.document.write('@media print {');
+    mywindow.document.write('  @page { margin: 0; }'); // Eliminar márgenes en la impresión
+    mywindow.document.write('  body { margin: 1cm; }'); // Ajustar márgenes del contenido
+    mywindow.document.write('  .no-print, .no-print * { display: none !important; }'); // Ocultar elementos no deseados
+    mywindow.document.write('}');
+    mywindow.document.write('</style>');
     mywindow.document.write('</head>');
     mywindow.document.write('<body>');
     mywindow.document.write('<div style="font-family:sans-serif; font-size:15px;">');
-    mywindow.document.write($('#documentos').html());
+    mywindow.document.write($('#documentos').html()); // Aquí se incluye el contenido de #documentos
     mywindow.document.write('</div>');
     mywindow.document.write('</body></html>');
     mywindow.document.title = "Documento";
     mywindow.document.close();
     mywindow.focus();
     mywindow.print();
-    mywindow.close();        
+    mywindow.close();      
 }

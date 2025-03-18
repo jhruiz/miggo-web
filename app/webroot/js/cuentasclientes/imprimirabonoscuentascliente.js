@@ -43,20 +43,32 @@ var imprimirAbonos = function() {
 
 
             var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-            mywindow.document.write('<html><head>');
-            mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 20px; } } </style>');
-            mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 10px; } </style>');
+            mywindow.document.write('<style>');
+            mywindow.document.write('@page { size: auto; margin: 0; }');
+            mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }');
+            mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }');
+            mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }');
+            mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 12px; }'); // Alineación por defecto a la derecha
+            mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }');
+            mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }');
+            mywindow.document.write('.align-left { text-align: left; }'); // Clase para alinear a la izquierda
+            mywindow.document.write('@media print {');
+            mywindow.document.write('  @page { margin: 0; }');
+            mywindow.document.write('  body { margin: 1cm; }');
+            mywindow.document.write('  .no-print, .no-print * { display: none !important; }');
+            mywindow.document.write('}');
+            mywindow.document.write('</style>');
             mywindow.document.write('</head>');
             mywindow.document.write('<body>');
             mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
             mywindow.document.write('<h4><b>' + nombreEmp + '</b></h4></div>');
             mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-
+            
             if (repLegal != "") {
                 mywindow.document.write('<h4><b>' + repLegal + '</b></h4>');
             }
-
+            
             mywindow.document.write('</div>');
             mywindow.document.write('<div style="margin:0px; width:100%; float:left;">');
             mywindow.document.write('<div style="float:left; margin-top: 10px; width:50%" align="left">');
@@ -75,17 +87,17 @@ var imprimirAbonos = function() {
             mywindow.document.write('<tr><th align="left">Usuario</th><th align="left">Cliente</th>');
             mywindow.document.write('<th align="left">Fecha</th><th align="left">Valor</th></tr>');
             mywindow.document.write('</thead>');
-
+            
             if (dataAbono.abonos.length > 0) {
                 mywindow.document.write('<tbody>');
                 var ttalAbono = 0;
                 $.each(dataAbono.abonos, function(k, val) {
                     ttalAbono += parseInt(val.Abonofactura.valor);
                     mywindow.document.write('<tr>');
-                    mywindow.document.write('<td align="left">' + (val.U.nombre) + '</td>');
-                    mywindow.document.write('<td align="left">' + (val.CL.nombre) + '</td>');
-                    mywindow.document.write('<td align="left">' + (val.Abonofactura.created) + '</td>');
-                    mywindow.document.write('<td align="right">$' + (val.Abonofactura.valor).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + '</td>');
+                    mywindow.document.write('<td class="align-left">' + (val.U.nombre) + '</td>'); // Alineado a la izquierda
+                    mywindow.document.write('<td class="align-left">' + (val.CL.nombre) + '</td>'); // Alineado a la izquierda
+                    mywindow.document.write('<td class="align-left">' + (val.Abonofactura.created) + '</td>'); // Alineado a la izquierda
+                    mywindow.document.write('<td align="right">$' + (val.Abonofactura.valor).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + '</td>'); // Alineado a la derecha
                     mywindow.document.write('</tr>');
                 });
                 mywindow.document.write('<tr><td align="right" colspan="3"><b>Total</b></td><td align="right">$' + ttalAbono.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + '</td><tr>');
