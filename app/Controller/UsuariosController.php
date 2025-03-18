@@ -174,15 +174,15 @@ class UsuariosController extends AppController {
      * @return void
      */
     public function edit($id = null) {
+
         /*se registra la actividad del usuario en la aplicacion*/
-        $usuarioId = $this->Auth->user('id'); 
+        $usuarioId = $this->Auth->user('id');
         $this->registraractividad($usuarioId);
-            
+
         if (!$this->Usuario->exists($id)) {
             throw new NotFoundException(__('Invalid usuario'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            
             $posData = $this->request->data;
             $productos = new ProductosController();
 
@@ -215,9 +215,11 @@ class UsuariosController extends AppController {
                 $this->Session->setFlash(__('El usuario no pudo ser actualizado. Por favor, intentelo de nuevo.'));
             }
         } else {
-            $options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id));
+            $options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id), 'recursive' => '-1');
             $this->request->data = $this->Usuario->find('first', $options);
         }
+        
+        
 
         /*si es el usuario administrador de la app se muestra el listado, sino se ingresa el dato oculto en el campo empresa*/
         /*Se obtiene el usuario en sesion*/
