@@ -108,13 +108,6 @@
         </dl>
     </div><br><br>
 </div>
-
-<div class="container hidden-print">                                        
-    <div class="btn-group">
-        <button id="butImprimirDoc" class="btn btn-primary" onclick="window.print();">Imprimir</button>
-        <button id="butAgregarNota" name="<?php echo $documento['Usuario']['id'];?>" class="btn btn-primary" onclick="agregarNotaDocumento(this);">Agragar Nota</button>
-    </div>
-</div> 
 <div id="div_anotacion"></div>
 
 	

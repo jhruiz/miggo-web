@@ -145,6 +145,7 @@ function validarProductosPrefacturados(){
         success: function(data) {    
             var respuesta = JSON.parse(data);
             if(respuesta.resp){
+                var contador = 1;
                 $.each(respuesta.detFact, function(idx, obj) {
                     var costoConIva = Number(obj['Prefacturasdetalle']['cantidad']) * Number(obj['Prefacturasdetalle']['costoventa']);
                     var costoSinIva = Math.ceil(parseFloat(costoConIva) / (parseFloat(obj['Prefacturasdetalle']['impuesto']/100) + 1));
@@ -153,6 +154,7 @@ function validarProductosPrefacturados(){
                     var valorIva = Math.ceil((costoSinIva - valDcto) * prcImp);                                         
                     var valorConIva = Math.ceil(parseFloat(costoSinIva) + parseFloat(valorIva) - obj['Prefacturasdetalle']['descuento']);
                     $('#productosPrefacturas').append('<tr id="tr_' + obj['Prefacturasdetalle']['id'] + '">' + 
+                    '<td>' + contador + '</td>' +
                     '<td>' + obj['Cargueinventario']['descprod']  + '<input type="hidden" name="prcimpuesto_' + obj['Prefacturasdetalle']['id'] + '" id="prcimpuesto_' + obj['Prefacturasdetalle']['id'] + '" value="' + ((obj['Prefacturasdetalle']['impuesto']/100) + 1) + '">' + '</td>' + 
                     '<td>' + obj['Cargueinventario']['codprod'] + '</td>' + 
                     '<td><input type="text" name="cant_' + obj['Prefacturasdetalle']['id'] + '" class="form-control" id="cant_' + obj['Prefacturasdetalle']['id'] + '" value="' + obj['Prefacturasdetalle']['cantidad'] + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
@@ -163,6 +165,7 @@ function validarProductosPrefacturados(){
                     '<td><input type="text" name="valor_iva_' + obj['Prefacturasdetalle']['id'] + '" class="form-control valor_iva numericPrice" id="valor_iva_' + obj['Prefacturasdetalle']['id'] + '" value="' + valorIva + '" readonly>&nbsp;</td>' +                                            
                     '<td><input type="text" name="valor_con_iva_' + obj['Prefacturasdetalle']['id'] + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + obj['Prefacturasdetalle']['id'] + '" value="' + Math.ceil(valorConIva) + '" readonly>&nbsp;</td>' +                                            
                     '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + obj['Prefacturasdetalle']['id'] + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
+                    contador++;
                 });
                 $('.numericPrice').number(true);
                 calcularTotalConAbonos();
