@@ -78,10 +78,10 @@ function realizarAbono(){
                     var abonosFact = $('.ttalAbonos').val();
                     var ttalFinAbono = (parseInt(ttalAbono) + parseInt(abonosFact));
                     
-                    abn += "<tr><th colspan='8' class='text-right'>Abonos</th>";
+                    abn += "<tr><th colspan='9' class='text-right'>Abonos</th>";
                     abn += "<th class='text-right'>" + formatNumber(ttalFinAbono) + "</th>";
                     abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
-                    abn += "<tr><th colspan='8' class='text-right'>TOTAL</th>";
+                    abn += "<tr><th colspan='9' class='text-right'>TOTAL</th>";
                     abn += "<th class='text-right'>" + formatNumber(ttales - parseInt(ttalFinAbono)) + "</th></tr>";
                     $('#tBodAbonos').html(abn);                                        
                     $('.ttalAbonos').attr('value', ttalFinAbono);

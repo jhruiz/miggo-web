@@ -42,8 +42,12 @@
             class="img-responsive img-thumbnail center-block" width="200">
         </div>  
         <?php if(!empty($infoRemision)){?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __("NIT: " . $infoRemision['Relacionempresa']['nit']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['direccion']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['telefono1']); ?></b></div>
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
 
@@ -69,6 +73,7 @@
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>  
+        <div style="width:100%; float:left; margin:0px" align="center"><?php echo __($infoEmpresa['Empresa']['texto1']); ?></div>
         <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
@@ -664,6 +669,10 @@
         <?php if(!empty($infoRemision)){?>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['nombre']); ?></b></div>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __("NIT: " . $infoRemision['Relacionempresa']['nit']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['direccion']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['telefono1']); ?></b></div>
         <?php }else{?>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
 
@@ -691,6 +700,7 @@
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE COMPRA No. ' . $prefijo . ' ' . $consecutivoFact) ?></b></div>   
+            <div style="width:100%; float:left; margin:0px" align="center"><?php echo __($infoEmpresa['Empresa']['texto1']); ?></div>
             <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
             <input id="tipoVenta" type="hidden" value="2">
         <?php }?>

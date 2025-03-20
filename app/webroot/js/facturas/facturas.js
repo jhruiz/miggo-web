@@ -209,8 +209,7 @@ function actualizarCreditoLimite(){
     }    
 }
 
-function fnObtenerDatosProducto(e){    
-    console.log('entra por aqu');
+function fnObtenerDatosProducto(e){
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
 

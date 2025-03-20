@@ -1158,7 +1158,8 @@ var actualizarPorcentajeDtto = function(data){
     var arrId = (data.id).split("_");
         
     calcularValorDescuento(arrId['1']);
-    calcularTotalConDescuentoTabla(arrId['1']);      
+    calcularTotalConDescuentoTabla(arrId['1']);  
+    calcularValorIvaTabla(arrId['1']);    
     sumarTotales();
     calcularTotalConAbonos();
     
@@ -1166,7 +1167,7 @@ var actualizarPorcentajeDtto = function(data){
     var nuevoPor = $('#pordtto_' + arrId['1']).val();
     var valDtto = $('#valdtto_' + arrId['1']).val();
     actualizarValorPorcentajeDtto(nuevoPor, valDtto, arrId['1']);
-    calcularValorIvaTabla(arrId['1']);
+    
 };
 
 /**
@@ -1251,10 +1252,10 @@ function calcularTotalConAbonos(){
             ttalCompras = Number(ttalCompras) + Number($(this).val());
         });            
 
-        var abn = "<tr><th colspan='8' class='text-right'>Abonos</th>";
+        var abn = "<tr><th colspan='9' class='text-right'>Abonos</th>";
         abn += "<th class='text-right'>" + formatNumber(ttalAbonos) + "</th>";
         abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
-        abn += "<tr><th colspan='8' class='text-right'>TOTAL</th>";
+        abn += "<tr><th colspan='9' class='text-right'>TOTAL</th>";
         abn += "<th class='text-right'>" + formatNumber(ttalCompras - parseInt(ttalAbonos)) + "</th></tr>";
         $('#tBodAbonos').html(abn);        
     }         
