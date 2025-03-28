@@ -781,7 +781,7 @@ class CargueinventariosController extends AppController {
                         }
 
                         if(count($datos) == 1 ) {
-                            $datos = explode(';', $datos['0']);                            
+                            $datos = explode(';', trim($datos['0']));                            
                         }    
                         
                         //se obtiene un producto por codigo
@@ -791,60 +791,60 @@ class CargueinventariosController extends AppController {
 
                             if($this->validarCargue($datos)) {
                                 //se despeja el id de la bodega
-                                $arrBodega = explode('-', $datos['2']);
+                                $arrBodega = explode('-', trim($datos['2']));
                                 
                                 //se valida si existe impuesto y se despeja de ser asi
                                 $imp = '';
-                                if($datos['3'] != 'na') {
-                                    $arrImp = explode('-', $datos['3']);
+                                if(trim($datos['3']) != 'na') {
+                                    $arrImp = explode('-', trim($datos['3']));
                                     $imp = $arrImp['1'];
                                 }
                                 
                                 //se despeja el id del proveedor
-                                $arrProv = explode('-', $datos['8']);
+                                $arrProv = explode('-', trim($datos['8']));
 
                                 $prod['producto_id'] = $producto['Producto']['id'];
-                                $prod['cantidad'] = $datos['1'];
+                                $prod['cantidad'] = trim($datos['1']);
                                 $prod['bodega_id'] = $arrBodega['1'];
                                 $prod['impuesto_id'] = $imp;   
-                                $prod['costo_producto'] = $datos['4'];
-                                $prod['precio_maximo'] = $datos['5'];
-                                $prod['precio_minimo'] = $datos['6'];
-                                $prod['precio_venta'] = $datos['7'];
+                                $prod['costo_producto'] = trim($datos['4']);
+                                $prod['precio_maximo'] = trim($datos['5']);
+                                $prod['precio_minimo'] = trim($datos['6']);
+                                $prod['precio_venta'] = trim($datos['7']);
                                 $prod['proveedore_id'] = $arrProv['1'];
-                                $prod['tipopago'] = $datos['9'];
-                                $prod['num_factura'] = $datos['10'];
+                                $prod['tipopago'] = trim($datos['9']);
+                                $prod['num_factura'] = trim($datos['10']);
                                 $prod['empresa_id'] = $empresaId;
                                 $prod['usuario_id'] = $usuarioId;
                                 
                                 $arrProductos[] = $prod;
                             }else{
-                                $prodErr['producto_id'] = $datos['0'];
-                                $prodErr['cantidad'] = $datos['1'];
-                                $prodErr['bodega_id'] = $datos['2'];
-                                $prodErr['impuesto_id'] = $datos['3'];   
-                                $prodErr['costo_producto'] = $datos['4'];
-                                $prodErr['precio_maximo'] = $datos['5'];
-                                $prodErr['precio_minimo'] = $datos['6'];
-                                $prodErr['precio_venta'] = $datos['7'];
-                                $prodErr['proveedore_id'] = $datos['8'];
-                                $prodErr['tipopago'] = $datos['9'];
-                                $prodErr['num_factura'] = $datos['10'];
+                                $prodErr['producto_id'] = trim($datos['0']);
+                                $prodErr['cantidad'] = trim($datos['1']);
+                                $prodErr['bodega_id'] = trim($datos['2']);
+                                $prodErr['impuesto_id'] = trim($datos['3']);   
+                                $prodErr['costo_producto'] = trim($datos['4']);
+                                $prodErr['precio_maximo'] = trim($datos['5']);
+                                $prodErr['precio_minimo'] = trim($datos['6']);
+                                $prodErr['precio_venta'] = trim($datos['7']);
+                                $prodErr['proveedore_id'] = trim($datos['8']);
+                                $prodErr['tipopago'] = trim($datos['9']);
+                                $prodErr['num_factura'] = trim($datos['10']);
                                 $arrErrores[]= $prodErr;
                             }
                         } else {
-                            $secondMessage .= 'No se encontró producto con código ' . $datos['0'] . '<br>';
-                            $prodErr['producto_id'] = $datos['0'];
-                            $prodErr['cantidad'] = $datos['1'];
-                            $prodErr['bodega_id'] = $datos['2'];
-                            $prodErr['impuesto_id'] = $datos['3'];   
-                            $prodErr['costo_producto'] = $datos['4'];
-                            $prodErr['precio_maximo'] = $datos['5'];
-                            $prodErr['precio_minimo'] = $datos['6'];
-                            $prodErr['precio_venta'] = $datos['7'];
-                            $prodErr['proveedore_id'] = $datos['8'];
-                            $prodErr['tipopago'] = $datos['9'];
-                            $prodErr['num_factura'] = $datos['10'];
+                            $secondMessage .= 'No se encontró producto con código ' . trim($datos['0']) . '<br>';
+                            $prodErr['producto_id'] = trim($datos['0']);
+                            $prodErr['cantidad'] = trim($datos['1']);
+                            $prodErr['bodega_id'] = trim($datos['2']);
+                            $prodErr['impuesto_id'] = trim($datos['3']);   
+                            $prodErr['costo_producto'] = trim($datos['4']);
+                            $prodErr['precio_maximo'] = trim($datos['5']);
+                            $prodErr['precio_minimo'] = trim($datos['6']);
+                            $prodErr['precio_venta'] = trim($datos['7']);
+                            $prodErr['proveedore_id'] = trim($datos['8']);
+                            $prodErr['tipopago'] = trim($datos['9']);
+                            $prodErr['num_factura'] = trim($datos['10']);
                             $arrErrores[]= $prodErr;                            
                         }
                     }
