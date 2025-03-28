@@ -548,7 +548,7 @@ function submitForm(){
         success: function(data) { 
             var respuesta = JSON.parse(data);
 
-            if($('#esfactura').prop('checked')) {
+            if($('#esfactura').prop('checked') && $('#syncdia').val() == '1') {
                 obtenerFacturaDian(null, respuesta.resp, 1);
             } else {
                 window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;

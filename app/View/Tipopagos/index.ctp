@@ -25,13 +25,13 @@
                             <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Tipo de Pago', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $tipopago['Tipopago']['id']))); ?>
                             <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Tipo de Pago', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $tipopago['Tipopago']['id']))); ?>
                             <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Tipo de Pago', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $tipopago['Tipopago']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar el Tipo de Pago %s?', $tipopago['Tipopago']['descripcion']) //la confirmacion
-);
-?>
+                        echo $this->Form->postLink(
+                            $this->Html->image('png/list-2.png', array('title' => 'Eliminar Tipo de Pago', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                            array('action' => 'delete', $tipopago['Tipopago']['id']), //url
+                            array('escape' => false), //el escape
+                            __('Está seguro que desea eliminar el Tipo de Pago %s?', $tipopago['Tipopago']['descripcion']) //la confirmacion
+                        );
+                        ?>
                         </td>
                 </tr>
                 <?php endforeach;?>

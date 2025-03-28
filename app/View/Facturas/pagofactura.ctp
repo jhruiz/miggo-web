@@ -6,7 +6,10 @@ echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'med
 <div class="form_contenedor_pagos">
     <div class="row contenedor_metodos_pagos"> 
         <div class="col-md-12">                                
-            <?php echo $this->Form->input('totalventa', array('id' => 'totalVentaTipos', 'value' => $totalFacturar, 'type' => 'hidden'))?><br>
+            <?php 
+                echo $this->Form->input('totalventa', array('id' => 'totalVentaTipos', 'value' => $totalFacturar, 'type' => 'hidden'));
+                echo $this->Form->input('syncdia', array('syncdian' => 'syncdian', 'value' => $empresa['Empresa']['syncdian'], 'type' => 'hidden'))
+            ?><br>
             <div class="col-md-6"><label>TOTAL</label></div>
             <div class="col-md-6"><label id="ttalFactura"><?php echo h(number_format($totalFacturar, 2));?></label></div><br>
             <div class="col-md-6"><label>RESTANTE</label></div>

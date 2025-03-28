@@ -344,6 +344,7 @@ class ReportesController extends AppController
         $this->set('rows', $cuentasclientes);
         $arr_titulos = array(
             'Cliente',
+            'Tipo pago',
             '# Factura',
             'Total obligacion',
             'Fecha factura',
@@ -935,6 +936,7 @@ class ReportesController extends AppController
         }
 
         $empresaId = $this->Auth->user('empresa_id');
+        $filtros['Factura.empresa_id'] = $empresaId;
 
         $facturaClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
 

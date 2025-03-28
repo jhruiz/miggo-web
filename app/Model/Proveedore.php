@@ -93,7 +93,13 @@ class Proveedore extends AppModel {
  * return $arrProveedores
  */        
         public function obtenerProveedoresEmpresa($empresaId){
-            $arrProveedores = $this->find('list', array('conditions' => array('Proveedore.empresa_id' => $empresaId)));
+            $arrProveedores = $this->find('list', array(
+				'conditions' => array(
+					'Proveedore.empresa_id' => $empresaId
+				),
+				'recursive' => '-1',
+				'order' => 'Proveedore.nombre'
+			));
             return $arrProveedores;
         }
         
@@ -126,7 +132,13 @@ class Proveedore extends AppModel {
 		}
 		
 		public function obtenerInfoProveedores($empresaId) {
-			return $this->find('all', array('conditions' => array('Proveedore.empresa_id' => $empresaId), 'recursive' => '-1'));
+			return $this->find('all', array(
+				'conditions' => array(
+					'Proveedore.empresa_id' => $empresaId
+				), 
+				'recursive' => '-1',
+				'order' => 'Proveedore.nombre'
+			));
 		}
 
 }

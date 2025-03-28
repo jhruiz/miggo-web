@@ -22,12 +22,12 @@ class CuentasclientesController extends AppController {
  */
 	public function index() {
             $this->loadModel('Ventarapida');
+
             $empresaId = $this->Auth->user('empresa_id');
-//            $paginate['Cuentascliente.empresa_id'] = $empresaId;
-//            $this->Cuentascliente->recursive = 0;
-//            $cuentasclientes = $this->Paginator->paginate('Cuentascliente',$paginate);
             $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($empresaId);
+            
             $fechaActual = date('Y-m-d');
+            
             $costoTotal = 0;
             $costoVencido = 0;
             $costoVigente = 0;
@@ -52,8 +52,7 @@ class CuentasclientesController extends AppController {
                 }else{
                     $cuentasclientes[$i]['Cuentascliente']['limitecredito'] = 'text';                    
                 }                
-                    
-                    
+                            
                 if($diff <= '0'){
                     $cuentasclientes[$i]['Cuentascliente']['color'] = 'danger';
                     $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;

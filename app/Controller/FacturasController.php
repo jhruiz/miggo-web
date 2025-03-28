@@ -455,13 +455,15 @@ class FacturasController extends AppController
     public function pagofactura()
     {
         $this->loadModel('Tipopago');
+        $this->loadModel('Empresa');
         //se obtiene el listado de tipos de pago
         $empresaId = $this->Auth->user('empresa_id');
         $listTipPag = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+        $empresa = $this->Empresa->obtenerEmpresaPorId($empresaId);
 
         $posData = $this->request->data;
         $totalFacturar = $posData['valorCompra'];
-        $this->set(compact('totalFacturar', 'listTipPag'));
+        $this->set(compact('totalFacturar', 'listTipPag', 'empresa'));
         /*se carga el ctp para agregar los valores a pagar*/
     }
 
@@ -1760,24 +1762,70 @@ class FacturasController extends AppController
 
     }
 
+        /**
+     * Calcula el digito de verificacion de un nit 
+     */
+    private function calcularDigitoVerificacion($nit)  {
+
+        // Factores predefinidos para la multiplicación
+        $factors = [3, 7, 13, 17, 19, 23, 29, 37, 41];
+        
+        // Convertir el NIT en una cadena y asegurarse de que sea solo dígitos
+        $nit = (string) preg_replace('/\D/', '', $nit);
+
+        // Inicializar la suma
+        $sum = 0;
+        
+        // Longitud del NIT
+        $length = strlen($nit);
+
+        // Recorrer cada dígito del NIT, multiplicarlo por el factor correspondiente y sumarlo
+        for ($i = 0; $i < $length; $i++) {
+            $sum += $nit[$i] * $factors[$length - $i - 1];
+        }
+
+        // Obtener el residuo de la división de la suma por 11
+        $remainder = $sum % 11;
+
+        // Determinar el dígito de verificación
+        if ($remainder == 0 || $remainder == 1) {
+            return $remainder;
+        } else {
+            return 11 - $remainder;
+        }
+    }
+
     /**
      * Genera la información del cliente siempre y cuando se encuentre relacionado 
      * a la factura en la base de datos
      */
     private function formatearInfoCliente($infoCliente, $municipio_id) {
 
+        $typeRegimen = $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id']);
+        
+        // Manejar el caso en que el cliente es una organización (tipoRegimen = 1)
+        $identification = $infoCliente['nit'] ?? '1234567890';
+        $identification = $this->obtenerIdentificacion($identification);
+          
+        if ($typeRegimen == '1' && strlen($identification) > 9) {
+            $identification = substr($identification, 0, 9);
+        }
+
+        $dv = $typeRegimen == '1' ? $this->calcularDigitoVerificacion($identification) : null;
+
         return [
         "customer" => [
-            "identification_number" => !empty($infoCliente['nit']) ? $this->obtenerIdentificacion($infoCliente['nit']) : '1234567890',
+            "identification_number" => $identification,
+            "dv" => $dv,
             "name" => !empty($infoCliente['nombre']) ? $infoCliente['nombre'] : 'Cliente anónimo',
             "phone" => !empty($infoCliente['celular']) ? $infoCliente['celular'] : '3101234567',
             "address" => !empty($infoCliente['direccion']) ? $infoCliente['direccion'] : 'Calle 1 # 2 - 3',
             "email" => !empty($infoCliente['email']) ? $infoCliente['email'] : 'noemail@hotmail.comm',
             "merchant_registration" => '0000-00',
             "type_document_identification_id" => $infoCliente['tipoidentificacione_id'],
-            "type_organization_id" => $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id']),
+            "type_organization_id" => $typeRegimen,
             "municipality_id" => $municipio_id,
-            "type_regime_id" => $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id'])
+            "type_regime_id" => $typeRegimen
         ]
         ];
     }

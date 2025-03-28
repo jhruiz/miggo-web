@@ -211,8 +211,8 @@ class Cliente extends AppModel {
             }             
         }
         
-        public function obtenerClientePorIdentificacion($identificacion){
-            $infoCliente = $this->find('first', array('conditions' => array('Cliente.nit' => $identificacion), 'recursive' => '-1'));
+        public function obtenerClientePorIdentificacion($identificacion, $empresaId){
+            $infoCliente = $this->find('first', array('conditions' => array('Cliente.nit' => $identificacion, 'Cliente.empresa_id' => $empresaId), 'recursive' => '-1'));
             return $infoCliente;
         }
         

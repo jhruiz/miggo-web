@@ -58,7 +58,7 @@
                         </tr>
                         <?php foreach ($detalleDoc as $detalledocumento): ?>
                         <tr>
-                            <td><?php echo h($detalledocumento['Producto']['descripcion']); ?>&nbsp;</td>
+                            <td><?php echo h($detalledocumento['Producto']['descripcion'] . " - " . $detalledocumento['Producto']['codigo']); ?>&nbsp;</td>
                             <td><?php echo h($detalledocumento['Detalledocumento']['depositoorigen_id']); ?>&nbsp;</td>
                             <td><?php echo h($detalledocumento['Detalledocumento']['depositodestino_id']); ?>&nbsp;</td>
                             <td><?php echo h("$ ". number_format($detalledocumento['Detalledocumento']['costoproducto'],2)); ?>&nbsp;</td>

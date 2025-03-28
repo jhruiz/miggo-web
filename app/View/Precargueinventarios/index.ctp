@@ -34,7 +34,7 @@
                     <?php foreach ($arrInfoPreCargue as $datCarg): ?>
                     <?php $disabled = $datCarg['Producto']['inventario'] == '0' ? 'disabled' : ''; ?>
                     <tr>
-                        <td><br><?php echo h($datCarg['Producto']['descripcion']); ?> <input type="hidden" name="prod_<?php echo $datCarg['Precargueinventario']['id']; ?>"></td>
+                        <td><br><?php echo h($datCarg['Producto']['descripcion'] . " - " . $datCarg['Producto']['codigo']); ?> <input type="hidden" name="prod_<?php echo $datCarg['Precargueinventario']['id']; ?>"></td>
                             <td> <?php                             
                                             echo $this->Form->input("depositos_" . $datCarg['Precargueinventario']['id'],
                                                     array(

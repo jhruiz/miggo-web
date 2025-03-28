@@ -9,6 +9,7 @@
                 <tr>
                                 <th><?php echo $this->Paginator->sort('documento_id'); ?></th>
                                 <th><?php echo $this->Paginator->sort('cliente_id'); ?></th>                                                                
+                                <th><?php echo $this->Paginator->sort('tipopago_id', 'Tipo Pago'); ?></th>                                                                
                                 <th><?php echo $this->Paginator->sort('totalobligacion', 'Total Obligación'); ?></th>
                                 <th><?php echo $this->Paginator->sort('factura_id', '# Factura'); ?></th>
                                 <th><?php echo $this->Paginator->sort('created', 'Fecha Factura'); ?></th>                                
@@ -26,6 +27,9 @@
                         </td>
                         <td>
                                 <?php echo $this->Html->link($cuentascliente['CL']['nombre'], array('controller' => 'clientes', 'action' => 'view', $cuentascliente['CL']['id'])); ?>
+                        </td>                        
+                        <td>
+                                <?php echo $this->Html->link($cuentascliente['TP']['descripcion'], array('controller' => 'tipopagos', 'action' => 'view', $cuentascliente['TP']['id'])); ?>
                         </td>                        
                         <td class="<?php echo $cuentascliente['Cuentascliente']['limitecredito']; ?>"><?php echo h("$" . number_format($cuentascliente['Cuentascliente']['totalobligacion'],2)); ?>&nbsp;</td>
                         <td>

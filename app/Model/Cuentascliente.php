@@ -217,6 +217,17 @@ class Cuentascliente extends AppModel {
                     'F.id=Cuentascliente.factura_id'
                     )                
             )); 
+            
+            array_push($arr_join, array(
+                'table' => 'tipopagos', 
+                'alias' => 'TP', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'TP.id=Cuentascliente.tipopago_id'
+                    )                
+            )); 
+
+
                        
             $cuentasClientes = $this->find('all', array(
                 'joins' => $arr_join,
@@ -233,6 +244,7 @@ class Cuentascliente extends AppModel {
                     'F.consecutivodian',
                     'F.codigo',
                     'Cuentascliente.*',
+                    'TP.*'
                 ),
                 'conditions' => array(
                     'Cuentascliente.empresa_id' => $empresaId,

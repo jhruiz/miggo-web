@@ -196,6 +196,7 @@ endforeach;
         ?>
     <tr>
         <td class="tableTdContent"><?php echo h($cuentasCli['CL']['nombre']); ?></td>
+        <td class="tableTdContent"><?php echo h($cuentasCli['TP']['descripcion']); ?></td>
         <td class="tableTdContent"><?php echo h(!empty($cuentasCli['F']['consecutivodian']) ? $cuentasCli['F']['consecutivodian'] : $cuentasCli['F']['codigo']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['totalobligacion']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['created']); ?></td>

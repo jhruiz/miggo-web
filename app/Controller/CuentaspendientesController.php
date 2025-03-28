@@ -279,17 +279,24 @@ class CuentaspendientesController extends AppController {
 
             $empresaId = $this->Auth->user('empresa_id');
 
-            //se obtiene el item del gasto pago proveedores 
-            $itemGasto = $this->Itemsgasto->obtenerItemGastoProv($empresaId, 'PAGO PROVEEDOR');
+            $desc = $ctaPend['Proveedore']['regimene_id'] == '1' ? "PAGO A PROVEEDOR CON IVA" : "PAGO A PROVEEDOR SIN IVA";
+            $itemGasto = $this->Itemsgasto->obtenerItemGastoProv($empresaId, $desc);
 
-            $data['descripcion'] = "Pago cuenta pendiente a proveedor " . $ctaPend['Proveedore']['nombre'];
+            // valida que exista el item de gasto de pago a proveedores. Si no, lo crea
+            if( empty( $itemGasto ) ) {
+                $idItem = $this->Itemsgasto->crearItemGasto($empresaId, $desc);
+            } else {
+                $idItem = $itemGasto['Itemsgasto']['id'];
+            }
+
+            $data['descripcion'] = "Pago cuenta pendiente a proveedor " . $ctaPend['Proveedore']['nombre'] . " sobre la factura No. " . $ctaPend['Cuentaspendiente']['numerofactura'];
             $data['usuario_id'] = $this->Auth->user('id');
             $data['empresa_id'] = $empresaId;
             $data['fechagasto'] = date('Y-m-d H:i:s');
             $data['valor'] = $ttalPago;
             $data['cuenta_id'] = $cuentaId;
             $data['traslado'] = '0';
-            $data['itemsgasto_id'] = !empty($itemGasto['Itemsgasto']['id']) ? $itemGasto['Itemsgasto']['id'] : null;
+            $data['itemsgasto_id'] = $idItem;
             $data['tipoempresa'] = 'P';
             $data['empresaasg_id'] = $empresaId;
 

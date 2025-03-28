@@ -345,10 +345,11 @@ class ClientesController extends AppController
 
         $posData = $this->request->data;
         $identificacion = $posData['identificacion'];
+        $empresaId = $this->Auth->user('empresa_id');
 
         if (!empty($identificacion)) {
 
-            $arrCliente = $this->Cliente->obtenerClientePorIdentificacion($identificacion);
+            $arrCliente = $this->Cliente->obtenerClientePorIdentificacion($identificacion, $empresaId);
 
             if (!empty($arrCliente)) {
                 echo json_encode(array('resp' => '1', 'data' => $arrCliente));
