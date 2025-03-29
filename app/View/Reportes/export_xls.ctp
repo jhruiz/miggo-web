@@ -555,15 +555,41 @@ else if(isset($cierrediario)){
         <td class="tableTd"><?php echo ('Valor'); ?></td>
     </tr>
     <?php foreach ($ventasFactura as $dFact): ?>
-    <tr>        
-        <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
-        <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
-        <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
-        <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
-        <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
-        <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
-    </tr>
+        <?php if($dFact['fact_eliminada'] == '0') {?> 
+            <tr>        
+                <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
+                <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
+                <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
+                <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
+                <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
+            </tr>
+        <?php } ?>
     <?php endforeach; ?>
+    </table>
+    <br><br>
+    <table>
+    <tr><td><b><?php echo __('Detalle Notas Credito'); ?></b></td></tr>  
+    <tr id="titles">
+        <td class="tableTd"><?php echo ('Consecutivo Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Cliente'); ?></td>
+        <td class="tableTd"><?php echo ('Vendedor'); ?></td>
+        <td class="tableTd"><?php echo ('Cuenta'); ?></td>
+        <td class="tableTd"><?php echo ('Tipo Pago'); ?></td>
+        <td class="tableTd"><?php echo ('Valor'); ?></td>
+    </tr>
+    <?php foreach ($ventasFactura as $dFact): ?>
+        <?php if($dFact['fact_eliminada'] == '1') {?> 
+            <tr>        
+                <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
+                <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
+                <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
+                <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
+                <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
+            </tr>
+        <?php } ?>
+    <?php endforeach; ?>        
     </table>
     <br><br>
     <table>
@@ -614,7 +640,9 @@ else if(isset($cierrediario)){
     <table>
     <tr><td><b><?php echo __('Detalle Abonos'); ?></b></td></tr>
     <tr>
-        <td class="tableTd"><?php echo ('usuario'); ?></td>
+        <td class="tableTd"><?php echo ('Cliente'); ?></td>
+        <td class="tableTd"><?php echo ('Prefactura'); ?></td>
+        <td class="tableTd"><?php echo ('Factura'); ?></td>
         <td class="tableTd"><?php echo ('Fecha del Abono'); ?></td>
         <td class="tableTd"><?php echo ('Cuenta'); ?></td>
         <td class="tableTd"><?php echo ('Valor Abono'); ?></td>
@@ -622,12 +650,55 @@ else if(isset($cierrediario)){
     <?php foreach ($arrAbonos as $abn): ?>
     <tr>
         <td class="tableTdContent"><?php echo h($abn['cliente']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($abn['prefactura']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($abn['factura']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['fecha']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['cuenta']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['valor']); ?>&nbsp;</td>
     </tr>
     <?php endforeach; ?>
-    </table><br><br>
+    </table>
+    <br><br>
+
+    <table>
+    <tr><td><b><?php echo __('Detalle Ventas a Credito'); ?></b></td></tr>
+    <tr>
+        <td class="tableTd"><?php echo ('Usuario'); ?></td>
+        <td class="tableTd"><?php echo ('Cliente'); ?></td>
+        <td class="tableTd"><?php echo ('Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Tipo de Pago'); ?></td>
+        <td class="tableTd"><?php echo ('Total Obligacion'); ?></td>
+    </tr>
+    <?php foreach ($ctasClientes as $ccl): ?>
+    <tr>
+        <td class="tableTdContent"><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['C']['nombre']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h(!empty($ccl['F']['consecutivodian']) ? $ccl['F']['consecutivodian'] : $ccl['F']['codigo']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['T']['descripcion']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['Cuentascliente']['total']); ?>&nbsp;</td>
+    </tr>
+    <?php endforeach; ?>
+    </table>
+    <br><br>
+
+    <table>
+    <tr><td><b><?php echo __('Detalle Compras a Credito'); ?></b></td></tr>
+    <tr>
+        <td class="tableTd"><?php echo ('Proveedor'); ?></td>
+        <td class="tableTd"><?php echo ('Usuario'); ?></td>
+        <td class="tableTd"><?php echo ('Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Total Obligacion'); ?></td>
+    </tr>
+    <?php foreach ($ctasPendientes as $ccp): ?>
+    <tr>
+        <td class="tableTdContent"><?php echo h($ccp['P']['nombre']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccp['U']['nombre']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccp['Cuentaspendiente']['numerofactura']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccp['Cuentaspendiente']['total']); ?>&nbsp;</td>
+    </tr>
+    <?php endforeach; ?>
+    </table>
+    <br><br>
 
 <table>
     <tr>
@@ -647,7 +718,7 @@ else if(isset($cierrediario)){
     <?php foreach ($estadoCuentas as $key => $val): ?>
 
     <?php
-$saldoInicial = 0;
+    $saldoInicial = 0;
     $saldoInicial = $val['estado_actual'];
     $saldoInicial -= isset($val['ing_ventas']) ? $val['ing_ventas'] : 0;
     $saldoInicial += isset($val['gastos']) ? $val['gastos'] : 0;
@@ -693,7 +764,7 @@ $saldoInicial = 0;
     <?php }?>
 
 <!-- Zona descarga /ordentrabajos/ordenesPrefacturas (Ordenes trabajo)-->
-    <?php if (isset($ordenes)) {?>
+<?php if (isset($ordenes)) {?>
     <?php foreach ($ordenes as $ot): ?>
 
         <tr>
@@ -707,4 +778,4 @@ $saldoInicial = 0;
         </tr>
 
     <?php endforeach;?>
-    <?php }?>
+<?php }?>

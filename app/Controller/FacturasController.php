@@ -949,11 +949,6 @@ class FacturasController extends AppController
             }
         }
 
-        // echo "<pre>";
-        // print_r($arrAbonos); 
-        // echo "</pre>";
-        // die();
-
         //se obtiene el estado actual de las cuentas
         $ctasEstAct = $this->Cuenta->obtenerInfoCuentas($empresaId);
         if (!empty($ctasEstAct)) {

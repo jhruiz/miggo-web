@@ -419,6 +419,8 @@ class ReportesController extends AppController
         $this->loadModel('Prefactura');
         $this->loadModel('Tipopago');
         $this->loadModel('Factura');
+        $this->loadModel('Cuentascliente');
+        $this->loadModel('Cuentaspendiente');
 
         $cuenta = "";
         if (!empty($_POST['rpcuenta'])) {
@@ -512,6 +514,8 @@ class ReportesController extends AppController
                     'valor' => $abnpf['Abonofactura']['valor'],
                     'cliente' => $abnpf['CL']['nombre'],
                     'cuenta' => $abnpf['C']['descripcion'],
+                    'prefactura' => $abnpf['Abonofactura']['prefactura_id'],
+                    'factura' => $abnpf['Abonofactura']['factura_id']
                 ];
 
                 $estadoCuentas[$abnpf['Abonofactura']['cuenta_id']]['abono_prefact'] += $abnpf['Abonofactura']['valor'];
@@ -532,6 +536,8 @@ class ReportesController extends AppController
                     'valor' => $abnf['Abonofactura']['valor'],
                     'cliente' => $abnf['CL']['nombre'],
                     'cuenta' => $abnf['C']['descripcion'],
+                    'prefactura' => $abnf['Abonofactura']['prefactura_id'],
+                    'factura' => $abnf['Abonofactura']['factura_id']
                 ];
 
                 $estadoCuentas[$abnf['Abonofactura']['cuenta_id']]['abono_fact'] += $abnf['Abonofactura']['valor'];
@@ -551,10 +557,15 @@ class ReportesController extends AppController
             }
         }
 
-        $this->set(compact('ventasFactura'));
+        //se obtienen las cuentas pendientes de los clientes registradas en el dia consultado
+        $ctasClientes = $this->Cuentascliente->obtenerVentasCredito($empresaId, $fechaCierre);
+
+        $ctasPendientes = $this->Cuentaspendiente->obtenerComprasCredito($empresaId, $fechaCierre);
+
         $this->set('rows', $detFacts);
         $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));
         $this->set(compact('infoGastos', 'arrAbonos', 'flgCierre', 'rpcuenta', 'estadoCuentas', 'listTipoPago'));
+        $this->set(compact('ctasClientes', 'ctasPendientes'));
         $this->render('export_xls', 'export_xls');
     }
 
