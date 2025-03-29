@@ -1799,7 +1799,7 @@ class FacturasController extends AppController
         $typeRegimen = $this->obtenerOrganizacion($infoCliente['tipoidentificacione_id']);
         
         // Manejar el caso en que el cliente es una organización (tipoRegimen = 1)
-        $identification = $infoCliente['nit'] ?? '1234567890';
+        $identification = $infoCliente['nit'] != null && $infoCliente['nit'] != "" ? $infoCliente['nit'] : '1234567890';
         $identification = $this->obtenerIdentificacion($identification);
           
         if ($typeRegimen == '1' && strlen($identification) > 9) {
@@ -1808,8 +1808,7 @@ class FacturasController extends AppController
 
         $dv = $typeRegimen == '1' ? $this->calcularDigitoVerificacion($identification) : null;
 
-        return [
-        "customer" => [
+        $cliente = [
             "identification_number" => $identification,
             "dv" => $dv,
             "name" => !empty($infoCliente['nombre']) ? $infoCliente['nombre'] : 'Cliente anónimo',
@@ -1821,8 +1820,14 @@ class FacturasController extends AppController
             "type_organization_id" => $typeRegimen,
             "municipality_id" => $municipio_id,
             "type_regime_id" => $typeRegimen
-        ]
         ];
+
+        // Si el cliente no es una organización, removemos el campo 'dv'
+        if ($typeRegimen != '1') {
+            unset($cliente['dv']);
+        }
+    
+        return ['customer' => $cliente];
     }
 
     /**
