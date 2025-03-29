@@ -672,6 +672,8 @@ class ReportesController extends AppController
      */
     public function descargarUtilidades(){
         $this->loadModel('Utilidade');
+        $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Cuentascliente');
         
         if(!empty($_POST['rpfechIni']) && !empty($_POST['rpfechFin'])){
             $fechaInicio = $_POST['rpfechIni'];
@@ -685,6 +687,42 @@ class ReportesController extends AppController
 
         /*se recorre el registro de las utilidades*/
         $utilidades = $this->Utilidade->obtenerUtilidadesPorEmpresa($fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59', $empresaId);
+
+        $totalVenta = 0;
+        $utilidadBruta = 0;
+        for($i = 0; $i < count($utilidades); $i++){
+
+            $tipoPagos = "";
+            $credito = "NO";
+
+            // valida si la factura tiene una cuenta por cobrar
+            $cuentasPendientes = $this->Cuentascliente->obtenerCuentaPendienteFact($utilidades[$i]['Utilidade']['factura_id']);
+            if( count( $cuentasPendientes ) > 0) {
+                foreach( $cuentasPendientes as $key => $val ) {
+                    if ( $tipoPagos == "" ){
+                        $tipoPagos = $val['TP']['descripcion'];
+                    } else {
+                        $tipoPagos .= " + " . $val['TP']['descripcion'];
+                    }
+                }
+                $credito = "SI";
+            }
+
+            // valida si la factura tiene pagos de contado o transferencias
+            $pagosFactura = $this->FacturaCuentaValore->obtenerPagosFactura($utilidades[$i]['Utilidade']['factura_id']);
+            if( count( $pagosFactura ) > 0) {
+                foreach( $pagosFactura as $key => $val ) {
+                    if ( $tipoPagos == "" ){
+                        $tipoPagos .= $val['T']['descripcion'];
+                    } else {
+                        $tipoPagos .= " + " . $val['T']['descripcion'];
+                    }
+                }
+            }
+
+            $utilidades[$i]['Utilidade']['tipopago'] = $tipoPagos;
+            $utilidades[$i]['Utilidade']['creditointerno'] = $credito;
+        }
 
         $texto_tit = "Utilidad por Ventas";
         $this->set(compact('utilidades'));
