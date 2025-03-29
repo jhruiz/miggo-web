@@ -22,35 +22,71 @@ class UtilidadesController extends AppController {
  * @return void
  */
 	public function index() {      
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            		
-            $this->loadModel('Producto');
+        $this->loadModel('Cuentascliente');
+        $this->loadModel('FacturaCuentaValore');
 
-            if(isset($this->passedArgs['Utilidade.fechaInicio']) && isset($this->passedArgs['Utilidade.fechaFin'])){
-                $fechaInicio = $this->passedArgs['Utilidade.fechaInicio'];
-                $fechaFin = $this->passedArgs['Utilidade.fechaFin'];
-            }else{
-                $fechaInicio = date('Y-m-d');
-                $fechaFin = date('Y-m-d');
-            }
-
-            $empresaId = $this->Auth->user('empresa_id');            
-            
-            /*se recorre el registro de las utilidades*/
-            $utilidades = $this->Utilidade->obtenerUtilidadesPorEmpresa($fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59', $empresaId);
-
-            $totalVenta = 0;
-            $utilidadBruta = 0;
-            for($i = 0; $i < count($utilidades); $i++){
-                $totalVenta += $utilidades[$i]['Utilidade']['costo_producto'] * $utilidades[$i]['Utilidade']['cantidad'];
-                $utilidadBruta += $utilidades[$i]['Utilidade']['precioventa'] * $utilidades[$i]['Utilidade']['cantidad'];
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
                 
+        $this->loadModel('Producto');
+
+        if(isset($this->passedArgs['Utilidade.fechaInicio']) && isset($this->passedArgs['Utilidade.fechaFin'])){
+            $fechaInicio = $this->passedArgs['Utilidade.fechaInicio'];
+            $fechaFin = $this->passedArgs['Utilidade.fechaFin'];
+        }else{
+            $fechaInicio = date('Y-m-d');
+            $fechaFin = date('Y-m-d');
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');       
+        
+        /*se recorre el registro de las utilidades*/
+        $utilidades = $this->Utilidade->obtenerUtilidadesPorEmpresa($fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59', $empresaId);
+
+        $totalVenta = 0;
+        $utilidadBruta = 0;
+        for($i = 0; $i < count($utilidades); $i++){
+
+            $tipoPagos = "";
+            $credito = "NO";
+
+            // valida si la factura tiene una cuenta por cobrar
+            $cuentasPendientes = $this->Cuentascliente->obtenerCuentaPendienteFact($utilidades[$i]['Utilidade']['factura_id']);
+            if( count( $cuentasPendientes ) > 0) {
+                foreach( $cuentasPendientes as $key => $val ) {
+                    if ( $tipoPagos == "" ){
+                        $tipoPagos = $val['TP']['descripcion'];
+                    } else {
+                        $tipoPagos .= " + " . $val['TP']['descripcion'];
+                    }
+                }
+                $credito = "SI";
             }
+
+            // valida si la factura tiene pagos de contado o transferencias
+            $pagosFactura = $this->FacturaCuentaValore->obtenerPagosFactura($utilidades[$i]['Utilidade']['factura_id']);
+            if( count( $pagosFactura ) > 0) {
+                foreach( $pagosFactura as $key => $val ) {
+                    if ( $tipoPagos == "" ){
+                        $tipoPagos .= $val['T']['descripcion'];
+                    } else {
+                        $tipoPagos .= " + " . $val['T']['descripcion'];
+                    }
+                }
+            }
+
+            $utilidades[$i]['Utilidade']['tipopago'] = $tipoPagos;
+            $utilidades[$i]['Utilidade']['creditointerno'] = $credito;
+
+
+            $totalVenta += $utilidades[$i]['Utilidade']['costo_producto'] * $utilidades[$i]['Utilidade']['cantidad'];
+            $utilidadBruta += $utilidades[$i]['Utilidade']['precioventa'] * $utilidades[$i]['Utilidade']['cantidad'];
             
-            $this->set(compact('utilidades','totalVenta','utilidadBruta','fechaInicio','fechaFin'));
+        } 
+        
+        $this->set(compact('utilidades','totalVenta','utilidadBruta','fechaInicio','fechaFin'));
 	}
 
 /**

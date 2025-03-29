@@ -48,6 +48,8 @@
                     <th><?php echo h('Tipo Utilidad'); ?></th>
                     <th><?php echo h('Fecha'); ?></th>
                     <th><?php echo h('Factura'); ?></th>
+                    <th><?php echo h('Tipo Pago'); ?></th>
+                    <th><?php echo h('Crédito Interno'); ?></th>
                 </tr>
                 <?php foreach ($utilidades as $utilidade): ?>
                 <tr>
@@ -66,8 +68,10 @@
                     <td class="text-right"><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],4) . "%"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['Utilidade']['created']); ?>&nbsp;</td>
-                    <td><?php echo $this->Html->link($utilidade['F']['factura'] == '1' ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo'], 
+                    <td><?php echo $this->Html->link($utilidade['F']['consecutivodian'] != NULL ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo'], 
                             '/facturas/view/' . $utilidade['F']['id'], array('target' => '_blanck')); ?>&nbsp;</td>
+                    <td><?php echo h($utilidade['Utilidade']['tipopago']); ?>&nbsp;</td>
+                    <td><?php echo h($utilidade['Utilidade']['creditointerno']); ?>&nbsp;</td>
                 </tr>
                 <?php endforeach; ?>
                 </table>
