@@ -20,7 +20,7 @@
     </form><br><br>    
     
     
-	<legend><h2><b><?php echo __('Detalle Cierre Diario: ' . $fechaCierre); ?></b></h2></legend>        
+	<legend><h2><b><?php echo __('Detalle Ventas Totales: ' . $fechaCierre); ?></b></h2></legend>        
         <div class="table-responsive">
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">

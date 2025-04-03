@@ -756,6 +756,8 @@ class ReportesController extends AppController
             'Tipo de Utilidad',
             'Fecha',
             'Factura',
+            'Tipo de Pago',
+            'Credito Interno',
         );
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');

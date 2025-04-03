@@ -1724,7 +1724,8 @@ class FacturasController extends AppController
         $infoDep = $this->Deposito->obtenerInfoDepositosEmpresa($factura['Factura']['empresa_id']);
 
         //Se obtiene la fecha de la factura
-        $date = date_create($factura['Factura']['created']);
+        // $date = date_create($factura['Factura']['created']);
+        $date = date('Y-m-d');;
 
         return [
             "number" => $factura['Factura']['consecutivodian'],
@@ -1886,7 +1887,8 @@ class FacturasController extends AppController
 
             $duration_measure = isset($factura['Cliente']['id']) ? ($factura['Cliente']['diascredito'] ?? 30) : 30;
   
-            $date = date_create($infoTipoPago['0']['Cuentascliente']['created']);
+            // $date = date_create($infoTipoPago['0']['Cuentascliente']['created']);
+            $date = date('Y-m-d');;
 
             return [
               "payment_form" => [
