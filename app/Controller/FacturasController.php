@@ -1725,14 +1725,14 @@ class FacturasController extends AppController
 
         //Se obtiene la fecha de la factura
         // $date = date_create($factura['Factura']['created']);
-        // $date = date('Y-m-d');
+        $date = date('Y-m-d');
 
         return [
             "number" => $factura['Factura']['consecutivodian'],
             "prefix" => $infoDep['0']['Deposito']['prefijo'],
             "type_document_id" =>  $factura['Empresa']['typedocument'],
-            "date" =>  date('Y-m-d'),
-            "time" =>  date('H:i:s'),
+            "date" =>  date_format($date, 'Y-m-d'),
+            "time" =>  date_format($date, 'H:i:s'),
             "resolution_number" =>  $infoDep['0']['Deposito']['resolucionfacturacion']
         ];
 
@@ -1888,13 +1888,13 @@ class FacturasController extends AppController
             $duration_measure = isset($factura['Cliente']['id']) ? ($factura['Cliente']['diascredito'] ?? 30) : 30;
   
             // $date = date_create($infoTipoPago['0']['Cuentascliente']['created']);
-            $date = date('Y-m-d');
+            $date = date('Y-m-d');;
 
             return [
               "payment_form" => [
                 "payment_form_id" => '2',
                 "payment_method_id" => '30',
-                "payment_due_date" => $this->sumarDiasFecha($date), $duration_measure),
+                "payment_due_date" => $this->sumarDiasFecha(date_format($date, 'Y-m-d'), $duration_measure),
                 "duration_measure" => $duration_measure
               ]
             ];
