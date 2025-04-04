@@ -555,7 +555,6 @@ else if(isset($cierrediario)){
         <td class="tableTd"><?php echo ('Valor'); ?></td>
     </tr>
     <?php foreach ($ventasFactura as $dFact): ?>
-        <?php if($dFact['fact_eliminada'] == '0') {?> 
             <tr>        
                 <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
                 <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
@@ -564,7 +563,6 @@ else if(isset($cierrediario)){
                 <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
                 <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
             </tr>
-        <?php } ?>
     <?php endforeach; ?>
     </table>
     <br><br>
@@ -578,17 +576,15 @@ else if(isset($cierrediario)){
         <td class="tableTd"><?php echo ('Tipo Pago'); ?></td>
         <td class="tableTd"><?php echo ('Valor'); ?></td>
     </tr>
-    <?php foreach ($ventasFactura as $dFact): ?>
-        <?php if($dFact['fact_eliminada'] == '1') {?> 
+    <?php foreach ($ventasFacturaElim as $dFactE): ?>
             <tr>        
-                <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
-                <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
-                <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
-                <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
-                <td class="tableTdContent"><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?></td>     
-                <td class="tableTdContent"><?php echo h($dFact['fcv_valor']);?></td>              
+                <td class="tableTdContent"><?php echo(!empty($dFactE['consecutivodian']) ? $dFactE['consecutivodian'] : $dFactE['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo(!empty($dFactE['cliente_nombre']) ? $dFactE['cliente_nombre'] . " - " . $dFactE['cliente_nit'] : 'Venta Anónima');?></td>
+                <td class="tableTdContent"><?php echo h($dFactE['usuario_nombre'] . " - " . $dFactE['usuario_identificacion']); ?></td>
+                <td class="tableTdContent"><?php echo h($listCuenta[$dFactE['fcv_cuenta']]); ?></td>
+                <td class="tableTdContent"><?php echo h($listTipoPago[$dFactE['fcv_tipopago']]); ?></td>     
+                <td class="tableTdContent"><?php echo h($dFactE['fcv_valor']);?></td>              
             </tr>
-        <?php } ?>
     <?php endforeach; ?>        
     </table>
     <br><br>

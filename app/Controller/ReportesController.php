@@ -438,6 +438,7 @@ class ReportesController extends AppController
         /*se obtienen las facturas generadas durante la fecha actual o la seleccionada*/
         $detFacts = $this->Factura->obtenerFacturasTipoPagos($fechaCierre . ' 00:00:00', $fechaCierre . ' 23:59:59', $empresaId, $cuenta);
         $ventasFactura = [];
+        $ventasFacturaElim = [];
         $estadoCuentas = [];
         if (!empty($detFacts)) {
             foreach ($detFacts as $df) {
@@ -445,21 +446,35 @@ class ReportesController extends AppController
                     $estadoCuentas[$df['FCV']['cuenta_id']]['ing_ventas'] = 0;
                 }
 
-                //se obtiene el detalle de la venta de cada factura por cada tipo de pago
-                $ventasFactura[] = [
-                    'fact_codigo' => $df['Factura']['codigo'],
-                    'consecutivodian' => !empty($df['Factura']['consecutivodian']) ? $df['Factura']['consecutivodian'] : "",
-                    'cliente_nit' => !empty($df['Cliente']['nit']) ? $df['Cliente']['nit'] : "",
-                    'cliente_nombre' => !empty($df['Cliente']['nombre']) ? $df['Cliente']['nombre'] : "",
-                    'usuario_nombre' => !empty($df['Usuario']['nombre']) ? $df['Usuario']['nombre'] : "",
-                    'usuario_identificacion' => !empty($df['Usuario']['identificacion']) ? $df['Usuario']['identificacion'] : "",
-                    'fcv_cuenta' => $df['FCV']['cuenta_id'],
-                    'fcv_tipopago' => $df['FCV']['tipopago_id'],
-                    'fcv_valor' => $df['FCV']['valor'],
-                ];
+                if($df['Factura']['eliminar'] == '0'){
+                    //se obtiene el detalle de la venta de cada factura por cada tipo de pago
+                    $ventasFactura[] = [
+                        'fact_codigo' => $df['Factura']['codigo'],
+                        'consecutivodian' => !empty($df['Factura']['consecutivodian']) ? $df['Factura']['consecutivodian'] : "",
+                        'cliente_nit' => !empty($df['Cliente']['nit']) ? $df['Cliente']['nit'] : "",
+                        'cliente_nombre' => !empty($df['Cliente']['nombre']) ? $df['Cliente']['nombre'] : "",
+                        'usuario_nombre' => !empty($df['Usuario']['nombre']) ? $df['Usuario']['nombre'] : "",
+                        'usuario_identificacion' => !empty($df['Usuario']['identificacion']) ? $df['Usuario']['identificacion'] : "",
+                        'fcv_cuenta' => $df['FCV']['cuenta_id'],
+                        'fcv_tipopago' => $df['FCV']['tipopago_id'],
+                        'fcv_valor' => $df['FCV']['valor'],
+                    ];
 
-                //se obtiene el ingreso por venta en cada cuenta
-                $estadoCuentas[$df['FCV']['cuenta_id']]['ing_ventas'] += $df['FCV']['valor'];
+                    //se obtiene el ingreso por venta en cada cuenta
+                    $estadoCuentas[$df['FCV']['cuenta_id']]['ing_ventas'] += $df['FCV']['valor'];
+                } else {
+                    $ventasFacturaElim[] = [
+                        'fact_codigo' => $df['Factura']['codigo'],
+                        'consecutivodian' => !empty($df['Factura']['consecutivodian']) ? $df['Factura']['consecutivodian'] : "",
+                        'cliente_nit' => !empty($df['Cliente']['nit']) ? $df['Cliente']['nit'] : "",
+                        'cliente_nombre' => !empty($df['Cliente']['nombre']) ? $df['Cliente']['nombre'] : "",
+                        'usuario_nombre' => !empty($df['Usuario']['nombre']) ? $df['Usuario']['nombre'] : "",
+                        'usuario_identificacion' => !empty($df['Usuario']['identificacion']) ? $df['Usuario']['identificacion'] : "",
+                        'fcv_cuenta' => $df['FCV']['cuenta_id'],
+                        'fcv_tipopago' => $df['FCV']['tipopago_id'],
+                        'fcv_valor' => $df['FCV']['valor'],
+                    ];
+                }
             }
         }
 
@@ -565,7 +580,7 @@ class ReportesController extends AppController
         $this->set('rows', $detFacts);
         $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));
         $this->set(compact('infoGastos', 'arrAbonos', 'flgCierre', 'rpcuenta', 'estadoCuentas', 'listTipoPago'));
-        $this->set(compact('ctasClientes', 'ctasPendientes'));
+        $this->set(compact('ctasClientes', 'ctasPendientes', 'ventasFacturaElim'));
         $this->render('export_xls', 'export_xls');
     }
 
