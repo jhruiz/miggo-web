@@ -242,7 +242,7 @@ function fnObtenerDatosProducto(e){
                             $('.numericPrice').number(true);
                             $('#datosProducto').hide();
                             calcularTotalConAbonos();
-                            dialogDialogSeleccionProducto.dialog('close');
+                            //dialogDialogSeleccionProducto.dialog('close');
 
                     }else{                        
                         $('#FacturaProducto').val("");
@@ -674,7 +674,7 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
                             $('.numericPrice').number(true);
                             $('#datosProductoclientenuevo').hide();
                             calcularTotalConAbonos();
-                            dialogDialogSeleccionProducto.dialog('close');
+                            //dialogDialogSeleccionProducto.dialog('close');
                    }else{
                         $('#FacturaProductousuarionuevo').val("");
                         $('#FacturaProductoventarapida').val("");                                            
@@ -795,7 +795,7 @@ function fnObtenerDatosProductoVentaRapida(e){
                         $('.numericPrice').number(true);
                         $('#datosProductoventarapida').hide(); 
                         calcularTotalConAbonos();
-                        dialogDialogSeleccionProducto.dialog('close');
+                        //dialogDialogSeleccionProducto.dialog('close');
 
                 }else{                        
                     $('#FacturaProductousuarionuevo').val("");
