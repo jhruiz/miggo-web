@@ -2038,13 +2038,13 @@ class FacturasController extends AppController
         ];
     
         // Verifica si hay descuento y lo añade al array de productos si es necesario
-        if ($val['descuento'] > 0) {
+        if ($val['Facturasdetalle']['descuento'] > 0) {
             $arrProductos['allowance_charges']['0'] = [
                 "discount_id" => '12',
                 "charge_indicator" => false,
                 "allowance_charge_reason" => "Descuento General",
-                "amount" => $val['descuento'],
-                "base_amount" => $val['costototal']
+                "amount" => $val['Facturasdetalle']['descuento'],
+                "base_amount" => $val['Facturasdetalle']['costototal']
             ];
         }
     
