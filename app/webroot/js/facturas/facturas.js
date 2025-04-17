@@ -612,7 +612,7 @@ function validarDatosContadoCredito(){
 }
 
 
-function submitForm(arrData){
+function submitForm(){
 
     var formData = new FormData($('#FacturaAddForm')[0]);  
 

@@ -514,7 +514,6 @@ function facturarProductos(){
         bootbox.alert('Debe seleccionar al menos un producto.');
         
     }else{
-        var tipoPago = $('#PrefacturaTipopago').val();
         var ttalAbonos = $('.ttalAbonos').val();
         var contado = totalCrediContado();
          

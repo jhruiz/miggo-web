@@ -491,6 +491,7 @@ class FacturasController extends AppController
         $datFact = $posData['Factura'];
         $datCliNuevo = $posData['Nuevo'];
         $datVentaRapida = $posData['Rapida'];
+        $userId = $this->Auth->user('id');
 
         /*Se obtienen los datos de la empresa para obtener la ciudad de la misma y asignarla al cliente*/
         $arrEmpresa = $this->Empresa->obtenerEmpresaPorId($datFact['empresa']);
@@ -669,7 +670,7 @@ class FacturasController extends AppController
         $this->Factura->actualizarValorVentaTotal($facturaId, $ttalVenta);
 
         //se actualiza la factura cuenta valor
-        $this->FacturaCuentaValore->actualizarIdFacturaCuentaValor($prefacturaId, $facturaId);
+        $this->FacturaCuentaValore->actualizarIdFacturaCuentaValor($facturaId, $userId);
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);

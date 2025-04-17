@@ -32,12 +32,14 @@ class FacturaCuentaValore extends AppModel
      * @param type $prefacturaId
      * @param type $facturaId
      */
-    public function actualizarIdFacturaCuentaValor($prefacturaId, $facturaId)
+    public function actualizarIdFacturaCuentaValor($facturaId, $usuarioId)
     {
         $this->updateAll(array(
             'FacturaCuentaValore.factura_id' => $facturaId),
             array(
-                'FacturaCuentaValore.prefactura_id' => $prefacturaId,
+                'FacturaCuentaValore.usuario_id' => $usuarioId,
+                'FacturaCuentaValore.created > ' => date('Y-m-d 00:00:01'),
+                'FacturaCuentaValore.factura_id is null'
             )
         );
     }
