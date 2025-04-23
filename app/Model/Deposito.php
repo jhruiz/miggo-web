@@ -364,4 +364,39 @@ class Deposito extends AppModel {
 			return $data;
 		}
 
+		/**
+		 * Se valida si la resolución de la empresa está proximo 
+		 * a vencerse ya sea por fecha o por numeración
+		 */
+		public function obtenerDetalleResolucion( $empresaId ) {
+			$resp = ['porFecha' => '', 'porDias' => ''];
+
+            $data = $this->find('first', array(
+				'conditions' => array(
+					'Deposito.empresa_id' => $empresaId,
+				), 
+                'recursive' => '-1',
+                'order' => 'Deposito.id ASC'
+				)
+			);
+
+			/**Validar vencimiento por fecha */
+			$fechaFinObj = new DateTime($data['Deposito']['fechafin']);
+			$fechaActualObj = new DateTime();
+			
+			// Calcular la diferencia entre las fechas
+			$diffFechas = ($fechaFinObj->diff($fechaActualObj))->days;
+			if( $diffFechas < 5 ) {
+				$resp['porFecha'] = "Restan $diffFechas días para el vencimiento de tu resolución, es hora de renovarla";
+			}
+
+			/**Validar vecimiento por numeración */
+			$diffDias = $data['Deposito']['resolucionfin'] - ($data['Deposito']['numresolucionactual'] - 1);
+			if( $diffDias < 20 ) {
+				$resp['porDias'] = "Tienes $diffDias consecutivos disponibles de tu resolución, es hora de renovar tu resolución";
+			}
+
+			return $resp;
+		}
+
 }

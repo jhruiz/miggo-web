@@ -415,12 +415,24 @@ class UsuariosController extends AppController {
 
     //Pagina inicial que se le muestra al usuario.
     public function paginainicio() {
+        $this->loadModel('Configuraciondato');
+        $this->loadModel('Empresa');
+        $this->loadModel('Deposito');
+
         /*se registra la actividad del usuario en la aplicacion*/
         $usuarioId = $this->Auth->user('id'); 
         $this->registraractividad($usuarioId);
-            
-        $this->loadModel('Configuraciondato');
+
+        /**Se obtiene la información de la empresa */
+        $empresaId = $this->Auth->user('empresa_id');
+        $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($empresaId);
         
+        $infoResolucion = array();
+        /**Validar vencimiento de resolución */
+        if( $infoEmpresa['Empresa']['syncdian'] == 1 ) {
+            $infoResolucion = $this->Deposito->obtenerDetalleResolucion($empresaId);
+        }
+
         /*Se obtiene la url del proyecto*/
         $datoConfP = "dirRutaPublica";
         $urlPublica = $this->Configuraciondato->obtenerValorDatoConfig($datoConfP);
@@ -429,7 +441,7 @@ class UsuariosController extends AppController {
         $datoConf = "urlImgMenu";
         $urlImagMenu = $this->Configuraciondato->obtenerValorDatoConfig($datoConf);
         
-        $this->set(compact('urlPublica', 'urlImagMenu'));
+        $this->set(compact('urlPublica', 'urlImagMenu', 'infoResolucion'));
         
     }
 
