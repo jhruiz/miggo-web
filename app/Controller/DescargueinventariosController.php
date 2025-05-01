@@ -208,7 +208,7 @@ class DescargueinventariosController extends AppController {
             $this->autoRender = false;
             $posData = $this->request->data;
             $empresaId = $posData['empresaId'];   
-            
+
             /*Se obtienen los productos que se habian agregado al */
             $descargueInventario = $this->Descargueinventario->obtenerDescargueInventario($empresaId);
 

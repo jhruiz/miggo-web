@@ -97,8 +97,49 @@ class Descargueinventario extends AppModel {
         }
         
         public function obtenerDescargueInventario($empresaId){
-            $descargueInventario = $this->find('all', array('conditions' => array('Descargueinventario.empresa_id' => $empresaId), 'recursive' => '0'));
-            return $descargueInventario;
+
+			$arr_join = array();
+			array_push($arr_join, array(
+				'table' => 'productos',
+				'alias' => 'P',
+				'type' => 'INNER',
+				'conditions' => array(
+					'P.id=Descargueinventario.producto_id',
+				),
+			));
+			
+			array_push($arr_join, array(
+				'table' => 'depositos',
+				'alias' => 'D',
+				'type' => 'INNER',
+				'conditions' => array(
+					'D.id=Descargueinventario.deposito_id',
+				),
+			));
+			
+			array_push($arr_join, array(
+				'table' => 'cargueinventarios',
+				'alias' => 'CI',
+				'type' => 'INNER',
+				'conditions' => array(
+					'CI.producto_id=P.id',
+				),
+			));
+
+			$descargueInventario = $this->find('all', array(
+				'joins' => $arr_join,
+				'fields' => array(
+					'P.*',
+					'D.*',
+					'CI.*',
+					'Descargueinventario.*'
+				),
+				'conditions' => array('Descargueinventario.empresa_id' => $empresaId),
+				'recursive' => '-1',
+			));
+	
+			return $descargueInventario;
+
         }
         
         public function actualizarCantidadDescargue($descargueId,$cantidad){

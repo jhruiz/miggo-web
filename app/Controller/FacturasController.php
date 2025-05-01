@@ -1029,6 +1029,19 @@ class FacturasController extends AppController
         $this->redirect($url, null, true);
     }
 
+    public function searchNC()
+    {
+        $url = array();
+        $url['action'] = 'notascredito';
+
+        foreach ($this->data as $kk => $vv) {
+            $url[$kk] = $vv;
+        }
+
+        // redirect the user to the url
+        $this->redirect($url, null, true);
+    }
+
     public function validarImpuestoCierreDiario($productoId, $depositoId, $pagoContado, $pagoCredito)
     {
         $this->loadModel('CargueinventariosImpuesto');
@@ -2079,6 +2092,111 @@ class FacturasController extends AppController
         echo json_encode(array(
             'result' => $result
         ));
+
+    }
+
+    /**
+     * Obtiene la información para el reporte de notas crédito
+     */
+    public function notascredito()
+    {
+
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
+
+        $rpcodigo = "";
+        $rpconsecutivo = "";
+        $rpvendedor = "";
+        $rpfecha = "";
+        $rpvencimiento = "";
+        $rptipopago = "";
+        $esFactura = "";
+        $rpfechaFin = "";
+
+        $this->loadModel('Tipopago');
+        $this->loadModel('Usuario');
+        $this->loadModel('Cuenta');
+
+        if (isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != "") {
+            $paginate['Factura.codigo LIKE'] = '%' . $this->passedArgs['codigo'] . '%';
+            $rpcodigo = $this->passedArgs['codigo'];
+        }
+
+        if (isset($this->passedArgs['consecutivo']) && $this->passedArgs['consecutivo'] != "") {
+            $paginate['Factura.consecutivodian LIKE'] = '%' . $this->passedArgs['consecutivo'] . '%';
+            $rpconsecutivo = $this->passedArgs['consecutivo'];
+        }
+
+        if (isset($this->passedArgs['vendedor']) && $this->passedArgs['vendedor'] != "") {
+            $paginate['Factura.usuario_id'] = $this->passedArgs['vendedor'];
+            $rpvendedor = $this->passedArgs['vendedor'];
+        }
+
+        if (!empty($this->passedArgs['fechafactura']) && empty($this->passedArgs['fechafactura_fin'])) {
+            $paginate['Factura.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura'] . ' 00:00:00', $this->passedArgs['fechafactura'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura'] . ' 23:59:59';
+        }
+
+        if (!empty($this->passedArgs['fechafactura_fin']) && empty($this->passedArgs['fechafactura'])) {
+            $paginate['Factura.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura_fin'] . ' 00:00:00', $this->passedArgs['fechafactura_fin'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura_fin'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura_fin'] . ' 23:59:59';
+        }
+
+        if (!empty($this->passedArgs['fechafactura']) && !empty($this->passedArgs['fechafactura_fin'])) {
+            $paginate['Factura.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura'] . ' 00:00:00', $this->passedArgs['fechafactura_fin'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura_fin'] . ' 23:59:59';
+        }
+
+        if (isset($this->passedArgs['fechavence']) && $this->passedArgs['fechavence'] != "") {
+            $paginate['Factura.fechavence BETWEEN ? AND ?'] = array($this->passedArgs['fechavence'] . ' 00:00:00', $this->passedArgs['fechavence'] . ' 23:59:59');
+            $rpvencimiento = $this->passedArgs['fechavence'];
+        }
+
+        if (isset($this->passedArgs['tipopago']) && $this->passedArgs['tipopago'] != "") {
+            $paginate['FCV.tipopago_id'] = $this->passedArgs['tipopago'];
+            $rptipopago = $this->passedArgs['tipopago'];
+        }
+
+        if (isset($this->passedArgs['vehiculo']) && $this->passedArgs['vehiculo']) {
+            $paginate['LOWER(V.placa) LIKE'] = '%' . strtolower($this->passedArgs['vehiculo']) . '%';
+            $rpplaca = $this->passedArgs['vehiculo'];
+        }
+
+        if (isset($this->passedArgs['cliente']) && $this->passedArgs['cliente']) {
+            $paginate['LOWER(C.nombre) LIKE'] = '%' . strtolower($this->passedArgs['cliente']) . '%';
+            $rpplaca = $this->passedArgs['vehiculo'];
+        }
+
+        if (isset($this->passedArgs['factura']) && !empty($this->passedArgs['factura'])) {
+            $paginate['Factura.factura'] = true;
+            $esFactura = '1';
+        } else if (isset($this->passedArgs['factura']) && $this->passedArgs['factura'] == '0') {
+            $paginate['Factura.factura'] = false;
+            $esFactura = '0';
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');
+        //Se obtiene el listado de tipos de pago para el filtro
+        $tipoPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+
+        //se obtienen los usuarios de la empresa para el filtro
+        $usuario = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+        $paginate['Factura.empresa_id'] = $empresaId;
+        $paginate['Factura.eliminar'] = 1;
+
+        $this->Factura->recursive = 0;
+        $this->Paginator->settings = $this->Factura->obtenerIndexFacturas($paginate);
+        $facturas = $this->Paginator->paginate('Factura');
+
+
+        $this->set(compact('facturas'));
+        $this->set(compact('tipoPago', 'usuario', 'rpcodigo', 'rpconsecutivo', 'rpvendedor', 'rpfecha', 'rpvencimiento', 'rptipopago'));
+        $this->set(compact('esFactura', 'rpfechaFin'));
 
     }
 }

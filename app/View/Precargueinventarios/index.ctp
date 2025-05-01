@@ -19,7 +19,7 @@
                     <tr>
                                     <th><?php echo ('Producto'); ?></th>
                                     <th><?php echo ('Bodega'); ?></th>
-                                    <th><?php echo ('Valor Unitario'); ?></th>
+                                    <th><?php echo ('Costo Unitario'); ?></th>
                                     <th><?php echo ('Cantidad'); ?></th>
                                     <th><?php echo ('Valor Total');?></th>
                                     <th><?php echo ('Valor Máximo'); ?></th>

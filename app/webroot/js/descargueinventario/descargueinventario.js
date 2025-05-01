@@ -31,8 +31,12 @@ function fnObtenerDatosProducto(e){
             }else if(productos.boolResp === '2'){
                 $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
                         '<td>' + productos.resp['0']['Producto']['descripcion'] + '</td>' + 
+                        '<td>' + productos.resp['0']['Producto']['codigo'] + '</td>' + 
+                        '<td>' + productos.resp['0']['Cargueinventario']['costoproducto'] + '</td>' + 
+                        '<td>' + productos.resp['0']['Cargueinventario']['existenciaactual'] + '</td>' + 
                         '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>');                
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
+                    );                
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                 
             }else if(productos.boolResp === '3'){
@@ -87,6 +91,8 @@ function seleccionarProducto(producto){
        type: "POST",
        success: function(data) {
             var productos = JSON.parse(data);
+
+            console.log(productos);
             if(productos.boolResp === '1'){
                 bootbox.alert('No hay productos disponibles en Stock.');
                 $('#buscarproducto').val("");
@@ -94,8 +100,12 @@ function seleccionarProducto(producto){
             }else if(productos.boolResp === '2'){
                 $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
                         '<td>' + productos.resp['Producto']['descripcion'] + '</td>' + 
+                        '<td>' + productos.resp['Producto']['codigo'] + '</td>' + 
+                        '<td>' + productos.resp['Cargueinventario']['costoproducto'] + '</td>' + 
+                        '<td>' + productos.resp['Cargueinventario']['existenciaactual'] + '</td>' + 
                         '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>');                
+                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
+                    );                
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                 
             }else if(productos.boolResp === '3'){
@@ -121,11 +131,16 @@ function validarProductosDescargue(){
         success: function(data) {   
             var respuesta = JSON.parse(data);
             if(respuesta.resp){
+                var costoTotal = 0;
                 $.each(respuesta.detDesc, function(idx, obj) {
                     $('#descInventario').append('<tr id="tr_' + obj['Descargueinventario']['id'] + '">' + 
-                    '<td>' + obj['Producto']['descripcion'] + '</td>' + 
+                    '<td>' + obj['P']['descripcion'] + '</td>' + 
+                    '<td>' + obj['P']['codigo'] + '</td>' + 
+                    '<td>' + formatNumber(obj['CI']['costoproducto']) + '</td>' + 
+                    '<td>' + obj['CI']['existenciaactual'] + '</td>' + 
                     '<td><input type="text" name="cant_' + obj['Descargueinventario']['id'] + '" class="form-control" id="cant_' + obj['Descargueinventario']['id'] + '" value="' + obj['Descargueinventario']['cantidaddescargue'] + '" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                    '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + obj['Descargueinventario']['id'] + '"onclick="eliminarRegistroDescargue(this)"></td></tr>');
+                    '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + obj['Descargueinventario']['id'] + '"onclick="eliminarRegistroDescargue(this)"></td></tr>'
+                    );
                 }); 
             }            
         }
@@ -146,7 +161,9 @@ function actualizarCantidadDescargue(dato){
                     location.reload();
                 });
             }else if(respuesta.resp === '2'){
-                bootbox.alert('La cantidad a descargar ha sido actualizada.');
+                bootbox.alert('La cantidad a descargar ha sido actualizada.', function(){
+                    location.reload();
+                });
             }else if(respuesta.resp === '3'){
                 bootbox.alert('La cantidad a descargar no se pudo actualizar. Por favor, inténtelo de nuevo.');
             }            

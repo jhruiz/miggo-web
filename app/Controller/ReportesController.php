@@ -624,13 +624,14 @@ class ReportesController extends AppController
 
         $empresaId = $this->Auth->user('empresa_id');
         $paginate['Factura.empresa_id'] = $empresaId;
+        $paginate['Factura.eliminar'] = '0';
 
         $facturas = $this->Factura->obtenerFacturas($paginate); 
 
         $arrFacts = array();
         foreach ($facturas as $f){ 
 
-            if($f['Factura']['factura']){
+            if($f['Factura']['factura'] == '1'){
                 $valorBase = 0;
                 $descuento = 0;
 
@@ -692,7 +693,119 @@ class ReportesController extends AppController
         $this->render('export_xls', 'export_xls');       
         
     }
-    
+
+    /**
+     * Función para descargar las notas crédito
+     */
+    public function descargarNotasCredito(){
+
+        $this->loadModel('Factura');
+        
+
+        if(!empty($_POST['rpcodigo'])){
+            $paginate['Factura.codigo LIKE'] = '%' . $_POST['rpcodigo'] . '%';
+        } 
+
+        if(!empty($_POST['rpconsecutivo'])){
+            $paginate['Factura.consecutivodian LIKE'] = '%' . $_POST['rpconsecutivo'] . '%';
+        }             
+
+        if(!empty($_POST['rpvendedor'])){
+            $paginate['Factura.usuario_id'] = $_POST['rpvendedor'];
+        }            
+
+        if(!empty($_POST['rpfecha']) && !empty($_POST['rpfechaFin'])){
+            $paginate['Factura.created BETWEEN ? AND ?'] = array($_POST['rpfecha'], $_POST['rpfechaFin']);
+        }            
+
+        if(!empty($_POST['rpvencimiento'])){
+            $paginate['Factura.fechavence BETWEEN ? AND ?'] = array($_POST['rpvencimiento'] . ' 00:00:01', $_POST['rpvencimiento'] . ' 23:59:59');
+        }            
+
+        if(!empty($_POST['rptipopago'])){
+            $paginate['FCV.tipopago_id'] = $_POST['rptipopago'];
+        }        
+        
+        if($_POST['esfactura'] == '1'){
+            $paginate['Factura.factura'] = true;
+        }else if($_POST['esfactura'] == '0'){
+            $paginate['Factura.factura'] = false;
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $paginate['Factura.empresa_id'] = $empresaId;
+        $paginate['Factura.eliminar'] = '1';
+
+        $facturas = $this->Factura->obtenerFacturas($paginate); 
+
+        $arrFacts = array();
+        foreach ($facturas as $f){ 
+
+            if($f['Factura']['factura'] == '1'){
+                $valorBase = 0;
+                $descuento = 0;
+
+                if (!empty($f['FD']['impuesto'])){
+                    $valorBase = ceil($f['FD']['costoventa'] / (($f['FD']['impuesto'] / 100) +1));
+                } else {
+                    $valorBase = ceil($f['FD']['costoventa']);
+                }
+
+                if (!empty($f['FD']['porcentaje'])){
+                    $descuento = ceil(($valorBase * ($f['FD']['porcentaje'])/100) * $f['FD']['cantidad']);
+                }
+
+                $valorXCantidad = $valorBase * $f['FD']['cantidad'];
+                $iva = ceil(($valorXCantidad - $descuento) * ($f['FD']['impuesto']/100));
+            }else{
+                $valorBase = $f['FD']['costoventa'];
+                $valorXCantidad = ceil($valorBase * $f['FD']['cantidad']);
+                $descuento = $valorXCantidad * ($f['FD']['porcentaje']/100);
+            }
+
+
+            $arrFacts[] = [
+                'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
+                'fecha' => $f['Factura']['created'],
+                'nombreCliente' => $f['CL']['nombre'],
+                'identificacion' => $f['CL']['nit'],
+                'telefono' => $f['CL']['celular'],
+                'cantidad' => $f['FD']['cantidad'],
+                'producto' => $f['PR']['descripcion'],
+                'valor' => $valorBase,
+                'valor_ttal' => $valorBase * $f['FD']['cantidad'],
+                'descuento' => $descuento,
+                'subtotal' => ($valorBase * $f['FD']['cantidad']) - $descuento,
+                'iva' => $iva
+            ];
+        }
+                
+        $texto_tit = "Facturas";
+        $this->set(compact('arrFacts'));
+        $this->set('texto_tit', $texto_tit);
+        $this->set('rows', $arrFacts);
+        $arr_titulos = array(
+            'Consecutivo',
+            'Fecha',
+            'Nombre Cliente',
+            'Identificacion',
+            'Telefono',
+            'Cantidad',
+            'Descripcion',
+            'Valor Unitario',
+            'Valor Total',
+            'Descuento',
+            'Subtotal',
+            'IVA'   
+            );
+
+        $this->set('titulos', $arr_titulos);
+        $this->render('export_xls', 'export_xls');       
+        
+    }
+
+
+
     /**
      * Se genera el reporte de utilidades
      */
