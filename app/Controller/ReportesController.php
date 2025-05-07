@@ -648,6 +648,7 @@ class ReportesController extends AppController
                 $valorXCantidad = $valorBase * $f['FD']['cantidad'];
                 $iva = ceil(($valorXCantidad - $descuento) * ($f['FD']['impuesto']/100));
             }else{
+                $iva = 0;
                 $valorBase = $f['FD']['costoventa'];
                 $valorXCantidad = ceil($valorBase * $f['FD']['cantidad']);
                 $descuento = $valorXCantidad * ($f['FD']['porcentaje']/100);
@@ -659,6 +660,7 @@ class ReportesController extends AppController
                 'fecha' => $f['Factura']['created'],
                 'nombreCliente' => $f['CL']['nombre'],
                 'identificacion' => $f['CL']['nit'],
+                'vendedor' => $f['US']['nombre'],
                 'telefono' => $f['CL']['celular'],
                 'cantidad' => $f['FD']['cantidad'],
                 'producto' => $f['PR']['descripcion'],
@@ -679,6 +681,7 @@ class ReportesController extends AppController
             'Fecha',
             'Nombre Cliente',
             'Identificacion',
+            'Vendedor',
             'Telefono',
             'Cantidad',
             'Descripcion',

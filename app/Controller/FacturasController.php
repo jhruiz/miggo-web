@@ -442,13 +442,13 @@ class FacturasController extends AppController
             }
             
             if ($this->Factura->actualizarEstadoFacturaEliminar($id)) {
-                echo json_encode(array('resp' => 'La nota crédito ha sido registrada.'));
+                echo json_encode(array('resp' => true, 'msg' => ''));
             } else {
-                echo json_encode(array('resp' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
+                echo json_encode(array('resp' => false, 'msg' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
             }
 
         } else {
-            echo json_encode(array('resp' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
+            echo json_encode(array('resp' => false, 'msg' => 'La nota crédito no pudo ser registrada. Por favor, inténtelo de nuevo.'));
         }
     }
 
@@ -1661,13 +1661,17 @@ class FacturasController extends AppController
             $ttalFact += floatval($val['FacturaCuentaValore']['valor']);
         }
 
+        //obtiene la información de la factura para validar envío a la Dian
+        $infoFact = $this->Factura->obtenerInfoFacturaPorId($facturaId);
+        $syncDian = ($infoFact['Empresa']['syncdian'] == '1' && $infoFact['Factura']['factura']) ? '1' : '0';
+
         //obtiene los pagos de la factura en abonos
         $abonos = $this->Abonofactura->obtenerAbonosFactura($facturaId);
         foreach($abonos as $valA) {
             $ttalFact += floatval($valA['Abonofactura']['valor']);
         }
 
-        $this->set(compact('lstTipPagos', 'facturaId', 'ttalFact'));
+        $this->set(compact('lstTipPagos', 'facturaId', 'ttalFact', 'syncDian'));
     }
 
     public function searchFacCli()
@@ -1714,10 +1718,7 @@ class FacturasController extends AppController
             $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral));
 
             echo json_encode(array(
-                'token' => $factura['Empresa']['tokendian'], 
-                'nitEmpresa' => $factura['Empresa']['nit'],
-                'prefijo' => $infoRes['prefix'],
-                'consecutivo' => $infoRes['number'],
+                'token' => $factura['Empresa']['tokendian'],
                 array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)
             ));
 
@@ -2054,7 +2055,7 @@ class FacturasController extends AppController
         // Verifica si hay descuento y lo añade al array de productos si es necesario
         if ($val['Facturasdetalle']['descuento'] > 0) {
             $arrProductos['allowance_charges']['0'] = [
-                "discount_id" => '12',
+                "discount_id" => '1',
                 "charge_indicator" => false,
                 "allowance_charge_reason" => "Descuento General",
                 "amount" => $val['Facturasdetalle']['descuento'],
@@ -2075,7 +2076,7 @@ class FacturasController extends AppController
     }
 
 
-        /**
+    /**
      * Consumir el servicio de facturación de la DIAN
      */
     public function guardarInfoDian( ) {
@@ -2092,6 +2093,133 @@ class FacturasController extends AppController
         echo json_encode(array(
             'result' => $result
         ));
+
+    }
+
+    /**
+     * Consumir el servicio de facturación de la DIAN
+     */
+    public function guardarNCInfoDian( ) {
+
+        $this->autoRender = false;
+        $this->loadModel('Factura');
+        $this->loadModel('Resolucionnotacredito');
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $facturaId = $this->request->data['facturaId'];
+        $statusCode = $this->request->data['statusCode'];
+        $cude = $this->request->data['cude'];
+        $NCQR = $this->request->data['QR'];
+
+        $result = $this->Resolucionnotacredito->actualizarResolucionNC($empresaId);
+        
+        $result = $this->Factura->actualizarNCInfoDian( $facturaId, $statusCode, $cude, $NCQR );
+
+        echo json_encode(array(
+            'result' => $result
+        ));
+
+    }
+
+    /**
+     * Genera la información requerida para la factura de refencia en la nota crédito
+     */
+    public function generarFacturaReferencia($factura) {
+        $this->loadModel('Deposito');
+
+        //Obtiene la información del deposito con la configuración de la resolución
+        $infoDep = $this->Deposito->obtenerInfoDepositosEmpresa($factura['Factura']['empresa_id']);
+
+        return [
+            "billing_reference" => [
+              "number" => $infoDep['0']['Deposito']['prefijo'] . $factura['Factura']['consecutivodian'],
+              "uuid" => $factura['Factura']['diancufe'],
+              "issue_date" => date('Y-m-d')
+            ]
+          ];
+    }
+
+    /**
+     * genera la información general para la nota credito
+     */
+    public function generarInformacionGeneral($factura) {
+        $this->loadModel('Resolucionnotacredito');
+
+        //Obtiene la información del deposito con la configuración de la resolución
+        $infoNC = $this->Resolucionnotacredito->obtenerResolucionNC($factura['Factura']['empresa_id']);
+
+        $descNotaCredito = "El usuario " . $factura['Usuario']['nombre'] . " genera nota credito sobre la factura No. " . $factura['Factura']['consecutivodian'];
+
+        if( !isset($infoNC['Resolucionnotacredito']['id'])) {
+            return [];
+        }
+
+        return [
+            "discrepancyresponsecode" => 2,
+            "discrepancyresponsedescription" => $descNotaCredito,
+            "notes" => $descNotaCredito,
+            "prefix" => $infoNC['Resolucionnotacredito']['prefijo'],
+            "number" => $infoNC['Resolucionnotacredito']['consecutivoactual'],
+            "type_document_id" => $infoNC['Resolucionnotacredito']['tipodocumento'],
+            "date" =>  date('Y-m-d'),
+            "time" =>  date('H:i:s'),
+            "establishment_name" =>  $infoNC['Empresa']['nombre'],
+            "establishment_address" =>  !empty($infoNC['Empresa']['direccion']) ? $infoNC['Empresa']['direccion'] : 'Calle 1 # 2 - 3',
+            "establishment_phone" =>  !empty($infoNC['Empresa']['telefono1']) ? $infoNC['Empresa']['telefono1'] : '3111234567',
+            "establishment_municipality" =>  $infoNC['Empresa']['municipio_id'],
+            "sendmail" =>  true,
+            "sendmailtome" =>  true
+        ];
+    }
+
+    /**
+     * Genera el json para la nota crédito hacia la Dian
+     */
+    public function obtenerNCParaDian() {
+        $this->autoRender = false;
+        $this->loadModel('Factura');
+        $facturaId = $this->request->data['facturaId'];
+
+        //Obtiene la información de la factura
+        $factura = $this->Factura->obtenerInfoFacturaPorId($facturaId);
+
+        //Generar factura de referencia
+        $billingReference = $this->generarFacturaReferencia($factura);
+
+        //Generar datos generales de la nota crédito
+        $generalInfo = $this->generarInformacionGeneral($factura);
+
+        //Obtiene la información del cliente de la factura
+        $infoCliente = $this->generarInfoCliente( $factura );
+
+        //Obtiene los totales generales de la factura
+        $infoPagoGeneral = $this->generarInfoPagoGeneral( $factura );
+
+        // Verificar si existe la clave invoice_lines
+        if (isset($infoPagoGeneral['invoice_lines'])) {
+            // Asignar el valor a la nueva clave
+            $infoPagoGeneral['credit_note_lines'] = $infoPagoGeneral['invoice_lines'];
+            // Eliminar la clave antigua
+            unset($infoPagoGeneral['invoice_lines']);
+        }
+
+        //Valida que todos los resultados sean un array procesable
+        if ($this->validateArrays($billingReference, $generalInfo, $infoCliente, $infoPagoGeneral)) {
+
+            echo json_encode(array(
+                'status' => true,
+                'token' => $factura['Empresa']['tokendian'], 
+                'nitEmpresa' => $factura['Empresa']['nit'],
+                'prefijo' => $infoRes['prefix'],
+                'consecutivo' => $infoRes['number'],
+                array_merge($billingReference, $generalInfo, $infoCliente, $infoPagoGeneral)
+            ));
+
+        } else {
+            echo json_encode(array(
+                'status' => false
+            ));
+        }       
 
     }
 

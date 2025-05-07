@@ -1,12 +1,14 @@
 <?php 
 $this->layout=false;
 echo ($this->Html->script('facturas/pagonotacredito.js'));
+echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'media' => 'all'));
 ?>
 <div class="form_contenedor_pagos">
     <div class="row contenedor_metodos_pagos"> 
         <div class="col-md-12">                                
             <?php echo $this->Form->input('totalFactura', array('id' => 'totalFactura', 'value' => $ttalFact, 'type' => 'hidden'))?><br>
             <?php echo $this->Form->input('factura_id', array('id' => 'facturaId', 'value' => $facturaId, 'type' => 'hidden'))?><br>
+            <?php echo $this->Form->input('syncdian', array('id' => 'syncdian', 'value' => $syncDian, 'type' => 'hidden'))?><br>
             <div class="col-md-6"><label>TOTAL</label></div>
             <div class="col-md-6"><label id="ttalFactura"><?php echo h(number_format($ttalFact, 2));?></label></div><br>
             <div class="col-md-6"><label>RESTANTE</label></div>
@@ -36,5 +38,10 @@ echo ($this->Html->script('facturas/pagonotacredito.js'));
         <div class="col-md-6">
             <button id="btn_agregar" class="btn btn-primary center-block">Agregar Método</button>
         </div>    
+    </div>
+
+    <div class="icon-container" style="display: none;">
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+        <span class="icon-text" id="fact_status">Generando nota crédito en Miggo</span>
     </div>
 </div>

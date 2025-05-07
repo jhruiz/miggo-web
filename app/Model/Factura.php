@@ -775,6 +775,26 @@ class Factura extends AppModel
         }        
     }
 
+    /**
+     * Actualiza la factura con la información de la Dian
+     */
+    public function actualizarNCInfoDian( $facturaId, $statusCode, $cufe, $QR) {
+
+        $data = array();
+        $factura = new Factura();
+
+        $data['id'] = $facturaId;
+        $data['dianstatuscode'] = $statusCode;
+        $data['diancude'] = $cufe;
+        $data['dianNCQRStr'] = $QR;
+
+        if ($factura->save($data)) {
+            return true;
+        } else {
+            return false;
+        }        
+    }
+
 
 
 }

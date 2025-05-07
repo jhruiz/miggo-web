@@ -4,7 +4,12 @@
  * @param {*} facturaId 
  */
 function generarNotaCreditoFactura() {
-    var facturaId = $('#facturaId').val(); 
+    var facturaId = $('#facturaId').val();
+    $('.icon-container').show();
+    $('#btn_notacredito_m').css('display', 'none');
+    $('#btn_agregar').css('display', 'none');
+    var syncDian = $('#syncdian').val();
+
     $.ajax({        
         url: $('#url-proyecto').val() + 'facturas/delete', 
         async : false,
@@ -12,8 +17,16 @@ function generarNotaCreditoFactura() {
         type: "POST",
         success: function(data) {
              var resp = JSON.parse(data);
-             alert(resp.resp);
-             location.reload();
+             if ( resp.resp ) {
+                $('#fact_status').text('Nota crédito generada con éxito en Miggo.');
+                if( syncDian == '1' ) {
+                    obtenerNCDian(facturaId);
+                }
+             } else {
+                bootbox.alert(resp.msg);
+                location.reload(); 
+            }
+             
         }
     });  
 }

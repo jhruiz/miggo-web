@@ -144,6 +144,7 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['fecha']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['nombreCliente']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['identificacion']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['vendedor']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['telefono']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['producto']); ?></td>
