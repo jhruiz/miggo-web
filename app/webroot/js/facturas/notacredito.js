@@ -84,9 +84,9 @@ var sincronizarNCDian = function(resp, facturaId) {
         },
         data: JSON.stringify(resp[0]),
         success: function(response) {
-            console.log(response);
             if(response.cude) {
 
+                enviarCorreoCliente(resp);
                 guardarNCInfoDian(response, facturaId);
 
             } else {
@@ -122,7 +122,6 @@ function obtenerNCDian(facturaId) {
         async: false,
         success: function(data) {
             var resp = JSON.parse(data);
-            console.log(resp);
             if(resp.status){
 
                 sincronizarNCDian(resp, facturaId);

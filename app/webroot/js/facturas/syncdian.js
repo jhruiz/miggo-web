@@ -76,7 +76,7 @@ var enviarCorreoCliente = function(resp) {
         prefix: resp.prefijo,
         number: resp.consecutivo
     };
-    
+
     // Realizar la solicitud AJAX
     $.ajax({
         url: 'https://facturaconmiggo.com/api/send-email-customer',

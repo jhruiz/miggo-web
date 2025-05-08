@@ -2210,8 +2210,8 @@ class FacturasController extends AppController
                 'status' => true,
                 'token' => $factura['Empresa']['tokendian'], 
                 'nitEmpresa' => $factura['Empresa']['nit'],
-                'prefijo' => $infoRes['prefix'],
-                'consecutivo' => $infoRes['number'],
+                'prefijo' => $generalInfo['prefix'],
+                'consecutivo' => $generalInfo['number'],
                 array_merge($billingReference, $generalInfo, $infoCliente, $infoPagoGeneral)
             ));
 
