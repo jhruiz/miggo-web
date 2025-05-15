@@ -18,26 +18,29 @@
     </div><br><br>                          
     <?php echo $this->Form->submit('Buscar',array('class'=>'btn btn-primary'));?>
     </form><br><br>    
-    
-    
-	<legend><h2><b><?php echo __('Detalle Ventas Totales: ' . $fechaCierre); ?></b></h2></legend>        
+
+	<legend><h2><b><?php echo __('Detalle Ventas Totales (' . $cantFacturas . '): ' . $fechaCierre); ?></b></h2></legend>        
         <div class="table-responsive">
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                                <th><?php echo ('# Factura'); ?></th>
-                                <th><?php echo ('Cliente'); ?></th>
-                                <th><?php echo ('Vendedor'); ?></th>
-                                <th><?php echo ('Cuenta'); ?></th>                                
-                                <th><?php echo ('Tipo Pago'); ?></th>                                
-                                <th class="text-right"><?php echo ('Valor'); ?></th>
+                    <th><?php echo ('Código'); ?></th>
+                    <th><?php echo ('# Factura'); ?></th>
+                    <th><?php echo ('Fecha Factura'); ?></th>
+                    <th><?php echo ('Cliente'); ?></th>
+                    <th><?php echo ('Vendedor'); ?></th>
+                    <th><?php echo ('Cuenta'); ?></th>                                
+                    <th><?php echo ('Tipo Pago'); ?></th>                                
+                    <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
                 <?php $ttalventasFact = 0; ?>
                 <?php foreach ($ventasFactura as $dFact): ?>   
                 <?php if($dFact['fact_eliminada'] == '0') {?>             
                 <tr>
-                    <td><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
-                    <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta An��nima');?></td>
+                    <td><?php echo($dFact['fact_codigo']);?></td>
+                    <td><?php echo($dFact['consecutivodian']);?></td>
+                    <td><?php echo($dFact['created']); ?>&nbsp;</td>
+                    <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
                     <td><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?>&nbsp;</td>
                     <td><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?>&nbsp;</td>
                     <td><?php echo h($listTipoPago[$dFact['fcv_tipopago']]); ?>&nbsp;</td>
@@ -47,30 +50,34 @@
                 <?php } ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="5" align="right">TOTAL</th>
+                    <th colspan="7" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalventasFact,2)); ?>&nbsp;</th>
                 </tr>
                 </table>
             </div>
         </div>
 
-        <legend><h2><b><?php echo __('Detalle Notas Crédito: ' . $fechaCierre); ?></b></h2></legend>        
+        <legend><h2><b><?php echo __('Detalle Notas Crédito (' . $cantNotasCred . '): ' . $fechaCierre); ?></b></h2></legend>        
         <div class="table-responsive">
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                                <th><?php echo ('# Factura'); ?></th>
-                                <th><?php echo ('Cliente'); ?></th>
-                                <th><?php echo ('Vendedor'); ?></th>
-                                <th><?php echo ('Cuenta'); ?></th>                                
-                                <th><?php echo ('Tipo Pago'); ?></th>                                
-                                <th class="text-right"><?php echo ('Valor'); ?></th>
+                    <th><?php echo ('Código'); ?></th>
+                    <th><?php echo ('# Factura'); ?></th>
+                    <th><?php echo ('Fecha Factura'); ?></th>
+                    <th><?php echo ('Cliente'); ?></th>
+                    <th><?php echo ('Vendedor'); ?></th>
+                    <th><?php echo ('Cuenta'); ?></th>                                
+                    <th><?php echo ('Tipo Pago'); ?></th>                                
+                    <th class="text-right"><?php echo ('Valor'); ?></th>
                 </tr>
                 <?php $ttalventasFact = 0; ?>
                 <?php foreach ($ventasFactura as $dFact): ?>   
                 <?php if($dFact['fact_eliminada'] == '1') {?>             
                 <tr>
-                    <td><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+                    <td><?php echo($dFact['fact_codigo']);?></td>
+                    <td><?php echo($dFact['consecutivodian']);?></td>
+                    <td><?php echo($dFact['created']); ?>&nbsp;</td>
                     <td><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta An��nima');?></td>
                     <td><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?>&nbsp;</td>
                     <td><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?>&nbsp;</td>
@@ -81,7 +88,7 @@
                 <?php } ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="5" align="right">TOTAL</th>
+                    <th colspan="7" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalventasFact,2)); ?>&nbsp;</th>
                 </tr>
                 </table>
@@ -159,6 +166,7 @@
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
+                    <th><?php echo ('Usuario'); ?></th>
                     <th><?php echo ('Cliente'); ?></th>
                     <th><?php echo ('Prefactura'); ?></th>
                     <th><?php echo ('Factura'); ?></th>
@@ -170,6 +178,7 @@
 
                 <?php foreach ($arrAbonos as $abn): ?> 
                 <tr>
+                    <td><?php echo h($abn['usuario']); ?>&nbsp;</td>
                     <td><?php echo h($abn['cliente']); ?>&nbsp;</td>
                     <td><?php echo h($abn['prefactura']); ?>&nbsp;</td>
                     <td><?php echo h($abn['factura']); ?>&nbsp;</td>
@@ -180,37 +189,42 @@
                 <?php $ttalAbonos += $abn['valor']; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="5" align="right">TOTAL</th>
+                    <th colspan="6" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalAbonos,2)); ?>&nbsp;</th>
                 </tr>                  
                 </table>
             </div>
         </div>
 
-        <legend><h2><b><?php echo __('Detalle Ventas a Crédito: ' . $fechaCierre); ?></b></h2></legend>        
+        <legend><h2><b><?php echo __('Detalle Ventas a Crédito (' . count($ctasClientes) . '): ' . $fechaCierre); ?></b></h2></legend>        
         <div class="table-responsive">
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                    <th><?php echo ('Usuario'); ?></th>
+                    <th><?php echo ('Código'); ?></th>
+                    <th><?php echo ('# Factura'); ?></th>
+                    <th><?php echo ('Fecha Factura'); ?></th>
                     <th><?php echo ('Cliente'); ?></th>
-                    <th><?php echo ('Factura'); ?></th>
+                    <th><?php echo ('Vendedor'); ?></th>
                     <th><?php echo ('Tipo de pago'); ?></th>                    
                     <th class="text-right"><?php echo ('Total Obligación'); ?></th>
                 </tr>
                 <?php $ttalCreditos = 0; ?> 
                 <?php foreach ($ctasClientes as $ccl): ?> 
                 <tr>
-                    <td><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
+                    
+                    <td><?php echo h($ccl['F']['codigo']); ?>&nbsp;</td>
+                    <td><?php echo h($ccl['F']['consecutivodian']); ?>&nbsp;</td>
+                    <td><?php echo h($ccl['F']['created']); ?>&nbsp;</td>
                     <td><?php echo h($ccl['C']['nombre']); ?>&nbsp;</td>                    
-                    <td><?php echo h(!empty($ccl['F']['consecutivodian']) ? $ccl['F']['consecutivodian'] : $ccl['F']['codigo']); ?>&nbsp;</td>                    
+                    <td><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
                     <td><?php echo h($ccl['T']['descripcion']); ?>&nbsp;</td>
                     <td align="right"><?php echo h('$' . number_format($ccl['Cuentascliente']['total'],2)); ?>&nbsp;</td>                    
                 </tr>
                 <?php $ttalCreditos += $ccl['Cuentascliente']['total']; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="4" align="right">TOTAL</th>
+                    <th colspan="6" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalCreditos,2)); ?>&nbsp;</th>
                 </tr>                  
                 </table>
@@ -224,7 +238,8 @@
                 <tr>
                     <th><?php echo ('Proveedor'); ?></th>
                     <th><?php echo ('Usuario'); ?></th>
-                    <th><?php echo ('Factura'); ?></th>
+                    <th><?php echo ('# Factura'); ?></th>
+                    <th><?php echo ('# Documento'); ?></th>
                     <th class="text-right"><?php echo ('Total Obligación'); ?></th>
                 </tr>
                 <?php $ttalCompCreditos = 0; ?> 
@@ -233,19 +248,20 @@
                     <td><?php echo h($ccp['P']['nombre']); ?>&nbsp;</td>
                     <td><?php echo h($ccp['U']['nombre']); ?>&nbsp;</td>                    
                     <td><?php echo h($ccp['Cuentaspendiente']['numerofactura']); ?>&nbsp;</td>                    
+                    <td><?php echo h($ccp['Cuentaspendiente']['documento_id']); ?>&nbsp;</td>                    
                     <td align="right"><?php echo h('$' . number_format($ccp['Cuentaspendiente']['total'],2)); ?>&nbsp;</td>                    
                 </tr>
                 <?php $ttalCompCreditos += $ccp['Cuentaspendiente']['total']; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <th colspan="3" align="right">TOTAL</th>
+                    <th colspan="4" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalCompCreditos,2)); ?>&nbsp;</th>
                 </tr>                  
                 </table>
             </div>
         </div> <br><br>                
         
-        <legend><h2><b><?php echo __('Detalle de Estado por Caja'); ?></b></h2></legend>  
+        <legend><h2><b><?php echo __('Detalle de Estado por Caja: ' . $fechaCierre); ?></b></h2></legend>  
         
         <div class="container">
             <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">              

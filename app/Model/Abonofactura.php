@@ -154,6 +154,15 @@ class Abonofactura extends AppModel {
                 'TP.id=Abonofactura.tipopago_id'
             )
         ));
+
+        array_push($arr_join, array(
+            'table' => 'usuarios',
+            'alias' => 'U',
+            'type' => 'INNER',
+            'conditions' => array(
+                'U.id=Abonofactura.usuario_id'
+            )
+        ));
       
         $abonos = $this->find('all', array(
             'joins' => $arr_join,
@@ -162,7 +171,7 @@ class Abonofactura extends AppModel {
                 'Abonofactura.empresa_id' => $empresaId,
                 $tipoAbono
             ),
-            'fields' => array('Abonofactura.*', 'CL.*', 'C.*', 'TP.*'),
+            'fields' => array('Abonofactura.*', 'CL.*', 'C.*', 'TP.*', 'U.*'),
             'recursive' => '-1'
             ));
         

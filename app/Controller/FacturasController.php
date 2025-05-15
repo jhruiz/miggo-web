@@ -842,8 +842,12 @@ class FacturasController extends AppController
 
         $ventasFactura = [];
         $estadoCuentas = [];
+        $cantFacturas = 0;
+        $cantNotasCred = 0;
         if (!empty($detFacts)) {
+
             foreach ($detFacts as $df) {
+
                 if (!isset($estadoCuentas[$df['FCV']['cuenta_id']])) {
                     $estadoCuentas[$df['FCV']['cuenta_id']]['ing_ventas'] = 0;
                 }
@@ -859,8 +863,15 @@ class FacturasController extends AppController
                     'fcv_cuenta' => $df['FCV']['cuenta_id'],
                     'fcv_tipopago' => $df['FCV']['tipopago_id'],
                     'fcv_valor' => $df['FCV']['valor'],
-                    'fact_eliminada' => $df['Factura']['eliminar']
+                    'fact_eliminada' => $df['Factura']['eliminar'],
+                    'created' => $df['Factura']['created'],
                 ];
+
+                if( $df['Factura']['eliminar'] == '1' ) {
+                    $cantNotasCred ++;
+                } else {
+                    $cantFacturas ++;
+                }
 
                 //se obtiene el ingreso por venta en cada cuenta
                 $estadoCuentas[$df['FCV']['cuenta_id']]['ing_ventas'] += $df['FCV']['valor'];
@@ -919,7 +930,8 @@ class FacturasController extends AppController
                     'cliente' => $abnpf['CL']['nombre'],
                     'cuenta' => $abnpf['C']['descripcion'],
                     'prefactura' => $abnpf['Abonofactura']['prefactura_id'],
-                    'factura' => $abnpf['Abonofactura']['factura_id']
+                    'factura' => $abnpf['Abonofactura']['factura_id'],
+                    'usuario' => $abnpf['U']['nombre']
                 ];
 
                 $estadoCuentas[$abnpf['Abonofactura']['cuenta_id']]['abono_prefact'] += $abnpf['Abonofactura']['valor'];
@@ -942,7 +954,8 @@ class FacturasController extends AppController
                     'cliente' => $abnf['CL']['nombre'],
                     'cuenta' => $abnf['C']['descripcion'],
                     'prefactura' => $abnf['Abonofactura']['prefactura_id'],
-                    'factura' => $abnf['Abonofactura']['factura_id']
+                    'factura' => $abnf['Abonofactura']['factura_id'],
+                    'usuario' => $abnpf['U']['nombre']
                 ];
 
                 $estadoCuentas[$abnf['Abonofactura']['cuenta_id']]['abono_fact'] += $abnf['Abonofactura']['valor'];
@@ -980,7 +993,7 @@ class FacturasController extends AppController
 
         $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));
         $this->set(compact('infoGastos', 'arrAbonos', 'flgCierre', 'rpcuenta', 'estadoCuentas', 'listTipoPago'));
-        $this->set(compact('cierreDiario', 'anotDay', 'obsCierre', 'ctasClientes', 'ctasPendientes'));
+        $this->set(compact('cierreDiario', 'anotDay', 'obsCierre', 'ctasClientes', 'ctasPendientes', 'cantFacturas', 'cantNotasCred'));
     }
 
     public function buscarcierre()

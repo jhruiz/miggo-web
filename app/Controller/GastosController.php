@@ -166,6 +166,7 @@ class GastosController extends AppController {
             
             if ($this->request->is('post')) {
                 $posData = $this->request->data;
+
                 $valor = str_replace(',', '', $posData['Gasto']['valor']);
                 $cuentaId = $posData['Gasto']['cuenta_id'];                
                 
@@ -180,6 +181,10 @@ class GastosController extends AppController {
                 }
                 
                 $this->request->data['Gasto']['valor'] = str_replace(',', '', $this->request->data['Gasto']['valor']);                  
+                
+                $fechaActual = $posData['Gasto']['fechagasto'];
+                $horaActual = date('H:i:s'); 
+                $this->request->data['Gasto']['fechagasto'] = $fechaActual . ' ' . $horaActual;              
                 
                 $this->Gasto->create();
                 if ($this->Gasto->save($this->request->data)) {
@@ -368,7 +373,7 @@ class GastosController extends AppController {
     /**
      * Crea un gasto de tipo nota credito
      */
-    public function crearGastoNotaCredito($valor, $cuentaId) {
+    public function crearGastoNotaCredito($valor, $cuentaId, $factura) {
         $this->loadModel('Itemsgasto');
         
         $idItem = "";
@@ -385,8 +390,10 @@ class GastosController extends AppController {
             $idItem = $infoItem['Itemsgasto']['id'];
         }
 
+        $numFact = empty($factura['Factura']['consecutivodian']) ? $factura['Factura']['codigo'] : $factura['Factura']['consecutivodian'];
+
         $data = array(
-            'descripcion' => 'Devolucion por nota credito',
+            'descripcion' => 'Devolucion por nota credito para la factura #' . $numFact . '. Fecha de la factura ' . $factura['Factura']['created'],
             'usuario_id' => $this->Auth->user('id'),
             'empresa_id' => $empresaId,
             'fechagasto' => date('Y-m-d H:i:s'),
@@ -410,12 +417,16 @@ class GastosController extends AppController {
     public function gastoNotaCredito() {
 
         $this->loadModel('Tipopago');
+        $this->loadModel('Factura');
 
         $this->autoRender = false;
 
         $resp = true;
 
         $payMeth = $this->request->data['arrPayMeth'];
+        $facturaId = $this->request->data['facturaId'];
+
+        $factura = $this->Factura->obtenerInfoFacturaPorId($facturaId);
 
         foreach($payMeth as $pm) {
             
@@ -426,7 +437,7 @@ class GastosController extends AppController {
             $this->descontarSaldoCuenta($pm['val_pay_meth'], $infoTipoPago['Cuenta']['id']);
 
             //crear gasto
-            $this->crearGastoNotaCredito($pm['val_pay_meth'], $infoTipoPago['Cuenta']['id']);
+            $this->crearGastoNotaCredito($pm['val_pay_meth'], $infoTipoPago['Cuenta']['id'], $factura);
         }
 
         echo json_encode(array('resp' => true));

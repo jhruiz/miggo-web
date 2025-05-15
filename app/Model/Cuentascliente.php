@@ -452,6 +452,7 @@ class Cuentascliente extends AppModel {
                     'F.id',
                     'F.consecutivodian',
                     'F.codigo',
+                    'F.created',
                     'T.id',
                     'T.descripcion',
                     'Cuentascliente.*',
