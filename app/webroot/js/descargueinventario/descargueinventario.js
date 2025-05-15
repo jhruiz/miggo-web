@@ -155,9 +155,9 @@ function validarProductosDescargue(){
                     '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + obj['Descargueinventario']['id'] + '"onclick="eliminarRegistroDescargue(this)"></td></tr>'
                     );
 
-                    costoTotal += parseInt(obj['CI']['costoproducto']);
+                    costoTotal += parseFloat(obj['CI']['costoproducto']);
                     cantidadProds ++;
-                    cantidadUnids += parseInt(obj['Descargueinventario']['cantidaddescargue']);
+                    cantidadUnids += parseFloat(obj['Descargueinventario']['cantidaddescargue']);
 
                 }); 
 
