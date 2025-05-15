@@ -38,7 +38,7 @@ function fnObtenerDatosProducto(e){
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
                     );                
                 $('#buscarproducto').val("");
-                $('#datosProducto').hide();                 
+                $('#datosProducto').hide();                
             }else if(productos.boolResp === '3'){
                 bootbox.alert('No se pudo agregar el producto al descargue del inventario. Por favor, inténtelo de nuevo');
             }else{
@@ -107,7 +107,8 @@ function seleccionarProducto(producto){
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
                     );                
                 $('#buscarproducto').val("");
-                $('#datosProducto').hide();                 
+                $('#datosProducto').hide();   
+                location.reload();              
             }else if(productos.boolResp === '3'){
                 bootbox.alert('No se pudo agregar el producto al descargue del inventario. Por favor, inténtelo de nuevo');
             }else if(productos.boolResp === '4'){
@@ -122,6 +123,16 @@ function seleccionarProducto(producto){
     
 }
 
+var actualizarTotales = function(costoTotal, cantidadProds, cantidadUnids) {
+    $('#descInventarioTtales').html(
+        '<tr>' + 
+        '<td>' + formatNumber(cantidadProds) + '</td>' + 
+        '<td>' + formatNumber(cantidadUnids) + '</td>' + 
+        '<td> $ ' + formatNumber(costoTotal) + '</td>' + 
+        '</tr>'
+        );
+}
+
 function validarProductosDescargue(){
     var empresaId = $('#empresa_id').val();
     $.ajax({
@@ -132,16 +143,26 @@ function validarProductosDescargue(){
             var respuesta = JSON.parse(data);
             if(respuesta.resp){
                 var costoTotal = 0;
+                var cantidadProds = 0;
+                var cantidadUnids = 0;
                 $.each(respuesta.detDesc, function(idx, obj) {
                     $('#descInventario').append('<tr id="tr_' + obj['Descargueinventario']['id'] + '">' + 
                     '<td>' + obj['P']['descripcion'] + '</td>' + 
                     '<td>' + obj['P']['codigo'] + '</td>' + 
-                    '<td>' + formatNumber(obj['CI']['costoproducto']) + '</td>' + 
+                    '<td> $ ' + formatNumber(obj['CI']['costoproducto']) + '</td>' + 
                     '<td>' + obj['CI']['existenciaactual'] + '</td>' + 
                     '<td><input type="text" name="cant_' + obj['Descargueinventario']['id'] + '" class="form-control" id="cant_' + obj['Descargueinventario']['id'] + '" value="' + obj['Descargueinventario']['cantidaddescargue'] + '" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
                     '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + obj['Descargueinventario']['id'] + '"onclick="eliminarRegistroDescargue(this)"></td></tr>'
                     );
+
+                    costoTotal += parseInt(obj['CI']['costoproducto']);
+                    cantidadProds ++;
+                    cantidadUnids += parseInt(obj['Descargueinventario']['cantidaddescargue']);
+
                 }); 
+
+                actualizarTotales(costoTotal, cantidadProds, cantidadUnids);
+
             }            
         }
     });      
@@ -182,7 +203,7 @@ function eliminarRegistroDescargue(dato){
                 success: function(data) { 
                     var respuesta = JSON.parse(data);
                     if(respuesta.resp){
-                        $('#tr_' + dato.id).remove();                
+                        location.reload();               
                     }else{
                         bootbox.alert('No se pudo eliminar el registro. Por favor, inténtelo de nuevo.');
                     }

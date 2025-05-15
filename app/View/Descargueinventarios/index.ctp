@@ -34,6 +34,18 @@ $this->layout='inicio';
                                     <th class="actions">&nbsp;</th>
                     </tr>                   
                 </table>
+
+                <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed" style="max-width: 500px; margin: auto;">
+                    <thead>
+                        <tr>
+                            <th><?php echo h('Cantidad de Productos'); ?></th>
+                            <th><?php echo h('Cantidad de Unidades'); ?></th>
+                            <th><?php echo h('Costo Total'); ?></th>
+                        </tr>                   
+                    </thead>
+                    <tbody id="descInventarioTtales">
+                    </tbody>
+                </table>
             </div>
         </div>
 </div><br><br>
