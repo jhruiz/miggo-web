@@ -864,7 +864,7 @@ class FacturasController extends AppController
                     'fcv_tipopago' => $df['FCV']['tipopago_id'],
                     'fcv_valor' => $df['FCV']['valor'],
                     'fact_eliminada' => $df['Factura']['eliminar'],
-                    'created' => $df['Factura']['created'],
+                    'created' => $df['Factura']['created']
                 ];
 
                 if( $df['Factura']['eliminar'] == '1' ) {

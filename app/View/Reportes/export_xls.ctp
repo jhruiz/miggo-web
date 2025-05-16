@@ -545,10 +545,12 @@ else if(isset($cierrediario)){
     </tr>
 
     <tr>
-        <td><b><?php echo __('Ventas'); ?></b></td>
+        <td><b><?php echo __('Detalle Ventas Totales (' . $cantFacturas .'): ' . $fechaCierre); ?></b></td>
     </tr>
     <tr id="titles">
-        <td class="tableTd"><?php echo ('Consecutivo Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Codigo'); ?></td>
+        <td class="tableTd"><?php echo ('# Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Fecha Factura'); ?></td>
         <td class="tableTd"><?php echo ('Cliente'); ?></td>
         <td class="tableTd"><?php echo ('Vendedor'); ?></td>
         <td class="tableTd"><?php echo ('Cuenta'); ?></td>
@@ -557,7 +559,9 @@ else if(isset($cierrediario)){
     </tr>
     <?php foreach ($ventasFactura as $dFact): ?>
             <tr>        
-                <td class="tableTdContent"><?php echo(!empty($dFact['consecutivodian']) ? $dFact['consecutivodian'] : $dFact['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo($dFact['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo($dFact['consecutivodian']);?></td>
+                <td class="tableTdContent"><?php echo($dFact['created']);?></td>
                 <td class="tableTdContent"><?php echo(!empty($dFact['cliente_nombre']) ? $dFact['cliente_nombre'] . " - " . $dFact['cliente_nit'] : 'Venta Anónima');?></td>
                 <td class="tableTdContent"><?php echo h($dFact['usuario_nombre'] . " - " . $dFact['usuario_identificacion']); ?></td>
                 <td class="tableTdContent"><?php echo h($listCuenta[$dFact['fcv_cuenta']]); ?></td>
@@ -568,9 +572,11 @@ else if(isset($cierrediario)){
     </table>
     <br><br>
     <table>
-    <tr><td><b><?php echo __('Detalle Notas Credito'); ?></b></td></tr>  
+    <tr><td><b><?php echo __('Detalle Notas Credito ('. $cantNotasCred . '): ' . $fechaCierre); ?></b></td></tr> 
     <tr id="titles">
-        <td class="tableTd"><?php echo ('Consecutivo Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Codigo'); ?></td>
+        <td class="tableTd"><?php echo ('# Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Fecha Factura'); ?></td>
         <td class="tableTd"><?php echo ('Cliente'); ?></td>
         <td class="tableTd"><?php echo ('Vendedor'); ?></td>
         <td class="tableTd"><?php echo ('Cuenta'); ?></td>
@@ -579,7 +585,9 @@ else if(isset($cierrediario)){
     </tr>
     <?php foreach ($ventasFacturaElim as $dFactE): ?>
             <tr>        
-                <td class="tableTdContent"><?php echo(!empty($dFactE['consecutivodian']) ? $dFactE['consecutivodian'] : $dFactE['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo($dFactE['fact_codigo']);?></td>
+                <td class="tableTdContent"><?php echo($dFactE['consecutivodian']);?></td>
+                <td class="tableTdContent"><?php echo($dFactE['created']);?></td>
                 <td class="tableTdContent"><?php echo(!empty($dFactE['cliente_nombre']) ? $dFactE['cliente_nombre'] . " - " . $dFactE['cliente_nit'] : 'Venta Anónima');?></td>
                 <td class="tableTdContent"><?php echo h($dFactE['usuario_nombre'] . " - " . $dFactE['usuario_identificacion']); ?></td>
                 <td class="tableTdContent"><?php echo h($listCuenta[$dFactE['fcv_cuenta']]); ?></td>
@@ -590,7 +598,7 @@ else if(isset($cierrediario)){
     </table>
     <br><br>
     <table>
-    <tr><td><b><?php echo __('Detalle Gastos'); ?></b></td></tr>  
+    <tr><td><b><?php echo __('Detalle Gastos: '. $fechaCierre); ?></b></td></tr>  
     <tr  id="titles">
         <td  class="tableTd"><?php echo ('Descripcion'); ?></td>
         <td  class="tableTd"><?php echo ('usuario'); ?></td>
@@ -612,7 +620,7 @@ else if(isset($cierrediario)){
     </table>
     <br><br>
     <table>
-    <tr><td><b><?php echo __('Detalle Traslados'); ?></b></td></tr>
+    <tr><td><b><?php echo __('Detalle Traslados: ' . $fechaCierre); ?></b></td></tr>
     <tr>
         <td class="tableTd"><?php echo ('Descripcion'); ?></td>
         <td class="tableTd"><?php echo ('usuario'); ?></td>
@@ -635,8 +643,9 @@ else if(isset($cierrediario)){
     <br><br>
       
     <table>
-    <tr><td><b><?php echo __('Detalle Abonos'); ?></b></td></tr>
+    <tr><td><b><?php echo __('Detalle Abonos: ' . $fechaCierre); ?></b></td></tr>
     <tr>
+        <td class="tableTd"><?php echo ('Usuario'); ?></td>
         <td class="tableTd"><?php echo ('Cliente'); ?></td>
         <td class="tableTd"><?php echo ('Prefactura'); ?></td>
         <td class="tableTd"><?php echo ('Factura'); ?></td>
@@ -646,6 +655,7 @@ else if(isset($cierrediario)){
     </tr>
     <?php foreach ($arrAbonos as $abn): ?>
     <tr>
+        <td class="tableTdContent"><?php echo h($abn['usuario']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['cliente']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['prefactura']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($abn['factura']); ?>&nbsp;</td>
@@ -658,19 +668,23 @@ else if(isset($cierrediario)){
     <br><br>
 
     <table>
-    <tr><td><b><?php echo __('Detalle Ventas a Credito'); ?></b></td></tr>
+    <tr><td><b><?php echo __('Detalle Ventas a Credito (' . count($ctasClientes) . '): ' . $fechaCierre); ?></b></td></tr>
     <tr>
-        <td class="tableTd"><?php echo ('Usuario'); ?></td>
+        <td class="tableTd"><?php echo ('Codigo'); ?></td>
+        <td class="tableTd"><?php echo ('# Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Fecha Factura'); ?></td>
         <td class="tableTd"><?php echo ('Cliente'); ?></td>
-        <td class="tableTd"><?php echo ('Factura'); ?></td>
+        <td class="tableTd"><?php echo ('Vendedor'); ?></td>
         <td class="tableTd"><?php echo ('Tipo de Pago'); ?></td>
         <td class="tableTd"><?php echo ('Total Obligacion'); ?></td>
     </tr>
     <?php foreach ($ctasClientes as $ccl): ?>
     <tr>
-        <td class="tableTdContent"><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['F']['codigo']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['F']['consecutivodian']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['F']['created']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccl['C']['nombre']); ?>&nbsp;</td>
-        <td class="tableTdContent"><?php echo h(!empty($ccl['F']['consecutivodian']) ? $ccl['F']['consecutivodian'] : $ccl['F']['codigo']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccl['U']['nombre']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccl['T']['descripcion']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccl['Cuentascliente']['total']); ?>&nbsp;</td>
     </tr>
@@ -679,11 +693,12 @@ else if(isset($cierrediario)){
     <br><br>
 
     <table>
-    <tr><td><b><?php echo __('Detalle Compras a Credito'); ?></b></td></tr>
+    <tr><td><b><?php echo __('Detalle Compras a Credito: ' . $fechaCierre); ?></b></td></tr>
     <tr>
         <td class="tableTd"><?php echo ('Proveedor'); ?></td>
         <td class="tableTd"><?php echo ('Usuario'); ?></td>
-        <td class="tableTd"><?php echo ('Factura'); ?></td>
+        <td class="tableTd"><?php echo ('# Factura'); ?></td>
+        <td class="tableTd"><?php echo ('# Documento'); ?></td>
         <td class="tableTd"><?php echo ('Total Obligacion'); ?></td>
     </tr>
     <?php foreach ($ctasPendientes as $ccp): ?>
@@ -691,6 +706,7 @@ else if(isset($cierrediario)){
         <td class="tableTdContent"><?php echo h($ccp['P']['nombre']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccp['U']['nombre']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccp['Cuentaspendiente']['numerofactura']); ?>&nbsp;</td>
+        <td class="tableTdContent"><?php echo h($ccp['Cuentaspendiente']['documento_id']); ?>&nbsp;</td>
         <td class="tableTdContent"><?php echo h($ccp['Cuentaspendiente']['total']); ?>&nbsp;</td>
     </tr>
     <?php endforeach; ?>
@@ -699,7 +715,7 @@ else if(isset($cierrediario)){
 
 <table>
     <tr>
-        <td><b><?php echo __('Detalle de Estado por Caja'); ?></b></td>
+        <td><b><?php echo __('Detalle de Estado por Caja: ' . $fechaCierre); ?></b></td>
     </tr>
     <tr>
         <td class="tableTd"><?php echo ('Caja'); ?></td>
