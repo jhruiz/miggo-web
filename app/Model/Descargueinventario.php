@@ -123,6 +123,7 @@ class Descargueinventario extends AppModel {
 				'type' => 'INNER',
 				'conditions' => array(
 					'CI.producto_id=P.id',
+					'CI.deposito_id=Descargueinventario.deposito_id'
 				),
 			));
 

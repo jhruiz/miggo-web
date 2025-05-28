@@ -29,14 +29,14 @@ function fnObtenerDatosProducto(e){
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                 
             }else if(productos.boolResp === '2'){
-                $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
-                        '<td>' + productos.resp['0']['Producto']['descripcion'] + '</td>' + 
-                        '<td>' + productos.resp['0']['Producto']['codigo'] + '</td>' + 
-                        '<td>' + productos.resp['0']['Cargueinventario']['costoproducto'] + '</td>' + 
-                        '<td>' + productos.resp['0']['Cargueinventario']['existenciaactual'] + '</td>' + 
-                        '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
-                    );                
+                // $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
+                //         '<td>' + productos.resp['0']['Producto']['descripcion'] + '</td>' + 
+                //         '<td>' + productos.resp['0']['Producto']['codigo'] + '</td>' + 
+                //         '<td>' + productos.resp['0']['Cargueinventario']['costoproducto'] + '</td>' + 
+                //         '<td>' + productos.resp['0']['Cargueinventario']['existenciaactual'] + '</td>' + 
+                //         '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
+                //         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
+                //     );                
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                
             }else if(productos.boolResp === '3'){
@@ -98,16 +98,16 @@ function seleccionarProducto(producto){
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                 
             }else if(productos.boolResp === '2'){
-                $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
-                        '<td>' + productos.resp['Producto']['descripcion'] + '</td>' + 
-                        '<td>' + productos.resp['Producto']['codigo'] + '</td>' + 
-                        '<td>' + productos.resp['Cargueinventario']['costoproducto'] + '</td>' + 
-                        '<td>' + productos.resp['Cargueinventario']['existenciaactual'] + '</td>' + 
-                        '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
-                    );                
-                $('#buscarproducto').val("");
-                $('#datosProducto').hide();   
+                // $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
+                //         '<td>' + productos.resp['Producto']['descripcion'] + '</td>' + 
+                //         '<td>' + productos.resp['Producto']['codigo'] + '</td>' + 
+                //         '<td>' + productos.resp['Cargueinventario']['costoproducto'] + '</td>' + 
+                //         '<td>' + productos.resp['Cargueinventario']['existenciaactual'] + '</td>' + 
+                //         '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
+                //         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
+                //     );                
+                // $('#buscarproducto').val("");
+                // $('#datosProducto').hide();   
                 location.reload();              
             }else if(productos.boolResp === '3'){
                 bootbox.alert('No se pudo agregar el producto al descargue del inventario. Por favor, inténtelo de nuevo');
@@ -182,9 +182,9 @@ function actualizarCantidadDescargue(dato){
                     location.reload();
                 });
             }else if(respuesta.resp === '2'){
-                bootbox.alert('La cantidad a descargar ha sido actualizada.', function(){
+                // bootbox.alert('La cantidad a descargar ha sido actualizada.', function(){
                     location.reload();
-                });
+                // });
             }else if(respuesta.resp === '3'){
                 bootbox.alert('La cantidad a descargar no se pudo actualizar. Por favor, inténtelo de nuevo.');
             }            
