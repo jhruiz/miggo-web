@@ -69,12 +69,14 @@ var i_syncData = function( facturaId, status ) {
  * @param {*} resp 
  */
 var enviarCorreoCliente = function(resp) {
-
     // Crear el cuerpo de la solicitud (body)
+
+    resp.nitEmpresa = resp.nitEmpresa.split("-")[0];
+
     var body = {
         company_idnumber: resp.nitEmpresa, 
-        prefix: resp.prefijo,
-        number: resp.consecutivo
+        prefix: resp['0'].prefix,
+        number: resp['0'].number
     };
 
     // Realizar la solicitud AJAX

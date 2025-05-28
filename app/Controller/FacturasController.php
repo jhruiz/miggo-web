@@ -1732,6 +1732,7 @@ class FacturasController extends AppController
 
             echo json_encode(array(
                 'token' => $factura['Empresa']['tokendian'],
+                'nitEmpresa' => $factura['Empresa']['nit'],
                 array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)
             ));
 
