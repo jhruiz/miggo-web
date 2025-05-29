@@ -300,6 +300,7 @@ function fnObtenerDatosProducto(e){
                     var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
 
                     $('#productosPrefacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
+                        '<td>&nbsp</td>' +
                         '<td>' + prefactura.producto['0'].Producto.descripcion + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((prefactura.impuesto/100) + 1) + '">' + '</td>' + 
                         '<td>' + prefactura.producto['0'].Producto.codigo + '</td>' +                         
                         '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="1" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
@@ -875,6 +876,7 @@ function agregarProductoFactura(){
             if(prefactura.resp != '0' && prefactura.resp != ""){
                 $('#productosPrefacturas').append(
                         '<tr id="tr_' + prefactura.resp + '">' + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
+                        '<td></td>' +
                         '<td>' + $('#nombreProducto').val() + '</td>' + 
                         '<td>' + $('#codigoProducto').val() + '</td>' + 
                         '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
@@ -1166,6 +1168,7 @@ var actualizarPorcentajeDtto = function(data){
     var nuevoPor = $('#pordtto_' + arrId['1']).val();
     var valDtto = $('#valdtto_' + arrId['1']).val();
     actualizarValorPorcentajeDtto(nuevoPor, valDtto, arrId['1']);
+    actualizarValorDtto(data);
     
 };
 
@@ -1199,8 +1202,8 @@ var actualizarValorDtto = function(data){
     var arrId = (data.id).split("_");
   
     actualizarDescuentoPorValorTabla(arrId['1']);
-    calcularTotalConDescuentoTabla(arrId['1']); 
     calcularValorIvaTabla(arrId['1']);
+    calcularTotalConDescuentoTabla(arrId['1']); 
     sumarTotales();
     calcularTotalConAbonos();
     

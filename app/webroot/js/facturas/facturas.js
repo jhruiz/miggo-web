@@ -1014,8 +1014,8 @@ var actualizarValorDtto = function(data){
     var arrId = (data.id).split("_");
   
     actualizarDescuentoPorValorTabla(arrId['1']);
-    calcularTotalConDescuentoTabla(arrId['1']);    
     calcularValorIvaTabla(arrId['1']);
+    calcularTotalConDescuentoTabla(arrId['1']);    
     sumarTotales();
     calcularTotalConAbonos();
     
