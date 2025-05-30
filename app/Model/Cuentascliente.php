@@ -407,15 +407,6 @@ class Cuentascliente extends AppModel {
             $arr_join = array(); 
             
             array_push($arr_join, array(
-                'table' => 'usuarios', 
-                'alias' => 'U', 
-                'type' => 'INNER',
-                'conditions' => array(
-                    'U.id=Cuentascliente.usuario_id'
-                    )                
-            ));
-            
-            array_push($arr_join, array(
                 'table' => 'clientes', 
                 'alias' => 'C', 
                 'type' => 'INNER',
@@ -433,6 +424,15 @@ class Cuentascliente extends AppModel {
                     )                
             ));            
             
+            array_push($arr_join, array(
+                'table' => 'usuarios', 
+                'alias' => 'U', 
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=F.usuario_id'
+                    )                
+            ));
+
             array_push($arr_join, array(
                 'table' => 'tipopagos', 
                 'alias' => 'T', 
