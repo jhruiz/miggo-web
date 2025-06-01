@@ -417,7 +417,7 @@ class UsuariosController extends AppController {
     public function paginainicio() {
         $this->loadModel('Configuraciondato');
         $this->loadModel('Empresa');
-        $this->loadModel('Deposito');
+        $this->loadModel('Resolucionfactura');
 
         /*se registra la actividad del usuario en la aplicacion*/
         $usuarioId = $this->Auth->user('id'); 
@@ -430,7 +430,7 @@ class UsuariosController extends AppController {
         $infoResolucion = array();
         /**Validar vencimiento de resolución */
         if( $infoEmpresa['Empresa']['syncdian'] == 1 ) {
-            $infoResolucion = $this->Deposito->obtenerDetalleResolucion($empresaId);
+            $infoResolucion = $this->Resolucionfactura->obtenerDetalleResolucion($empresaId);
         }
 
         /*Se obtiene la url del proyecto*/

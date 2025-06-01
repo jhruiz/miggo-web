@@ -65,7 +65,7 @@ class Relacionempresa extends AppModel {
         }
         
         public function obtenerEmpresaRelacionadaPorId($relacionEmpresaId){
-            $empRelacion = $this->find('first', array('conditions' => array('Relacionempresa.id' => $relacionEmpresaId), 'recursive' => '-1'));
+            $empRelacion = $this->find('first', array('conditions' => array('Relacionempresa.empresa_id' => $relacionEmpresaId), 'recursive' => '-1'));
             return $empRelacion;
         }
         

@@ -2,6 +2,7 @@
 <?php echo ($this->Html->script('facturas/gestionfacturas.js'));?>
 <div class="container body">
 <div class="main_container">
+
 <br>
   <div class="x_panel"> 
     <input type="hidden" id="facturaId" value="<?php echo $infoFact['Factura']['id'];?>">
@@ -53,10 +54,10 @@
 
         <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; font-size:13px; float:center;" align="center">
             <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
-            <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['resolucion']); ?></div>
+            <div><?php echo h($infoResolucion['Resolucionfactura']['nombredocumento']); ?>  <?php echo h($infoResolucion['Resolucionfactura']['resolucion']); ?></div>
             <div>
-                de <?php echo h($infoResolucion['fechaRes'] . ", Prefijo: " . $prefijo . ", Rango " . $infoResolucion['resInicial'] . " al " . $infoResolucion['resFin']); ?> -
-                Vigencia Desde: <?php echo h($infoResolucion['fechaRes'] . " Hasta: " . $infoResolucion['fechaFin'])?>
+                de <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . ", Prefijo: " . $infoFact['Factura']['prefijo'] . ", Rango " . $infoResolucion['Resolucionfactura']['resolucioninicia'] . " al " . $infoResolucion['Resolucionfactura']['resolucionfin']); ?> -
+                Vigencia Desde: <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . " Hasta: " . $infoResolucion['Resolucionfactura']['fechafin'])?>
             </div>
             <div>REPRESENTACIÓN GRÁFICA DE FACTURA ELECTRÓNICA</div>
             <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudade']['descripcion'] . " - " . $arrUbicacion['0']['P']['descripcion'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
@@ -67,12 +68,12 @@
        
         <?php if($infoFact['Factura']['factura']){ ?>
         <div style="width:100%; float:left; margin:0px; margin-top:10px;" align="center">
-            <div><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+            <div><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div> 
             <div> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
         </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE VENTA No. DV ' . $consecutivoFact) ?></b></div>  
+        <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div>  
         <div style="width:100%; float:left; margin:0px" align="center"><?php echo __($infoEmpresa['Empresa']['texto1']); ?></div>
         <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
         <input id="tipoVenta" type="hidden" value="2">
@@ -678,12 +679,12 @@
 
             <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; float:center;" align="center">
                 <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
-                <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['resolucion']); ?></div>
+                <div>Resolución de Facturación Electrónica No.  <?php echo h($infoResolucion['Resolucionfactura']['resolucion']); ?></div>
                 <div>
-                    de <?php echo h($infoResolucion['fechaRes'] . ", Prefijo: " . $prefijo . ", Rango " . $infoResolucion['resInicial'] . " al " . $infoResolucion['resFin']); ?>
+                    de <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . ", Prefijo: " . $infoFact['Factura']['prefijo'] . ", Rango " . $infoResolucion['Resolucionfactura']['resolucioninicia'] . " al " . $infoResolucion['Resolucionfactura']['resolucionfin']); ?>
                 </div>
                 <div>
-                    Vigencia Desde: <?php echo h($infoResolucion['fechaRes'] . " Hasta: " . $infoResolucion['fechaFin'])?>
+                    Vigencia Desde: <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . " Hasta: " . $infoResolucion['Resolucionfactura']['fechafin'])?>
                 </div>
                 <div>REPRESENTACIÓN GRÁFICA DE FACTURA ELECTRÓNICA</div>
                 <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudade']['descripcion'] . " - " . $arrUbicacion['0']['P']['descripcion'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
@@ -694,12 +695,12 @@
        
         <?php if($infoFact['Factura']['factura']){ ?>
             <div style="width:100%; float:left; margin:0px; margin-top:10px;" align="center">
-                <div><b><?php echo __($nombreDocumento . ' ' . $prefijo . ' ' . $consecutivoFact) ?></b></div> 
+                <div><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div> 
                 <div> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
             </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
-            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __('DOCUMENTO DE VENTA No. DV ' . $consecutivoFact) ?></b></div>   
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div>   
             <div style="width:100%; float:left; margin:0px" align="center"><?php echo __($infoEmpresa['Empresa']['texto1']); ?></div>
             <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
             <input id="tipoVenta" type="hidden" value="2">

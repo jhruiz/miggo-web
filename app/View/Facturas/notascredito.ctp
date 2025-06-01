@@ -120,7 +120,7 @@
                 </tr>
                 <?php foreach ($facturas as $factura): ?>
                 <tr>
-                        <td><?php echo h($factura['Factura']['codigo']); ?>&nbsp;</td>
+                        <td><?php echo h($factura['Factura']['consecutivodv']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['consecutivodian']); ?>&nbsp;</td>
                         <td><?php echo h(!empty($factura['C']['nombre']) ? $factura['C']['nombre'] : "Anonimo"); ?>&nbsp;</td>
                         <td><?php echo h($factura['U']['nombre']); ?>&nbsp;</td>

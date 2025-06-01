@@ -140,7 +140,8 @@ if (isset($ciudades)) {
     foreach ($arrFacts as $fact):
         ?>
         <tr>
-            <td class="tableTdContent" ><?php echo h($fact['consecutivo']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['consecutivodv']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['consecutivodian']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['fecha']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['nombreCliente']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['identificacion']); ?></td>

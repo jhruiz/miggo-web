@@ -28,7 +28,7 @@ function generarNotaCredito(facturaId){
  * Si la respuesta es satifactoria, se actualiza la información de la Dian en la factura
  * @param {*} response 
  */
-var  guardarNCInfoDian = function( response, facturaId ) {
+var  guardarNCInfoDian = function( response, facturaId, resp ) {
 
     $('#fact_status').text('Nota crédito enviada a la DIAN.');
 
@@ -40,7 +40,9 @@ var  guardarNCInfoDian = function( response, facturaId ) {
             statusCode: response.ResponseDian.Envelope.Body.SendBillSyncResponse.SendBillSyncResult.StatusCode,
             cude: response.cude,
             QR: response.QRStr,
-            facturaId: facturaId
+            facturaId: facturaId, 
+            consecutivoNC: resp.consecutivo,
+            prefijoNC: resp.prefijo
         },
         success: function(response) {
             // Manejar la respuesta exitosa
@@ -87,7 +89,7 @@ var sincronizarNCDian = function(resp, facturaId) {
             if(response.cude) {
 
                 enviarCorreoCliente(resp);
-                guardarNCInfoDian(response, facturaId);
+                guardarNCInfoDian(response, facturaId, resp);
 
             } else {
                 bootbox.alert('No fue posible sincronizar la nota crédito en la Dian. Por favor, realice el debido proceso en el portal de la DIAN.', function() {
@@ -123,9 +125,7 @@ function obtenerNCDian(facturaId) {
         success: function(data) {
             var resp = JSON.parse(data);
             if(resp.status){
-
                 sincronizarNCDian(resp, facturaId);
-                
             }else{
                 bootbox.alert('No fue posible sincronizar la nota crédito en la Dian. Por favor, realice el debido proceso en el portal de la DIAN.', function() {
                     location.reload();

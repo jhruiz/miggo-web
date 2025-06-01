@@ -603,7 +603,7 @@ class ReportesController extends AppController
         
 
         if(!empty($_POST['rpcodigo'])){
-            $paginate['Factura.codigo LIKE'] = '%' . $_POST['rpcodigo'] . '%';
+            $paginate['Factura.consecutivodv LIKE'] = '%' . $_POST['rpcodigo'] . '%';
         } 
 
         if(!empty($_POST['rpconsecutivo'])){
@@ -666,7 +666,8 @@ class ReportesController extends AppController
 
 
             $arrFacts[] = [
-                'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
+                'consecutivodian' => $f['Factura']['consecutivodian'],
+                'consecutivodv' => $f['Factura']['consecutivodv'],
                 'fecha' => $f['Factura']['created'],
                 'nombreCliente' => $f['CL']['nombre'],
                 'identificacion' => $f['CL']['nit'],
@@ -687,7 +688,8 @@ class ReportesController extends AppController
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $arrFacts);
         $arr_titulos = array(
-            'Consecutivo',
+            'Consecutivo DV',
+            'Consecutivo Dian',
             'Fecha',
             'Nombre Cliente',
             'Identificacion',
@@ -699,7 +701,7 @@ class ReportesController extends AppController
             'Valor Total',
             'Descuento',
             'Subtotal',
-            'IVA'   
+            'IVA' 
             );
 
         $this->set('titulos', $arr_titulos);
@@ -716,7 +718,7 @@ class ReportesController extends AppController
         
 
         if(!empty($_POST['rpcodigo'])){
-            $paginate['Factura.codigo LIKE'] = '%' . $_POST['rpcodigo'] . '%';
+            $paginate['Factura.consecutivodv LIKE'] = '%' . $_POST['rpcodigo'] . '%';
         } 
 
         if(!empty($_POST['rpconsecutivo'])){
@@ -779,7 +781,8 @@ class ReportesController extends AppController
 
 
             $arrFacts[] = [
-                'consecutivo' => !empty($f['Factura']['consecutivodian']) ? $f['Factura']['consecutivodian'] : $f['Factura']['codigo'],
+                'consecutivodv' => $f['Factura']['consecutivodv'],
+                'consecutivodian' => $f['Factura']['consecutivodian'],
                 'fecha' => $f['Factura']['created'],
                 'nombreCliente' => $f['CL']['nombre'],
                 'identificacion' => $f['CL']['nit'],
@@ -800,7 +803,8 @@ class ReportesController extends AppController
         $this->set('texto_tit', $texto_tit);
         $this->set('rows', $arrFacts);
         $arr_titulos = array(
-            'Consecutivo',
+            'Consecutivo DV',
+            'Consecutivo Dian',
             'Fecha',
             'Nombre Cliente',
             'Identificacion',

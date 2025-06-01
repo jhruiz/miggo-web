@@ -33,7 +33,7 @@ class FacturasController extends AppController
         $this->loadModel('Cuenta');
 
         if (isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != "") {
-            $paginate['Factura.codigo LIKE'] = '%' . $this->passedArgs['codigo'] . '%';
+            $paginate['Factura.consecutivodv LIKE'] = '%' . $this->passedArgs['codigo'] . '%';
             $rpcodigo = $this->passedArgs['codigo'];
         }
 
@@ -149,6 +149,7 @@ class FacturasController extends AppController
         $this->loadModel('FacturaCuentaValore');
         $this->loadModel('Abonofactura');
         $this->loadModel('Deposito');
+        $this->loadModel('Resolucionfactura');
 
         /*se obtiene la información de la factura por el id*/
         $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
@@ -162,14 +163,12 @@ class FacturasController extends AppController
         // obtiene el pago a credito asociado al cliente
         $factCredit = $this->Cuentascliente->obtenerCuentaPendienteFact($id);
 
-        if ($infoFact['Factura']['relacionempresa'] == "") {
-            /*se obtiene la información de la empresa*/
-            $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($infoFact['Factura']['empresa_id']);
-            $infoResolucion = $this->obtenerInfoResolucionFactura($infoFact['Factura']['empresa_id']);
-        } else {
-            $infoEmpresaRel = $this->Relacionempresa->obtenerEmpresaRelacionadaPorId($infoFact['Factura']['relacionempresa']);
-        }
+        $tipoDocumentoVenta = $infoFact['Factura']['factura'] == '1' ? '1' : '2';
+        $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($infoFact['Factura']['empresa_id']);
 
+        /** Se obtiene la información de la resolución para la factura o documento de venta */
+        $infoResolucion = $this->Resolucionfactura->obtenerResolucion($infoFact['Factura']['empresa_id'], $tipoDocumentoVenta);
+        
         /*Se obtiene la información del vendedor*/
         $infoVendedor = $this->Usuario->obtenerUsuarioPorId($infoFact['Factura']['usuario_id']);
 
@@ -196,11 +195,7 @@ class FacturasController extends AppController
         $iva = $impuestos;
 
         /*se obtiene el consecutivo de la factura*/
-        if (!empty($infoFact['Factura']['consecutivodian'])) {
-            $consecutivoFact = $infoFact['Factura']['consecutivodian'];
-        } else {
-            $consecutivoFact = $infoFact['Factura']['codigo'];
-        }
+        $consecutivoFact = !empty($infoFact['Factura']['consecutivodian']) ? $infoFact['Factura']['consecutivodian'] : $consecutivoFact = $infoFact['Factura']['consecutivodv'];
 
         /*se valida si fue una venta rapida*/
         $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($id);
@@ -252,15 +247,6 @@ class FacturasController extends AppController
         //se obtiene la ciudad y el pais
         $arrUbicacion = $this->Ciudade->obtenerCiudadPais($infoEmpresa['Empresa']['ciudade_id']);
 
-        //se obtiene el prefijo del consecutivo
-        $prefijo = '';
-        $nombreDocumento = '';
-        $infoDepositos = $this->Deposito->obtenerDepositoConsecutivo($infoFact['Factura']['empresa_id']);
-        if(!empty($infoDepositos)) {
-            $prefijo = $infoDepositos['Deposito']['prefijo'];
-            $nombreDocumento = $infoDepositos['Deposito']['nombredocumentoventa'];
-        }
-
         $arrInfoOrd = array();
         /*Se valida si existe una orden de trabajo relacionada*/
         if (!empty($infoFact['Factura']['ordentrabajo_id'])) {
@@ -294,9 +280,9 @@ class FacturasController extends AppController
         }
 
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
-        $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'infoEmpresaRel', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit'));
+        $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
-        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'prefijo', 'nombreDocumento'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'nombreDocumento'));
     }
 
 /**
@@ -600,7 +586,7 @@ class FacturasController extends AppController
                 $depDestId = "", $arrCrgInv['Cargueinventario']['precioventa'], $detallePrefactura['Prefacturasdetalle']['cantidad'],
                 $arrCrgInv['Cargueinventario']['preciomaximo'], $arrCrgInv['Cargueinventario']['preciominimo'],
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $arrCrgInv['Cargueinventario']['proveedore_id'],
-                null, $consFact, $documentoId);
+                null, $consFact['consecutivo'], $documentoId);
 
             $impuesto = 0;
             if ($esFactura && !empty($detallePrefactura['Prefacturasdetalle']['impuesto'])) {
@@ -659,13 +645,6 @@ class FacturasController extends AppController
                 $arrEmpresa['Empresa']['id'], $facturaId, $arrCrgInv['Cargueinventario']['costoproducto']);
         }
 
-        //se obtiene el total de los abonos
-        //            $ttalAbonos = isset($posData['Prefactura']['ttalAbonos']) && !empty($posData['Prefactura']['ttalAbonos']) ?
-        //                    $posData['Prefactura']['ttalAbonos'] : $posData['Factura']['ttalAbonos'];
-        //
-        //            //se guarda el efectivo en la cuenta seleccionada
-        //            $this->enviarDineroCuenta($ttalVenta, $datFact['cuentas'], $ttalAbonos);
-
         //actualiza el valor final de venta de la factura en pagocontado
         $this->Factura->actualizarValorVentaTotal($facturaId, $ttalVenta);
 
@@ -674,12 +653,8 @@ class FacturasController extends AppController
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
-
-        // if (count($detallePrefact) == '0') {
-            /*se elimina el registro de la prefactura que fue procesada y facturada*/
-            $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
-            // $this->eliminarPrefactura($prefacturaId);
-        // }
+        
+        $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
 
         //se actualiza el id de la factura en los abonos correspondientes
         $this->Abonofactura->asignarFacturaAbonos($prefacturaId, $facturaId);
@@ -698,32 +673,39 @@ class FacturasController extends AppController
         return $fechaVence->format('Y-m-d');
     }
 
+    /**
+     * obtiene el consecutivo de la resolucion para el documento
+     */
     public function obtenerConsecutivoFactura($arrDatDpto, $facturaId)
     {
-        $this->loadModel('Deposito');
-        if ($arrDatDpto['Deposito']['regimene_id'] == '1') {
+        $this->loadModel('Resolucionfactura');
+        
+        $empresaId = $this->Auth->user('empresa_id');
 
-            $empresaId = $this->Auth->user('empresa_id');
-            $infoDepositos = $this->obtenerInfoResolucionFactura($empresaId);
+        $arrconsecutivo = [
+            'prefijo' => '',
+            'consecutivo' => ''
+        ];
 
-            $consFact = !empty($infoDepositos['numActual']) ? $infoDepositos['numActual'] : '';
-            if (empty($consFact)) {
-                $numResAct = $consFact = '1';
-            } else {
-                $numResAct = $consFact+'1';
-            }
+        $tipoDocumento = $arrDatDpto['Deposito']['regimene_id'] == '1' ? '1' : '2';
+
+        $infoResolucion = $this->Resolucionfactura->obtenerResolucion( $empresaId, $tipoDocumento );
+
+        $arrconsecutivo = [
+            'consecutivo' => !empty($infoResolucion['Resolucionfactura']['consecutivoactual']) ? $infoResolucion['Resolucionfactura']['consecutivoactual'] : 1,
+            'prefijo' => !empty($infoResolucion['Resolucionfactura']['prefijo']) ? $infoResolucion['Resolucionfactura']['prefijo'] : 'FV-DV'
+        ];
+
+        /*se actualiza el consecutivo de la factura consecutivodian*/
+        $this->Factura->actualizarConsecutivoDianFactura($facturaId, $arrconsecutivo, $tipoDocumento);
+
+        /*se incrementa el numero de resolucion actual y se actualiza*/
+        if (!empty($infoResolucion['Resolucionfactura']['id'])) {
             /*se actualiza el consecutivo de la factura consecutivodian*/
-            $this->Factura->actualizarConsecutivoDianFactura($facturaId, $consFact);
-
-            /*se incrementa el numero de resolucion actual y se actualiza*/
-            if (!empty($infoDepositos['id'])) {
-                $this->Deposito->actualizarConsecutivoFactura($infoDepositos['id'], $numResAct);
-            }
-        } else {
-            $infoFact = $this->Factura->obtenerInfoFacturaPorId($facturaId);
-            $consFact = $infoFact['Factura']['codigo'];
+            $infoResolucion['Resolucionfactura'] = $this->Resolucionfactura->actualizarResolucion( $empresaId, $tipoDocumento );
         }
-        return $consFact;
+
+        return $arrconsecutivo;
     }
 
     public function eliminarDetallePrefactura($id)
@@ -1384,35 +1366,6 @@ class FacturasController extends AppController
 
         echo json_encode(array('resp' => $resp));
 
-    }
-
-    public function obtenerInfoResolucionFactura($empresaId)
-    {
-        $this->loadModel('Deposito');
-        //se obtienen todas los depositos de la empresa
-        $depositos = $this->Deposito->obtenerInfoDepositosEmpresa($empresaId);
-        $arrResolucion = [];
-        foreach ($depositos as $dp) {
-            if (!empty($dp['Deposito']['resolucionfacturacion'])) {
-                $fechaRes = explode(" ", $dp['Deposito']['fecharesolucion']);
-                $fechaFin = explode(" ", $dp['Deposito']['fechafin']);
-
-                $arrResolucion = [
-                    'nombreDoc' => $dp['Deposito']['nombredocumentoventa'],
-                    'resolucion' => $dp['Deposito']['resolucionfacturacion'],
-                    'fechaRes' => $fechaRes['0'],
-                    'fechaFin' => $fechaFin['0'],
-                    'prefijo' => $dp['Deposito']['prefijo'],
-                    'resInicial' => $dp['Deposito']['resolucioninicia'],
-                    'resFin' => $dp['Deposito']['resolucionfin'],
-                    'numActual' => $dp['Deposito']['numresolucionactual'],
-                    'nota' => $dp['Deposito']['nota'],
-                    'id' => $dp['Deposito']['id'],
-                ];
-                break;
-            }
-        }
-        return $arrResolucion;
     }
 
     /**
@@ -2117,17 +2070,20 @@ class FacturasController extends AppController
 
         $this->autoRender = false;
         $this->loadModel('Factura');
-        $this->loadModel('Resolucionnotacredito');
+        $this->loadModel('Resolucionfactura');
 
         $empresaId = $this->Auth->user('empresa_id');
         $facturaId = $this->request->data['facturaId'];
         $statusCode = $this->request->data['statusCode'];
         $cude = $this->request->data['cude'];
         $NCQR = $this->request->data['QR'];
+        $consecutivo = $this->request->data['consecutivoNC'];
+        $prefijo = $this->request->data['prefijoNC'];
 
-        $result = $this->Resolucionnotacredito->actualizarResolucionNC($empresaId);
+        $documentoId = '4';
+        $result = $this->Resolucionfactura->actualizarResolucion( $empresaId, $documentoId );
         
-        $result = $this->Factura->actualizarNCInfoDian( $facturaId, $statusCode, $cude, $NCQR );
+        $result = $this->Factura->actualizarNCInfoDian( $facturaId, $statusCode, $cude, $NCQR, $consecutivo, $prefijo );
 
         echo json_encode(array(
             'result' => $result
@@ -2141,12 +2097,9 @@ class FacturasController extends AppController
     public function generarFacturaReferencia($factura) {
         $this->loadModel('Deposito');
 
-        //Obtiene la información del deposito con la configuración de la resolución
-        $infoDep = $this->Deposito->obtenerInfoDepositosEmpresa($factura['Factura']['empresa_id']);
-
         return [
             "billing_reference" => [
-              "number" => $infoDep['0']['Deposito']['prefijo'] . $factura['Factura']['consecutivodian'],
+              "number" => $factura['Factura']['prefijo'] . $factura['Factura']['consecutivodian'],
               "uuid" => $factura['Factura']['diancufe'],
               "issue_date" => date('Y-m-d')
             ]
@@ -2157,14 +2110,15 @@ class FacturasController extends AppController
      * genera la información general para la nota credito
      */
     public function generarInformacionGeneral($factura) {
-        $this->loadModel('Resolucionnotacredito');
+        $this->loadModel('Resolucionfactura');
 
         //Obtiene la información del deposito con la configuración de la resolución
-        $infoNC = $this->Resolucionnotacredito->obtenerResolucionNC($factura['Factura']['empresa_id']);
+        $documentoId = '4';
+        $infoNC = $this->Resolucionfactura->obtenerResolucion($factura['Factura']['empresa_id'], $documentoId);
 
         $descNotaCredito = "El usuario " . $factura['Usuario']['nombre'] . " genera nota credito sobre la factura No. " . $factura['Factura']['consecutivodian'];
 
-        if( !isset($infoNC['Resolucionnotacredito']['id'])) {
+        if( !isset($infoNC['Resolucionfactura']['id'])) {
             return [];
         }
 
@@ -2172,9 +2126,9 @@ class FacturasController extends AppController
             "discrepancyresponsecode" => 2,
             "discrepancyresponsedescription" => $descNotaCredito,
             "notes" => $descNotaCredito,
-            "prefix" => $infoNC['Resolucionnotacredito']['prefijo'],
-            "number" => $infoNC['Resolucionnotacredito']['consecutivoactual'],
-            "type_document_id" => $infoNC['Resolucionnotacredito']['tipodocumento'],
+            "prefix" => $infoNC['Resolucionfactura']['prefijo'],
+            "number" => $infoNC['Resolucionfactura']['consecutivoactual'],
+            "type_document_id" => $infoNC['Resolucionfactura']['tipodocumentoventa_id'],
             "date" =>  date('Y-m-d'),
             "time" =>  date('H:i:s'),
             "establishment_name" =>  $infoNC['Empresa']['nombre'],

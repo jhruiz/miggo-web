@@ -175,13 +175,19 @@ class Factura extends AppModel
         return $infoFact;
     }
 
-    public function actualizarConsecutivoDianFactura($facturaId, $consFact)
+    public function actualizarConsecutivoDianFactura($facturaId, $consFact, $tipoDocumento)
     {
         $data = array();
         $factura = new Factura();
 
+        if( $tipoDocumento == 1 ) {
+            $data['consecutivodian'] = $consFact['consecutivo'];
+        } else {
+            $data['consecutivodv'] = $consFact['consecutivo'];
+        }
+
         $data['id'] = $facturaId;
-        $data['consecutivodian'] = $consFact;
+        $data['prefijo'] = $consFact['prefijo'];
 
         if ($factura->save($data)) {
             return true;
@@ -778,7 +784,7 @@ class Factura extends AppModel
     /**
      * Actualiza la factura con la información de la Dian
      */
-    public function actualizarNCInfoDian( $facturaId, $statusCode, $cufe, $QR) {
+    public function actualizarNCInfoDian( $facturaId, $statusCode, $cufe, $QR, $consecutivo, $prefijo) {
 
         $data = array();
         $factura = new Factura();
@@ -787,6 +793,8 @@ class Factura extends AppModel
         $data['dianstatuscode'] = $statusCode;
         $data['diancude'] = $cufe;
         $data['dianNCQRStr'] = $QR;
+        $data['prefijo'] = $prefijo;
+        $data['consecutivonc'] = $consecutivo;
 
         if ($factura->save($data)) {
             return true;

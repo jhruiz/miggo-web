@@ -159,7 +159,7 @@
                             <?php } ?>
                         </td>
 
-                        <td><?php echo h($factura['Factura']['codigo']); ?>&nbsp;</td>
+                        <td><?php echo h($factura['Factura']['consecutivodv']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['consecutivodian']); ?>&nbsp;</td>
                         <td><?php echo h(!empty($factura['C']['nombre']) ? $factura['C']['nombre'] : "Anonimo"); ?>&nbsp;</td>
                         <td><?php echo h($factura['V']['placa']); ?>&nbsp;</td>
@@ -168,7 +168,6 @@
                         <td><?php echo h($factura['Factura']['factura'] ? "F" : "R"); ?>&nbsp;</td>
                         <td class="actions">
                             <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $factura['Factura']['id']))); ?>
-                            <?php echo $this->Html->image('png/list-3.png', array('title' => 'Ver Detalle Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'detalleventa', $factura['Factura']['id']))); ?>
                             <?php echo $this->Html->image('png/list-2.png', array('title' => 'Nota crédito', 'alt' => __('Brownies'), 'width' => '20px', 'onclick' => "generarNotaCredito(" . $factura['Factura']['id'] . ")", 'class' => 'nota_credito'));?>
                         </td>
                 </tr>
