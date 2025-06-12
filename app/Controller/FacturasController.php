@@ -836,7 +836,7 @@ class FacturasController extends AppController
 
                 //se obtiene el detalle de la venta de cada factura por cada tipo de pago
                 $ventasFactura[] = [
-                    'fact_codigo' => $df['Factura']['codigo'],
+                    'fact_codigo' => $df['Factura']['consecutivodv'],
                     'consecutivodian' => !empty($df['Factura']['consecutivodian']) ? $df['Factura']['consecutivodian'] : "",
                     'cliente_nit' => !empty($df['Cliente']['nit']) ? $df['Cliente']['nit'] : "",
                     'cliente_nombre' => !empty($df['Cliente']['nombre']) ? $df['Cliente']['nombre'] : "",
@@ -1457,7 +1457,7 @@ class FacturasController extends AppController
         if (!empty($infoFact['Factura']['consecutivodian'])) {
             $consecutivoFact = $infoFact['Factura']['consecutivodian'];
         } else {
-            $consecutivoFact = $infoFact['Factura']['codigo'];
+            $consecutivoFact = $infoFact['Factura']['consecutivodv'];
         }
 
         /*se valida si fue una venta rapida*/

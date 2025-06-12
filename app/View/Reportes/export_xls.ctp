@@ -120,7 +120,7 @@ if (isset($ciudades)) {
     <tr>
         <td class="tableTdContent"><?php echo h($dFact['Factura']['created']); ?></td>
         <?php if ($dFact['Factura']['consecutivodian'] == ""){?>
-        <td class="tableTdContent"><?php echo h($dFact['Factura']['codigo']); ?></td>
+        <td class="tableTdContent"><?php echo h($dFact['Factura']['consecutivodv']); ?></td>
         <?php }else{?>
         <td class="tableTdContent"><?php echo h($dFact['Factura']['consecutivodian']); ?></td>
         <?php }?>
@@ -297,7 +297,7 @@ endforeach;
                 <td class="tableTdContent"><?php echo h($fc['C']['celular']); ?></td>
                 <td class="tableTdContent"><?php echo h($fc['V']['placa']); ?></td>
                 <td class="tableTdContent"><?php echo h($fc['U']['nombre']); ?></td>
-                <td class="tableTdContent"><?php echo h($fc['Factura']['codigo']); ?></td>
+                <td class="tableTdContent"><?php echo h($fc['Factura']['consecutivodv']); ?></td>
                 <td class="tableTdContent"><?php echo h($fc['Factura']['created']); ?></td>
                 <td class="tableTdContent"><?php echo h($fc['0']['conteo']); ?></td>
                 <td class="tableTdContent"><?php echo h($fc['0']['valor']); ?></td>
@@ -346,7 +346,7 @@ else if(isset($arrFactOrdenes)) {
 
     foreach ($arrFactOrdenes as $ordenes):
 
-        $consec = !empty($ordenes['Factura']['consecutivodian']) ? $ordenes['Factura']['consecutivodian'] : $ordenes['Factura']['codigo'];
+        $consec = !empty($ordenes['Factura']['consecutivodian']) ? $ordenes['Factura']['consecutivodian'] : $ordenes['Factura']['consecutivodv'];
 
         ?>
         <tr>

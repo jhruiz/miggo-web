@@ -390,7 +390,7 @@ class GastosController extends AppController {
             $idItem = $infoItem['Itemsgasto']['id'];
         }
 
-        $numFact = empty($factura['Factura']['consecutivodian']) ? $factura['Factura']['codigo'] : $factura['Factura']['consecutivodian'];
+        $numFact = empty($factura['Factura']['consecutivodian']) ? $factura['Factura']['consecutivodv'] : $factura['Factura']['consecutivodian'];
 
         $data = array(
             'descripcion' => 'Devolucion por nota credito para la factura #' . $numFact . '. Fecha de la factura ' . $factura['Factura']['created'],

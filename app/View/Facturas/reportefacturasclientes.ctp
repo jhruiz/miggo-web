@@ -99,7 +99,7 @@
                                 <td><?php echo h($fc['C']['celular']); ?></td>
                                 <td><?php echo h($fc['V']['placa']); ?></td>
                                 <td><?php echo h($fc['U']['nombre']); ?></td>
-                                <td><?php echo h($fc['Factura']['codigo']); ?></td>
+                                <td><?php echo h($fc['Factura']['consecutivodv']); ?></td>
                                 <td><?php echo h($fc['Factura']['created']); ?></td>
                                 <td><?php echo h($fc['0']['conteo']); ?></td>
                                 <td><?php echo h(number_format($fc['0']['valor'], 2, ',', '.')); ?></td>
