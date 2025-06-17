@@ -92,7 +92,7 @@ if (isset($ciudades)) {
         <td class="tableTdContent"><?php echo h($ci['PR']['nombre']); ?></td>
         <td class="tableTdContent"><?php echo h(intval($ci['Cargueinventario']['costoproducto'])); ?></td>
         <td class="tableTdContent"><?php echo h(intval($ci['Cargueinventario']['precioventa'])); ?></td>
-        <td class="tableTdContent"><?php echo h(intval($ci['Cargueinventario']['existenciaactual'])); ?></td>
+        <td class="tableTdContent"><?php echo h($ci['P']['inventario'] == '0' ? intval($ci['Cargueinventario']['existenciaactual']) : '0'); ?></td>
         <td class="tableTdContent"><?php echo h($ci['Cargueinventario']['created']); ?></td>
     </tr>
     <?php
@@ -103,9 +103,9 @@ if (isset($ciudades)) {
     <tr>
         <td class="tableTdContent"><?php echo h($cp['PR']['descripcion']); ?></td>
         <td class="tableTdContent"><?php echo h($cp['PR']['codigo']); ?></td>
-        <td class="tableTdContent"><?php echo h($cp['Cuentaspendiente']['costoproducto']); ?></td>
+        <td class="tableTdContent"><?php echo h(intval($cp['Cuentaspendiente']['costoproducto'])); ?></td>
         <td class="tableTdContent"><?php echo h($cp['Cuentaspendiente']['cantidad']); ?></td>
-        <td class="tableTdContent"><?php echo h($cp['Cuentaspendiente']['totalobligacion']); ?></td>
+        <td class="tableTdContent"><?php echo h(intval($cp['Cuentaspendiente']['totalobligacion'])); ?></td>
         <td class="tableTdContent"><?php echo h($cp['PV']['nombre']); ?></td>
         <td class="tableTdContent"><?php echo h($cp['Cuentaspendiente']['numerofactura']); ?></td>
         <td class="tableTdContent"><?php echo h($cp['Cuentaspendiente']['created']); ?></td>
@@ -131,8 +131,8 @@ if (isset($ciudades)) {
         <?php } ?>
         <td class="tableTdContent">
             <?php echo h($dFact['Usuario']['nombre'] . " - " . $dFact['Usuario']['identificacion']); ?></td>
-        <td class="tableTdContent"><?php echo h('$' . number_format($dFact['Factura']['pagocontado'],0)); ?></td>
-        <td class="tableTdContent"><?php echo h('$' . number_format($dFact['Factura']['pagocredito'],0)); ?></td>
+        <td class="tableTdContent"><?php echo h('$' . intval($dFact['Factura']['pagocontado'])); ?></td>
+        <td class="tableTdContent"><?php echo h('$' . intval($dFact['Factura']['pagocredito'])); ?></td>
     </tr>
     <?php
     endforeach;
@@ -149,10 +149,10 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['telefono']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['producto']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['valor']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['valor_ttal']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['descuento']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['subtotal']); ?></td>
+            <td class="tableTdContent" ><?php echo h(intval($fact['valor'])); ?></td>
+            <td class="tableTdContent" ><?php echo h(intval($fact['valor_ttal'])); ?></td>
+            <td class="tableTdContent" ><?php echo h(intval($fact['descuento'])); ?></td>
+            <td class="tableTdContent" ><?php echo h(intval($fact['subtotal'])); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
         </tr>
     <?php
@@ -232,7 +232,7 @@ endforeach;
         <td class="tableTdContent"><?php echo h($cpr['num_factura']); ?></td>
         <td class="tableTdContent"><?php echo h($cpr['usuario']); ?></td>
         <td class="tableTdContent"><?php echo h($cpr['categoria']); ?></td>
-        <td class="tableTdContent"><?php echo h($cpr['valor']); ?></td>
+        <td class="tableTdContent"><?php echo h(intval($cpr['valor'])); ?></td>
 
             <?php if($typeTax == '1'){?>
                 <td class="tableTdContent" ><?php echo h($cpr['iva_prc']); ?></td>

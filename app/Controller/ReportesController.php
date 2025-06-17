@@ -260,6 +260,7 @@ class ReportesController extends AppController
         }
 
         $data['Cargueinventario.empresa_id'] = $empresaId;
+        $data['P.estado'] = '1';
 
         /*se obtiene el stock que tiene la empresa en el inventario*/
         $cargueinventarios = $this->Cargueinventario->obtenerCargueInventario($data);
