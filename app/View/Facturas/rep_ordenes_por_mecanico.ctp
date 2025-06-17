@@ -94,7 +94,7 @@
                                 <td>
                                     <?php echo $this->Html->link($FO['OT']['codigo'], '/ordentrabajos/view/' . $FO['OT']['id'], array('target' => '_blank')); ?>
                                 </td>
-                                <td><?php echo $this->Html->link($FO['Factura']['consecutivodv'],'/facturas/view/' . $FO['Factura']['id'],array('target' => '_blank')); ?></td>
+                                <td><?php echo h(!empty($FO['Factura']['consecutivodv']) ? $FO['Factura']['consecutivodv'] : $FO['Factura']['consecutivodian']); ?></td>
                                 <td><?php echo h($FO['Factura']['created']); ?>&nbsp;</td>
                                 <td><?php echo h($FO['US']['nombre'] . " - " . $FO['US']['identificacion']); ?>&nbsp;</td>
                                 <td><?php echo h($FO['PR']['descripcion']); ?>&nbsp;</td>
