@@ -176,7 +176,7 @@ endforeach;
             <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'], 4)); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['created']); ?></td>
-            <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['consecutivodian']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo']); ?></td>
+            <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['consecutivodian']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['consecutivodv']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['tipopago']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['creditointerno']); ?></td>
         </tr>

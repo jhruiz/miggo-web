@@ -68,7 +68,7 @@
                     <td class="text-right"><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],4) . "%"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['Utilidade']['created']); ?>&nbsp;</td>
-                    <td><?php echo $this->Html->link($utilidade['F']['consecutivodian'] != NULL ? $utilidade['F']['consecutivodian'] : $utilidade['F']['codigo'], 
+                    <td><?php echo $this->Html->link($utilidade['F']['consecutivodian'] != NULL ? $utilidade['F']['consecutivodian'] : $utilidade['F']['consecutivodv'], 
                             '/facturas/view/' . $utilidade['F']['id'], array('target' => '_blanck')); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['Utilidade']['tipopago']); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['Utilidade']['creditointerno']); ?>&nbsp;</td>
