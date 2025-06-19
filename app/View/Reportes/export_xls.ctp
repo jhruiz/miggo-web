@@ -92,7 +92,7 @@ if (isset($ciudades)) {
         <td class="tableTdContent"><?php echo h($ci['PR']['nombre']); ?></td>
         <td class="tableTdContent"><?php echo h(intval($ci['Cargueinventario']['costoproducto'])); ?></td>
         <td class="tableTdContent"><?php echo h(intval($ci['Cargueinventario']['precioventa'])); ?></td>
-        <td class="tableTdContent"><?php echo h($ci['P']['inventario'] == '0' ? intval($ci['Cargueinventario']['existenciaactual']) : '0'); ?></td>
+        <td class="tableTdContent"><?php echo h($ci['P']['inventario'] == '1' ? intval($ci['Cargueinventario']['existenciaactual']) : '0'); ?></td>
         <td class="tableTdContent"><?php echo h($ci['Cargueinventario']['created']); ?></td>
     </tr>
     <?php
