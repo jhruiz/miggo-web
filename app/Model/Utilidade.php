@@ -165,6 +165,7 @@ class Utilidade extends AppModel {
                     'F.factura',
                     'F.codigo',
                     'F.consecutivodian',
+                    'F.consecutivodv',
                     'CV.descripcion',
                     'DP.id',
                     'DP.descripcion',
