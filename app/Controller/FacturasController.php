@@ -1700,22 +1700,30 @@ class FacturasController extends AppController
      * Genera el arreglo con la información de la resolución de la empresa
      */
     public function generarInfoResolucion($factura) {
-        $this->loadModel('Deposito');
+        $this->loadModel('Resolucionfactura');
+        $this->loadModel('Notafactura');
+        $tipoDocumento = '1';
 
         //Obtiene la información del deposito con la configuración de la resolución
-        $infoDep = $this->Deposito->obtenerInfoDepositosEmpresa($factura['Factura']['empresa_id']);
+        $infoDep = $this->Resolucionfactura->obtenerResolucion( $factura['Factura']['empresa_id'], $tipoDocumento );
 
-        //Se obtiene la fecha de la factura
-        // $date = date_create($factura['Factura']['created']);
-        // $date = date('Y-m-d');
+        //Obtiene el listado de notas para facturas de la empresa
+        $listaNotasF = $this->Notafactura->obtenerNotasFacturasEmpresa($factura['Factura']['empresa_id']);
+
+        $footNote = "";
+        if(isset($factura['FacturasNotafactura']['0']['notafactura_id'])) {
+            $footNote = $listaNotasF[$factura['FacturasNotafactura']['0']['notafactura_id']];
+        }
 
         return [
             "number" => $factura['Factura']['consecutivodian'],
-            "prefix" => $infoDep['0']['Deposito']['prefijo'],
+            "prefix" => $factura['Factura']['prefijo'],
             "type_document_id" =>  $factura['Empresa']['typedocument'],
             "date" =>  date('Y-m-d'),
             "time" =>  date('H:i:s'),
-            "resolution_number" =>  $infoDep['0']['Deposito']['resolucionfacturacion']
+            "resolution_number" =>  $infoDep['Resolucionfactura']['resolucion'],
+            "notes" => $factura['Factura']['observacion'],
+            "foot_note" => $footNote
         ];
 
     }

@@ -154,6 +154,7 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h(intval($fact['descuento'])); ?></td>
             <td class="tableTdContent" ><?php echo h(intval($fact['subtotal'])); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['impuesto_iva']); ?></td>
         </tr>
     <?php
 endforeach;

@@ -680,7 +680,8 @@ class ReportesController extends AppController
                 'valor_ttal' => $valorBase * $f['FD']['cantidad'],
                 'descuento' => $descuento,
                 'subtotal' => ($valorBase * $f['FD']['cantidad']) - $descuento,
-                'iva' => $iva
+                'iva' => $iva,
+                'impuesto_iva' => $f['FD']['impuesto']
             ];
         }
                 
@@ -702,7 +703,8 @@ class ReportesController extends AppController
             'Valor Total',
             'Descuento',
             'Subtotal',
-            'IVA' 
+            'IVA',
+            '% IVA'
             );
 
         $this->set('titulos', $arr_titulos);
