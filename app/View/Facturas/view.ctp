@@ -549,7 +549,7 @@
         <!--kilometraje-->
         <div style="width:100%; float:left; margin-top: 10px;"><b>Kilometraje </b>
             <?php
-            echo __(number_format($arrInfoOrd['0']['Ordentrabajo']['kilometraje']));
+            echo __(number_format($arrInfoOrd['0']['Ordentrabajo']['kilometraje'], 4, '.', ','));
             ?>
         </div>
         
