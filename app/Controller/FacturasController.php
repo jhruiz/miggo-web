@@ -1668,7 +1668,7 @@ class FacturasController extends AppController
 
         //Genera y organiza la información para el apartado de resolución
         $infoRes = $this->generarInfoResolucion( $factura );
-
+        
         //Obtiene la información del cliente de la factura
         $infoCliente = $this->generarInfoCliente( $factura );
 
@@ -1936,8 +1936,7 @@ class FacturasController extends AppController
         $facturaDetalle = $this->Facturasdetalle->obtenerFacturaDetalleFactId( $factura['Factura']['id'] );
   
         foreach ( $facturaDetalle as $val ) {
-            
-  
+
           $costoTotal = $val['Facturasdetalle']['costototal'];
           $descuento = $val['Facturasdetalle']['descuento'];
           $impuesto = $val['Facturasdetalle']['impuesto'];
@@ -1946,7 +1945,7 @@ class FacturasController extends AppController
   
           // Suma de valores con y sin IVA
           $sumValSinIva += $valSinImp;
-          $sumValConIva += round( ( $costoTotal - $descuento ), 2 );
+          $sumValConIva += round( ( $valSinImp + $valIva ), 2 );
   
           // Información de los impuestos por cada producto
           $arrImpuestos[] = $this->obtenerImpuestoPorProducto( $valIva, $valSinImp, $val['Facturasdetalle']['impuesto'] );
@@ -1971,8 +1970,8 @@ class FacturasController extends AppController
         if ( $impuesto > 0 ) {
 
             $impuesto /= 100;
-            $valSinImp = round( ( $costoTotal - $descuento ) / ( 1 + $impuesto ), 2 );
-            $valIva = round( ( $costoTotal - $descuento ) - $valSinImp, 2 );
+            $valSinImp = (round( ( $costoTotal ) / ( 1 + $impuesto ), 2 )) - $descuento;
+            $valIva = round( $valSinImp * $impuesto, 2 );
         
         } else {
             $valSinImp = round( ( $costoTotal - $descuento ), 2 );
