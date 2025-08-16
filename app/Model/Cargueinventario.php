@@ -113,7 +113,8 @@ class Cargueinventario extends AppModel {
 	);
         
         
-        public function guardarCargueInventario($prodId,$deptoId,$costProd,$existAct,$prcMax,$prcMin,$prcVenta,$usrId,$estId,$provId,$tipPag,$numFact,$empId){
+        public function guardarCargueInventario($prodId,$deptoId,$costProd,$existAct,$prcMax,$prcMin,$prcVenta,$usrId,$estId,$provId,$tipPag,$numFact,$empId,$INC, $valorINC){
+
             $data=array();                        
               
             $cargueinventario = new Cargueinventario();                        
@@ -131,7 +132,10 @@ class Cargueinventario extends AppModel {
             $data['tipopago_id']=$tipPag;            
             $data['numerofactura']=$numFact;   
             $data['empresa_id']=$empId;
-            
+            $data['impuesto']=$INC;
+            $data['valor_impuesto']=$valorINC;
+            $data['valor_ultimo_cargue'] =  $$costProd;
+
             if($cargueinventario->save($data)){
                 return true;
             }else{

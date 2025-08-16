@@ -126,7 +126,10 @@
                     <div class="form-group form-inline"> 
                         <b><?php echo $imp['Impuesto']['descripcion'];?></b> <input type="checkbox" name="data[impuestos][<?php echo $imp['Impuesto']['id'];?>]" value="<?php echo $imp['Impuesto']['id'];?>"><br>
                     </div>                           
-               <?php } ?>                    
+               <?php } ?> 
+                    <div class="form-group form-inline">
+                        <b>Impoconsumo</b><input type="checkbox" name="impoconsumo" value="1">
+                    </div>                
                 </div>
                 <div class="col-md-4">
                     <div class="form-group form-inline"> 

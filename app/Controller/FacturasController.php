@@ -290,7 +290,7 @@ class FacturasController extends AppController
  *
  * @return void
  */
-    public function add()
+    public function add($esFactura = '0')
     {
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
@@ -335,7 +335,7 @@ class FacturasController extends AppController
         // Se obtiene el listado de canal de ventas
         $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
-        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas'));
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas', 'esFactura'));
     }
 
 /**
@@ -518,8 +518,15 @@ class FacturasController extends AppController
 
         /*se actualiza el codigo del documento ya que en mysql no se admite mas de un autoincrement*/
         $this->Documento->actualizarCodigoDocumento($documentoId);
+        
+        $esFactura = 0;
+        if ( isset($posData['Factura']['esFacturaDV']) ) {
+            $esFactura = $datFact['esFacturaDV'] == '1' ? '1' : '0';
+        } else {
+            $esFactura = $posData['Prefactura']['esFacturaDV'] == '1' ? '1' : '0';
+        }
 
-        $esFactura = isset($datFact['esfactura']) ? '1' : '0';
+
         $ordenTrabajo = isset($datFact['ordentrabajo']) && !empty($datFact['ordentrabajo']) ? $datFact['ordentrabajo'] : "";
         /*Se crea la factura*/
         $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $datFact['vendedor'], $fechaVence,
@@ -598,7 +605,7 @@ class FacturasController extends AppController
             if ($this->Facturasdetalle->guardarDetalleFactura($facturaId, $arrCrgInv['Cargueinventario']['deposito_id'],
                 $arrCrgInv['Cargueinventario']['producto_id'], $detallePrefactura['Prefacturasdetalle']['cantidad'],
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $costoTotalProd, $detallePrefactura['Prefacturasdetalle']['descuento'],
-                $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto)) {
+                $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto, $detallePrefactura['Prefacturasdetalle']['impoconsumo'])) {
                 /*se elimina el registro de prefacturadetalle*/
                 // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
             }
@@ -740,6 +747,7 @@ class FacturasController extends AppController
 
         $this->autoRender = false;
         $posData = $this->request->data;
+        $esFactura = $posData['esFactura'];
         $cargueinventarioId = $posData['cargueinventarioId'];
         $cantidadventa = $posData['cantidadventa'];
         $precioventa = $posData['precioventa'];
@@ -748,11 +756,12 @@ class FacturasController extends AppController
         $impuesto = $posData['impuesto'];
         $porcentajeDescuento = $posData['porcentajeDescuento'];
         $valorDescuento = $posData['valorDescuento'];
+        $prcINC = isset($posData['prcINC']) && !empty($posData['prcINC']) ? $posData['prcINC'] : 0;
 
         /*Se valida si existe la prefactura*/
         if ($prefacturaId == "" || $prefacturaId == null) {
             /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
-            $prefacturaId = $this->Prefactura->guardarPrefactura($usuarioId, $clienteId = null);
+            $prefacturaId = $this->Prefactura->guardarPrefactura($usuarioId, $clienteId = null, null, $esFactura);
         }
 
         /*se descuenta la cantidad del producto prefacturado del inventario*/
@@ -768,7 +777,7 @@ class FacturasController extends AppController
         }
         
         $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefacturaId,
-            $valorDescuento, $porcentajeDescuento, $impuesto);
+            $valorDescuento, $porcentajeDescuento, $impuesto, $prcINC);
         if ($detalleId != '0' && $detalleId != "") {
             echo json_encode(array('resp' => $detalleId, 'prefact' => $prefacturaId));
         } else {

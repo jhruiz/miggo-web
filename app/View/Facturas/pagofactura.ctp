@@ -24,7 +24,7 @@ echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'med
                 </div>
                 <div class="col-md-6">
                     <label>Valor</label>
-                    <?php echo $this->Form->input('valorFactura', array('label' => '', 'type' => 'number', 'value' => '', 'class' => 'form-control numericPrice valueFact'))?>
+                    <?php echo $this->Form->input('valorFactura', array('label' => '', 'type' => 'text', 'value' => '', 'class' => 'form-control numericPrice valueFact'))?>
                 </div>
                 <div class="col-md-6 divValueClientPaid">
                     <label>Paga con: </label>

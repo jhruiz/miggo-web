@@ -131,6 +131,6 @@ function eliminarCuentaPendiente(id, valPendiente) {
 }
 
 $(function() {
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
 
 });

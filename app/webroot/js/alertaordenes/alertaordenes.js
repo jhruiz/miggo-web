@@ -140,7 +140,7 @@ var calcularFechaMantenimiento = function() {
     var kmPromDia = $('#OrdentrabajoKmxdia').val();
 
     if(kmPromDia != ''){
-        var diffKm = (parseInt(kmProxMant) - parseInt(kmActual)) / parseInt(kmPromDia);
+        var diffKm = (parseFloat(kmProxMant) - parseFloat(kmActual)) / parseFloat(kmPromDia);
 
         //fecha actual y fecha mantenimiento
         var fechaAct = new Date();        
@@ -261,7 +261,7 @@ var generarAlertaTecno = function() {
 
 $(function() {        
     datePicker();
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
     $('#day_unit').hide();
     $('#OrdentrabajoUnidadesMedidaId').change(tipoFormUnidadesMedida);
     $('#OrdentrabajoKmxdia').blur(calcularFechaMantenimiento);

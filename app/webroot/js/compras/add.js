@@ -192,7 +192,7 @@ var agregarReteica = function(){
  */
 var calcularIvaCompra = function(sumTtalAI){
     var html = "";
-    var iva = parseInt($('#imp_val').val());
+    var iva = parseFloat($('#imp_val').val());
     var ivaMod = parseFloat((iva/100)+1).toFixed(2);
     var ttalIva = parseFloat(sumTtalAI * ivaMod) - parseFloat(sumTtalAI);
     html += "<tr><td><b>IVA</b></td><td>$" + formatNumber(ttalIva) + "</td><td>&nbsp;</td></tr>";
@@ -283,7 +283,7 @@ function aplicarReteica(){
 function obtenerTtalAntesImpuestos(){
     var sumTtalAI = 0;
     $('.categoryVal').each(function(index){
-        sumTtalAI = parseInt($(this).val()) + parseInt(sumTtalAI);
+        sumTtalAI = parseFloat($(this).val()) + parseFloat(sumTtalAI);
     }); 
     
     return sumTtalAI;
@@ -462,7 +462,7 @@ function addPaymentToTable() {
     var ttalPago = 0;
     arrCuentas.forEach(function(elem, index){
 
-        ttalPago += parseInt(elem.valor);
+        ttalPago += parseFloat(elem.valor);
 
         html += '<tr class="tr_' + elem.cuenta + '"><th>' + elem.tipo + '</th>';
         html += '<th>' + elem.nombre + '</th>';
@@ -474,7 +474,7 @@ function addPaymentToTable() {
 
     $('#metPagos').html(html);
     $('.ttalPay').text(formatNumber(ttalPago));
-    $('.ttalDiffPay').text(formatNumber(parseInt(valTtal) - parseInt(ttalPago)));
+    $('.ttalDiffPay').text(formatNumber(parseFloat(valTtal) - parseFloat(ttalPago)));
 
 }
 
@@ -507,7 +507,7 @@ function getRealValueToDescount() {
 
     arrCuentas.forEach(function(elem, index){
         if(elem.cuenta == $('#cuenta_id').val()){
-            realValue = parseInt(elem.valor) + parseInt(value);
+            realValue = parseFloat(elem.valor) + parseFloat(value);
         }
     });    
 
@@ -572,7 +572,7 @@ function agregarCuentaValor(){
             cuentaId = 'crd';       
         }
 
-        objCuentaValor.valor = parseInt($('#valuePaymenth').val());
+        objCuentaValor.valor = parseFloat($('#valuePaymenth').val());
         
         if( arrCuentas.length < 1 ) {          
             arrCuentas.push(objCuentaValor);
@@ -580,7 +580,7 @@ function agregarCuentaValor(){
         } else {
             arrCuentas.forEach(function(elem, index){
                 if(elem.cuenta == cuentaId){
-                    var newVal = parseInt(elem.valor) + parseInt($('#valuePaymenth').val());
+                    var newVal = parseFloat(elem.valor) + parseFloat($('#valuePaymenth').val());
                     arrCuentas[index].valor = newVal;
                     flg = true;
                 }
@@ -638,7 +638,7 @@ $(function() {
     $('#addRetefuente').click(agregarRetefuente);
     $('#addReteIca').click(agregarReteica);
     
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
     
     $('#valCat').blur(validarCategoria);
     

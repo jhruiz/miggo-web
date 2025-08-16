@@ -26,16 +26,16 @@ var abonosPrefactura = function(){
         ttales = (Number(ttales) + Number($(this).val()));
     });       
     
-    ttales = ttales - parseInt($('.ttalAbonos').val());
+    ttales = ttales - parseFloat($('.ttalAbonos').val());
 
-    // if(parseInt(ttales) > 0){
+    // if(parseFloat(ttales) > 0){
         $("#div_abono").load(
             $('#url-proyecto').val() + "abonofacturas/abonofactura",
             {ttales: ttales},
             function(){                                                            
                 dialogAbonos=$("#div_abono").dialog(opcAbonos);
                 dialogAbonos.dialog('open');
-                $('.numericPrice').number(true);
+                $('.numericPrice').number(true, 2);
             }
         );          
     // }else{
@@ -60,7 +60,7 @@ function realizarAbono(){
         prefacturaId = $('#prefactId').val();
     }
     
-    if(parseInt(ttalAbono) > 0){
+    if(parseFloat(ttalAbono) > 0){
         $.ajax({
             url: $('#url-proyecto').val() + 'abonofacturas/abonoCliente',
             data: {prefacturaId: prefacturaId, ttalAbono: ttalAbono, tipopagoId: tipopagoId},
@@ -76,13 +76,13 @@ function realizarAbono(){
                     });
                     
                     var abonosFact = $('.ttalAbonos').val();
-                    var ttalFinAbono = (parseInt(ttalAbono) + parseInt(abonosFact));
+                    var ttalFinAbono = (parseFloat(ttalAbono) + parseFloat(abonosFact));
                     
                     abn += "<tr><th colspan='9' class='text-right'>Abonos</th>";
                     abn += "<th class='text-right'>" + formatNumber(ttalFinAbono) + "</th>";
                     abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
                     abn += "<tr><th colspan='9' class='text-right'>TOTAL</th>";
-                    abn += "<th class='text-right'>" + formatNumber(ttales - parseInt(ttalFinAbono)) + "</th></tr>";
+                    abn += "<th class='text-right'>" + formatNumber(ttales - parseFloat(ttalFinAbono)) + "</th></tr>";
                     $('#tBodAbonos').html(abn);                                        
                     $('.ttalAbonos').attr('value', ttalFinAbono);
                     alert('Abono realizado de forma correcta.');

@@ -224,5 +224,5 @@ function verCargueCatalogo() {
 }
 
 $(function() {
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
 });

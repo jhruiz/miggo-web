@@ -312,6 +312,7 @@ class CargueinventariosController extends AppController {
             $posData = $this->request->data;
             
             $productoId = $posData['productoId'];
+            $esFactura = $posData['esFactura'];
 
             $cargueInvId = isset($posData['cargueInvId']) && !empty($posData['cargueInvId']) ? $posData['cargueInvId'] : "";
             
@@ -329,13 +330,20 @@ class CargueinventariosController extends AppController {
             $vlrAntesImp = $arrProducto['Cargueinventario']['precioventa'];
             $vlrImpuesto = 0;
             //se valida si existen impuestos
-            if(!empty($arrImpuestos)){                
+            if(!empty($arrImpuestos) && $esFactura == '1'){                
                 $prcImpuesto = 1 + (floatval($arrImpuestos['0']['Impuesto']['valor'])/100);
-                $vlrAntesImp = intval($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto);
-                $vlrImpuesto = intval($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp);
+                $vlrAntesImp = round(($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto), 4);
+                $vlrImpuesto = round(($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp), 4);
             }
-            
-            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto'));
+
+            $prcICA = 0;
+            $vlrICA = 0;
+            if($arrProducto['Cargueinventario']['impuesto'] == '1' && $esFactura == '1') {
+                $prcICA = round((floatval($arrProducto['Cargueinventario']['valor_impuesto'])/100),4);
+                $vlrICA = round(($vlrAntesImp * $prcICA), 4);
+            }
+
+            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto', 'prcICA', 'vlrICA', 'esFactura'));
         }
         
         public function seleccionproductoventaclientenuevo(){
@@ -346,7 +354,9 @@ class CargueinventariosController extends AppController {
             
             $posData = $this->request->data;
             
-            $productoId = $posData['productoId'];                     
+            $productoId = $posData['productoId'];   
+            $esFactura = $posData['esFactura'];
+
             $cargueInvId = isset($posData['cargueInvId']) && !empty($posData['cargueInvId']) ? $posData['cargueInvId'] : "";
             
             /*Se obtiene el producto del stock*/
@@ -363,13 +373,20 @@ class CargueinventariosController extends AppController {
             $vlrAntesImp = $arrProducto['Cargueinventario']['precioventa'];
             $vlrImpuesto = 0;
             //se valida si existen impuestos
-            if(!empty($arrImpuestos)){                
+            if(!empty($arrImpuestos) && $esFactura == '1'){                
                 $prcImpuesto = 1 + (floatval($arrImpuestos['0']['Impuesto']['valor'])/100);
                 $vlrAntesImp = intval($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto);
                 $vlrImpuesto = intval($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp);
-            }            
+            }      
             
-            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos'));   
+            $prcICA = 0;
+            $vlrICA = 0;
+            if($arrProducto['Cargueinventario']['impuesto'] == '1' && $esFactura == '1') {
+                $prcICA = round((floatval($arrProducto['Cargueinventario']['valor_impuesto'])/100),4);
+                $vlrICA = round(($vlrAntesImp * $prcICA), 4);
+            }
+            
+            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'vlrICA', 'esFactura'));   
             $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto'));
         }
         
@@ -381,7 +398,8 @@ class CargueinventariosController extends AppController {
             
             $posData = $this->request->data;
             
-            $productoId = $posData['productoId'];                     
+            $productoId = $posData['productoId'];
+            $esFactura = $posData['esFactura'];                     
             
             /*Se obtiene el producto del stock*/
             $arrProducto = $this->Cargueinventario->obtenerProductoStock($productoId);
@@ -397,13 +415,20 @@ class CargueinventariosController extends AppController {
             $vlrAntesImp = $arrProducto['Cargueinventario']['precioventa'];
             $vlrImpuesto = 0;
             //se valida si existen impuestos
-            if(!empty($arrImpuestos)){                
+            if(!empty($arrImpuestos && $esFactura == '1')){                
                 $prcImpuesto = 1 + (floatval($arrImpuestos['0']['Impuesto']['valor'])/100);
                 $vlrAntesImp = intval($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto);
                 $vlrImpuesto = intval($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp);
             }              
+
+            $prcICA = 0;
+            $vlrICA = 0;
+            if($arrProducto['Cargueinventario']['impuesto'] == '1'  && $esFactura == '1') {
+                $prcICA = round((floatval($arrProducto['Cargueinventario']['valor_impuesto'])/100),4);
+                $vlrICA = round(($vlrAntesImp * $prcICA), 4);
+            }
             
-            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto'));             
+            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto', 'vlrICA', 'esFactura'));             
         }      
         
         

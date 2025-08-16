@@ -92,7 +92,7 @@ var imprimirAbonos = function() {
                 mywindow.document.write('<tbody>');
                 var ttalAbono = 0;
                 $.each(dataAbono.abonos, function(k, val) {
-                    ttalAbono += parseInt(val.Abonofactura.valor);
+                    ttalAbono += parseFloat(val.Abonofactura.valor);
                     mywindow.document.write('<tr>');
                     mywindow.document.write('<td class="align-left">' + (val.U.nombre) + '</td>'); // Alineado a la izquierda
                     mywindow.document.write('<td class="align-left">' + (val.CL.nombre) + '</td>'); // Alineado a la izquierda

@@ -83,12 +83,13 @@ class Prefactura extends AppModel {
 		)
 	);
         
-        public function guardarPrefactura($usuarioId,$clienteId,$idOrdenT = null){
+        public function guardarPrefactura($usuarioId,$clienteId,$idOrdenT = null, $esFactura){
             $data = array();
             
             $prefactura = new Prefactura();
             
             $data['usuario_id'] = $usuarioId;
+            $data['esfactura'] = $esFactura;
             if($clienteId != "" && $clienteId != NULL){
                 $data['cliente_id'] = $clienteId;
             }

@@ -212,19 +212,24 @@ function actualizarCreditoLimite(){
 function fnObtenerDatosProducto(e){
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
+    var esFactura = $('#esFacturaDV').val();
 
     if(event.key === 'Enter'){        
         if(typeof(clienteId) != "undefined" && clienteId != ""){
             $.ajax({
                url: $('#url-proyecto').val() + 'prefacturas/addProductoBarCode',
-               data: {usuarioId: usuarioId, descProducto: $('#FacturaProducto').val(), clienteId: clienteId},
+               data: {usuarioId: usuarioId, descProducto: $('#FacturaProducto').val(), clienteId: clienteId, esFactura: esFactura},
                type: "POST",
                success: function(data) {
+                
                     var prefactura = JSON.parse(data);
                     if(prefactura.valido){
 
                         var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
                         var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
+                        var prcINC = (esFactura == '1') ? prefactura.producto['0'].Cargueinventario.valor_impuesto : parseFloat('0');
+                        var valINC = (esFactura == '1') ? parseFloat(valAntesIva) * parseFloat(prcINC/100) : parseFloat('0');
+                        var valFinal = parseFloat(valAntesIva + valIva + valINC);
 
                         $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
                             '<td>' + prefactura.producto['0'].Producto.descripcion + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((prefactura.impuesto/100) + 1) + '">' + '</td>' + 
@@ -235,11 +240,14 @@ function fnObtenerDatosProducto(e){
                             '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="0" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
                             '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="0" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
                             '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valIva + '" readonly>&nbsp;</td>' +
-                            '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + prefactura.producto['0'].Cargueinventario.precioventa + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="porc_iva_' + prefactura.resp + '" class="form-control porc_iva numericPrice" id="porc_iva_' + prefactura.resp + '" value="' + prefactura.impuesto + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="valor_ica_' + prefactura.resp + '" class="form-control valor_ica numericPrice" id="valor_ica_' + prefactura.resp + '" value="' + valINC + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="porc_ica_' + prefactura.resp + '" class="form-control porc_ica numericPrice" id="porc_ica_' + prefactura.resp + '" value="' + prcINC + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valFinal + '" readonly>&nbsp;</td>' +
                             '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                             $('#FacturaProducto').val("");
                             $('#prefacturaId').val(prefactura.prefactId);
-                            $('.numericPrice').number(true);
+                            $('.numericPrice').number(true, 2);
                             $('#datosProducto').hide();
                             calcularTotalConAbonos();
                             //dialogDialogSeleccionProducto.dialog('close');
@@ -270,7 +278,7 @@ function fnObtenerDatosProducto(e){
                         var producto = JSON.parse(data);
                         var uls = "";
                         for(var i = 0; i < producto.resp.length; i++){
-                            if(parseInt(producto.resp[i].Cargueinventario.existenciaactual) >= parseInt(1)){
+                            if(parseFloat(producto.resp[i].Cargueinventario.existenciaactual) >= parseFloat(1)){
                                 uls += "<a href='#' class='list-group-item list-group-item-info' ";
                                 uls += "name='" + producto.resp[i].Producto.id + "' ";
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
@@ -301,11 +309,12 @@ function fnObtenerDatosProducto(e){
 function seleccionarProducto(dato){
     var productoId = dato.name;  
     var cargueInvId = dato.id;
+    var esFactura = $('#esFacturaDV').val();
     
     $("#div_producto").load(
             $('#url-proyecto').val() + "cargueinventarios/seleccionproductoventa",
             {
-                productoId: productoId, cargueInvId: cargueInvId
+                productoId: productoId, cargueInvId: cargueInvId, esFactura: esFactura
             },
             function(){                                                            
                 dialogDialogSeleccionProducto=$("#div_producto").dialog(opcDialogSeleccionProducto);
@@ -316,7 +325,8 @@ function seleccionarProducto(dato){
 }
 
 function agregarProductoFactura(){
-    var impuesto = $('#impuesto').val();
+    var esFactura = $('#esFacturaDV').val();
+    var impuesto = (esFactura == '1') ? $('#impuesto').val() : parseFloat('0');
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
     var cargueinventarioId = $('#cargueinventarioId').val();
@@ -328,6 +338,8 @@ function agregarProductoFactura(){
     var valorConIva = $('#valorConIva').val();    
     var precioventaCI = $('#precioventaCI').val();  // se obtiene el precio de venta antes de impuesto
     var prefactId = $('#prefacturaId').val();
+    var valorIca = $('#valorIca').val();
+    var prcINC = (esFactura == '1') ? $('#prcINC').val() : parseFloat('0');
     
     var mensaje = "";    
     
@@ -338,7 +350,8 @@ function agregarProductoFactura(){
         url: $('#url-proyecto').val() + 'prefacturas/add',
         data: {usuarioId: usuarioId, clienteId: clienteId, cargueinventarioId: cargueinventarioId, 
             cantidadventa: cantidadventa, precioventa: precioventa, valorDescuento: valorDescuento,
-            porcentajeDescuento: porcentajeDescuento, impuesto: impuesto, prefactId: prefactId
+            porcentajeDescuento: porcentajeDescuento, impuesto: impuesto, prefactId: prefactId, prcINC: prcINC,
+            esFactura: esFactura
         },
         type: "POST",
         success: function(data) {
@@ -354,11 +367,14 @@ function agregarProductoFactura(){
                         '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
                         '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
                         '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_iva_' + prefactura.resp + '" class="form-control porc_iva numericPrice" id="porc_iva_' + prefactura.resp + '" value="' + impuesto + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_ica_' + prefactura.resp + '" class="form-control valor_ica numericPrice" id="valor_ica_' + prefactura.resp + '" value="' + valorIca + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_ica_' + prefactura.resp + '" class="form-control porc_ica numericPrice" id="porc_ica_' + prefactura.resp + '" value="' + prcINC + '" readonly>&nbsp;</td>' +
                         '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                 $('#FacturaProducto').val("");
                 $('#prefacturaId').val(prefactura.prefactId);
-                $('.numericPrice').number(true);
+                $('.numericPrice').number(true, 2);
                 calcularTotalConAbonos();
                 dialogDialogSeleccionProducto.dialog('close');
             }else{
@@ -373,6 +389,7 @@ function agregarProductoFactura(){
 }
 
 function agregarProductoFacturaClienteNuevo(){
+    var esFactura = $('#esFacturaDV').val();
     var cargueinventarioId = $('#cargueinventarioId').val();
     var cantidadventa = $('#cantidadventa').val();
     var precioventa = $('#precioventa').val();
@@ -382,9 +399,11 @@ function agregarProductoFacturaClienteNuevo(){
     var valorDescuento = Number($('#descuento').val());      
     var valorIva = $('#valorIva').val();
     var valorConIva = $('#valorConIva').val();    
-    var impuesto = $('#impuesto').val();
+    var impuesto = (esFactura == '1') ? $('#impuesto').val() : parseFloat('0');
     var mensaje = ""; 
     var precioventaCI = $('#precioventaCI').val();  // se obtiene el precio de venta antes de impuesto
+    var valorIca = $('#valorIca').val();
+    var prcINC = (esFactura == '1') ? $('#prcINC').val() : parseFloat('0');
 
     mensaje = validarDatosFactura(cantidadventa,precioventa);
 
@@ -393,14 +412,14 @@ function agregarProductoFacturaClienteNuevo(){
         url: $('#url-proyecto').val() + 'facturas/facturacionclientenuevo',
         data: {prefacturaId: prefacturaId, cargueinventarioId: cargueinventarioId, cantidadventa: cantidadventa, 
             precioventa: precioventa, usuarioId:usuarioId, valorDescuento: valorDescuento, 
-            porcentajeDescuento: porcentajeDescuento, impuesto: impuesto
+            porcentajeDescuento: porcentajeDescuento, impuesto: impuesto, prcINC: prcINC, esFactura: esFactura
         },
         type: "POST",
         success: function(data) {
             var prefactura = JSON.parse(data);
             if(prefactura.resp != '0' && prefactura.resp != ""){
                 $('#productosFacturas').append(
-                        '<tr id="tr_' + prefactura.resp + '">' + 
+                        '<tr id="tr_' + prefactura.resp + '">' +  
                         '<td>' + $('#nombreProducto').val() + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((impuesto/100) + 1) + '">' + '</td>' + 
                         '<td>' + $('#codigoProducto').val() + '</td>' + 
                         '<td><input type="text" name="cant_' + prefactura.resp + '" class="form-control" id="cant_' + prefactura.resp + '" value="' + cantidadventa + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
@@ -408,13 +427,16 @@ function agregarProductoFacturaClienteNuevo(){
                         '<td><input type="text" name="total_' + prefactura.resp + '" class="form-control ttales numericPrice ttalTotal" id="total_' + prefactura.resp + '" value="' + precioventaCI + '" readonly>&nbsp;</td>' +
                         '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="' + porcentajeDescuento + '" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
                         '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="' + valorDescuento + '" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
-                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +                        
+                        '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valorIva + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_iva_' + prefactura.resp + '" class="form-control porc_iva numericPrice" id="porc_iva_' + prefactura.resp + '" value="' + impuesto + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_ica_' + prefactura.resp + '" class="form-control valor_ica numericPrice" id="valor_ica_' + prefactura.resp + '" value="' + valorIca + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_ica_' + prefactura.resp + '" class="form-control porc_ica numericPrice" id="porc_ica_' + prefactura.resp + '" value="' + prcINC + '" readonly>&nbsp;</td>' +
                         '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valorConIva + '" readonly>&nbsp;</td>' +
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
                 $('#FacturaProductousuarionuevo').val("");
                 $('#FacturaProductoventarapida').val("");
                 $('#prefacturaId').val(prefactura.prefact);
-                $('.numericPrice').number(true);
+                $('.numericPrice').number(true, 2);
                 calcularTotalConAbonos();
                 dialogDialogSeleccionProducto.dialog('close');               
             }else{
@@ -461,7 +483,6 @@ function actualizarCantidadPrefact(dato){
                     calcularValorDescuento(arrName['1']);
                     calcularValorIvaTabla(arrName['1']);
                     calcularTotalConDescuentoTabla(arrName['1']);                    
-//                    totalCrediContado();
 
                     //se actualiza el porcentaje y valor de descuento
                     var nuevoPor = $('#pordtto_' + arrName['1']).val();
@@ -499,8 +520,7 @@ function actualizarPrecioPrefact(dato){
                     //se actualiza el porcentaje y valor de descuento
                     var nuevoPor = $('#pordtto_' + arrName['1']).val();
                     var valDtto = $('#valdtto_' + arrName['1']).val();
-                    actualizarValorPorcentajeDtto(nuevoPor, valDtto, arrName['1']);                                    
-//                    totalCrediContado();
+                    actualizarValorPorcentajeDtto(nuevoPor, valDtto, arrName['1']);
                 }else{
                     $('#' + dato.name).val(respuesta.precioventa);
                     bootbox.alert('El precio de venta no puede ser menor al mínimo establecido.');
@@ -538,7 +558,7 @@ function facturarProductos(){
     }else{
         var tipoPago = $('#FacturaTipopago').val();
         var ttalAbonos = $('.ttalAbonos').val();
-        var contado = parseInt($('.thTFCIVA').text().replace( /,/g, ""));
+        var contado = parseFloat($('.thTFCIVA').text().replace( /,/g, ""));
         $('#pagocontado').val(contado);        
         
         var valorCompra = contado - ttalAbonos;
@@ -556,15 +576,9 @@ function facturarProductos(){
 
 function totalCrediContado(){
     var ttales = 0;
-//    if ($('#esfactura').prop('checked') == true) {
         $(".valor_con_iva").each(function() {
             ttales = Number(ttales) + Number($(this).val());
         });
-//    }else{
-//        $(".ttalesFinal").each(function() {
-//            ttales = Number(ttales) + Number($(this).val());
-//        });        
-//    }    
     return ttales;
 }
 
@@ -627,29 +641,27 @@ function submitForm(){
         success: function(data) {
             var respuesta = JSON.parse(data);
 
-            if($('#esfactura').prop('checked') && $('#syncdia').val() == '1') {
+            if($('#esFacturaDV').val() == '1' && $('#syncdia').val() == '1') {
                 obtenerFacturaDian(null, respuesta.resp, 1);
             } else {
                 window.location.href = $('#url-proyecto').val() + 'facturas/view/' + respuesta.resp;
             }
-
-
-
         }
     });    
 }
 
 function fnObtenerDatosProductoUsuarioNuevo(e){
     var usuarioId = $('#usuarioId').val();
-    var prefacturaId = $('#prefacturaId').val();    
-    
+    var prefacturaId = $('#prefacturaId').val(); 
+    var esFactura = $('#esFacturaDV').val();   
     var mensaje = "";
+
     if(event.key === 'Enter'){      
         mensaje = validarDatosUsuarioNuevo();
         if(mensaje == ""){
             $.ajax({
                url: $('#url-proyecto').val() + 'prefacturas/addProductoClienteNuevoBarCode',
-               data: {usuarioId: usuarioId, descProducto: $('#FacturaProductousuarionuevo').val(), prefacturaId: prefacturaId},
+               data: {usuarioId: usuarioId, descProducto: $('#FacturaProductousuarionuevo').val(), prefacturaId: prefacturaId, esFactura: esFactura},
                type: "POST",
                success: function(data) {
                     var prefactura = JSON.parse(data);
@@ -657,6 +669,9 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
 
                         var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
                         var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
+                        var prcINC = (esFactura == '1') ? prefactura.producto['0'].Cargueinventario.valor_impuesto : parseFloat('0');
+                        var valINC = (esFactura == '1') ? parseFloat(valAntesIva) * parseFloat(prcINC/100) : parseFloat('0');
+                        var valFinal = parseFloat(valAntesIva + valIva + valINC);
 
                         $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
                             '<td>' + prefactura.producto['0'].Producto.descripcion + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((prefactura.impuesto/100) + 1) + '">' + '</td>' + 
@@ -667,11 +682,14 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
                             '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="0" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
                             '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="0" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
                             '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valIva + '" readonly>&nbsp;</td>' +
-                            '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + prefactura.producto['0'].Cargueinventario.precioventa + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="porc_iva_' + prefactura.resp + '" class="form-control porc_iva numericPrice" id="porc_iva_' + prefactura.resp + '" value="' + prefactura.impuesto + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="valor_ica_' + prefactura.resp + '" class="form-control valor_ica numericPrice" id="valor_ica_' + prefactura.resp + '" value="' + valINC + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="porc_ica_' + prefactura.resp + '" class="form-control porc_ica numericPrice" id="porc_ica_' + prefactura.resp + '" value="' + prcINC + '" readonly>&nbsp;</td>' +
+                            '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valFinal + '" readonly>&nbsp;</td>' +
                             '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                             $('#FacturaProductousuarionuevo').val("");
                             $('#prefacturaId').val(prefactura.prefactId);
-                            $('.numericPrice').number(true);
+                            $('.numericPrice').number(true, 2);
                             $('#datosProductoclientenuevo').hide();
                             calcularTotalConAbonos();
                             //dialogDialogSeleccionProducto.dialog('close');
@@ -704,7 +722,7 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
                         var producto = JSON.parse(data);
                         var uls = "";
                         for(var i = 0; i < producto.resp.length; i++){
-                            if(parseInt(producto.resp[i].Cargueinventario.existenciaactual) >= parseInt(1)){
+                            if(parseFloat(producto.resp[i].Cargueinventario.existenciaactual) >= parseFloat(1)){
                                 uls += "<a href='#' class='list-group-item list-group-item-info' ";
                                 uls += "name='" + producto.resp[i].Producto.id + "' ";
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
@@ -763,13 +781,14 @@ function validarDatosUsuarioNuevo(){
 function fnObtenerDatosProductoVentaRapida(e){   
     var usuarioId = $('#usuarioId').val();       
     var mensaje = "";
+    var esFactura = $('#esFacturaDV').val(); 
 
     if(event.key === 'Enter'){      
         mensaje = validarDatosVentaRapida();
         if(mensaje == ""){
             $.ajax({
                url: $('#url-proyecto').val() + 'prefacturas/addProductoClienteNuevoBarCode',
-               data: {usuarioId: usuarioId, descProducto: $('#FacturaProductoventarapida').val(), prefacturaId: null},
+               data: {usuarioId: usuarioId, descProducto: $('#FacturaProductoventarapida').val(), prefacturaId: null, esFactura: esFactura},
                type: "POST",
                success: function(data) {
 
@@ -778,7 +797,10 @@ function fnObtenerDatosProductoVentaRapida(e){
 
                     var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
                     var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
-
+                    var prcINC = (esFactura == '1') ? prefactura.producto['0'].Cargueinventario.valor_impuesto : parseFloat('0');
+                    var valINC = (esFactura == '1') ? parseFloat(valAntesIva) * parseFloat(prcINC/100) : parseFloat('0');
+                    var valFinal = parseFloat(valAntesIva + valIva + valINC);
+                    
                     $('#productosFacturas').append('<tr id="tr_' + prefactura.resp + '">' + 
                         '<td>' + prefactura.producto['0'].Producto.descripcion + '<input type="hidden" name="prcimpuesto_' + prefactura.resp + '" id="prcimpuesto_' + prefactura.resp + '" value="' + ((prefactura.impuesto/100) + 1) + '">' + '</td>' + 
                         '<td>' + prefactura.producto['0'].Producto.codigo + '</td>' +                         
@@ -788,11 +810,14 @@ function fnObtenerDatosProductoVentaRapida(e){
                         '<td><input type="text" name="pordtto_' + prefactura.resp + '" class="form-control ttalPorDtto" id="pordtto_' + prefactura.resp + '" value="0" onblur="actualizarPorcentajeDtto(this);">&nbsp;</td>' +
                         '<td><input type="text" name="valdtto_' + prefactura.resp + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + prefactura.resp + '" value="0" onblur="actualizarValorDtto(this);">&nbsp;</td>' +
                         '<td><input type="text" name="valor_iva_' + prefactura.resp + '" class="form-control valor_iva numericPrice" id="valor_iva_' + prefactura.resp + '" value="' + valIva + '" readonly>&nbsp;</td>' +
-                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + prefactura.producto['0'].Cargueinventario.precioventa + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_iva_' + prefactura.resp + '" class="form-control porc_iva numericPrice" id="porc_iva_' + prefactura.resp + '" value="' + prefactura.impuesto + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_ica_' + prefactura.resp + '" class="form-control valor_ica numericPrice" id="valor_ica_' + prefactura.resp + '" value="' + valINC + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="porc_ica_' + prefactura.resp + '" class="form-control porc_ica numericPrice" id="porc_ica_' + prefactura.resp + '" value="' + prcINC + '" readonly>&nbsp;</td>' +
+                        '<td><input type="text" name="valor_con_iva_' + prefactura.resp + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + prefactura.resp + '" value="' + valFinal + '" readonly>&nbsp;</td>' +
                         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');                                                
                         $('#FacturaProductoventarapida').val("");
                         $('#prefacturaId').val(prefactura.prefactId);
-                        $('.numericPrice').number(true);
+                        $('.numericPrice').number(true, 2);
                         $('#datosProductoventarapida').hide(); 
                         calcularTotalConAbonos();
                         //dialogDialogSeleccionProducto.dialog('close');
@@ -827,7 +852,7 @@ function fnObtenerDatosProductoVentaRapida(e){
                         var producto = JSON.parse(data);
                         var uls = "";
                         for(var i = 0; i < producto.resp.length; i++){
-                            if(parseInt(producto.resp[i].Cargueinventario.existenciaactual) >= parseInt(1)){
+                            if(parseFloat(producto.resp[i].Cargueinventario.existenciaactual) >= parseFloat(1)){
                                 uls += "<a href='#' class='list-group-item list-group-item-info' ";
                                 uls += "name='" + producto.resp[i].Producto.id + "' ";
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
@@ -871,11 +896,12 @@ function validarDatosVentaRapida(){
 function seleccionarProductoClienteNuevo(dato){
     var productoId = dato.name;  
     var cargueInvId = dato.id;
+    var esFactura = $('#esFacturaDV').val();
     
     $("#div_producto").load(
         $('#url-proyecto').val() + "cargueinventarios/seleccionproductoventaclientenuevo",
         {
-            productoId: productoId, cargueInvId: cargueInvId
+            productoId: productoId, cargueInvId: cargueInvId, esFactura: esFactura
         },
         function(){                                                            
             dialogDialogSeleccionProducto=$("#div_producto").dialog(opcDialogSeleccionProducto);
@@ -901,11 +927,12 @@ function limpirarFormulariosRegistrados(){
 function seleccionarProductoVentaRapida(dato){
     var productoId = dato.name;  
     var cargueInvId = dato.id;
+    var esFactura = $('#esFacturaDV').val();
     
     $("#div_producto").load(
         $('#url-proyecto').val() + "cargueinventarios/seleccionproductoventaclientenuevo",
         {
-            productoId: productoId, cargueInvId: cargueInvId
+            productoId: productoId, cargueInvId: cargueInvId, esFactura: esFactura
         },
         function(){                                                            
             dialogDialogSeleccionProducto=$("#div_producto").dialog(opcDialogSeleccionProducto);
@@ -926,56 +953,64 @@ var sumarTotales = function (){
     var ttalValDtto = 0;
     var ttalesFinal = 0;
     var ttalesIva = 0;
+    var ttalesIca = 0;
     var ttalesConIva = 0;
     var propina=0;
 
 
     //se suman todos los valores unitarios
     $( ".ttalUnit" ).each(function( index, val ) {
-        ttalUnit += parseInt($(this).val());
+        ttalUnit += parseFloat($(this).val());
     });    
     
     $('.thTUnit').html(formatNumber(ttalUnit));
 
     //se suman todos los valores subtotales
     $( ".ttalTotal" ).each(function( index, val ) {
-        ttalTotal += parseInt($(this).val());
+        ttalTotal += parseFloat($(this).val());
     }); 
     if ($('#tienePropina').prop('checked')){
         propina=ttalTotal*(0.1);
         const isNumeric =!isNaN($('.propina').val());
-        if (!isNumeric || parseInt($('.propina').val())>propina){
+        if (!isNumeric || parseFloat($('.propina').val())>propina){
             propina=ttalTotal*(0.1);
         }else{
-            propina=parseInt($('.propina').val());
+            propina=parseFloat($('.propina').val());
         }
     }       
     $('.propina').val(formatNumber(propina));
     $('.thTTotal').html(formatNumber(ttalTotal+propina));
     //se suman todos los valores de descuento
     $( ".ttalValDtto" ).each(function( index, val ) {
-        ttalValDtto += parseInt($(this).val());
+        ttalValDtto += parseFloat($(this).val());
     });        
     
     $('.thDtto').html(formatNumber(ttalValDtto));
     
     //se suman todos los valores de los totales finales
     $( ".ttalesFinal" ).each(function( index, val ) {
-        ttalesFinal += parseInt($(this).val());
+        ttalesFinal += parseFloat($(this).val());
     });        
     
     $('.thTFinal').html(formatNumber(ttalesFinal));
     
     //se suman los totales del iva
     $(".valor_iva").each(function(index, val){
-       ttalesIva += parseInt($(this).val());
+       ttalesIva += parseFloat($(this).val());
     });
     
     $('.thIVA').html(formatNumber(ttalesIva));
     
+    //se suman los totales del iva
+    $(".valor_ica").each(function(index, val){
+       ttalesIca += parseFloat($(this).val());
+    });
+    
+    $('.thICA').html(formatNumber(ttalesIca));
+    
     //se suman los totales con iva incluido
     $('.valor_con_iva').each(function(index, val){
-        ttalesConIva += parseInt($(this).val());
+        ttalesConIva += parseFloat($(this).val());
     });
     
     $('.thTFCIVA').html(formatNumber(ttalesConIva+propina));
@@ -991,18 +1026,26 @@ var sumarTotales = function (){
 var formatNumber = function(num) {
     if (!num || num == 'NaN') return '-';
     if (num == 'Infinity') return '&#x221e;';
-    num = num.toString().replace(/\$|\,/g, '');
-    if (isNaN(num))
-        num = "0";
-    sign = (num == (num = Math.abs(num)));
-    num = Math.floor(num * 100 + 0.50000000001);
-    cents = num % 100;
-    num = Math.floor(num / 100).toString();
-    if (cents < 10)
-        cents = "0" + cents;
-    for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3) ; i++)
-        num = num.substring(0, num.length - (4 * i + 3)) + ',' + num.substring(num.length - (4 * i + 3));
-    return (((sign) ? '' : '-') + num);
+    
+    // Convertir a número y manejar casos no numéricos
+    num = parseFloat(num.toString().replace(/\$|\,/g, ''));
+    if (isNaN(num)) {
+        num = 0;
+    }
+
+    // Redondear a 2 decimales
+    num = Math.round(num * 100) / 100;
+
+    // Separar parte entera y decimal
+    let parts = num.toFixed(2).split('.');
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || '00'; // Asegurar 2 decimales
+
+    // Agregar separadores de miles a la parte entera
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // Combinar parte entera y decimal
+    return integerPart + '.' + decimalPart;
 };
 
 /**
@@ -1104,7 +1147,7 @@ function calcularTotalConAbonos(){
     var ttalCompras = 0;
     var ttalAbonos = $('.ttalAbonos').val();
     
-    if(parseInt(ttalAbonos) > 0){
+    if(parseFloat(ttalAbonos) > 0){
         $(".valor_con_iva").each(function() {
             ttalCompras = Number(ttalCompras) + Number($(this).val());
         });    
@@ -1112,7 +1155,7 @@ function calcularTotalConAbonos(){
         var abn = "<tr><th colspan='8' class='text-right'>Abonos</th>";
         abn += "<th class='text-right'>" + formatNumber(ttalAbonos) + "</th></tr>";
         abn += "<tr><th colspan='8' class='text-right'>TOTAL</th>";
-        abn += "<th class='text-right'>" + formatNumber(ttalCompras - parseInt(ttalAbonos)) + "</th></tr>";
+        abn += "<th class='text-right'>" + formatNumber(ttalCompras - parseFloat(ttalAbonos)) + "</th></tr>";
         $('#tBodAbonos').html(abn);        
     }
          

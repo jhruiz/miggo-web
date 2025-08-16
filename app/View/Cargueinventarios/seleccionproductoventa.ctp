@@ -14,16 +14,23 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
             Precio Mínimo: $ <?php echo number_format($arrProducto['Cargueinventario']['preciominimo'],2); ?>            
         </div>                
         </div>
-        <legend>&nbsp;</legend>
-        <b>Impuestos</b><br>        
-        <?php foreach ($arrImpuestos as $imp):?>
-        <?php echo $imp['Impuesto']['descripcion'] . " : " . $imp['Impuesto']['valor'] . '%';?><br>
-        <?php endforeach;?>        
+
+        <?php if($esFactura == '1') {?>
+            <legend>&nbsp;</legend>
+            <b>Impuestos</b><br>        
+            <?php foreach ($arrImpuestos as $imp):?>
+            <?php echo $imp['Impuesto']['descripcion'] . ": " . $imp['Impuesto']['valor'] . '%';?><br>
+            <?php endforeach;?>  
+            
+            <?php if($arrProducto['Cargueinventario']['impuesto'] == '1'){ ?>
+            <?php echo "Impoconsumo: " . $arrProducto['Cargueinventario']['valor_impuesto'] . '%';?><br>
+            <?php } ?>
+        <?php } ?>
     </div>
 
     <div class="col-md-6">        
-        <input type="hidden" id="precioMinimo" value="<?php echo $arrProducto['Cargueinventario']['preciominimo'];?>">
         <input type="hidden" id="precioVenta" value="<?php echo $arrProducto['Cargueinventario']['precioventa'];?>">
+        <input type="hidden" id="precioMinimo" value="<?php echo $arrProducto['Cargueinventario']['preciominimo'];?>">
         <input type="hidden" id="cantidadProducto" value="<?php echo $arrProducto['Cargueinventario']['existenciaactual'];?>">
         <input type="hidden" id="cargueinventarioId" value="<?php echo $arrProducto['Cargueinventario']['id'];?>">  
         <input type="hidden" id="nombreProducto" value="<?php echo $arrProducto['Producto']['descripcion'];?>">
@@ -31,6 +38,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
         <input type="hidden" id="impuesto" value="<?php echo !empty($arrImpuestos) ? $arrImpuestos['0']['Impuesto']['valor'] : '0';?>">
         <input type="hidden" id="prcImpuesto" value="<?php echo $prcImpuesto;?>">
         <input type="hidden" id="vtaInventario" value="<?php echo $arrProducto['Producto']['inventario'];?>">
+        <input type="hidden" id="prcINC" value="<?php echo $arrProducto['Cargueinventario']['valor_impuesto'];?>">
         
         <div class="form-group form-inline"> 
             <label>Cantidad</label><br>
@@ -114,15 +122,26 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
         </div>        
         
         <div class="form-group form-inline"> 
-            <label>Total con IVA</label><br>
+            <label>Valor ICA</label><br>
+            <div class="input-group">
+                <span class="input-group-addon">$</span>                    
+                <?php echo $this->Form->input('valorIca', array(
+                    'label' => '', 
+                    'class' => 'form-control numericPrice',
+                    'disabled' => true,
+                    'value' => $vlrICA )); ?>
+            </div>
+        </div>        
+        
+        <div class="form-group form-inline"> 
+            <label>Total con Impuestos</label><br>
             <div class="input-group">
                 <span class="input-group-addon">$</span>                    
                 <?php echo $this->Form->input('valorConIva', array(
                     'label' => '', 
                     'class' => 'form-control numericPrice', 
-                    'placeholder' => 'Valor Descuento', 
                     'disabled' => true,
-                    'value' => intval($vlrAntesImp + $vlrImpuesto) )); ?>
+                    'value' => $vlrAntesImp + $vlrImpuesto + $vlrICA) ); ?>
             </div>
         </div>               
     </div>

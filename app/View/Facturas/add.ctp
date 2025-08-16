@@ -13,19 +13,10 @@
 <div class="x_panel">
         <div class="x_title">
                     <h2><?php echo __('Venta de Productos'); ?></h2>
-                    <a class="btn btn-primary btn-sm" href="https://catalogo-vpfe.dian.gov.co/User/Login" role="button" target="_blank">Facturacion Electronica</a>
-                    <ul class="nav navbar-right panel_toolbox">
-
-                  </li>
-                  <li class="dropdown">
-
-                  </li>
-
-                  </li>
-                </ul>
                  </div>
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '31', 'id' => 'menuvert')) ?>
             <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => 0)) ?>
+            <?php echo $this->Form->input('esFacturaDV', array('type' => 'hidden', 'value' => $esFactura, 'id' => 'esFacturaDV')) ?>
             <div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#registrado" aria-controls="registrado" data-toggle="tab" role="tab">Cliente Registrado</a></li>
@@ -244,11 +235,7 @@
                         </div>
                     </div>
                 </div>
-                <!--Finaliza el div para facturar productos a los usuarios de venta rapida, es decir, no se guardan en la aplicacion-->
                 </div>
-                <!-- Finaliza x_panel
-            </div>
-            <!--Finaliza el div de los tabs para gestion de usuarios-->
 
                     <legend>&nbsp;</legend>
                     <div class="table-responsive">
@@ -264,7 +251,10 @@
                                                 <th><?php echo ('% Dtto'); ?></th>
                                                 <th><?php echo ('$ Dtto'); ?></th>
                                                 <th><?php echo ('Valor IVA'); ?></th>
-                                                <th><?php echo ('Ttal con IVA'); ?></th>
+                                                <th><?php echo ('% IVA'); ?></th>
+                                                <th><?php echo ('Valor INC'); ?></th>
+                                                <th><?php echo ('% INC'); ?></th>
+                                                <th><?php echo ('Ttal Imp. Inc.'); ?></th>
                                                 <th>&nbsp;</th>
                                 </tr>
                                 </thead>
@@ -274,11 +264,7 @@
                                         <th class="text-right"><input id="tienePropina" type="checkbox"></th>
                                         <th colspan="2"><b>PROPINA</b></th>
                                         <th class="text-right"><input class="propina" type="text"></input></th>
-                                        <th>&nbsp</th>
-                                        <th>&nbsp;</th>
-                                        <th class="text-right"></th>
-                                        <th class="text-right"></th>
-                                        <th class="text-right"></th>
+                                        <th colspan="9">&nbsp</th>
                                     </tr>
                                 </tbody>
                                 <tbody id="totalFacturas">
@@ -290,6 +276,9 @@
                                         <th>&nbsp;</th>
                                         <th class="text-right"><b class="thDtto"></b></th>
                                         <th class="text-right"><b class="thIVA"></b></th>
+                                        <th class="text-right"><b class="thPorcIVA"></b></th>
+                                        <th class="text-right"><b class="thICA"></b></th>
+                                        <th class="text-right"><b class="thPorcICA"></b></th>
                                         <th class="text-right"><b class="thTFCIVA"></b></th>
                                     </tr>
                                 </tbody>
@@ -310,11 +299,6 @@
                         
                         <div class="col-md-1">
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...')); ?>
-                        </div>
-                  
-                        <div class="col-md-1">
-                            <label>Factura</label>
-                            <input type="checkbox" id="esfactura" name="data[Factura][esfactura]" checked><br>
                         </div>
                         
                         <div class="col-md-8">

@@ -3,7 +3,7 @@
  * @returns {undefined}
  */
 var imprimir = function() {
-    if ($('#esfactura').prop("checked") == true) {
+    if ($('#esFacturaDV').val() == '1') {
         imprimirPrefacturaFactura();
     } else {
         imprimirPrefacturaDocumentoEquivalente();
@@ -134,21 +134,21 @@ var imprimirPrefacturaFactura = function() {
                         ttalImp += Math.ceil(baseSubtotal * valImp);
                         marcImp = "*";
                     } else {
-                        valBase = parseInt(val.PFD.costoventa);
+                        valBase = parseFloat(val.PFD.costoventa);
                     }
             
                     // Se obtiene el total del descuento
                     ttalDcto += parseFloat(val.PFD.descuento);
             
                     // Se obtienen los totales del valor base del producto
-                    ttalBases += valBase * parseInt(val.PFD.cantidad);
+                    ttalBases += valBase * parseFloat(val.PFD.cantidad);
             
                     mywindow.document.write('<tr>');
                     mywindow.document.write('<td class="align-left">' + val.PFD.cantidad + '</td>');
                     mywindow.document.write('<td class="align-left">' + val.P.descripcion + marcImp + '</td>');
                     mywindow.document.write('<td class="align-right">' + (valBase).toLocaleString() + '</td>');
                     mywindow.document.write('<td class="align-right">' + val.PFD.porcentaje + '%</td>');
-                    mywindow.document.write('<td class="align-right">' + (valBase * parseInt(val.PFD.cantidad)).toLocaleString() + '</td>');
+                    mywindow.document.write('<td class="align-right">' + (valBase * parseFloat(val.PFD.cantidad)).toLocaleString() + '</td>');
                     mywindow.document.write('</tr>');
                 });
                 mywindow.document.write('</tbody>');
@@ -177,11 +177,11 @@ var imprimirPrefacturaFactura = function() {
             if ($('.ttalAbonos').val() != "" && $('.ttalAbonos').val() > 0) {
                 mywindow.document.write('<tr>');
                 mywindow.document.write('<td colspan="3"></td><td class="align-right"><b>Abonos</b></td>');
-                mywindow.document.write('<td class="align-right">' + (parseInt($('.ttalAbonos').val())).toLocaleString() + '</td>');
+                mywindow.document.write('<td class="align-right">' + (parseFloat($('.ttalAbonos').val())).toLocaleString() + '</td>');
                 mywindow.document.write('</tr>');
             }
             
-            var ttalFinal = ttalBases - ttalDcto + ttalImp - parseInt($('.ttalAbonos').val());
+            var ttalFinal = ttalBases - ttalDcto + ttalImp - parseFloat($('.ttalAbonos').val());
             
             mywindow.document.write('<tr>');
             mywindow.document.write('<td colspan="3"></td><td class="align-right"><b>TOTAL</b></td>');
@@ -333,20 +333,20 @@ var imprimirPrefacturaDocumentoEquivalente = function() {
                     var valBase = 0;
             
                     // Valor base del producto
-                    valBase = parseInt(val.PFD.costoventa);
+                    valBase = parseFloat(val.PFD.costoventa);
             
                     // Se obtiene el total del descuento
                     ttalDcto += parseFloat((val.PFD.costoventa * val.PFD.cantidad) * (val.PFD.porcentaje / 100));
             
                     // Se obtienen los totales del valor base del producto
-                    ttalBases += valBase * parseInt(val.PFD.cantidad);
+                    ttalBases += valBase * parseFloat(val.PFD.cantidad);
             
                     mywindow.document.write('<tr>');
                     mywindow.document.write('<td class="align-left">' + val.PFD.cantidad + '</td>');
                     mywindow.document.write('<td class="align-left">' + val.P.descripcion + '</td>');
                     mywindow.document.write('<td class="align-right">' + (valBase).toLocaleString() + '</td>');
                     mywindow.document.write('<td class="align-right">' + val.PFD.porcentaje + '%</td>');
-                    mywindow.document.write('<td class="align-right">' + (valBase * parseInt(val.PFD.cantidad)).toLocaleString() + '</td>');
+                    mywindow.document.write('<td class="align-right">' + (valBase * parseFloat(val.PFD.cantidad)).toLocaleString() + '</td>');
                     mywindow.document.write('</tr>');
                 });
                 mywindow.document.write('</tbody>');
@@ -363,11 +363,11 @@ var imprimirPrefacturaDocumentoEquivalente = function() {
             if ($('.ttalAbonos').val() != "" && $('.ttalAbonos').val() > 0) {
                 mywindow.document.write('<tr>');
                 mywindow.document.write('<td colspan="3"></td><td class="align-right"><b>Abonos</b></td>');
-                mywindow.document.write('<td class="align-right">' + (parseInt($('.ttalAbonos').val())).toLocaleString() + '</td>');
+                mywindow.document.write('<td class="align-right">' + (parseFloat($('.ttalAbonos').val())).toLocaleString() + '</td>');
                 mywindow.document.write('</tr>');
             }
             
-            var ttalFinal = ttalBases - ttalDcto - parseInt($('.ttalAbonos').val());
+            var ttalFinal = ttalBases - ttalDcto - parseFloat($('.ttalAbonos').val());
             
             mywindow.document.write('<tr>');
             mywindow.document.write('<td colspan="3"></td><td class="align-right"><b>TOTAL</b></td>');

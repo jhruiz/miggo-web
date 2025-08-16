@@ -174,7 +174,7 @@ function generarNotaCreditoFactura() {
 
 $( function() {
     $('#valorFactura').val('0');
-    $('.numericPrice').number(true);    
+    $('.numericPrice').number(true, 2); 
     $('#btn_agregar').click(duplicarMediosPago);
     $('#btn_notacredito_m').click(facturarMediosPagos);
     $('.del_pay_meth').click(deletePaymentMethod);

@@ -28,7 +28,7 @@ var obtenerAbonos = function() {
         function(){                                                            
             dialogAbonos=$("#div_gestionabono").dialog(opcAbonos);
             dialogAbonos.dialog('open');
-            $('.numericPrice').number(true);
+            $('.numericPrice').number(true, 2);
         }
     );          
    

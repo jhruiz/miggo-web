@@ -173,19 +173,21 @@ class PrefacturasController extends AppController {
         $posData = $this->request->data;
         $usuarioId = $posData['usuarioId'];            
         $clienteId = $posData['clienteId'];
+        $esFactura = $posData['esFactura'];
         $cargueinventarioId = $posData['cargueinventarioId'];
         $cantidadventa = $posData['cantidadventa'];
         $precioventa = $posData['precioventa'];
         $valorDescuento = isset($posData['valorDescuento']) && !empty($posData['valorDescuento']) ? $posData['valorDescuento'] : 0;
         $porcentajeDescuento = isset($posData['porcentajeDescuento']) && !empty($posData['porcentajeDescuento']) ? $posData['porcentajeDescuento'] : 0;
         $impuesto = $posData['impuesto'];
+        $prcINC = isset($posData['prcINC']) && !empty($posData['prcINC']) ? $posData['prcINC'] : 0;
         
         if(isset($posData['prefactId']) && !empty($posData['prefactId'])){
             $prefactId = $posData['prefactId'];
             $arrPrefactId = $this->Prefactura->obtenerPrefacturaPorId($prefactId);
         }else{
             /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
-            $prefactId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId);                 
+            $prefactId = $this->Prefactura->guardarPrefactura($usuarioId, $clienteId, null, $esFactura);                 
         }
             
         /*se descuenta la cantidad del producto prefacturado del inventario*/
@@ -201,8 +203,11 @@ class PrefacturasController extends AppController {
         }
 
         if($prefactId != '0'){
+
+            $prcINC = $esFactura == '1' ? $prcINC : '0';
+
             $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,
-                    $prefactId, $valorDescuento, $porcentajeDescuento, $impuesto);
+                    $prefactId, $valorDescuento, $porcentajeDescuento, $impuesto, $prcINC);
             
             //guarda el producto en la orden de trabajo
             if(!empty($arrPrefactId['Prefactura']['ordentrabajo_id'])){            
@@ -240,6 +245,7 @@ class PrefacturasController extends AppController {
             }
             
             $descripcionProd = $posData['descProducto'];
+            $esFactura = $posData['esFactura'];
             
             /*Se obtienen los depositos en los cuales está el usuario*/
             $arrDepositos = $this->Deposito->obtenerDepositoUsuario($usuarioId);
@@ -275,12 +281,12 @@ class PrefacturasController extends AppController {
                     $prefactId = $arrPrefactId['Prefactura']['id'];
                 }else{
                     /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
-                    $prefactId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId);                 
+                    $prefactId = $this->Prefactura->guardarPrefactura($usuarioId, $clienteId, null, $esFactura);                 
                 }   
 
                 /*Se obtiene el impuesto del producto */
                 $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
-                if(empty($impuesto)){
+                if(empty($impuesto) || $esFactura == '0'){
                     $impto = 0;
                 }else{
                     $impto = $impuesto['0']['Impuesto']['valor'];
@@ -306,7 +312,12 @@ class PrefacturasController extends AppController {
                     }
 
                     if($prefactId != '0'){
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId,0,0,$impto);
+
+                        $prcINC = isset($produtoInfo['0']['Cargueinventario']['valor_impuesto']) && !empty($produtoInfo['0']['Cargueinventario']['valor_impuesto']) ? $produtoInfo['0']['Cargueinventario']['valor_impuesto'] : '0';
+
+                        $prcINC = $esFactura == '1' ? $prcINC : '0';
+
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefactId, 0, 0, $impto, $prcINC);
 
                         if($detalleId != '0' && $detalleId != ""){
                             echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefactId));
@@ -331,6 +342,7 @@ class PrefacturasController extends AppController {
             $usuarioId = $posData['usuarioId']; 
             $prefacturaId = $posData['prefacturaId'];                       
             $descripcionProd = $posData['descProducto'];
+            $esFactura = $posData['esFactura'];
             
             /*Se obtienen los depositos en los cuales está el usuario*/
             $arrDepositos = $this->Deposito->obtenerDepositoUsuario($usuarioId);
@@ -362,12 +374,12 @@ class PrefacturasController extends AppController {
                 /*Se valida si existe la prefactura*/
                 if($prefacturaId == "" || $prefacturaId == NULL){
                     /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
-                    $prefacturaId = $this->Prefactura->guardarPrefactura($usuarioId,$clienteId = null); 
+                    $prefacturaId = $this->Prefactura->guardarPrefactura($usuarioId, null, null, $esFactura); 
                 }      
                 
                 /*Se obtiene el impuesto del producto */
                 $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
-                if(empty($impuesto)){
+                if(empty($impuesto) || $esFactura == '0'){
                     $impto = 0;
                 }else{
                     $impto = $impuesto['0']['Impuesto']['valor'];
@@ -392,7 +404,11 @@ class PrefacturasController extends AppController {
                     }
 
                     if($prefactId != '0') {
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefacturaId,0,0,$impto);
+
+                        $prcINC = isset($produtoInfo['0']['Cargueinventario']['valor_impuesto']) && !empty($produtoInfo['0']['Cargueinventario']['valor_impuesto']) ? $produtoInfo['0']['Cargueinventario']['valor_impuesto'] : '0';
+                        $prcINC = $esFactura == '1' ? $prcINC : '0';
+                        
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefacturaId, 0, 0, $impto, $prcINC);
                         
                         if($detalleId != '0' && $detalleId != ""){
                             echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefacturaId));

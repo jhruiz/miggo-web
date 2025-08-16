@@ -48,7 +48,7 @@ function fnObtenerDatosProducto(e){
                                 '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + prefactura.resp + '"onclick="eliminarProductoPrefactura(this)"></td></tr>');
                         $('#FacturaProducto').val("");
                         $('#datosProducto').hide();
-                        $('.numericPrice').number(true);
+                        $('.numericPrice').number(true, 2);
                     }else{                        
                         $('#FacturaProducto').val("");
                         $('#datosProducto').hide();                        
@@ -147,8 +147,8 @@ function agregarProductoCotizacion(){
                 $('#CotizacioneProducto').val("");
                 $('#CotizacioneSubtotal').val(cotizacion.subTotal['total_val']);
                 $('#CotizacioneImpuestos').val(cotizacion.totalImp['total_sum']);
-                $('#CotizacioneTotal').val(parseInt(cotizacion.subTotal['total_val']) + parseInt(cotizacion.totalImp['total_sum']));
-                $('.numericPrice').number(true);
+                $('#CotizacioneTotal').val(parseFloat(cotizacion.subTotal['total_val']) + parseFloat(cotizacion.totalImp['total_sum']));
+                $('.numericPrice').number(true, 2);
                 dialogDialogSeleccionProducto.dialog('close');
             }else{
                 bootbox.alert('No se pudo agregar el producto a la factura de venta. Por favor, inténtelo de nuevo.');

@@ -43,6 +43,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-6">
+                                
                                 <?php if(isset($prefactura['Cliente']['id']) && $prefactura['Cliente']['id'] != ""){?>
                                     <?php echo $this->Form->input('idcliente', array('type' => 'hidden', 'name' => 'data[Factura][idcliente]', 'id' => 'FacturaIdcliente', 'value' => $prefactura['Cliente']['id'], 'class' => 'id_cliente'));?>
                                     <?php echo $this->Form->input('nombrecliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['nombre']));?>
@@ -50,6 +51,7 @@
                                     <?php echo $this->Form->input('nitcccliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['nit']));?>
                                     <?php echo $this->Form->input('diascliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['diascredito']));?>
                                     <?php echo $this->Form->input('telcliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['telefono']));?>
+                                    <?php echo $this->Form->input('limitecliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['limitecredito']));?>                                
                                     <?php echo $this->Form->input('limitecliente', array('type' => 'hidden', 'value' => $prefactura['Cliente']['limitecredito']));?>                                
                                 <?php }else{?>
                                 <?php echo $this->Form->input('idcliente', array('type' => 'hidden', 'name' => 'data[Factura][idcliente]', 'id' => 'FacturaIdcliente', 'class' => 'id_cliente'));?>
@@ -61,6 +63,7 @@
                                 <?php echo $this->Form->input('prefacturado', array('type' => 'hidden', 'name' => 'data[Factura][prefacturado]', 'value' => $prefactura['Prefactura']['id'], 'id' => 'prefacturadoId'));?>
                                 <?php echo $this->Form->input('ordentrabajo', array('type' => 'hidden', 'name' => 'data[Factura][ordentrabajo]', 'value' => !empty($prefactura['Prefactura']['ordentrabajo_id']) ? $prefactura['Prefactura']['ordentrabajo_id'] : "", 'id' => 'ordentrabajoId'));?>
                                 <?php echo $this->Form->input('prefactId', array('type' => 'hidden', 'value' => $id, 'id' => 'prefactId'));?>
+                                <?php echo $this->Form->input('esFacturaDV', array('type' => 'hidden', 'value' => $prefactura['Prefactura']['esfactura'], 'id' => 'esFacturaDV')) ?>
                                 
                                 <div class="form-group ">  
                                     <label>Cliente</label><br>                                
@@ -279,8 +282,11 @@
                                                 <th><?php echo ('Precio Venta A.I'); ?></th>                                       
                                                 <th><?php echo ('% Dtto'); ?></th>
                                                 <th><?php echo ('$ Dtto'); ?></th>                                                                                                                            
-                                                <th><?php echo ('Valor IVA'); ?></th>                                       
-                                                <th><?php echo ('Ttal con IVA'); ?></th>
+                                                <th><?php echo ('Valor IVA'); ?></th>
+                                                <th><?php echo ('% IVA'); ?></th>
+                                                <th><?php echo ('Valor INC'); ?></th>
+                                                <th><?php echo ('% INC'); ?></th>
+                                                <th><?php echo ('Ttal Imp. Inc.'); ?></th>
                                                 <th>&nbsp;</th>
                                 </tr>   
                                 </thead>
@@ -294,6 +300,9 @@
                                         <th>&nbsp;</th>
                                         <th class="text-right"><b class="thDtto"></b></th>
                                         <th class="text-right"><b class="thIVA"></b></th>
+                                        <th class="text-right"><b class="thPorcIVA"></b></th>
+                                        <th class="text-right"><b class="thICA"></b></th>
+                                        <th class="text-right"><b class="thPorcICA"></b></th>
                                         <th class="text-right"><b class="thTFCIVA"></b></th>
                                     </tr>
                                 </tbody>
@@ -373,12 +382,7 @@
                         <div class="col-md-1">
                             <?php $estadoAct = !empty($prefactura['Prefactura']['estadoprefactura_id']) ? $prefactura['Prefactura']['estadoprefactura_id'] : "";?>
                             <?php echo $this->Form->input('estados', array('label' => 'Estados', 'type' => 'select', 'options' => $estados, 'class' => 'form-control', 'default' => $estadoAct));?>
-                        </div>   
-                        
-                        <div class="col-md-1">
-                            <label>Factura</label><br>
-                            <input type="checkbox" id="esfactura" name="data[Factura][esfactura]" checked>                        
-                        </div>                   
+                        </div>               
                         
                         <div class="col-md-7">
                             <label for="obs_fact">Observaciones</label>

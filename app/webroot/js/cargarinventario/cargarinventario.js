@@ -11,5 +11,5 @@ var tipoProveedor = function() {
 
 $(function() {
     $('#proveedore_id').change(tipoProveedor);
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
 });

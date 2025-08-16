@@ -64,5 +64,5 @@ var validarNuevoValor = function() {
 $(function() {
     $('#preguardar').click(validarNuevoValor);
     $('#guardar_gasto').click(actualizarGasto);
-    $('.numericPrice').number(true);
+    $('.numericPrice').number(true, 2);
 });

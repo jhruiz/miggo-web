@@ -4,6 +4,8 @@
  */
 function imprimirTicket() {
 
+    console.log('entra por aqui');
+
     var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
     var mywindow = window.open('', 'PRINT', 'height=400, width=600');
     mywindow.document.write('<html><head>');
@@ -41,9 +43,9 @@ function imprimirFactura() {
     mywindow.document.write('<style>');
     mywindow.document.write('@page { size: auto; margin: 0; }'); // Eliminar márgenes de la página
     mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }'); // Tamaño de fuente base
-    mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }'); // Tamaño de fuente para la tabla
-    mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }'); // Tamaño de fuente para celdas
-    mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 12px; }'); // Tamaño de fuente para celdas
+    mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 8px !important; }'); // Tamaño de fuente para la tabla
+    mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 8px !important; }'); // Tamaño de fuente para celdas
+    mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; text-align: right; font-size: 8px !important; }'); // Tamaño de fuente para celdas
     mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }');
     mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }');
     mywindow.document.write('@media print {');
@@ -58,11 +60,11 @@ function imprimirFactura() {
     mywindow.document.write('</head><body>');
     
     // Contenido que deseas imprimir
-    mywindow.document.write('<div style="font-family: Arial, sans-serif; font-size: 12px;">');
+    mywindow.document.write('<div style="font-family: Arial, sans-serif; font-size: 8px !important;">');
     mywindow.document.write($('#dvFacturas').html()); // Contenido de la tabla
     mywindow.document.write('</div>');
     
-    mywindow.document.write('<div style="margin-top: 20px; margin-right: 3px; float: left; text-align: justify; width: 70%; font-size: 12px;">');
+    mywindow.document.write('<div style="margin-top: 20px; margin-right: 3px; float: left; text-align: justify; width: 70%; font-size: 8px !important;">');
     mywindow.document.write($('#p_condCont').html()); // Contenido adicional
     mywindow.document.write('</div>');
     
@@ -154,7 +156,7 @@ var generarQRDian = function() {
         ecLevel: 'L',
         left: 0,
         top: 0,
-        size: 150,
+        size: 100,
         fill: '#000',
         background: null,
         text: $("#dianQRStr").val(),

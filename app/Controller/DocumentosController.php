@@ -210,8 +210,11 @@ class DocumentosController extends AppController {
             $documentoId = $this->Documento->guardarDocumento($tipoDocumentoId,$infoPrecargue['0']['Usuario']['empresa_id'],$usuarioId);
             
             /*se actualiza el codigo del documento ya que en mysql no se admite mas de un autoincrement*/
-            $this->Documento->actualizarCodigoDocumento($documentoId);            
+            $this->Documento->actualizarCodigoDocumento($documentoId);    
             
+            /*se obtiene el valor del impoconsumo*/ 
+            $valorINC = $this->Configuraciondato->obtenerValorDatoConfig('INC');
+
             /*se guarda la informacion del detalle del documento y del inventario*/
             $resp = true;
             foreach ($infoPrecargue as $infP){
@@ -226,6 +229,7 @@ class DocumentosController extends AppController {
                 /*Se valida si el producto que se va cargar ya existe en el inventario*/
                 $infoProducto = $this->Cargueinventario->obtenerProductoPorIdDeposito($infP['Producto']['id'],$infP['Deposito']['id']);
                 if(count($infoProducto)>'0'){
+
                     /*Si existe se debe actualizar la información del inventario*/
                     $cantidadActual = $infoProducto['Cargueinventario']['existenciaactual'];
                     $costoActual = $infoProducto['Cargueinventario']['costoproducto'];
@@ -245,10 +249,14 @@ class DocumentosController extends AppController {
                     $data['preciominimo'] = $infP['Precargueinventario']['preciominimo'];
                     $data['precioventa'] = $infP['Precargueinventario']['precioventa'];
                     $data['usuario_id'] = $usuarioId;
+                    $data['created'] = date('Y-m-d H:i:s');
                     $data['estado_id'] = $infP['Estado']['id'];
                     $data['proveedore_id'] = $infP['Proveedore']['id'];
                     $data['tipopago_id'] = $infP['Tipopago']['id'];
                     $data['numerofactura'] = $infP['Precargueinventario']['numerofactura'];
+                    $data['impuesto'] = $infP['Precargueinventario']['impoconsumo'];
+                    $data['valor_impuesto'] =  $valorINC;
+                    $data['valor_ultimo_cargue'] =  $costoACargar;
                     /*Se actualiza el registro del producto en el inventario*/
                     $this->Cargueinventario->save($data);
                     
@@ -257,7 +265,9 @@ class DocumentosController extends AppController {
                     if(!$this->Cargueinventario->guardarCargueInventario($infP['Producto']['id'],$infP['Deposito']['id'],
                            $infP['Precargueinventario']['costoproducto'],$infP['Precargueinventario']['cantidad'],$infP['Precargueinventario']['preciomaximo'],
                            $infP['Precargueinventario']['preciominimo'],$infP['Precargueinventario']['precioventa'],$usuarioId,$infP['Estado']['id'],
-                           $infP['Proveedore']['id'],$infP['Tipopago']['id'],$infP['Precargueinventario']['numerofactura'], $infoPrecargue['0']['Usuario']['empresa_id'])){
+                           $infP['Proveedore']['id'],$infP['Tipopago']['id'],$infP['Precargueinventario']['numerofactura'], $infoPrecargue['0']['Usuario']['empresa_id'],
+                           $infP['Precargueinventario']['impoconsumo'], $valorINC
+                           )){
                         $resp = false;
                        } 
                 }

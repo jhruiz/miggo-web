@@ -200,7 +200,7 @@ const calcularDevolucion = function(){
 
 
 $( function() {
-    $('.numericPrice').number(true);    
+    $('.numericPrice').number(true, 2);   
     $('#btn_agregar').click(duplicarMediosPago);
     $('#btn_facturar_m').click(facturarMediosPagos);
     $('.del_pay_meth').click(deletePaymentMethod);

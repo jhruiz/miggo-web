@@ -74,7 +74,7 @@ var fnObtenerDatosCliente = function() {
     var datosCliente = $('#CotizacioneDatoscliente').val();
     var empresaId = $('#empresaId').val();
 
-    if (parseInt(datosCliente.length) > 3) {
+    if (parseFloat(datosCliente.length) > 3) {
         $.ajax({
             url: $('#url-proyecto').val() + 'clientes/ajaxObtenerClientes',
             data: { datosCliente: datosCliente, empresaId: empresaId },
@@ -245,7 +245,7 @@ var actCantPrdCot = function(data) {
     var arrData = data.id.split("_");
     var nuevaCant = $('#' + data.id).val();
     var valUnit = $('#vUnit_' + arrData['1']).val();
-    var valorNuevo = parseInt($('#vUnit_' + arrData['1']).val()) * nuevaCant;
+    var valorNuevo = parseFloat($('#vUnit_' + arrData['1']).val()) * nuevaCant;
 
     if (nuevaCant != "") {
         $.ajax({
@@ -289,7 +289,7 @@ var actValUnitPrdCot = function(data) {
                 if (resp.resp != '1') {
                     bootbox.alert('No fue posible actualizar el registro. Por favor, inténtelo de nuevo.');
                 } else {
-                    var nuevoTotal = parseInt(nuevoValor) * parseInt(cantidad);
+                    var nuevoTotal = parseFloat(nuevoValor) * parseFloat(cantidad);
                     $('#vTtal_' + arrData['1']).val(nuevoTotal);
                     calcularTtalCot();
                 }
@@ -515,7 +515,7 @@ var fnObtenerProductoCotRapida = function() {
 var calcularTtalCot = function() {
     var tFinal = 0;
     $('.tfinal').each(function() {
-        tFinal = parseInt(tFinal) + parseInt($(this).val());
+        tFinal = parseFloat(tFinal) + parseFloat($(this).val());
     });
 
     $('#resultCot').html(tFinal).number(true);

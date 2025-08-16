@@ -798,7 +798,7 @@ var obtenerDatosSuministro = function() {
                     var producto = JSON.parse(data);
                     var uls = "";
                     for (var i = 0; i < producto.resp.length; i++) {
-                        if (parseInt(producto.resp[i].Cargueinventario.existenciaactual) > parseInt(0)) {
+                        if (parseFloat(producto.resp[i].Cargueinventario.existenciaactual) > parseFloat(0)) {
                             uls += "<a href='#' class='list-group-item list-group-item-info' ";
                             uls += "name='" + producto.resp[i].Producto.id + "' ";
                             uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";

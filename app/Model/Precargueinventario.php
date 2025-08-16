@@ -139,6 +139,7 @@ class Precargueinventario extends AppModel {
             $data['proveedore_id'] = $infoPreCargue['proveedores'];
             $data['tipopago_id'] = $infoPreCargue['Cargueinventario']['inventario'] == '0' ? '1' : $infoPreCargue['tipopago'];
             $data['numerofactura'] = $infoPreCargue['Cargueinventario']['numerofactura'];
+            $data['impoconsumo'] = isset($infoPreCargue['impoconsumo']) ? $infoPreCargue['impoconsumo'] : '0';
 
             if($preCargueInventario->save($data)){
                 return $preCargueInventario->id;

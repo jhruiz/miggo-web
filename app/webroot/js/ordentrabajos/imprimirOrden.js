@@ -269,7 +269,7 @@ var imprimirOrdenEntrada = function() {
                     mywindow.document.write('<tbody>');
                     var ttalAbono = 0;
                     $.each(dataRem.abonos, function(k, val) {
-                        ttalAbono += parseInt(val.Abonofactura.valor);
+                        ttalAbono += parseFloat(val.Abonofactura.valor);
                         mywindow.document.write('<tr>');
                         mywindow.document.write('<td align="left">' + (val.U.nombre) + '</td>');
                         mywindow.document.write('<td align="left">' + (val.CL.nombre) + '</td>');
