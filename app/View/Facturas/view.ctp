@@ -276,9 +276,9 @@
                         $valorICA = number_format(($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impoconsumo']/100),2,'.','');
                         
                         if($DetFact['C']['servicio'] == '1'){                            
-                            $ttalServ += $costoTotal - $valorIVA;
+                            $ttalServ += $costoBase;
                         } else {
-                            $ttalRep += $costoTotal - $valorIVA;
+                            $ttalRep += $costoBase;
                         }
                 ?>                
                     <tr>
@@ -293,7 +293,7 @@
                         <td  align="right"><?php echo h(number_format($DetFact['Facturasdetalle']['impuesto'],2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h("$ " . number_format($valorICA,2)); ?>&nbsp;</td>
                         <td  align="right"><?php echo h(number_format($DetFact['Facturasdetalle']['impoconsumo'],2)); ?>&nbsp;</td>
-                        <td  align="right"><?php echo h("$ " . number_format(($costoTotal - $valorIVA - $descuento),2)); ?>&nbsp;</td>
+                        <td  align="right"><?php echo h("$ " . number_format(($costoBase - $descuento),2)); ?>&nbsp;</td>
 
                     </tr>    
                     
@@ -341,7 +341,7 @@
                 </tr>                    
                 <tr>
                     <td colspan="9">&nbsp;</td>
-                    <td  align="right" colspan="2"><b>ICA</b></td>
+                    <td  align="right" colspan="2"><b>INC</b></td>
                     <td  align="right"><b><?php echo ("$ ". number_format($ttalICA,2));?></b></td>
                 </tr>                    
                 <tr>
@@ -779,13 +779,13 @@
         <b>Método(s) de Pago: </b> <br>
         <?php if(count($factCV) > 0 ){ ?>
             <?php foreach($factCV as $fvcv):?>
-                <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 0)); ?>&nbsp;<br>
+                <?php echo h($fvcv['T']['descripcion'] . ": $ " . number_format($fvcv['FacturaCuentaValore']['valor'], 2)); ?>&nbsp;<br>
             <?php endforeach; ?>                             
         <?php } ?>
 
         <?php if(count($factAbonos) > 0 ){ ?>
             <?php foreach($factAbonos as $fab):?>
-                <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 0)); ?>&nbsp;<br>
+                <?php echo h($fab['TP']['descripcion'] . ": $ " . number_format($fab['Abonofactura']['valor'], 2)); ?>&nbsp;<br>
             <?php endforeach; ?>
         <?php } ?> 
         <?php if(count($factCredit) > 0 ){ ?>
@@ -799,14 +799,14 @@
                     if(!$infoFact['Factura']['factura']){
                 ?>
                 <tr>
-                                <th class="text-left"><?php echo ('#'); ?></th>
+                                <th class="text-left"><?php echo ('Cant.'); ?></th>
                                 <th class="text-left"><?php echo ('Desc'); ?></th>                                
                                 <th class="text-right"><?php echo ('Vlr.Unit'); ?></th>
                                 <th class="text-right"><?php echo ('Subtotal'); ?></th>
                 </tr>
                     <?php }else{?>
                 <tr>
-                                <th class="text-left"><?php echo ('#'); ?></th>
+                                <th class="text-left"><?php echo ('Cant.'); ?></th>
                                 <th class="text-left"><?php echo ('Desc'); ?></th>                                
                                 <th class="text-right"><?php echo ('Vlr.Unit'); ?></th>                                                     
                                 <th class="text-right"><?php echo ('Subtotal'); ?></th>
@@ -831,36 +831,38 @@
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
                         <td><?php echo h($DetFact['P']['descripcion']); ?>&nbsp;</td>                    
-                        <td  align="right"><?php echo h("$" . number_format($costoVenta,0)); ?>&nbsp;</td>
-                        <td  align="right"><?php echo h("$" . number_format(($valorXCantidad),0)); ?>&nbsp;</td>
+                        <td  align="right"><?php echo h("$" . number_format($costoVenta,2)); ?>&nbsp;</td>
+                        <td  align="right"><?php echo h("$" . number_format(($valorXCantidad),2)); ?>&nbsp;</td>
                     </tr>    
                     
                 <?php        
                     }else{
+
                         $costoBase = 0;
                         $descuento = 0;
                         $costoVenta = $DetFact['Facturasdetalle']['costoventa'];
+                        $costoTotal = $DetFact['Facturasdetalle']['costototal'];
                         $imp = "";
                         if(!empty($DetFact['Facturasdetalle']['impuesto'])){
                             $imp = "*";
-                            $costoBase = ($DetFact['Facturasdetalle']['costoventa'] / (($DetFact['Facturasdetalle']['impuesto']/100)+1));
+                            $costoBase = number_format($DetFact['Facturasdetalle']['costoventa'] / (($DetFact['Facturasdetalle']['impuesto']/100)+1),2, '.', '');
                         }else{
-                            $costoBase = ($DetFact['Facturasdetalle']['costoventa']);
+                            $costoBase = number_format($DetFact['Facturasdetalle']['costoventa'],2, '.', '');
                         }
                         
                         if(!empty($DetFact['Facturasdetalle']['porcentaje'])){
-                            $descuento = (($costoBase * ($DetFact['Facturasdetalle']['porcentaje'])/100) * $DetFact['Facturasdetalle']['cantidad']);
+                            $descuento = number_format((($costoBase * ($DetFact['Facturasdetalle']['porcentaje'])/100) * $DetFact['Facturasdetalle']['cantidad']),2, '.', '');
                         }                        
                         
-                        $valorXCantidad = $costoBase * $DetFact['Facturasdetalle']['cantidad'];                                                
-                        $valorIVA = (($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impuesto']/100));                      
+                        $valorXCantidad = number_format(($costoBase * $DetFact['Facturasdetalle']['cantidad']),2, '.', '');                                           
+                        $valorIVA = number_format(($valorXCantidad - $descuento) * ($DetFact['Facturasdetalle']['impuesto']/100),2, '.', '');                       
 
                 ?>                
                     <tr>
                         <td><?php echo h($DetFact['Facturasdetalle']['cantidad']); ?>&nbsp;</td>
                         <td><?php echo h($imp . $DetFact['P']['descripcion']); ?>&nbsp;</td>                    
-                        <td  align="right"><?php echo h("$" . number_format($costoBase,0)); ?>&nbsp;</td>
-                        <td  align="right"><?php echo h("$" . number_format(($costoBase * $DetFact['Facturasdetalle']['cantidad']),0)); ?>&nbsp;</td>
+                        <td  align="right"><?php echo h("$" . number_format($DetFact['Facturasdetalle']['costoventa'],2)); ?>&nbsp;</td>
+                        <td  align="right"><?php echo h("$" . number_format(($costoBase - $descuento),2)); ?>&nbsp;</td>
 
                     </tr>    
                     
@@ -875,35 +877,40 @@
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b><?php echo($serviceName);?></b></td>
-                    <td  align="right"><b><?php echo "$ " . number_format(($ttalServ),0); ?></td></td>
+                    <td  align="right"><b><?php echo "$" . number_format(($ttalServ),2); ?></td></td>
                 </tr>
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b><?php echo($productName);?></b></td>
-                    <td  align="right"><b><?php echo "$ " . number_format(($ttalRep),0); ?></td></td>
+                    <td  align="right"><b><?php echo "$" . number_format(($ttalRep),2); ?></td></td>
                 </tr>
 
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>Subtotal</b></td>
-                    <td  align="right"><b><?php echo "$" . number_format(($subTtalVenta),0); ?></td></td>
+                    <td  align="right"><b><?php echo "$" . number_format(($ttalServ + $ttalRep),2); ?></td></td>
                 </tr>
-                <?php if(!empty($ttalDtto)){ ?>
+
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>Dcto</b></td>
-                    <td  align="right"><b>(<?php echo ("$". number_format(($ttalDtto),0));?>)</b></td>
-                </tr>                 
-                <?php } ?>                
+                    <td  align="right"><b>(<?php echo ("$". number_format(($ttalDtto),2));?>)</b></td>
+                </tr>      
+
                 <tr>
                     <td colspan="2">&nbsp;</td>
-                    <td  align="right"><b>Subttal con Dcto.</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format((($subTtalVenta - $ttalDtto)),0));?></b></td>
+                    <td  align="right"><b>Total Bruto fact.</b></td>
+                    <td  align="right"><b><?php echo ("$". number_format((($ttalServ + $ttalRep - $ttalDtto)),2));?></b></td>
                 </tr>                 
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>IVA</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format($ttalIVA,0));?></b></td>
+                    <td  align="right"><b><?php echo ("$". number_format($ttalIVA,2));?></b></td>
+                </tr>                    
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td  align="right"><b>INC</b></td>
+                    <td  align="right"><b><?php echo ("$". number_format($ttalICA,2));?></b></td>
                 </tr>                    
                 <tr>
                     <td colspan="2">&nbsp;</td>
@@ -918,7 +925,7 @@
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format((($subTtalVenta - $ttalDtto) + $ttalIVA),0));?></b></td>
+                    <td  align="right"><b><?php echo ("$". number_format(($ttalServ + $ttalRep - $ttalDtto + $ttalIVA + $ttalICA),2));?></b></td>
                 </tr>
                 
                 <?php }else{ ?>
@@ -936,17 +943,17 @@
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>Subttal</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format(($subTtalVenta),0));?></b></td>
+                    <td  align="right"><b><?php echo ("$". number_format(($subTtalVenta),2));?></b></td>
                 </tr>                
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>Dcto</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format(($ttalDtto),0));?></b></td>
+                    <td  align="right"><b><?php echo ("$". number_format(($ttalDtto),2));?></b></td>
                 </tr>                
                 <tr>
                     <td colspan="2">&nbsp;</td>
                     <td  align="right"><b>TOTAL</b></td>
-                    <td  align="right"><b><?php echo ("$". number_format(($subTtalVenta - $ttalDtto),0));?></b></td>
+                    <td  align="right"><b><?php echo ("$". number_format(($subTtalVenta - $ttalDtto),2));?></b></td>
                 </tr>                
                 
                 <?php } ?>

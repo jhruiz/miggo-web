@@ -212,7 +212,60 @@ class CargueinventariosController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+
+public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, string $esFactura): array 
+{
+    $precision = 4;
+    
+    // Extracción de datos con manejo de valores nulos/ausentes
+    $valorTotalString = (string) ($arrProducto['Cargueinventario']['precioventa'] ?? 0);
+    $tasaIvaPorc = (string) ($arrImpuestos['0']['Impuesto']['valor'] ?? 0);
+    
+    $tasaIncPorc = '0';
+    if (($arrProducto['Cargueinventario']['impuesto'] ?? '0') === '1') {
+        $tasaIncPorc = (string) ($arrProducto['Cargueinventario']['valor_impuesto'] ?? 0);
+    }
+    
+    // Valores decimales para el cálculo
+    $tasaIvaDecimal = bcdiv($tasaIvaPorc, '100', $precision);
+    $tasaIncDecimal = bcdiv($tasaIncPorc, '100', $precision);
+
+    // Valores iniciales (se calculan a continuación)
+    $valorBase = $valorTotalString;
+    $valIVA = '0';
+    $valINC = '0';
+
+    // --- 2. Lógica de Cálculo Inverso
+    if ($esFactura === '1') {
+        // Cálculo del Factor de Retiro: 1 + tIVA + tINC
+        $factorRetiro = bcadd('1', bcadd($tasaIvaDecimal, $tasaIncDecimal, $precision), $precision);
         
+        // CÁLCULO A: Valor Base (V_T / FactorRetiro) - Alta Precisión
+        $valorBaseCalculado = bcdiv($valorTotalString, $factorRetiro, $precision);
+        
+        // CÁLCULO B y C: Valor IVA y Valor INC (V_B * tasa) - Redondeado a 2 decimales para el registro
+        $valIVA = bcmul($valorBaseCalculado, $tasaIvaDecimal, $precision);
+        $valINC = bcmul($valorBaseCalculado, $tasaIncDecimal, $precision);
+
+        // Redondeo final a 2 decimales
+        $valIVA = round($valIVA, 2);
+        $valINC = round($valINC, 2);
+
+        // CÁLCULO D: Valor Base Final (Por diferencia) - Garantiza que la suma sea exacta
+        $sumaImpuestosFinal = bcadd((string)$valIVA, (string)$valINC, 2);
+        $valorBase = bcsub($valorTotalString, $sumaImpuestosFinal, 2);
+    }
+
+    // --- 3. Retorno de Resultados
+    return [
+        'tasaIvaDecimal' => $tasaIvaDecimal,
+        'tasaIncDecimal' => $tasaIncDecimal,
+        'valorIva' => (float) $valIVA, // Convierte a float para compatibilidad si es necesario
+        'valorInc' => (float) $valINC, // Convierte a float para compatibilidad si es necesario
+        'valorBase' => (float) $valorBase, // Convierte a float para compatibilidad si es necesario
+    ];
+}
         
 /**
  * cargarinventario method
@@ -326,24 +379,10 @@ class CargueinventariosController extends AppController {
             /*Se obtienen los impuestos grabados al producto*/
             $arrImpuestos = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($arrProducto['Cargueinventario']['id']);
             
-            $prcImpuesto = 0;
-            $vlrAntesImp = $arrProducto['Cargueinventario']['precioventa'];
-            $vlrImpuesto = 0;
-            //se valida si existen impuestos
-            if(!empty($arrImpuestos) && $esFactura == '1'){                
-                $prcImpuesto = 1 + (floatval($arrImpuestos['0']['Impuesto']['valor'])/100);
-                $vlrAntesImp = round(($arrProducto['Cargueinventario']['precioventa']/$prcImpuesto), 4);
-                $vlrImpuesto = round(($arrProducto['Cargueinventario']['precioventa'] - $vlrAntesImp), 4);
-            }
+            /**Se obtienen porcentajes de impuestos, valores y valores base */
+            $dataImpuestos = $this->obtenerInfoImpuestos( $arrProducto, $arrImpuestos, $esFactura );
 
-            $prcICA = 0;
-            $vlrICA = 0;
-            if($arrProducto['Cargueinventario']['impuesto'] == '1' && $esFactura == '1') {
-                $prcICA = round((floatval($arrProducto['Cargueinventario']['valor_impuesto'])/100),4);
-                $vlrICA = round(($vlrAntesImp * $prcICA), 4);
-            }
-
-            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'prcImpuesto', 'vlrAntesImp', 'vlrImpuesto', 'prcICA', 'vlrICA', 'esFactura'));
+            $this->set(compact('arrProducto','urlImgProducto','arrImpuestos', 'esFactura', 'dataImpuestos'));
         }
         
         public function seleccionproductoventaclientenuevo(){

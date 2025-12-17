@@ -68,7 +68,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
         </div> 
         
         <div class="form-group form-inline"> 
-            <label>Precio de Venta A.I.</label><br>
+            <label>Valor Base</label><br>
             <div class="input-group">
                 <span class="input-group-addon">$</span>                    
                 <?php echo $this->Form->input('precioventaCI', array(

@@ -37,6 +37,22 @@ var opcCrediContado = {
 
 var dialogCrediContado;
 
+var obtenerFactorRetiro = function( prefactura ) {
+
+    alert('llega aqui');
+
+    console.log( prefactura );
+
+
+
+
+                        var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
+                        var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
+                        var prcINC = (esFactura == '1') ? prefactura.producto['0'].Cargueinventario.valor_impuesto : parseFloat('0');
+                        var valINC = (esFactura == '1') ? parseFloat(valAntesIva) * parseFloat(prcINC/100) : parseFloat('0');
+                        var valFinal = parseFloat(valAntesIva + valIva + valINC);
+}
+
 var fnObtenerDatosCliente = function(){
     
     activarFiltroProducto();
@@ -225,6 +241,11 @@ function fnObtenerDatosProducto(e){
                     var prefactura = JSON.parse(data);
                     if(prefactura.valido){
 
+                        var factorRetiro = obtenerFactorRetiro(prefactura);
+
+
+
+
                         var valAntesIva = prefactura.producto['0'].Cargueinventario.precioventa / ((prefactura.impuesto/100) + 1);
                         var valIva = parseFloat(prefactura.producto['0'].Cargueinventario.precioventa) - parseFloat(valAntesIva);
                         var prcINC = (esFactura == '1') ? prefactura.producto['0'].Cargueinventario.valor_impuesto : parseFloat('0');
@@ -326,7 +347,7 @@ function seleccionarProducto(dato){
 
 function agregarProductoFactura(){
     var esFactura = $('#esFacturaDV').val();
-    var impuesto = (esFactura == '1') ? $('#impuesto').val() : parseFloat('0');
+    var impuesto = (esFactura == '1') ? $('#prcIVA').val() : parseFloat('0');
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('#FacturaIdcliente').val();
     var cargueinventarioId = $('#cargueinventarioId').val();

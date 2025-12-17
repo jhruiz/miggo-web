@@ -35,9 +35,8 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
         <input type="hidden" id="cargueinventarioId" value="<?php echo $arrProducto['Cargueinventario']['id'];?>">  
         <input type="hidden" id="nombreProducto" value="<?php echo $arrProducto['Producto']['descripcion'];?>">
         <input type="hidden" id="codigoProducto" value="<?php echo $arrProducto['Producto']['codigo'];?>">
-        <input type="hidden" id="impuesto" value="<?php echo !empty($arrImpuestos) ? $arrImpuestos['0']['Impuesto']['valor'] : '0';?>">
-        <input type="hidden" id="prcImpuesto" value="<?php echo $prcImpuesto;?>">
         <input type="hidden" id="vtaInventario" value="<?php echo $arrProducto['Producto']['inventario'];?>">
+        <input type="hidden" id="prcIVA" value="<?php echo !empty($arrImpuestos) ? $arrImpuestos['0']['Impuesto']['valor'] : '0';?>">
         <input type="hidden" id="prcINC" value="<?php echo $arrProducto['Cargueinventario']['valor_impuesto'];?>">
         
         <div class="form-group form-inline"> 
@@ -49,7 +48,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'class' => 'form-control quant_sale', 
                     'placeholder' => 'Cantidad', 
                     'value' => '1', 
-                    'onchange' => 'validarCantidadStock();'
+                    'onchange' => 'recalculoValores();'
                     )); ?>
             </div>
         </div> 
@@ -62,20 +61,20 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'label' => '', 
                     'class' => 'form-control numericPrice salePriceWI', 
                     'placeholder' => 'Precio de Venta', 
-                    'onchange' => 'calcularTotales();',
+                    'onchange' => 'recalculoValores();',
                     'value' => $arrProducto['Cargueinventario']['precioventa'])); ?>
             </div>
         </div> 
 
         <div class="form-group form-inline"> 
-            <label>Precio de Venta A.I.</label><br>
+            <label>Valor Base</label><br>
             <div class="input-group">
                 <span class="input-group-addon">$</span>                    
                 <?php echo $this->Form->input('precioventaCI', array(
                     'label' => '', 
                     'class' => 'form-control numericPrice salePriceCI', 
                     'placeholder' => 'Precio de Venta', 
-                    'value' => $vlrAntesImp,                     
+                    'value' => $dataImpuestos['valorBase'],                     
                     'disabled' => true)); ?>
             </div>
         </div> 
@@ -91,7 +90,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'value' => '0',
                     'min' => '0',
                     'max' => '100',
-                    'onblur' => 'calcularDescuentoPorPorcentaje();')); ?>
+                    'onchange' => 'recalculoValores();')); ?>
             </div>
         </div>
         
@@ -104,7 +103,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'class' => 'form-control numericPrice val_discount', 
                     'placeholder' => 'Valor Descuento', 
                     'value' => '0',                   
-                    'onblur' => 'calcularDescuentoPorValor();')); ?>
+                    'disabled' => true)); ?>
             </div>
         </div>       
         
@@ -117,7 +116,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'class' => 'form-control numericPrice', 
                     'placeholder' => 'Valor Descuento', 
                     'disabled' => true,
-                    'value' => $vlrImpuesto )); ?>
+                    'value' => $dataImpuestos['valorIva'] )); ?>
             </div>
         </div>        
         
@@ -129,7 +128,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'label' => '', 
                     'class' => 'form-control numericPrice',
                     'disabled' => true,
-                    'value' => $vlrICA )); ?>
+                    'value' => $dataImpuestos['valorInc'] )); ?>
             </div>
         </div>        
         
@@ -141,7 +140,7 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
                     'label' => '', 
                     'class' => 'form-control numericPrice', 
                     'disabled' => true,
-                    'value' => $vlrAntesImp + $vlrImpuesto + $vlrICA) ); ?>
+                    'value' => $dataImpuestos['valorBase'] + $dataImpuestos['valorIva'] + $dataImpuestos['valorInc']) ); ?>
             </div>
         </div>               
     </div>

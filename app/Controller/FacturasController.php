@@ -1949,19 +1949,27 @@ class FacturasController extends AppController
           $costoTotal = $val['Facturasdetalle']['costototal'];
           $descuento = $val['Facturasdetalle']['descuento'];
           $impuesto = $val['Facturasdetalle']['impuesto'];
+          $impoconsumo = $val['Facturasdetalle']['impoconsumo'];
   
-          list($valSinImp, $valIva) = $this->calcularValores($costoTotal, $descuento, $impuesto);
-  
+          list($valSinImp, $valIva, $valImpoconsumo) = $this->calcularValores($costoTotal, $descuento, $impuesto, $impoconsumo);
+         
           // Suma de valores con y sin IVA
           $sumValSinIva += $valSinImp;
-          $sumValConIva += round( ( $valSinImp + $valIva ), 2 );
-  
+          $sumValConIva += round( ( $valSinImp + $valIva + $valImpoconsumo ), 2 );
+
           // Información de los impuestos por cada producto
-          $arrImpuestos[] = $this->obtenerImpuestoPorProducto( $valIva, $valSinImp, $val['Facturasdetalle']['impuesto'] );
-  
+          $arrImpuestos[] = $this->obtenerImpuestoPorProducto( '1', $valIva, $valSinImp, $val['Facturasdetalle']['impuesto'] );
+
+          $flgINC = false;
+          if( $impoconsumo != 0 ) {
+              $arrImpuestos[] = $this->obtenerImpuestoPorProducto( '4', $valImpoconsumo, $valSinImp, $val['Facturasdetalle']['impoconsumo'] );
+              $flgINC = true;
+          }
+
+          $montoProducto = $valSinImp + $valIva + $valImpoconsumo;
+
           // Información detallada de las lineas
-          $arrLineas[] = $this->obtenerDetalleLineas( $val, $arrImpuestos[count($arrImpuestos) - 1] );
-          
+          $arrLineas[] = $this->obtenerDetalleLineas( $val, $arrImpuestos, $flgINC, $montoProducto, $valSinImp );
         }
   
         // Información de los totales de la venta con y sin iva
@@ -1974,8 +1982,9 @@ class FacturasController extends AppController
     /**
      * Calcular los valores de impuestos y productos
      */
-    private function calcularValores( $costoTotal, $descuento, $impuesto ) {
+    private function calcularValores( $costoTotal, $descuento, $impuesto, $impoconsumo ) {
 
+        //Gestión de impuesto IVA
         if ( $impuesto > 0 ) {
 
             $impuesto /= 100;
@@ -1987,7 +1996,16 @@ class FacturasController extends AppController
             $valIva = number_format( 0, 2 );
         }
 
-        return [number_format($valSinImp, 2, '.', ''), number_format($valIva, 2, '.', '')];
+        //Gestión de impuesto Impoconsumo
+        if( $impoconsumo > 0 ) {
+            $impoconsumo /= 100;
+
+            $valImpoconsumo = round( ($valSinImp ) * $impoconsumo, 2 );
+        } else {
+            $valImpoconsumo = number_format( 0, 2 );
+        }
+
+        return [number_format($valSinImp, 2, '.', ''), number_format($valIva, 2, '.', ''), number_format($valImpoconsumo, 2, '.', '')];
     }    
 
     /**
@@ -2004,34 +2022,47 @@ class FacturasController extends AppController
     }
 
     /**
-     * Retorna un arreglo con el impuesto de un producto
+     * Retorna un arreglo con el impuesto de IVA
      */
-    public function obtenerImpuestoPorProducto( $valIva, $valSinImp, $impuesto){
+    public function obtenerImpuestoPorProducto( $idImpto, $valImpto, $valSinImp, $impuesto){
 
         return [
-        'tax_id' => '1',
-        'tax_amount' => $valIva,
-        'taxable_amount' => $valSinImp,
-        'percent' => number_format($impuesto, 2)
+            'tax_id' => $idImpto,
+            'tax_amount' => $valImpto,
+            'taxable_amount' => $valSinImp,
+            'percent' => number_format($impuesto, 2)
         ];
     }
 
     /**
      * Genera la información de las lineas de la factura
      */
-    public function obtenerDetalleLineas($val, $arrImpuestos)
-    {
+    public function obtenerDetalleLineas( $val, $arrImpuestos, $flgINC, $montoProducto, $valSinImp ){
+
+        $arrImp = array();
+        if( $flgINC ) {
+
+            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 2]; 
+            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 1]; 
+
+        } else {
+
+            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 1]; 
+
+        }
+
+
         // Inicializa el array de productos con los valores proporcionados
         $arrProductos = [
             'unit_measure_id' => '70',
             'invoiced_quantity' => $val['Facturasdetalle']['cantidad'],
             'line_extension_amount' => $arrImpuestos['taxable_amount'],
             'free_of_charge_indicator' => false,
-            'tax_totals' => [$arrImpuestos],
+            'tax_totals' => $arrImp,
             'description' => $val['P']['descripcion'],
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
-            'price_amount' => $val['Facturasdetalle']['costoventa'],
+            'price_amount' => $montoProducto,
             'base_quantity' => $val['Facturasdetalle']['cantidad']
         ];
     
@@ -2042,7 +2073,7 @@ class FacturasController extends AppController
                 "charge_indicator" => false,
                 "allowance_charge_reason" => "Descuento General",
                 "amount" => $val['Facturasdetalle']['descuento'],
-                "base_amount" => $val['Facturasdetalle']['costototal']
+                "base_amount" => number_format(($valSinImp + $val['Facturasdetalle']['descuento']), 2, '.', '')
             ];
         }
     
