@@ -183,11 +183,19 @@ class FacturasController extends AppController
 
         for ($i = 0; $i < count($infoDetFact); $i++) {
 
-            $ttalUnid += $infoDetFact[$i]['Facturasdetalle']['cantidad'];
-            $infoDetFact[$i]['Facturasdetalle']['baseiva'] = 'N/A';
-            $infoDetFact[$i]['Facturasdetalle']['valorconiva'] = $infoDetFact[$i]['Facturasdetalle']['costototal'];
-            $infoDetFact[$i]['Facturasdetalle']['valoriva'] = 'N/A';
-            $infoDetFact[$i]['Facturasdetalle']['iva'] = 'N/A';
+            $arrInfoProds = [
+                'unidadesProd' => (float)($infoDetFact[$i]['Facturasdetalle']['cantidad']),
+                'precioVenta' => (float)($infoDetFact[$i]['Facturasdetalle']['costoventa']),
+                'porcentajeDesc' => (float)($infoDetFact[$i]['Facturasdetalle']['porcentaje']),
+                'prcIVA' => (float)($infoDetFact[$i]['Facturasdetalle']['impuesto'] / 100),
+                'prcINC' => (float)($infoDetFact[$i]['Facturasdetalle']['impoconsumo'] / 100),
+                'valBolsa' => (float)($infoDetFact[$i]['Facturasdetalle']['incbolsa'])
+            ];
+
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
+
+            $infoDetFact[$i]['valoresBase'] = $objValoresBase;
+
         }     
 
         $impuestos = '0';
@@ -292,10 +300,6 @@ class FacturasController extends AppController
  */
     public function add($esFactura = '0')
     {
-        /*se reagistra la actividad del uso de la aplicacion*/
-        $usuariosController = new UsuariosController();
-        $usuarioAct = $this->Auth->user('id');
-        $usuariosController->registraractividad($usuarioAct);
 
         $this->loadModel('Tipopago');
         $this->loadModel('Notafactura');
@@ -306,15 +310,6 @@ class FacturasController extends AppController
         $this->loadModel('Empresa');
         $this->loadModel('Canalventa');
 
-        if ($this->request->is('post')) {
-            $this->Factura->create();
-            if ($this->Factura->save($this->request->data)) {
-                $this->Session->setFlash(__('The factura has been saved.'));
-                return $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('The factura could not be saved. Please, try again.'));
-            }
-        }
         $empresaId = $this->Auth->user('empresa_id');
         $usuarioId = $this->Auth->user('id');
         $tipoPago = $this->Tipopago->find('list');
@@ -449,6 +444,7 @@ class FacturasController extends AppController
 
         $posData = $this->request->data;
         $totalFacturar = $posData['valorCompra'];
+
         $this->set(compact('totalFacturar', 'listTipPag', 'empresa'));
         /*se carga el ctp para agregar los valores a pagar*/
     }
@@ -531,7 +527,7 @@ class FacturasController extends AppController
         /*Se crea la factura*/
         $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $datFact['vendedor'], $fechaVence,
             null, $datFact['pagocontado'], $datFact['pagocredito'], $documentoId, $datFact['empresaRelacionada'],
-            $ordenTrabajo, $esFactura, null, $datFact['observacion'], $datFact['canalventa']);
+            $ordenTrabajo, $esFactura, null, $datFact['observacion'], $datFact['canalventa'], $datFact['f_ref_or'], $datFact['n_ref_or']);
 
         /*Se actualiza el codigo de la factura con el id de la factura ya que MySql solo acepta un autoincrement*/
         $this->Factura->actualizarCodigoFactura($facturaId);
@@ -565,6 +561,7 @@ class FacturasController extends AppController
             /*id 1 = comun     id 2 = simplificado*/
             $consFact = $this->obtenerConsecutivoFactura($arrDatDpto, $facturaId);
         }
+        
         /* se valida si la fecha de vencimiento es diferente de null,
         de ser asi, se confirma el pago a crédito y se registra el
         valor pendiente por cobrar al cliente */
@@ -572,7 +569,7 @@ class FacturasController extends AppController
         if ($fechaVence != null) {
             $depositoId = $arrDptos['0']['DepositosUsuario']['deposito_id'];
             $this->Cuentascliente->guardarCuentaPorCobrar($documentoId, $depositoId, $clienteId, $datFact['usuario'], $datFact['empresa'], $datFact['pagocredito'], $facturaId);
-        }
+        }        
 
         $prefacturaId = "";
         $ttalVenta = 0;
@@ -605,51 +602,33 @@ class FacturasController extends AppController
             if ($this->Facturasdetalle->guardarDetalleFactura($facturaId, $arrCrgInv['Cargueinventario']['deposito_id'],
                 $arrCrgInv['Cargueinventario']['producto_id'], $detallePrefactura['Prefacturasdetalle']['cantidad'],
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $costoTotalProd, $detallePrefactura['Prefacturasdetalle']['descuento'],
-                $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto, $detallePrefactura['Prefacturasdetalle']['impoconsumo'])) {
+                $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto, $detallePrefactura['Prefacturasdetalle']['impoconsumo'],
+                $detallePrefactura['Prefacturasdetalle']['incbolsa'])) {
                 /*se elimina el registro de prefacturadetalle*/
                 // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
             }
 
-            /*Se calculan las utilidades de la venta y se guarda la utilidad del producto*/
-            $subValUnit = $detallePrefactura['Prefacturasdetalle']['costoventa'];
-            $cantidadVta = $detallePrefactura['Prefacturasdetalle']['cantidad'];
-            $subPrecioTtal = $subValUnit * $cantidadVta;
+            //Obtiene los valores base de los productos
+            $arrInfoProds = [
+                'unidadesProd' => (float)($detallePrefactura['Prefacturasdetalle']['cantidad']),
+                'precioVenta' => (float)($detallePrefactura['Prefacturasdetalle']['costoventa']),
+                'porcentajeDesc' => (float)($detallePrefactura['Prefacturasdetalle']['porcentaje']),
+                'prcIVA' => (float)($detallePrefactura['Prefacturasdetalle']['impuesto'] / 100),
+                'prcINC' => (float)($detallePrefactura['Prefacturasdetalle']['impoconsumo'] / 100),
+                'valBolsa' => (float)($detallePrefactura['Prefacturasdetalle']['incbolsa'])
+            ];
 
-            //se obtiene el precio base del producto
-            $valorIva = 0;
-            if (!empty($impuesto)) {
-                $subBaseSinIva = intval($subPrecioTtal / (($impuesto / 100) + 1));
-                $valorIva = $subPrecioTtal - $subBaseSinIva;
-            } else {
-                $subBaseSinIva = $subPrecioTtal;
-            }
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
 
-            //valor del descuento
-            $valorDtto = 0;
-            if (!empty($detallePrefactura['Prefacturasdetalle']['porcentaje'])) {
-                $valorDtto = intval($subBaseSinIva * ($detallePrefactura['Prefacturasdetalle']['porcentaje'] / 100));
-            }
 
-            //precio total sumando la base con el iva y restando el descuento
-            $subPrecioFinal = $subBaseSinIva + $valorIva - $valorDtto;
-            $ttalVenta += $subPrecioFinal;
+            $cantidadVta = (float)($arrInfoProds['unidadesProd']);
+            $precioUnitario = ($objValoresBase['valorBaseUnitario']-$objValoresBase['descuento'])/$cantidadVta;
+            $utilidadBruta = (float)($precioUnitario-$arrCrgInv['Cargueinventario']['costoproducto']);
+            $utilidadPorcentual = (float)(($utilidadBruta/$precioUnitario)*100);
 
-            //el precio final del producto por unidad
-            $finalUnitario = $subPrecioFinal / $cantidadVta;
-
-            //se obtiene la utilidad bruta y la porcentual
-            $utilidadBruta = $subPrecioFinal - ($arrCrgInv['Cargueinventario']['costoproducto'] * $cantidadVta);
-
-            //si el precio final es 0 es porque se dio un descuento del 100%
-            if ($subPrecioFinal > 0) {
-                $utilidadPorcentual = $utilidadBruta / ($subPrecioFinal * 100);
-            } else {
-                $utilidadPorcentual = '0';
-            }
-
-            $this->Utilidade->guardarUtilidadProducto(
-                $arrCrgInv['Cargueinventario']['id'], $cantidadVta, $finalUnitario, $utilidadBruta, number_format($utilidadPorcentual, 2),
-                $arrEmpresa['Empresa']['id'], $facturaId, $arrCrgInv['Cargueinventario']['costoproducto']);
+            $this->Utilidade->guardarUtilidadProducto(  $arrCrgInv['Cargueinventario']['id'], $cantidadVta, $precioUnitario, 
+                                                        $utilidadBruta, $utilidadPorcentual, $arrEmpresa['Empresa']['id'], 
+                                                        $facturaId, $arrCrgInv['Cargueinventario']['costoproducto']);     
         }
 
         //actualiza el valor final de venta de la factura en pagocontado
@@ -660,13 +639,14 @@ class FacturasController extends AppController
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
-        
+   
         $this->Prefactura->actualizarEstadoPrefacturaEliminar($prefacturaId);
 
         //se actualiza el id de la factura en los abonos correspondientes
         $this->Abonofactura->asignarFacturaAbonos($prefacturaId, $facturaId);
 
         $this->Cuentascliente->actualizarCuentaClienteFactura($documentoId, $clienteId, $facturaId, $prefacturaId);
+        
 
         echo json_encode(array('resp' => $facturaId));
     }
@@ -1681,6 +1661,9 @@ class FacturasController extends AppController
         //Obtiene la información del cliente de la factura
         $infoCliente = $this->generarInfoCliente( $factura );
 
+        //Obtiene la inforamción de la orde de compra
+        $infoOrden = $this->generarInfoOrden( $factura );
+
         //Obtiene la información del tipo de pago
         $infoTipoPago = $this->generarInfoTipoPago( $factura );
         
@@ -1690,12 +1673,12 @@ class FacturasController extends AppController
         //Valida que todos los resultados sean un array procesable
         if ($this->validateArrays($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)) {
 
-            $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral));
-
+            $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral));
+            print_r($jsonFactura); die();
             echo json_encode(array(
                 'token' => $factura['Empresa']['tokendian'],
                 'nitEmpresa' => $factura['Empresa']['nit'],
-                array_merge($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)
+                array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral)
             ));
 
         } else {
@@ -1757,6 +1740,25 @@ class FacturasController extends AppController
 
     }
 
+    /**
+     * Genera el arreglo con la información de la orden, si aplica
+     */
+    public function generarInfoOrden( $factura ) {
+        if( !empty($factura['Factura']['numeroorden']) ) {
+
+            $arrOrden = array();
+
+            $arrOrden['order_reference']['id_order'] = $factura['Factura']['numeroorden'];
+
+            if( !empty($factura['Factura']['fechaorden']) ) {
+                $arrOrden['order_reference']['issue_date_order'] = $factura['Factura']['fechaorden'];
+            }
+
+            return $arrOrden;
+        }
+        return [];
+    }
+
         /**
      * Calcula el digito de verificacion de un nit 
      */
@@ -1814,7 +1816,7 @@ class FacturasController extends AppController
             "name" => !empty($infoCliente['nombre']) ? $infoCliente['nombre'] : 'Cliente anónimo',
             "phone" => !empty($infoCliente['celular']) ? $infoCliente['celular'] : '3101234567',
             "address" => !empty($infoCliente['direccion']) ? $infoCliente['direccion'] : 'Calle 1 # 2 - 3',
-            "email" => !empty($infoCliente['email']) ? $infoCliente['email'] : 'noemail@hotmail.comm',
+            "email" => !empty($infoCliente['email']) ? $infoCliente['email'] : 'noemail@hotmail.com',
             "merchant_registration" => '0000-00',
             "type_document_identification_id" => $infoCliente['tipoidentificacione_id'],
             "type_organization_id" => $typeRegimen,
@@ -1936,77 +1938,62 @@ class FacturasController extends AppController
           return false;
         }
         
-        $sumValSinIva = 0;
-        $sumValConIva = 0;
-        $arrImpuestos = [];
+        $sumValSinImp = 0;
+        $sumValConImp = 0;
         $arrLineas = [];
+        $arrImpuestosTotales = [];
 
         //Obtiene la información del detalle de la factura
         $facturaDetalle = $this->Facturasdetalle->obtenerFacturaDetalleFactId( $factura['Factura']['id'] );
-  
+
         foreach ( $facturaDetalle as $val ) {
+            $arrImpuestosLinea = [];
 
-          $costoTotal = $val['Facturasdetalle']['costototal'];
-          $descuento = $val['Facturasdetalle']['descuento'];
-          $impuesto = $val['Facturasdetalle']['impuesto'];
-          $impoconsumo = $val['Facturasdetalle']['impoconsumo'];
-  
-          list($valSinImp, $valIva, $valImpoconsumo) = $this->calcularValores($costoTotal, $descuento, $impuesto, $impoconsumo);
-         
-          // Suma de valores con y sin IVA
-          $sumValSinIva += $valSinImp;
-          $sumValConIva += round( ( $valSinImp + $valIva + $valImpoconsumo ), 2 );
+            $arrInfoProds = [
+                'unidadesProd' => (float)($val['Facturasdetalle']['cantidad']),
+                'precioVenta' => (float)($val['Facturasdetalle']['costoventa']),
+                'porcentajeDesc' => (float)($val['Facturasdetalle']['porcentaje']),
+                'prcIVA' => (float)($val['Facturasdetalle']['impuesto'] / 100),
+                'prcINC' => (float)($val['Facturasdetalle']['impoconsumo'] / 100),
+                'valBolsa' => (float)($val['Facturasdetalle']['incbolsa'])
+            ];
 
-          // Información de los impuestos por cada producto
-          $arrImpuestos[] = $this->obtenerImpuestoPorProducto( '1', $valIva, $valSinImp, $val['Facturasdetalle']['impuesto'] );
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
 
-          $flgINC = false;
-          if( $impoconsumo != 0 ) {
-              $arrImpuestos[] = $this->obtenerImpuestoPorProducto( '4', $valImpoconsumo, $valSinImp, $val['Facturasdetalle']['impoconsumo'] );
-              $flgINC = true;
-          }
+            // impuesto del iva
+            if ( !empty( $val['Facturasdetalle']['impuesto'] ) ) {
+                $arrImpuestosTotales[] = $arrImpuestosLinea[] = $this->obtenerImpuestoPorProducto( $val['Facturasdetalle']['producto_id'], $val['Facturasdetalle']['impuesto'], $objValoresBase['valorIVA'], $objValoresBase['valorBaseUnitario'], $arrInfoProds );
+            }
 
-          $montoProducto = $valSinImp + $valIva + $valImpoconsumo;
+            // impueto del inc
+            if ( !empty( $val['Facturasdetalle']['impoconsumo'] ) ) {
+                $arrImpuestosTotales[] = $arrImpuestosLinea[] = $this->obtenerImpuestoPorProducto( $val['Facturasdetalle']['producto_id'], $val['Facturasdetalle']['impoconsumo'], $objValoresBase['valorINC'], $objValoresBase['valorBaseUnitario'], $arrInfoProds ); 
+            }
 
-          // Información detallada de las lineas
-          $arrLineas[] = $this->obtenerDetalleLineas( $val, $arrImpuestos, $flgINC, $montoProducto, $valSinImp );
+            // impuesto de bolsa
+            $valImpBolsa = 0;
+            if ( !empty( $val['Facturasdetalle']['incbolsa'] ) ) {
+                $arrImpuestosTotales[] = $arrImpuestosLinea[] = $this->obtenerImpuestoPorProducto( $val['Facturasdetalle']['producto_id'], $val['Facturasdetalle']['incbolsa'], $objValoresBase['varorINCBolsa'], $objValoresBase['valorBaseUnitario'], $arrInfoProds );
+                $valImpBolsa = $objValoresBase['varorINCBolsa'];
+            } 
+
+            $valorProducto = $objValoresBase['valorBaseUnitario'] + $objValoresBase['valorIVA'] + $objValoresBase['valorINC'];
+
+            //Sumatoria de valores con y sin impuestos
+            $sumValSinImp += $objValoresBase['valorBaseUnitario'];
+            $sumValConImp += $valorProducto + $valImpBolsa;
+
+            $arrLineas[] = $this->obtenerDetalleLineas( $val, $arrImpuestosLinea, $objValoresBase );
         }
   
         // Información de los totales de la venta con y sin iva
-        $arrTotales = $this->obtenerTotalesVenta( $sumValSinIva, $sumValConIva );
+        $arrTotales = $this->obtenerTotalesVenta( $sumValSinImp, $sumValConImp );
+
+        $arrImpuestosTotales = $this->consolidarImpuestosGlobales($arrImpuestosTotales);
   
-        return ['legal_monetary_totals' => $arrTotales, 'tax_totals' => $arrImpuestos, 'invoice_lines' => $arrLineas];
+        return ['legal_monetary_totals' => $arrTotales, 'tax_totals' => $arrImpuestosTotales, 'invoice_lines' => $arrLineas];
   
-    }
-
-    /**
-     * Calcular los valores de impuestos y productos
-     */
-    private function calcularValores( $costoTotal, $descuento, $impuesto, $impoconsumo ) {
-
-        //Gestión de impuesto IVA
-        if ( $impuesto > 0 ) {
-
-            $impuesto /= 100;
-            $valSinImp = (round( ( $costoTotal ) / ( 1 + $impuesto ), 2 )) - $descuento;
-            $valIva = round( $valSinImp * $impuesto, 2 );
-        
-        } else {
-            $valSinImp = round( ( $costoTotal - $descuento ), 2 );
-            $valIva = number_format( 0, 2 );
-        }
-
-        //Gestión de impuesto Impoconsumo
-        if( $impoconsumo > 0 ) {
-            $impoconsumo /= 100;
-
-            $valImpoconsumo = round( ($valSinImp ) * $impoconsumo, 2 );
-        } else {
-            $valImpoconsumo = number_format( 0, 2 );
-        }
-
-        return [number_format($valSinImp, 2, '.', ''), number_format($valIva, 2, '.', ''), number_format($valImpoconsumo, 2, '.', '')];
-    }    
+    }   
 
     /**
      * Retorna un arreglo con los totales de venta con y sin iva
@@ -2022,47 +2009,94 @@ class FacturasController extends AppController
     }
 
     /**
-     * Retorna un arreglo con el impuesto de IVA
+     * se consolidan los impuestos globales para la sumatoria global de taxes
      */
-    public function obtenerImpuestoPorProducto( $idImpto, $valImpto, $valSinImp, $impuesto){
+    public function consolidarImpuestosGlobales($impuestosDetalle) {
+        $consolidado = [];
 
-        return [
-            'tax_id' => $idImpto,
-            'tax_amount' => $valImpto,
-            'taxable_amount' => $valSinImp,
-            'percent' => number_format($impuesto, 2)
+        foreach ($impuestosDetalle as $imp) {
+            // Creamos una llave única por ID de impuesto y porcentaje
+            // Ej: "1_19.00" o "10_0.00"
+            $key = $imp['tax_id'] . '_' . $imp['percent'];
+
+            if (!isset($consolidado[$key])) {
+                // Si es la primera vez que vemos este impuesto/tarifa, lo inicializamos
+                $consolidado[$key] = $imp;
+                // Aseguramos que los valores sean flotantes para sumar
+                $consolidado[$key]['tax_amount'] = (float)$imp['tax_amount'];
+                $consolidado[$key]['taxable_amount'] = (float)$imp['taxable_amount'];
+            } else {
+                // Si ya existe, sumamos los valores a la base existente
+                $consolidado[$key]['tax_amount'] += (float)$imp['tax_amount'];
+                $consolidado[$key]['taxable_amount'] += (float)$imp['taxable_amount'];
+            }
+        }
+
+        // Formateamos los números al final para que cumplan el estándar (2 decimales)
+        return array_values(array_map(function($item) {
+            $item['tax_amount'] = number_format($item['tax_amount'], 2, '.', '');
+            $item['taxable_amount'] = number_format($item['taxable_amount'], 2, '.', '');
+            return $item;
+        }, $consolidado));
+    }
+
+    /**
+     * Genera el arreglo con la información de los impuestos por valor o porcentaje
+     */
+    public function obtenerImpuestoPorProducto($productoId, $valPrcImp, $valorImp, $valorBase, $arrInfoProds) {
+        $this->loadModel('CargueinventariosImpuesto');
+
+        // 1. Obtener la información del impuesto y validar que exista
+        $resultado = $this->CargueinventariosImpuesto->obtenerImpProdInvValor($productoId, $valPrcImp);
+        
+        if (empty($resultado)) {
+            return null; // O manejar un error si el producto no tiene ese impuesto configurado
+        }
+
+        $infoImpuesto = $resultado[0]['Impuesto'];
+        $valorConfigurado = (float)$infoImpuesto['valor'];
+        $unidades = (float)($arrInfoProds['unidadesProd'] ?? 1);
+
+        // 2. Estructura base del impuesto
+        $arrImpuesto = [
+            'tax_id'         => $infoImpuesto['tax_id'],
+            'tax_amount'     => number_format($valorImp, 2, '.', ''),
+            'taxable_amount' => number_format($valorBase, 2, '.', ''),
+            'percent'        => number_format($valorConfigurado, 2, '.', '')
         ];
+
+        // 3. Lógica para Impuestos Nominales/Fijos (Bolsas, Licores, etc.)
+        // Asumimos que valoprc == '0' significa "Impuesto por Valor Fijo"
+        if ($infoImpuesto['valoprc'] == '0') {
+            $totalNominal = $valorConfigurado * $unidades;
+
+            $arrImpuesto['percent']           = "0";
+            $arrImpuesto['unit_measure_id']   = "70";
+            $arrImpuesto['tax_amount']       = number_format($totalNominal, 2, '.', ''); 
+            $arrImpuesto['taxable_amount'] = number_format($unidades, 2, '.', '');
+            $arrImpuesto['per_unit_amount']  = number_format($valorConfigurado, 2, '.', '');
+            $arrImpuesto['base_unit_measure'] = "1.00";
+        }
+
+        return $arrImpuesto;
     }
 
     /**
      * Genera la información de las lineas de la factura
      */
-    public function obtenerDetalleLineas( $val, $arrImpuestos, $flgINC, $montoProducto, $valSinImp ){
-
-        $arrImp = array();
-        if( $flgINC ) {
-
-            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 2]; 
-            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 1]; 
-
-        } else {
-
-            $arrImp[] = $arrImpuestos[count($arrImpuestos) - 1]; 
-
-        }
-
+    public function obtenerDetalleLineas( $val, $arrImpuestos, $objValoresBase ){
 
         // Inicializa el array de productos con los valores proporcionados
         $arrProductos = [
             'unit_measure_id' => '70',
             'invoiced_quantity' => $val['Facturasdetalle']['cantidad'],
-            'line_extension_amount' => $arrImpuestos['taxable_amount'],
-            'free_of_charge_indicator' => false,
-            'tax_totals' => $arrImp,
+            'line_extension_amount' => $objValoresBase['valorBaseUnitario'],
+            'free_of_charge_indicator' => $objValoresBase['valorBaseUnitario'] > 0 ? false : true,
+            'tax_totals' => $arrImpuestos,
             'description' => $val['P']['descripcion'],
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
-            'price_amount' => $montoProducto,
+            'price_amount' => $objValoresBase['precioUnitarioFinal'],
             'base_quantity' => $val['Facturasdetalle']['cantidad']
         ];
     
@@ -2073,7 +2107,7 @@ class FacturasController extends AppController
                 "charge_indicator" => false,
                 "allowance_charge_reason" => "Descuento General",
                 "amount" => $val['Facturasdetalle']['descuento'],
-                "base_amount" => number_format(($valSinImp + $val['Facturasdetalle']['descuento']), 2, '.', '')
+                "base_amount" => number_format(($objValoresBase['valorBaseUnitario'] + $val['Facturasdetalle']['descuento']), 2, '.', '')
             ];
         }
     
@@ -2203,9 +2237,12 @@ class FacturasController extends AppController
 
         //Generar datos generales de la nota crédito
         $generalInfo = $this->generarInformacionGeneral($factura);
-
+        
         //Obtiene la información del cliente de la factura
         $infoCliente = $this->generarInfoCliente( $factura );
+
+        //Obtiene la inforamción de la orde de compra
+        $infoOrden = $this->generarInfoOrden( $factura );
 
         //Obtiene los totales generales de la factura
         $infoPagoGeneral = $this->generarInfoPagoGeneral( $factura );

@@ -18,21 +18,24 @@
                                 <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($impuestos as $impuesto): ?>
+                    <?php 
+                        $prc = $impuesto['Impuesto']['valoprc'];
+                        $valor = $prc != 1 ? '$' . $impuesto['Impuesto']['valor'] : $impuesto['Impuesto']['valor'] . '%';
+                    ?> 
                 <tr>
-                        <td><?php echo h($impuesto['Impuesto']['descripcion']); ?>&nbsp;</td>
-                        <td><?php echo h($impuesto['Impuesto']['valor']); ?>&nbsp;</td>
+                        <td><?php echo h($impuesto['Taxes']['name']); ?>&nbsp;</td>
+                        <td><?php echo h($valor); ?>&nbsp;</td>
                         <td><?php echo h($impuesto['Impuesto']['empresa_id'] . '-' . $impuesto['Impuesto']['id']); ?>&nbsp;</td>
                         <td class="actions">
-                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Impuesto', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $impuesto['Impuesto']['id']))); ?>
                             <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Impuesto', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $impuesto['Impuesto']['id']))); ?>
                             <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Impuesto', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $impuesto['Impuesto']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar el impuesto %s?', $impuesto['Impuesto']['descripcion']) //la confirmacion
-);
-?>
+                            echo $this->Form->postLink(
+                                $this->Html->image('png/list-2.png', array('title' => 'Eliminar Impuesto', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                                array('action' => 'delete', $impuesto['Impuesto']['id']), //url
+                                array('escape' => false), //el escape
+                                __('Está seguro que desea eliminar el impuesto %s?', $impuesto['Impuesto']['descripcion']) //la confirmacion
+                            );
+                            ?>
                         </td>
                 </tr>
                 <?php endforeach;?>

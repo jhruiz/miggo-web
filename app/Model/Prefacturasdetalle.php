@@ -61,7 +61,8 @@ class Prefacturasdetalle extends AppModel {
 	);
         
         public function guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,$prefactId, 
-                $valorDescuento = null, $porcentajeDescuento = null, $impuesto = null, $inc = null){
+                $valorDescuento = null, $porcentajeDescuento = null, $tasaIvaPorc = null, $tasaIncPorc = null, $tasaBolsaVal = null){
+
             $data = array();
             $prefacturadetalle = new Prefacturasdetalle();
             
@@ -71,8 +72,9 @@ class Prefacturasdetalle extends AppModel {
             $data['prefactura_id'] = $prefactId;
             $data['descuento'] = !empty($valorDescuento) ? $valorDescuento : 0;
             $data['porcentaje'] = !empty($porcentajeDescuento) ? $porcentajeDescuento : 0;
-            $data['impuesto'] = !empty($impuesto) ? $impuesto : 0;
-            $data['impoconsumo'] = !empty($inc) ? $inc : 0;
+            $data['impuesto'] = $tasaIvaPorc;
+            $data['impoconsumo'] = $tasaIncPorc;
+            $data['incbolsa'] = $tasaBolsaVal;
             
             if($prefacturadetalle->save($data)){                
                 return $prefacturadetalle->id;

@@ -130,7 +130,7 @@ class Factura extends AppModel
     );
 
     public function guardarfactura($clienteId, $empresaId, $usuarioId, $fechaVence, $tipoPagoId, $pagoContado, $pagoCredito,
-        $documentoId, $empRelacionada, $ordentrabajo, $esFactura, $cuenta_id, $observacion, $canalventa) {
+        $documentoId, $empRelacionada, $ordentrabajo, $esFactura, $cuenta_id, $observacion, $canalventa, $fechaOrden, $numeroOrden) {
         $data = array();
         $factura = new Factura();
 
@@ -160,6 +160,8 @@ class Factura extends AppModel
         $data['codigo'] = $esFactura;
         $data['cuenta_id'] = $cuenta_id;
         $data['observacion'] = $observacion;
+        $data['numeroorden'] = $numeroOrden;
+        $data['fechaorden'] = $fechaOrden;
 
         if ($factura->save($data)) {
             return $factura->id;
@@ -609,7 +611,7 @@ class Factura extends AppModel
             ),
             'limit' => '20',
             'order' => 'valor DESC, Factura.cliente_id, conteo DESC',
-            'group' => 'Factura.cliente_id, O.usuario_id',
+            'group' => 'Factura.cliente_id, O.usuario_id, V.id, Factura.id',
             'recursive' => -1,
         ));
 
@@ -801,6 +803,67 @@ class Factura extends AppModel
         } else {
             return false;
         }        
+    }
+
+        /**
+     * Obtiene los valores base para la factura
+     */
+    public function obtenerValorBaseProducto( $valoresIniciales ) {
+
+        // --- 1. Conversión y Preparación de Variables ---    
+        $precioVentaUnitario = (float)($valoresIniciales['precioVenta'] * $valoresIniciales['unidadesProd']) ?: 0;
+        $descuentoPorcentaje = (float)($valoresIniciales['porcentajeDesc']) ?: 0; // Usado si se aplica por %
+
+        // // Convertir tasas de porcentaje (%) a decimal (e.g., 19 -> 0.19)
+        $prcIVA = ((float)($valoresIniciales['prcIVA']) ?: 0);
+        $prcINC = ((float)($valoresIniciales['prcINC']) ?: 0);
+
+        
+        // // Factor para discriminar los impuestos (1 + tIVA + tINC)
+        $factorRetiro = 1 + $prcIVA + $prcINC;
+
+        // // --- 2. Descuento de Impuestos (Cálculo Inverso para Base Inicial) ---
+        // // A. Valor Base Inicial (B): Precio Venta Unitario / Factor de Retiro
+        $valorBaseInicial = $precioVentaUnitario / $factorRetiro; // Base sin impuestos ni descuento
+
+        // // --- 3. Aplicar Descuento a la Base Inicial (B) para obtener la Nueva Base (B') ---
+        $valorBaseNueva = 0;
+        
+        // // Asumimos que el descuento es aplicado como porcentaje
+        $descuento = 0;
+        if ($descuentoPorcentaje > 0) {
+        //     // B. Aplicar descuento por porcentaje a la Base Inicial
+            $factorDescuento = 1 - ($descuentoPorcentaje / 100);
+            $valorBaseNueva = $valorBaseInicial * $factorDescuento;
+            $descuento = $valorBaseInicial - $valorBaseNueva;
+        } 
+        // // Si no hay descuento
+        else {
+            $valorBaseNueva = $valorBaseInicial;
+        }
+        
+        // // Asegurar que la nueva base no sea negativa
+        $valorBaseNueva = max(0, $valorBaseNueva);
+        
+        // // --- 4. Recalcular Impuestos sobre la Nueva Base (B') ---
+        // // C. Impuestos Totales (aplicados a la Nueva Base)
+        $nuevoValIVA = $valorBaseNueva * $prcIVA;
+        $nuevoValINC = $valorBaseNueva * $prcINC;
+        
+        // // D. Valor Total Unitario Final (Suma de verificación: B' + nuevo IVA + nuevo INC)
+        $precioFinalUnitario = $valorBaseNueva + $nuevoValIVA + $nuevoValINC;
+
+        // // --- 5. Retorno (Redondeo para valores contables) ---
+        // // Redondeamos todos los resultados finales a 2 decimales.
+        return [
+            "valorBaseUnitario"   => round($valorBaseNueva, 2),
+            "valorIVA"            => round($nuevoValIVA, 2),
+            "valorINC"            => round($nuevoValINC, 2),
+            "varorINCBolsa"       => (float)($valoresIniciales['valBolsa'] * $valoresIniciales['unidadesProd']),
+            "precioUnitarioFinal" => round($precioFinalUnitario, 2),
+            "descuento"           => round($descuento, 2)
+        ];
+
     }
 
 

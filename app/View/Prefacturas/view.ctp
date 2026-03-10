@@ -1,9 +1,11 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas.js'));  ?>
 <?php echo ($this->Html->script('prefacturas/prefacturas.js')); ?>
+<?php echo ($this->Html->script('facturas/calcularValoresProducto.js')); ?>
 <?php echo ($this->Html->script('facturas/abonos.js')); ?>
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js'));  ?>
-<?php echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
+<?php //echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
+<?php echo ($this->Html->script('facturas/imprimirFactura')); ?>
 <?php echo ($this->Html->script('prefacturas/view.js')); ?>
 <?php echo ($this->Html->script('facturas/syncdian.js')); ?>
 <?php echo ($this->Html->script('abonos/gestionabonos.js')); ?>
@@ -14,17 +16,8 @@
 <div class="col-md-12">
     <div class="x_panel">
         <div class="x_title">
-                    <h2><?php echo __('Orden de Compra'); ?></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                  
-                  </li>
-                  <li class="dropdown">
-                   
-                  </li>
-                
-                  </li>
-                </ul>
-                 </div>
+            <h2><?php echo __('Prefacturas'); ?></h2>
+        </div>
 
 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '30', 'id' => 'menuvert'))?>
 <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => $ttalAbonos))?>
@@ -32,7 +25,6 @@
 <div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#registrado" aria-controls="registrado" data-toggle="tab" role="tab">Cliente Registrado</a></li>
-                    <li role="presentation"><a href="#nuevo" aria-controls="nuevo" data-toggle="tab" role="tab">Cliente Nuevo</a></li>
                     <li role="presentation"><a href="#ventarapida" aria-controls="ventarapida" data-toggle="tab" role="tab">Venta Rápida</a></li>                        
                 </ul>
             </div>
@@ -65,37 +57,27 @@
                                 <?php echo $this->Form->input('prefactId', array('type' => 'hidden', 'value' => $id, 'id' => 'prefactId'));?>
                                 <?php echo $this->Form->input('esFacturaDV', array('type' => 'hidden', 'value' => $prefactura['Prefactura']['esfactura'], 'id' => 'esFacturaDV')) ?>
                                 
-                                <div class="form-group ">  
-                                    <label>Cliente</label><br>                                
-                                        <?php echo $this->Form->input('datoscliente', array('label' => false, 'name' => 'data[Factura][datoscliente]', 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Cliente')); ?>
-                                        <div id="datosCliente" style="position: absolute;"></div>                                
-                                </div>
-
                                 <div class="form-group">
-                                    <label>Nit</label><br>
-                                    <?php echo $this->Form->input('nitcliente', array('label' => false, 'name' => 'data[Factura][nitcliente]', 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Nit', 'onblur' => 'actualizarNitCliente();')); ?>
+                                    <label>Cliente</label><br>
+                                        <?php echo $this->Form->input('datoscliente', array('label' => false, 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Cliente')); ?>
+                                        <div id="datosCliente" style="position:absolute; z-index:1;"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Teléfono</label><br>
-                                    <?php echo $this->Form->input('telefonocliente', array('label' => false, 'name' => 'data[Factura][telefonocliente]', 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Teléfono', 'onblur' => 'actualizarTelefonoCliente();')); ?>
-                                </div>                           
+                                    <?php echo $this->Form->input('telefonocliente', array('label' => false, 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Teléfono', 'onblur' => 'actualizarTelefonoCliente();')); ?>
+                                </div>                      
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label>Nit</label><br>
+                                    <?php echo $this->Form->input('nitcliente', array('label' => false, 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Nit', 'onblur' => 'actualizarNitCliente();')); ?>
+                                </div>
+
+                                <div class="form-group">
                                     <label>Dirección</label><br>
-                                    <?php echo $this->Form->input('dircliente', array('label' => false, 'name' => 'data[Factura][dircliente]', 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Dirección', 'onblur' => 'actualizarDireccionCliente();')); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Días</label><br>
-                                    <?php echo $this->Form->input('diascredcliente', array('label' => false, 'name' => 'data[Factura][diascredcliente]', 'class' => 'form-control registrado', 'name' => 'data[Factura][diascredcliente]', 'autocomplete' => 'off', 'placeholder' => 'Días Límite Crédito', 'onblur' => 'actualizarDiasLimite();')); ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Límite</label><br>
-                                    <?php echo $this->Form->input('limitecredcliente', array('label' => false, 'name' => 'data[Factura][limitecredcliente]', 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Límite de Crédito', 'onblur' => 'actualizarCreditoLimite();')); ?>
-                                </div>                             
+                                    <?php echo $this->Form->input('dircliente', array('label' => false, 'class' => 'form-control registrado', 'autocomplete' => 'off', 'placeholder' => 'Dirección', 'onblur' => 'actualizarDireccionCliente();')); ?>
+                                </div>                         
                             </div>
                         </div>
                     </div>
@@ -115,103 +97,6 @@
                     </div>                    
                 </div>
                 <!--Finaliza el div para facturar productos a los usuarios registrados en la aplicacion-->                
-
-                <!--Inicia el div para facturar productos a los usuarios que se van a registrar como nuevos en la aplicacion-->
-                <div role="tabpanel" class="tab-pane" id="nuevo"><br>
-                    <div class="container-fluid">                       
-                        <div class="row">
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Nombre *</label><br>                                
-                                        <?php echo $this->Form->input('nuevonombre', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevonombre]', 'autocomplete' => 'off', 'placeholder' => 'Nombre del Cliente Nuevo', 'onblur' => 'limpirarFormularios()')); ?>
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Nit/C.C *</label><br>                                
-                                        <?php echo $this->Form->input('nuevonit', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevonit]', 'autocomplete' => 'off', 'placeholder' => 'Nit/C.C del Cliente Nuevo', 'onblur' => 'activarFiltroProductoClienteNuevo();')); ?>
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Dirección *</label><br>                                
-                                        <?php echo $this->Form->input('nuevodireccion', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevodireccion]', 'autocomplete' => 'off', 'placeholder' => 'Dirección Cliente Nuevo', 'onblur' => 'activarFiltroProductoClienteNuevo();')); ?>
-                                </div>              
-                            </div>                        
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Teléfono</label><br>                                
-                                        <?php echo $this->Form->input('nuevotelefono', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevotelefono]', 'autocomplete' => 'off', 'placeholder' => 'Teléfono Cliente Nuevo')); ?>     
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Celular</label><br>                                
-                                        <?php echo $this->Form->input('nuevocelular', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevocelular]', 'autocomplete' => 'off', 'placeholder' => 'Celular Cliente Nuevo')); ?>                               
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Email</label><br>                                
-                                        <?php echo $this->Form->input('nuevoemail', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevoemail]', 'autocomplete' => 'off', 'placeholder' => 'Email Cliente Nuevo')); ?>                              
-                                </div>              
-                            </div>                        
-                        </div> 
-
-                        <div class="row">
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Página Web</label><br>                                
-                                        <?php echo $this->Form->input('nuevopaginaweb', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevopaginaweb]',  'autocomplete' => 'off', 'placeholder' => 'Página Web Cliente Nuevo')); ?>                                                                  
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Días de Crédito *</label><br>                                
-                                        <?php echo $this->Form->input('nuevodiscredito', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevodiascredito]',  'autocomplete' => 'off', 'placeholder' => 'Días de Crédito', 'onblur' => 'activarFiltroProductoClienteNuevo();')); ?> 
-                                </div>              
-                            </div>
-
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Límite de Crédito *</label><br>                                
-                                        <?php echo $this->Form->input('nuevolimitecredito', array('label' => false, 'class' => 'form-control nuevo', 'name' => 'data[Nuevo][nuevolimitecredito]',  'autocomplete' => 'off', 'placeholder' => 'Límite de Crédito', 'onblur' => 'activarFiltroProductoClienteNuevo();')); ?>
-                                </div>              
-                            </div>                        
-                        </div>    
-
-                        <div class="row">
-                            <div class="col-md-4">                    
-                                <div class="form-group ">  
-                                    <label>Cumpleaños</label><br>
-                                    <input name="data[Nuevo][nuevocumpleanios]" id="nuevocumpleanios" class="date form-control nuevo" placeholder="Cumpleaños del Cliente" autocomplete="off" type="text">
-                                </div>              
-                            </div>                                              
-                        </div>                      
-                    </div>
-                    
-                    <legend>&nbsp;</legend>  
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group ">  
-                                    <label>Producto</label><br>                                
-                                        <?php echo $this->Form->input('productousuarionuevo', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto', 'onkeyup' => 'fnObtenerDatosProductoUsuarioNuevo(event);')); ?>
-                                        <div id="datosProductoclientenuevo" style="position: absolute; z-index: 999"></div>                                
-                                </div>  
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Finaliza el div para facturar productos a los usuarios que se van a registrar como nuevos en la aplicacion-->
                 
                 <!--Inicia el div para facturar productos a los usuarios de venta rapida, es decir, no se guardan en la aplicacion-->
                 <div role="tabpanel" class="tab-pane" id="ventarapida">
@@ -274,23 +159,30 @@
                             <table cellpadding="0" cellspacing="0" class="table table-striped table-bordered table-hover table-condensed">
                                 <thead>
                                 <tr>
-                                                <th><?php echo ('#'); ?></th>
                                                 <th><?php echo ('Nombre'); ?></th>
                                                 <th><?php echo ('Código'); ?></th>
                                                 <th><?php echo ('Cantidad'); ?></th>
-                                                <th><?php echo ('Precio Venta U.'); ?></th>
-                                                <th><?php echo ('Precio Venta A.I'); ?></th>                                       
+                                                <th><?php echo ('Precio unitario'); ?></th>
+                                                <th><?php echo ('Precio unitario base'); ?></th>                                       
                                                 <th><?php echo ('% Dtto'); ?></th>
-                                                <th><?php echo ('$ Dtto'); ?></th>                                                                                                                            
-                                                <th><?php echo ('Valor IVA'); ?></th>
-                                                <th><?php echo ('% IVA'); ?></th>
-                                                <th><?php echo ('Valor INC'); ?></th>
-                                                <th><?php echo ('% INC'); ?></th>
-                                                <th><?php echo ('Ttal Imp. Inc.'); ?></th>
+                                                <th><?php echo ('Descuento'); ?></th>                                                                                                                            
+                                                <th><?php echo ('IVA'); ?></th>
+                                                <th><?php echo ('%'); ?></th>
+                                                <th><?php echo ('INC'); ?></th>
+                                                <th><?php echo ('%'); ?></th>
+                                                <th><?php echo ('INC bolsa'); ?></th>
+                                                <th><?php echo ('Total línea'); ?></th>
                                                 <th>&nbsp;</th>
                                 </tr>   
                                 </thead>
                                 <tbody id="productosPrefacturas"></tbody>
+                                <tbody id="imp_bolsa">
+                                    <tr>
+                                        <th colspan="11">&nbsp</th>
+                                        <th><b>INC Bolsa</b></th>
+                                        <th class="text-right"><?php echo $this->Form->input('inp_imp_bolsa', array('type' => 'text', 'label' => false, 'class' => 'form-control numericPrice', 'value' => '', 'id' => 'inp_imp_bolsa', 'disabled' => true)); ?></th>
+                                    </tr>
+                                </tbody>
                                 <tbody id="totalFacturas">
                                     <tr>
                                         <th>&nbsp</th>
@@ -306,7 +198,7 @@
                                         <th class="text-right"><b class="thTFCIVA"></b></th>
                                     </tr>
                                 </tbody>
-                                <tbody id="tBodAbonos"></tbody>                                
+                                <tbody id="tBodAbonos"></tbody>                               
                             </table>
                         </div>
                     </div> 
@@ -367,51 +259,73 @@
                     <legend>&nbsp;</legend>            
             
                     <div class="row">
-                        <div class="col-md-1">
+                        <div class="form-group col-md-2">
                             <?php echo $this->Form->input('vendedor', array('label' => 'Vendedor', 'type' => 'select', 'options' => $vendedor, 'class' => 'form-control', 'default' => $usuarioId, 'name' => 'data[Factura][vendedor]'));?><br>
                         </div>
 
-                        <div class="col-md-1">
+                        <div class="form-group col-md-2">
                             <?php echo $this->Form->input('canalventa', array('label' => 'Canal de ventas', 'type' => 'select', 'options' => $canalventas, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][canalventa]'));?><br>
                         </div>                
 
-                        <div class="col-md-1">    
+                        <div class="form-group col-md-2">    
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][notafactura]'));?><br>
                         </div>
                         
-                        <div class="col-md-1">
+                        <div class="form-group col-md-2">
                             <?php $estadoAct = !empty($prefactura['Prefactura']['estadoprefactura_id']) ? $prefactura['Prefactura']['estadoprefactura_id'] : "";?>
                             <?php echo $this->Form->input('estados', array('label' => 'Estados', 'type' => 'select', 'options' => $estados, 'class' => 'form-control', 'default' => $estadoAct));?>
-                        </div>               
+                        </div>       
                         
-                        <div class="col-md-7">
-                            <label for="obs_fact">Observaciones</label>
-                            <textarea id="obs_fact" name="data[Factura][observacion]" class="md-textarea form-control" rows="3"><?php echo($prefactura['Prefactura']['observacion'])?></textarea>                              
-                            <?php echo $this->Form->input('empresaRelacionada', array('label' => '', 'name' => 'data[Factura][empresaRelacionada]', 'class' => 'form-control', 'type' => 'hidden'));?>
+                        <div class="form-group col-md-2">
+                            <?php echo $this->Form->input('f_ref_or', array('label' => 'Fecha Orden', 'type' => 'text', 'class' => 'date form-control', 'autocomplete' => 'off', 'placeholder' => 'Fecha Orden', 'name' => 'data[Factura][f_ref_or]')); ?>
                         </div>
                         
+                        <div class="form-group col-md-2">
+                            <?php echo $this->Form->input('n_ref_or', array('label' => 'Prefijo - No. Orden', 'type' => 'text', 'autocomplete' => 'off', 'class' => 'form-control', 'placeholder' => 'Número de Orden', 'name' => 'data[Factura][n_ref_or]')); ?>
+                        </div>
+                    </div>
+
+                    <legend>&nbsp;</legend>
+                    
+                    <div class="row">
+                        <label for="obs_fact">Observaciones</label>
+                        <textarea id="obs_fact" name="data[Factura][observacion]" class="md-textarea form-control" rows="3"><?php echo($prefactura['Prefactura']['observacion'])?></textarea>                              
+                        <?php echo $this->Form->input('empresaRelacionada', array('label' => '', 'name' => 'data[Factura][empresaRelacionada]', 'class' => 'form-control', 'type' => 'hidden'));?>
                     </div>             
                     </form>
        
-        <div class="nav nav-pills">  
-            <div class="col-md-6">
-                <div class="col-md-2">
-                    <button id="btn_abonos" class="btn btn-primary active center-block" type="button">Abonar</button>
-                </div>
-                <div class="col-md-2">
-                    <button type='button' id="btn_facturar" class="btn btn-primary active center-block" onclick="facturarProductos();">Facturar</button>
-                </div>
-                <div class="col-md-2">
-                    <a href="#" class="btn btn-primary active pull-lefth" role="button" aria-pressed="true" id="imprimirCot">Imprimir</a>
-                </div>
-                <div class="col-md-2">                        
-                    <a href="#" class="wppSendPF" target=""><img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35"></a>
-                </div>
-                <div class="col-md-1">
-                    <button type='button' id="butImprimirFact" class="btn btn-primary hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
-                </div>
-            </div>  
-        </div><!-- termina x_content-->
+                    <legend>&nbsp;</legend>
+                    
+                    <div class="nav nav-pills">  
+                        <div class="row"> 
+                                <div class="col-md-10"> <div class="col-md-2">
+                                    <button id="btn_abonos" class="btn btn-primary active btn-block" type="button">Abonar</button>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <button type="button" id="btn_facturar" class="btn btn-primary active btn-block" onclick="facturarProductos();">Facturar</button>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <a href="#" class="btn btn-primary active btn-block" role="button" id="imprimirCot">Imprimir</a>
+                                </div>
+                                
+                                <div class="col-md-2"> 
+                                    <button type="button" id="butImprimirFact" class="btn btn-primary btn-block hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <div class="wpp-container">
+                                        <a href="#" class="wppSendPF" target="">
+                                            <img src="<?php echo $urlImgWP; ?>" class="img-responsive" width="35">
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>  
+                        </div>
+                    </div>
+
     </div> <!--Termina x_panel-->
        </div> <!-- Termina COL -->
 <div id="div_producto"></div>

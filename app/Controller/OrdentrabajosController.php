@@ -354,6 +354,7 @@ class OrdentrabajosController extends AppController {
         $this->loadModel('Ordentrabajo');
         $this->loadModel('Prefactura');
         $this->loadModel('Cargueinventario');
+        $this->loadModel('CargueinventariosImpuesto');
         $this->loadModel('Prefacturasdetalle');
         $this->loadModel('OrdentrabajosSuministro');
         $this->loadModel('Ordenestado');
@@ -382,8 +383,14 @@ class OrdentrabajosController extends AppController {
             $arrSuministros = $this->OrdentrabajosSuministro->obtenerSuministrosOrden($posData['idOrdenT']);
 
             if(!empty($arrOrdenT)){
+
+                $esFactura = 0;
+                if ($arrEstadosO['Ordenestado']['ordenfinal'] == '3' || $arrEstadosO['Ordenestado']['ordenfinal'] == '1'){
+                    $esFactura = 1;
+                }
+
                 //se crea la prefactura
-                $preFactId = $this->Prefactura->guardarPrefactura($arrOrdenT['Ordentrabajo']['usuario_id'],$arrOrdenT['Ordentrabajo']['cliente_id'], $posData['idOrdenT']);
+                $preFactId = $this->Prefactura->guardarPrefactura($arrOrdenT['Ordentrabajo']['usuario_id'],$arrOrdenT['Ordentrabajo']['cliente_id'], $posData['idOrdenT'], $esFactura);
 
                 //se valida la creacion de la prefactura
                 if(!empty($preFactId)){
@@ -394,9 +401,43 @@ class OrdentrabajosController extends AppController {
                         //se obtiene la informacion del cargueinventario 
                         $arrCargueInv = $this->Cargueinventario->obtenerInventarioId($sum['OrdentrabajosSuministro']['cargueinventario_id']);
 
+                        $tasaIvaPorc = 0;
+                        $tasaIncPorc = 0;
+                        $tasaBolsaVal = 0;
+
+                        if($arrEstadosO['Ordenestado']['ordenfinal'] == '3' || $arrEstadosO['Ordenestado']['ordenfinal'] == '1') {
+                            $ciImpuestos = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($sum['OrdentrabajosSuministro']['cargueinventario_id']);
+
+                            if(!empty($ciImpuestos)) {
+                                foreach($ciImpuestos as $imp) {
+
+                                    if($imp['TX']['code'] == '01') {
+                                        $tasaIvaPorc = $imp['IMP']['valor'];
+                                    }
+
+                                    if($imp['TX']['code'] == '04') {
+                                        $tasaIncPorc = $imp['IMP']['valor'];
+                                    }
+
+                                    if($imp['TX']['code'] == '22') {
+                                        $tasaBolsaVal = $imp['IMP']['valor'];
+                                    }
+                                }
+                            }
+                        }
+
                         //se crea el detalle de la prefactura con los suministros de la orden de trabajo
-                        $this->Prefacturasdetalle->guardarDetallePrefactura($sum['OrdentrabajosSuministro']['cantidad'],
-                                $arrCargueInv['Cargueinventario']['precioventa'],$sum['OrdentrabajosSuministro']['cargueinventario_id'],$preFactId);
+                        $this->Prefacturasdetalle->guardarDetallePrefactura(
+                                $sum['OrdentrabajosSuministro']['cantidad'],
+                                $arrCargueInv['Cargueinventario']['precioventa'],
+                                $sum['OrdentrabajosSuministro']['cargueinventario_id'],
+                                $preFactId, 
+                                null,
+                                null,
+                                $tasaIvaPorc,
+                                $tasaIncPorc,
+                                $tasaBolsaVal
+                            );
                     } 
 
                     echo json_encode(array('resp' => $preFactId, 'estadofin' => $arrEstadosO['Ordenestado']['ordenfinal']));

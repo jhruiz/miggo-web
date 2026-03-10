@@ -1,3 +1,6 @@
+/**
+ * Función que pasa la OT a un estado finalizado
+ */
 var finalizarOrden = function() {
     var ordenT = $('#ordentrabajo_id').val();
     var estadoId = $('#OrdentrabajoOrdenestadoId').val();
@@ -125,7 +128,7 @@ var validarFomulario = function() {
  * @returns {undefined}
  */
 var cambiarEstadoGuardarOrden = function() {
-    //    var ordenId = $('#ordentrabajo_id').val();
+    
     var estadoId = $('#OrdentrabajoOrdenestadoId').val();
 
     var ordenTId = $('#ordentrabajo_id').val();
@@ -137,6 +140,7 @@ var cambiarEstadoGuardarOrden = function() {
             type: "POST",
             success: function(data) {
                 var estadoFin = JSON.parse(data);
+                
                 if (estadoFin.resp != "0") {
                     var mensaje = validarFomulario();
 

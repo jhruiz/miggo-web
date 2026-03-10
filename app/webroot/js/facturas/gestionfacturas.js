@@ -3,27 +3,62 @@
  * @returns {undefined}
  */
 function imprimirTicket() {
-
-    console.log('entra por aqui');
-
     var tipoVenta = $('#tipoVenta').val() == '1' ? " - FV" : " - RMV";
-    var mywindow = window.open('', 'PRINT', 'height=400, width=600');
-    mywindow.document.write('<html><head>');
-    mywindow.document.write('<style media=screen>body { font-family: Lucidatypewriter, monospace; font-size: 12px; } } </style>');
-    mywindow.document.write('<style media=print>@page {margin: 5mm;} @page footer {page-break-after: always;} @page rotated {size: portrait} #tinfop {background-color:#FFF; font-family: Lucidatypewriter, monospace; font-size: 3px; } </style>');
-    mywindow.document.write('</head>');
-    mywindow.document.write('<body>');
-    mywindow.document.write('<div style="font-family:sans-serif; font-size:10px;">');
-    mywindow.document.write($('#dvTicket').html());   
-    mywindow.document.write('<div style="margin-top:5px; float:right; width:100%;">');
-    mywindow.document.write($('#dvNota').html());
+    var cliName = $('#cliName').val() || "Cliente";
+
+    // Abrimos la ventana con un ancho que simula el ticket
+    var mywindow = window.open('', 'PRINT', 'height=600, width=400');
+
+    mywindow.document.write('<html><head><title>' + cliName + tipoVenta + '</title>');
+    mywindow.document.write('<style>');
+
+    
+    mywindow.document.write('.linea-ticket { border-top: 1px dashed #000 !important; width: 100%; }');
+    
+    // Configuración base para el ticket
+    mywindow.document.write('body { margin: 0; padding: 0; font-family: sans-serif; font-size: 12px; width: 80mm; color: #000; }');
+    
+    // Eliminación de encabezados/pies de página del navegador (Fecha, URL, etc.)
+    mywindow.document.write('@page { size: 80mm auto; margin: 0mm; }'); 
+    
+    mywindow.document.write('@media print {');
+    // 72mm es el ancho imprimible real ideal para papel de 80mm
+    mywindow.document.write('  body { margin: 0; width: 72mm; padding: 2mm; }'); 
+    mywindow.document.write('  .no-print { display: none; }');
+    mywindow.document.write('}');
+    
+    // Estilos de la tabla de productos para que use todo el ancho
+    mywindow.document.write('table { width: 100%; border-collapse: collapse; margin-bottom: 5px; table-layout: fixed; }');
+    mywindow.document.write('th, td { font-size: 11px; padding: 2px 0; word-wrap: break-word; }');
+    
+    // Estilo para líneas punteadas divisorias
+    mywindow.document.write('.separador { border-top: 1px dashed #000; margin: 8px 0; padding-top: 5px; }');
+    
+    mywindow.document.write('img { max-width: 100%; height: auto; display: block; margin: 0 auto; padding-bottom: 10px; }');
+    mywindow.document.write('</style></head><body>');
+
+    // Contenedor principal
+    mywindow.document.write('<div style="width: 100%;">');
+    
+    /* IMPORTANTE: Solo llamamos a #dvTicket. 
+       Asegúrate de que en tu PHP el div #dvNota o la info de Miggo 
+       estén DENTRO del div #dvTicket al final.
+    */
+    mywindow.document.write($('#dvTicket').html()); 
+    mywindow.document.write($('#dvNota').html()); 
+    
     mywindow.document.write('</div>');
+
     mywindow.document.write('</body></html>');
-    mywindow.document.title = $('#cliName').val() + tipoVenta;
+
     mywindow.document.close();
-    mywindow.focus();
-    mywindow.print();
-    mywindow.close();
+    
+    // Tiempo de espera para asegurar que el logo cargue antes de lanzar el cuadro de impresión
+    setTimeout(function() {
+        mywindow.focus();
+        mywindow.print();
+        mywindow.close();
+    }, 500);
 }
 
 /**

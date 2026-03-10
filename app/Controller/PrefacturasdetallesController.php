@@ -228,7 +228,7 @@ class PrefacturasdetallesController extends AppController {
                 $arrDetFact[$i]['Cargueinventario']['codprod'] = $codigoProd;
             }
             if(count($arrDetFact) > 0){
-                echo json_encode(array('resp' => true, 'detFact' => $arrDetFact));
+                echo json_encode(array('resp' => true, 'producto' => $arrDetFact));
             }else{
                 echo json_encode(array('resp' => false));
             }

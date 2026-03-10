@@ -60,60 +60,129 @@ class CargueinventariosImpuesto extends AppModel {
 		)
 	);
         
-        public function obtenerImpuestosProducto($cargueInventarioId){
-            $arrImpuestosProd = $this->find('all', array('conditions' => array('CargueinventariosImpuesto.cargueinventario_id' => $cargueInventarioId), 'recursive' => '0'));
-            return $arrImpuestosProd;
-        }
+    public function obtenerImpuestosProducto($cargueInventarioId){
+        $arr_join = array();
         
-        public function obtenerImpuestosProductoId($productoId, $depositoId){
-            $arr_join = array(); 
-            array_push($arr_join, array(
-                'table' => 'cargueinventarios', 
-                'alias' => 'CI', 
-                'type' => 'INNER',
-                'conditions' => array(
-                    'CI.id=CargueinventariosImpuesto.cargueinventario_id'     
-                    )                
-            ));
-            
-            array_push($arr_join, array(
-                'table' => 'impuestos',
-                'alias' => 'I',
-                'type' => 'INNER',
-                'conditions' => array(
-                    'I.id=CargueinventariosImpuesto.impuesto_id'
-                )
-            ));
-            
-            $infoInventario = $this->find('all', array(
-                'joins' => $arr_join,
-                'fields' => array(
-                    'CI.id',
-                    'I.descripcion',
-                    'I.valor'                    
-                    ),
-                'conditions' => array(
-                    'CI.producto_id' => $productoId,
-                    'CI.deposito_id' => $depositoId
-                    ),
-                'recursive' => '-1'
-                ));            
-            
-            return $infoInventario;
-        }
+        array_push($arr_join, array(
+            'table' => 'impuestos',
+            'alias' => 'IMP',
+            'type' => 'INNER',
+            'conditions' => array(
+                'IMP.id=CargueinventariosImpuesto.impuesto_id'
+            )
+        ));
+
+        array_push($arr_join, array(
+            'table' => 'taxes',
+            'alias' => 'TX',
+            'type' => 'INNER',
+            'conditions' => array(
+                'IMP.tax_id=TX.id'
+            )
+        ));
+
+        $arrImpuestosProd = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'IMP.*',
+                'TX.*'
+            ),
+            'conditions' => array(
+                'CargueinventariosImpuesto.cargueinventario_id' => $cargueInventarioId
+            ),
+            'recursive' => '-1'
+        ));
+
+        return $arrImpuestosProd;
+    }
         
-        public function guardarImpuestosCargueInv($cargueInvId,$impuestoId){
-            $data = array();
-            
-            $cargueImpuetos = new CargueinventariosImpuesto();
-            
-            $data['cargueinventario_id'] = $cargueInvId;
-            $data['impuesto_id'] = $impuestoId;
-            
-            if($cargueImpuetos->save($data)){
-                return true;
-            }else{
-                return false;
-            }
-        }          
+    public function obtenerImpuestosProductoId($productoId, $depositoId){
+        $arr_join = array(); 
+        array_push($arr_join, array(
+            'table' => 'cargueinventarios', 
+            'alias' => 'CI', 
+            'type' => 'INNER',
+            'conditions' => array(
+                'CI.id=CargueinventariosImpuesto.cargueinventario_id'     
+                )                
+        ));
+        
+        array_push($arr_join, array(
+            'table' => 'impuestos',
+            'alias' => 'I',
+            'type' => 'INNER',
+            'conditions' => array(
+                'I.id=CargueinventariosImpuesto.impuesto_id'
+            )
+        ));
+        
+        $infoInventario = $this->find('all', array(
+            'joins' => $arr_join,
+            'fields' => array(
+                'CI.id',
+                'I.descripcion',
+                'I.valor'                    
+                ),
+            'conditions' => array(
+                'CI.producto_id' => $productoId,
+                'CI.deposito_id' => $depositoId
+                ),
+            'recursive' => '-1'
+            ));            
+        
+        return $infoInventario;
+    }
+        
+    public function guardarImpuestosCargueInv($cargueInvId,$impuestoId){
+        $data = array();
+        
+        $cargueImpuetos = new CargueinventariosImpuesto();
+        
+        $data['cargueinventario_id'] = $cargueInvId;
+        $data['impuesto_id'] = $impuestoId;
+        
+        if($cargueImpuetos->save($data)){
+            return true;
+        }else{
+            return false;
+        }
+    }   
+    
+    /**
+     * Obtiene el impuesto de un producto pasando el productoId y el valor del impuesto
+     */
+    public function obtenerImpProdInvValor( $productoId, $valorImp ) {
+
+        $arr_join = array(); 
+        
+        array_push($arr_join, array(
+            'table' => 'cargueinventarios',
+            'alias' => 'CI',
+            'type' => 'INNER',
+            'conditions' => array(
+                'CI.id=CargueinventariosImpuesto.cargueinventario_id'
+            )
+        ));
+        
+        array_push($arr_join, array(
+            'table' => 'impuestos',
+            'alias' => 'I',
+            'type' => 'INNER',
+            'conditions' => array(
+                'I.id=CargueinventariosImpuesto.impuesto_id'
+            )
+        ));
+        
+        $infoInventario = $this->find('all', array(
+            'joins' => $arr_join,
+            'conditions' => array(
+                'CI.producto_id' => $productoId,
+                'I.valor' => $valorImp
+                ),
+            'recursive' => '-1'
+            ));            
+        
+        return $infoInventario;        
+
+    }
 }

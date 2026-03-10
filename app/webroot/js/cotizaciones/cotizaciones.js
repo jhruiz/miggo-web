@@ -1,3 +1,25 @@
+var poblarTablaCotizacion = function ( valoresTabla ) {
+
+    $('#dvTCot').append('<tr id="tr_' + valoresTabla.idReg + '">' + 
+        '<td>' + valoresTabla.descProd + '</td>' + 
+        '<td>' + valoresTabla.codProd + '</td>' +                         
+        '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="cant_' + valoresTabla.idReg + '" value="' + valoresTabla.cantProd + '" onblur="actCantPrdCot(this);">&nbsp;</td>' +
+        '<td><input type="text" name="precio_' + valoresTabla.idReg + '" class="form-control numericPrice ttalUnit" id="precio_' + valoresTabla.idReg + '" value="' + valoresTabla.precioventa + '" onblur="actValUnitPrdCot(this);">&nbsp;</td>' +
+        '<td><input type="text" name="total_' + valoresTabla.idReg + '" class="form-control ttales numericPrice ttalTotal" id="total_' + valoresTabla.idReg + '" value="' + valoresTabla.valAntesImp + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="pordtto_' + valoresTabla.idReg + '" class="form-control ttalPorDtto" id="pordtto_' + valoresTabla.idReg + '" value="' + valoresTabla.prcDsc + '" onblur="actualizarPorcentajeDttoCot(this);">&nbsp;</td>' +
+        '<td><input type="text" name="valdtto_' + valoresTabla.idReg + '" class="form-control ttalValDtto numericPrice" id="valdtto_' + valoresTabla.idReg + '" value="' + valoresTabla.vlrDsc + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="valor_iva_' + valoresTabla.idReg + '" class="form-control valor_iva numericPrice" id="valor_iva_' + valoresTabla.idReg + '" value="' + valoresTabla.valIVA + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="porc_iva_' + valoresTabla.idReg + '" class="form-control porc_iva numericPrice" id="porc_iva_' + valoresTabla.idReg + '" value="' + valoresTabla.prcIVA + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="valor_ica_' + valoresTabla.idReg + '" class="form-control valor_ica numericPrice" id="valor_ica_' + valoresTabla.idReg + '" value="' + valoresTabla.valINC + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="porc_ica_' + valoresTabla.idReg + '" class="form-control porc_ica numericPrice" id="porc_ica_' + valoresTabla.idReg + '" value="' + valoresTabla.prcINC + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="inc_bolsa_' + valoresTabla.idReg + '" class="form-control inc_bolsa numericPrice" id="inc_bolsa_' + valoresTabla.idReg + '" value="' + valoresTabla.varorINCBolsa + '" readonly>&nbsp;</td>' +
+        '<td><input type="text" name="valor_con_iva_' + valoresTabla.idReg + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + valoresTabla.idReg + '" value="' + valoresTabla.valorConIva + '" readonly>&nbsp;</td>' +
+        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + valoresTabla.idReg + '"onclick="eliminarPrdCot(this)"></td></tr>' 
+    );                                               
+    $('.numericPrice').number(true, 2);
+        
+};
+
 /**
  * Se crea la cotizacion
  * @returns {undefined}
@@ -5,6 +27,7 @@
 function guardarCotizacionClienteRegistrado() {
 
     var formData = new FormData($('#CotizacioneAddForm')[0]);
+    $('#CotizacioneTipoCotizacion').prop('disabled', true);
 
     $.ajax({
         url: $('#url-proyecto').val() + 'cotizaciones/crearActualizarCotizacionClienteRegistrado',
@@ -165,24 +188,6 @@ var guardarCliente = function() {
 };
 
 /**
- * se valida si el formulario de venta rapida esta diligenciado
- * @returns {String}
- */
-var validarFormCotizacionRapida = function() {
-    var mensaje = "";
-
-    if ($('#CotizacioneRapidanombre').val() == "") {
-        mensaje += "- Debe ingresar el nombre del cliente.<br>";
-    }
-
-    if ($('#CotizacioneRapidanit').val() == "") {
-        mensaje += "- Debe ingresar el Nit/C.C del cliente.<br>";
-    }
-
-    return mensaje;
-};
-
-/**
  * Crea o actualiza la cotizacion de rapida
  * @returns {undefined}
  */
@@ -232,8 +237,6 @@ var aprobarCotizacion = function() {
             }
         });
     }
-
-
 };
 
 /**
@@ -244,20 +247,18 @@ var aprobarCotizacion = function() {
 var actCantPrdCot = function(data) {
     var arrData = data.id.split("_");
     var nuevaCant = $('#' + data.id).val();
-    var valUnit = $('#vUnit_' + arrData['1']).val();
-    var valorNuevo = parseFloat($('#vUnit_' + arrData['1']).val()) * nuevaCant;
 
     if (nuevaCant != "") {
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxActualizarCantidadCotiza',
-            data: { cotDetId: arrData['1'], nuevaCant: nuevaCant, valUnit: valUnit },
+            data: { cotDetId: arrData['1'], nuevaCant: nuevaCant },
             type: "POST",
             success: function(response) {
                 var resp = JSON.parse(response);
                 if (resp.resp != '1') {
                     bootbox.alert('No fue posible actualizar el registro. Por favor, inténtelo de nuevo.');
                 } else {
-                    $('#vTtal_' + arrData['1']).val(valorNuevo);
+                    recalculoValoresTabla(arrData['1']);
                     calcularTtalCot();
                 }
             }
@@ -275,22 +276,19 @@ var actCantPrdCot = function(data) {
  */
 var actValUnitPrdCot = function(data) {
     var arrData = data.id.split("_");
-    var cotDetId = arrData['1'];
     var nuevoValor = $('#' + data.id).val();
-    var cantidad = $('#cant_' + arrData['1']).val();
 
     if (nuevoValor != "") {
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxActualizarValorUnitarioCotiza',
-            data: { cotDetId: cotDetId, nuevoValor: nuevoValor, cantidad: cantidad },
+            data: { cotDetId: arrData['1'], nuevoValor: nuevoValor },
             type: "POST",
             success: function(response) {
                 var resp = JSON.parse(response);
                 if (resp.resp != '1') {
                     bootbox.alert('No fue posible actualizar el registro. Por favor, inténtelo de nuevo.');
                 } else {
-                    var nuevoTotal = parseFloat(nuevoValor) * parseFloat(cantidad);
-                    $('#vTtal_' + arrData['1']).val(nuevoTotal);
+                    recalculoValoresTabla(arrData['1']);
                     calcularTtalCot();
                 }
             }
@@ -299,6 +297,43 @@ var actValUnitPrdCot = function(data) {
         bootbox.alert('El valor del producto no puede estar vacio');
     }
 };
+
+
+/**
+ * Actualiza el registro en base de datos del valor y el porcentaje de descuento sobre el producto
+ * @param {type} nuevoPor
+ * @param {type} valDtto
+ * @param {type} idPref
+ * @returns {undefined}
+ */
+var actualizarValorPorcentajeDttoCot = function( inputId ){
+
+    var nuevoPor = $('#pordtto_' + inputId).val();
+    var valDtto = $('#valdtto_' + inputId).val();
+
+    $.ajax({
+        url: $('#url-proyecto').val() + 'cotizacionesdetalles/actualizarPorcentajeValorDttoCot',
+        data: {nuevoPor: nuevoPor, valDtto: valDtto, idCot: inputId},
+        type: "POST",
+        success: function(data) {
+            var resp = JSON.parse(data);
+            if(resp == '0'){
+                bootbox.alert('No fue posible realizar la actualización del registro. Por favor, inténtelo de nuevo');                
+            }
+        }
+    });  
+    
+};
+
+var actualizarPorcentajeDttoCot = function(data){
+    var arrId = (data.id).split("_");
+        
+    recalculoValoresTabla(arrId['1']);
+
+    calcularTtalCot();
+
+    actualizarValorPorcentajeDttoCot( arrId['1'] );
+}
 
 
 /**
@@ -332,6 +367,8 @@ var eliminarPrdCot = function(data) {
  */
 var seleccionarProductoCotizacion = function(data) {
 
+    var tipoCot = $('#CotizacioneTipoCotizacion').val();
+
     var nomProduct = "";
     var idProd = "";
     if (typeof(data.name) != "undefined") {
@@ -346,35 +383,94 @@ var seleccionarProductoCotizacion = function(data) {
         //se guarda el registro del producto para la cotizacion
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxGuardarDetalleCotiza',
-            data: { catizacionId: cotizacionId, nomProduct: nomProduct, idProd: idProd },
+            data: { catizacionId: cotizacionId, nomProduct: nomProduct, idProd: idProd, tipoCot: tipoCot },
             type: "POST",
             success: function(response) {
                 var resp = JSON.parse(response);
-                var inf = "";
                 if (resp.valid == '1') {
-                    var valProd = resp.prod.length == 0 ? '0' : resp.prod.Cargueinventario.precioventa;
 
-                    inf += "<tr id='tr_" + resp.resp + "'>";
-                    inf += "<td>" + nomProduct + "</td>";
-                    inf += '<td><input type="text" id="cant_' + resp.resp + '" class="form-control ttales" value="1" onblur="actCantPrdCot(this)">&nbsp;</td>';
-                    inf += '<td><input type="text" id="vUnit_' + resp.resp + '" class="form-control ttales" value="' + valProd + '" onblur="actValUnitPrdCot(this)">&nbsp;</td>';
-                    inf += '<td><input type="text" id="vTtal_' + resp.resp + '" class="form-control ttales tfinal" value="' + valProd + '" readonly>&nbsp;</td>';
-                    inf += '<td><input type="button" class="btn btn-primary btn-sm" value="Eliminar" id="' + resp.resp + '"onclick="eliminarPrdCot(this)"></td>';
-                    inf += "</tr>";
-                    $('#dvTCot').append(inf);
-                    $('.ttales').number(true);
-                    calcularTtalCot();
+                    var valoresTablaBC = obtenerValoresTablaCotizacion( resp.data.costoventa , resp.data.impuesto, resp.data.impoconsumo, resp.data.incbolsa, '1', '0' );
+
+                    var valoresTabla = {
+                        idReg: resp.resp,
+                        cantProd: '1',
+                        descProd: resp.prod.Producto.descripcion,
+                        codProd: resp.prod.Producto.codigo,
+                        precioventa: valoresTablaBC.precioUnitarioFinal,
+                        valAntesImp: valoresTablaBC.valorBaseUnitario,
+                        prcDsc: '0',
+                        vlrDsc: '0',
+                        prcIVA: resp.data.impuesto,
+                        valIVA: valoresTablaBC.valorIVA,
+                        prcINC: resp.data.impoconsumo,
+                        valINC: valoresTablaBC.valorINC,
+                        varorINCBolsa: valoresTablaBC.varorINCBolsa,
+                        valorConIva: valoresTablaBC.precioUnitarioFinal
+                    }
+
+                    poblarTablaCotizacion ( valoresTabla );
                     $('#datosProducto').html("").hide();
                     $('#CotizacioneProducto').val("");
+
                 } else {
                     bootbox.alert('No fue posible agregar el producto. Por favor, inténtelo de nuevo.');
                 }
+
+                calcularTtalCot();
             }
         });
     } else {
         bootbox.alert('El campo producto no debe estar vacio');
     }
 };
+
+var obtenerDetalleCotizacion = function(id) {
+        $.ajax({
+            url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxObtenerDetallesCotizacion',
+            data: { cotizacionId: id },
+            type: "POST",
+            success: function(data) {
+                var resp = JSON.parse(data);
+
+                if( resp.est ) {
+
+                    resp.resp.forEach(element => {
+                        var valoresTablaBC = obtenerValoresTablaCotizacion( element.Cotizacionesdetalle.costoventa, 
+                                                                            element.Cotizacionesdetalle.impuesto, 
+                                                                            element.Cotizacionesdetalle.impoconsumo, 
+                                                                            element.Cotizacionesdetalle.incbolsa,
+                                                                            element.Cotizacionesdetalle.cantidad,
+                                                                            element.Cotizacionesdetalle.porcentaje
+                                                                         );
+
+                        var valoresTabla = {
+                            idReg: element.Cotizacionesdetalle.id,
+                            cantProd: element.Cotizacionesdetalle.cantidad,
+                            descProd: element.P.descripcion,
+                            codProd: element.P.codigo,
+                            precioventa: element.Cotizacionesdetalle.costoventa,
+                            valAntesImp: valoresTablaBC.valorBaseUnitario,
+                            prcDsc: element.Cotizacionesdetalle.porcentaje,
+                            vlrDsc: element.Cotizacionesdetalle.descuento,
+                            prcIVA: element.Cotizacionesdetalle.impuesto,
+                            valIVA: valoresTablaBC.valorIVA,
+                            prcINC: element.Cotizacionesdetalle.impoconsumo,
+                            valINC: valoresTablaBC.valorINC,
+                            varorINCBolsa: element.Cotizacionesdetalle.incbolsa,
+                            valorConIva: valoresTablaBC.precioUnitarioFinal
+                        }
+
+                        poblarTablaCotizacion ( valoresTabla );
+                    
+                    });
+
+                } else {
+                    bootbox.alert('No fue posible cargar los productos de la cotización');
+                }
+                calcularTtalCot();
+            }
+        });
+}
 
 /**
  * Obtener los productos para cliente registrado
@@ -426,9 +522,9 @@ var fnObtenerProductoCotizacion = function() {
                     for (var i = 0; i < producto.resp.length; i++) {
                         uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Cargueinventario.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
                     }
+
                     $('#datosProducto').show();
                     $('#datosProducto').html(uls);
-                    calcularTtalCot();
                 }
             });
         } else {
@@ -439,86 +535,79 @@ var fnObtenerProductoCotizacion = function() {
 };
 
 /**
- * Obtener los productos para cliente nuevo
- * @returns {undefined}
- */
-var fnObtenerProductoCotCliNuevo = function() {
-    var cotizacionId = $('#cotizacionId').val();
-    var usuarioId = $('#CotizacioneVendedor').val();
-    var descProd = $(this).val();
-
-    if (cotizacionId == "") {
-        bootbox.alert("No se ha creado la cotización.");
-        $(this).val("");
-    } else {
-        if (descProd.length > 3) {
-            $.ajax({
-                url: $('#url-proyecto').val() + 'cargueinventarios/ajaxObtenerProductoCotizacion',
-                data: { descProducto: descProd, usuarioId: usuarioId },
-                type: "POST",
-                success: function(data) {
-                    var producto = JSON.parse(data);
-                    var uls = "";
-                    for (var i = 0; i < producto.resp.length; i++) {
-                        uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Cargueinventario.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
-                    }
-                    $('#datosProductoclientenuevo').show();
-                    $('#datosProductoclientenuevo').html(uls);
-                }
-            });
-        } else {
-            $('#datosProductoclientenuevo').hide();
-            $('#datosProductoclientenuevo').html("");
-        }
-    }
-};
-
-/**
- * Obtener los productos para cotizacion rapida
- * @returns {undefined}
- */
-var fnObtenerProductoCotRapida = function() {
-    var cotizacionId = $('#cotizacionId').val();
-    var usuarioId = $('#CotizacioneVendedor').val();
-    var descProd = $(this).val();
-
-    if (cotizacionId == "") {
-        bootbox.alert("No se ha creado la cotización.");
-        $(this).val("");
-    } else {
-        if (descProd.length > 3) {
-            $.ajax({
-                url: $('#url-proyecto').val() + 'cargueinventarios/ajaxObtenerProductoCotizacion',
-                data: { descProducto: descProd, usuarioId: usuarioId },
-                type: "POST",
-                success: function(data) {
-                    var producto = JSON.parse(data);
-                    var uls = "";
-                    for (var i = 0; i < producto.resp.length; i++) {
-                        uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Cargueinventario.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
-                    }
-                    $('#datosProductoventarapida').show();
-                    $('#datosProductoventarapida').html(uls);
-                }
-            });
-        } else {
-            $('#datosProductoventarapida').hide();
-            $('#datosProductoventarapida').html("");
-        }
-    }
-};
-
-/**
  * Se calcula el valor total de la cotizacion
  * @returns {undefined}
  */
 var calcularTtalCot = function() {
-    var tFinal = 0;
-    $('.tfinal').each(function() {
-        tFinal = parseFloat(tFinal) + parseFloat($(this).val());
-    });
 
-    $('#resultCot').html(tFinal).number(true);
+        var ttalXIncBolsa=0;
+        var unidadesProducto = 0;
+        $(".inc_bolsa").each(function() {
+            var idInpBolsa = $(this)['0'].id;
+            var idInpCantidad = idInpBolsa.replace('inc_bolsa_', 'cant_');
+            unidadesProducto = $('#' + idInpCantidad).val();
+            ttalXIncBolsa = Number(parseFloat(ttalXIncBolsa) + (parseFloat($(this).val())*parseFloat(unidadesProducto)));
+        });  
+
+        var ttalUnit = 0;
+        var ttalTotal = 0;
+        var ttalValDtto = 0;
+        var ttalesFinal = 0;
+        var ttalesIva = 0;
+        var ttalesIca = 0;
+        var ttalesConIva = 0;
+        var propina=0;
+    
+        //se suman todos los valores unitarios
+        $( ".ttalUnit" ).each(function( index, val ) {
+            ttalUnit += parseFloat($(this).val());
+        });    
+        
+        $('.thTUnit').html(formatNumber(ttalUnit));
+    
+        //se suman todos los valores subtotales
+        $( ".ttalTotal" ).each(function( index, val ) {
+            ttalTotal += parseFloat($(this).val());
+        });       
+
+        $('.thTTotal').html(formatNumber(ttalTotal+propina));
+        //se suman todos los valores de descuento
+        $( ".ttalValDtto" ).each(function( index, val ) {
+            ttalValDtto += parseFloat($(this).val());
+        });        
+        
+        $('.thDtto').html(formatNumber(ttalValDtto));
+        
+        //se suman todos los valores de los totales finales
+        $( ".ttalesFinal" ).each(function( index, val ) {
+            ttalesFinal += parseFloat($(this).val());
+        });        
+        
+        $('.thTFinal').html(formatNumber(ttalesFinal));
+        
+        //se suman los totales del iva
+        $(".valor_iva").each(function(index, val){
+            ttalesIva += parseFloat($(this).val());
+        });
+        
+        $('.thIVA').html(formatNumber(ttalesIva));
+        
+        //se suman los totales del iva
+        $(".valor_ica").each(function(index, val){
+            ttalesIca += parseFloat($(this).val());
+        });
+        
+        $('.thICA').html(formatNumber(ttalesIca));
+        
+        //se suman los totales con iva incluido
+        $('.valor_con_iva').each(function(index, val){
+            ttalesConIva += parseFloat($(this).val());
+        });
+    
+        $('#inp_imp_bolsa').val(ttalXIncBolsa);
+    
+        $('.thTFCIVA').html(formatNumber(parseFloat(ttalesConIva)+parseFloat(ttalXIncBolsa)));
+
 };
 
 /**
@@ -526,148 +615,32 @@ var calcularTtalCot = function() {
  * @param {type} num
  * @returns {Number|String}
  */
-function formatNumber(num) {
+var formatNumber = function(num) {
     if (!num || num == 'NaN') return '-';
     if (num == 'Infinity') return '&#x221e;';
-    num = num.toString().replace(/\$|\,/g, '');
-    if (isNaN(num))
-        num = "0";
-    sign = (num == (num = Math.abs(num)));
-    num = Math.floor(num * 100 + 0.50000000001);
-    cents = num % 100;
-    num = Math.floor(num / 100).toString();
-    if (cents < 10)
-        cents = "0" + cents;
-    for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
-        num = num.substring(0, num.length - (4 * i + 3)) + ',' + num.substring(num.length - (4 * i + 3));
-    return (((sign) ? '' : '-') + num);
-}
-
-
-/**
- * Imprime la cotizacion
- * @returns {undefined}
- */
-var imprimirCotizacion = function() {
-    var cotizacionId = $('#cotizacionId').val();
-
-    if (cotizacionId == "") {
-        bootbox.alert('No se ha creado la cotización.');
-    } else {
-        $.ajax({
-            url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxObtenerDetallesCotizacion',
-            data: { cotizacionId: cotizacionId },
-            type: "POST",
-            success: function(data) {
-                var productos = JSON.parse(data);
-                var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-                mywindow.document.write('<html><head>');
-                mywindow.document.write('<style>');
-                mywindow.document.write('@page { size: auto; margin: 0; }'); // Eliminar márgenes de la página
-                mywindow.document.write('body { font-family: Arial, sans-serif; font-size: 12px; margin: 0; padding: 0; }'); // Tamaño de fuente base
-                mywindow.document.write('table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 12px; }'); // Estilo de la tabla
-                mywindow.document.write('th { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }'); // Estilo de las celdas de encabezado
-                mywindow.document.write('td { border: 1px solid #ddd; padding: 8px; font-size: 12px; }'); // Estilo de las celdas
-                mywindow.document.write('th { background-color: #f5f5f5; font-weight: bold; }'); // Fondo del encabezado
-                mywindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }'); // Fondo alterno para filas
-                mywindow.document.write('.align-left { text-align: left; }'); // Clase para alinear a la izquierda
-                mywindow.document.write('.align-right { text-align: right; }'); // Clase para alinear a la derecha
-                mywindow.document.write('@media print {');
-                mywindow.document.write('  @page { margin: 0; }'); // Eliminar márgenes en la impresión
-                mywindow.document.write('  body { margin: 1cm; }'); // Ajustar márgenes del contenido
-                mywindow.document.write('  .no-print, .no-print * { display: none !important; }'); // Ocultar elementos no deseados
-                mywindow.document.write('}');
-                mywindow.document.write('</style>');
-                mywindow.document.write('</head>');
-                mywindow.document.write('<body>');
-                mywindow.document.write('<div style="margin:0px; width:100%; font-family:sans-serif; font-size:15px;">');
-                mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>' + $('#nombre_empresa').val() + '</b></h4></div>');
-                mywindow.document.write('<div style="width:100%; float:left; margin:0px" align="center">');
-                mywindow.document.write('<h4><b>COTIZACIÓN</b></h4></div>');
-                mywindow.document.write($('#dv_info_emp').html());
-                mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
-                mywindow.document.write('<b>Vendedor: </b>' + $('#CotizacioneVendedor option:selected').text() + '</div>');
-                
-                if ($('#CotizacioneDatoscliente').val() != "") {
-                    mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Cliente: </b>' + $('#CotizacioneDatoscliente').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Teléfono: </b>' + $('#CotizacioneTelefonocliente').val() + '</div></div></div>');
-                    mywindow.document.write('<div style="float:right; margin-top:10px; width:50%" align="left"><div style="margin: 2px; float: left; width: 100%;">');
-                    mywindow.document.write('<div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Identificación: </b>' + $('#CotizacioneNitcliente').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Dirección: </b>' + $('#CotizacioneDircliente').val() + '</div></div></div></div>');
-                } else if ($('#CotizacioneNuevonombre').val() != "") {
-                    mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Cliente: </b>' + $('#CotizacioneNuevonombre').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Teléfono: </b>' + $('#CotizacioneNuevotelefono').val() + '</div></div></div>');
-                    mywindow.document.write('<div style="float:right; margin-top:10px; width:50%" align="left"><div style="margin: 2px; float: left; width: 100%;">');
-                    mywindow.document.write('<div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Identificación: </b>' + $('#CotizacioneNuevonit').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Dirección: </b>' + $('#CotizacioneNuevodireccion').val() + '</div></div></div></div>');
-                } else {
-                    mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Cliente: </b>' + $('#CotizacioneRapidanombre').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Teléfono: </b>' + $('#CotizacioneRapidatelefono').val() + '</div></div></div>');
-                    mywindow.document.write('<div style="float:right; margin-top:10px; width:50%" align="left"><div style="margin: 2px; float: left; width: 100%;">');
-                    mywindow.document.write('<div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Identificación: </b>' + $('#CotizacioneRapidanit').val() + '</div></div>');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Dirección: </b>' + $('#CotizacioneRapidadireccion').val() + '</div></div></div></div>');
-                }
-                
-                if ($('#CotizacionePlaca').val() != "") {
-                    mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:50%" align="left">');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Placa Vehículo: </b>' + $('#CotizacionePlaca').val() + '</div></div></div></div>');
-                }
-                
-                mywindow.document.write('<div style="margin-top: 30px; float: left; width: 100%; aling-items: center; justify-content: center">');
-                mywindow.document.write('<table style="font-family:sans-serif; font-size:15px; border-collapse: collapse; width: 100%;"><thead>');
-                mywindow.document.write('<tr><th class="align-left">Detalle</th><th class="align-left">Cantidad</th><th class="align-right">Valor Unitario</th><th class="align-right">Valor Total</th></tr>');
-                mywindow.document.write('</thead>');
-                if (productos.resp.length > 0) {
-                    mywindow.document.write('<tbody>');
-                    if (productos.resp.length > 0) {
-                        $.each(productos.resp, function(k, val) {
-                            mywindow.document.write('<tr>');
-                            mywindow.document.write('<td class="align-left">' + val.Cotizacionesdetalle.nombreproducto + '</td>'); // Alineado a la izquierda
-                            mywindow.document.write('<td class="align-left">' + val.Cotizacionesdetalle.cantidad + '</td>'); // Alineado a la izquierda
-                            mywindow.document.write('<td class="align-right">' + formatNumber(val.Cotizacionesdetalle.costoventa) + '</td>'); // Alineado a la derecha
-                            mywindow.document.write('<td class="align-right">' + formatNumber(val.Cotizacionesdetalle.costototal) + '</td>'); // Alineado a la derecha
-                            mywindow.document.write('</tr>');
-                        });
-                    }
-                    mywindow.document.write('</tbody>');
-                }
-                mywindow.document.write('<tr><td colspan="2"></td><td class="align-right"><b>TOTAL</b></td>');
-                mywindow.document.write('<td class="align-right">' + $('#resultCot').html() + '</td>');
-                mywindow.document.write('</tr></table></div>');
-                if ($('#observacion').val() != "") {
-                    mywindow.document.write('<div style="margin:0px; width:100%; float:left;"><div style="float:left; margin-top: 10px; width:100%" align="left">');
-                    mywindow.document.write('<div style="margin: 2px; float: left; width: 100%;"><div style="margin: 0px; float: left; width: 100%;">');
-                    mywindow.document.write('<b>Nota: </b><br>' + $('#observacion').val() + '</div></div></div></div>');
-                }
-                mywindow.document.write($('#dv_emisor').html());
-                mywindow.document.write('</div>');
-                mywindow.document.write('</body></html>');
-                mywindow.document.title = $('#CotizacioneDatoscliente').val() + " - COTIZACION";
-                mywindow.document.close();
-                mywindow.focus();
-                mywindow.print();
-                mywindow.close();
-            }
-        });
+    
+    // Convertir a número y manejar casos no numéricos
+    num = parseFloat(num.toString().replace(/\$|\,/g, ''));
+    if (isNaN(num)) {
+        num = 0;
     }
+
+    // Redondear a 2 decimales
+    num = Math.round(num * 100) / 100;
+
+    // Separar parte entera y decimal
+    let parts = num.toFixed(2).split('.');
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || '00'; // Asegurar 2 decimales
+
+    // Agregar separadores de miles a la parte entera
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // Combinar parte entera y decimal
+    return integerPart + '.' + decimalPart;
 };
+
+
 
 /**
  * Imprime la cotizacion
@@ -675,23 +648,25 @@ var imprimirCotizacion = function() {
  */
 var generarPrefactura = function() {
     var cotizacionId = $('#cotizacionId').val();
+    var crearOT = $('#CotizacioneCrearOt').val();
+    var tipoCot = $('#CotizacioneTipoCotizacion').val();
 
     if (cotizacionId == "") {
         bootbox.alert('No se ha creado la cotización.');
     } else {
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxObtenerDetallesCotizacionPrefactura',
-            data: { cotizacionId: cotizacionId },
+            data: { cotizacionId: cotizacionId, crearOT: crearOT, tipoCot: tipoCot },
             type: "POST",
             success: function(data) {
                 var resp = JSON.parse(data);
-                if (resp.resp != '1') {
-                    bootbox.alert('Se creo la prefactura con exito');
+                if (resp.resp) {
+                    window.location.href = $('#url-proyecto').val() + 'cotizaciones/';
                 }
             }
         }).fail(
             function( jqXHR, textStatus, errorThrown ) {
-                bootbox.alert('Se creo la prefactura con exito');
+                bootbox.alert('No fue posible crear la prefactura');
             }
         );
     }
@@ -781,39 +756,6 @@ var actualizarDireccionCliente = function() {
     }
 };
 
-var actualizarDiasLimite = function() {
-    var clienteId = $('#CotizacioneIdcliente').val();
-    if (typeof(clienteId) != "undefined" && clienteId != "") {
-        $.ajax({
-            url: $('#url-proyecto').val() + 'clientes/ajaxActualizarDiasCliente',
-            data: { clienteId: clienteId, diascredito: $('#CotizacioneDiascredcliente').val() },
-            type: "POST",
-            success: function(data) {
-                var respuesta = JSON.parse(data);
-                bootbox.alert(respuesta.resp);
-            }
-        });
-    } else {
-        bootbox.alert('Debe seleccionar un cliente.');
-    }
-};
-
-var actualizarCreditoLimite = function() {
-    var clienteId = $('#CotizacioneIdcliente').val();
-    if (typeof(clienteId) != "undefined" && clienteId != "") {
-        $.ajax({
-            url: $('#url-proyecto').val() + 'clientes/ajaxActualizarCredCliente',
-            data: { clienteId: clienteId, limitecredito: $('#CotizacioneLimitecredcliente').val() },
-            type: "POST",
-            success: function(data) {
-                var respuesta = JSON.parse(data);
-                bootbox.alert(respuesta.resp);
-            }
-        });
-    } else {
-        bootbox.alert('Debe seleccionar un cliente.');
-    }
-};
 
 var guardarObservacion = function() {
 
@@ -941,13 +883,9 @@ $(function() {
     $('#CotizacioneNitcliente').change(actualizarNitCliente);
     $('#CotizacioneTelefonocliente').change(actualizarTelefonoCliente);
     $('#CotizacioneDircliente').change(actualizarDireccionCliente);
-    $('#CotizacioneDiascredcliente').change(actualizarDiasLimite);
-    $('#CotizacioneLimitecredcliente').change(actualizarCreditoLimite);
 
     //seleccion de producto
     $('#CotizacioneProducto').keyup(fnObtenerProductoCotizacion);
-    //    $('#CotizacioneProductousuarionuevo').keyup(fnObtenerProductoCotCliNuevo);    
-    //    $('#CotizacioneProductoventarapida').keyup(fnObtenerProductoCotRapida);
 
     if ($('#CotizacioneDatoscliente').val() != "") {
         $('#CotizacioneProducto').prop('disabled', false);
@@ -959,6 +897,10 @@ $(function() {
     $('#imprimirCot').click(imprimirCotizacion);
     $('#generarPrefac').click(generarPrefactura);
 
+    /**Se valida si existe la cotización para obtener el detalle */
+    if($('#cotizacionId').val()) {
+        obtenerDetalleCotizacion($('#cotizacionId').val());
+    }
+
     $('.ttales').number(true);
-    calcularTtalCot(); 
 });

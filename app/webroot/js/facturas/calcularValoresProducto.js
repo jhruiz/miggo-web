@@ -2,14 +2,14 @@
 
 // Obtiene el valor base del producto
 var obtenerValorBaseProducto = function( objValoresBase ) {
-    
+
     // --- 1. Conversión y Preparación de Variables ---    
     const precioVentaUnitario = parseFloat(objValoresBase.precioVenta * objValoresBase.unidadesProd) || 0;
     const descuentoPorcentaje = parseFloat(objValoresBase.porcentajeDesc) || 0; // Usado si se aplica por %
 
     // Convertir tasas de porcentaje (%) a decimal (e.g., 19 -> 0.19)
-    const prcIVA = (parseFloat(objValoresBase.prcIVA) || 0) / 100;
-    const prcINC = (parseFloat(objValoresBase.prcINC) || 0) / 100;
+    const prcIVA = (parseFloat(objValoresBase.prcIVA) || 0);
+    const prcINC = (parseFloat(objValoresBase.prcINC) || 0);
     
     // Factor para discriminar los impuestos (1 + tIVA + tINC)
     const factorRetiro = 1 + prcIVA + prcINC;
@@ -51,6 +51,7 @@ var obtenerValorBaseProducto = function( objValoresBase ) {
         valorBaseUnitario: parseFloat(valorBaseNueva.toFixed(2)),
         valorIVA: parseFloat(nuevoValIVA.toFixed(2)),
         valorINC: parseFloat(nuevoValINC.toFixed(2)),
+        varorINCBolsa: parseFloat(objValoresBase.valBolsa * objValoresBase.unidadesProd),
         precioUnitarioFinal: parseFloat(precioFinalUnitario.toFixed(2)),
         descuento: parseFloat(descuento.toFixed(2))
     };
@@ -77,14 +78,15 @@ var obtenerValoresIniciales = function() {
         'porcentajeDesc': $('#porcentaje').val(),
         'prcIVA': $('#prcIVA').val(),
         'prcINC': $('#prcINC').val(),
+        'valBolsa': $('#valINCBolsa').val(),
     }
 }
+
 
 // Recalculo de valores por cambios en el formulario
 var recalculoValores = function() {
 
     let vtaInventario = $('#vtaInventario').val();
-    
 
     // se valida si el precio esta por debajo del minimo establecido
     if(parseFloat($('#precioventa').val()) < parseFloat($('#precioMinimo').val())) {
@@ -111,193 +113,209 @@ var recalculoValores = function() {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //se calculan el total de venta sin iva, el valor del impuesto y total con descuento
-// var calcularTotales = function(){
-//     // se valida si el precio esta por debajo del minimo establecido
-//     if(parseFloat($('#precioventa').val()) < parseFloat($('#precioMinimo').val())) {
-//         $('#precioventa').val($('#precioVenta').val()); 
-//         bootbox.alert('El precio de venta no puede ser menor al mínimo establecido.');        
-//     }else{
-//         calcularPrecioVentaSinIva();    
-//         calcularDescuentoPorPorcentaje();    
-//         calcularValorImpuesto();
-//         calcularTotalConDescuento();
-//     }
-
-// };
-
-// //se valida si hay existencia en el stock del producto que se desea
-// function validarCantidadStock(){   
-//     if($('#vtaInventario').val() == '1'){
-//         var cantidadActual = $('#cantidadProducto').val();
-//         var cantidadVenta = $('#cantidadventa').val();
-//         if(Number(cantidadVenta) > Number(cantidadActual)){
-//             $('#cantidadventa').val(cantidadActual);
-//             bootbox.alert('Ha excedido la cantidad actual del Stock');        
-//         }    
-//     }
-//     calcularTotales();
-//     calcularDescuentoPorPorcentaje();
-// }
-
-
-// //se calcula el precio de venta 
-// var calcularPrecioVentaSinIva = function(){
-//     var esFactura = $('#esFacturaDV').val();
-//     var cantidad = parseFloat($('#cantidadventa').val());
-//     var precioUnit = parseFloat($('#precioventa').val());    
-//     var prcImpuesto = (esFactura == '1') ? parseFloat($('#impuesto').val()) : parseFloat('0');
-//     precioTtalAI = 0;
-//     if(prcImpuesto <= 0){
-//         var precioTtalAI = (cantidad * precioUnit);
-//     }else{
-//         var precioTtalAI = (cantidad * precioUnit)/prcImpuesto;
-//     }
-    
-//     $('#precioventaCI').val(precioTtalAI);
-            
-// };
-
-// //se calcula el valor final: valor sin iva menos descuento mas iva
-// var calcularTotalConDescuento = function(){
-//     var esFactura = $('#esFacturaDV').val();
-//     var precioVentaAI = parseFloat($('#precioventaCI').val());  
-//     var descuento = parseFloat($('#descuento').val());
-//     var valorIva = (esFactura == '1') ? parseFloat($('#valorIva').val()) : parseFloat('0');
-//     var valorIca = (esFactura == '1') ? parseFloat($('#valorIca').val()) : parseFloat('0');
-    
-//     var ttalFinalVenta = (precioVentaAI - parseFloat(descuento) + valorIva + valorIca);
-    
-//     $('#valorConIva').val(ttalFinalVenta);
-// };
-
-// //se calcula el valor del impuesto
-// var calcularValorImpuesto = function(){
-//     var esFactura = $('#esFacturaDV').val();
-//     var precioVentaAI = parseFloat($('#precioventaCI').val());
-//     var descuento = parseFloat($('#descuento').val());
-//     var prcImpuesto = (esFactura == '1') ? parseFloat($('#impuesto').val()/100) : parseFloat('0');
-//     var prcInc = (esFactura == '1') ? parseFloat($('#prcINC').val()/100) : parseFloat('0');
-//     var baseSubTtal = precioVentaAI - descuento;    
-//     var ttalIimp = baseSubTtal * prcImpuesto;      
-//     var ttalInc =   baseSubTtal * prcInc;
-    
-//     $('#valorIva').val(ttalIimp);    
-//     $('#valorIca').val(ttalInc);    
-// };
-
-// //a partir del porcentaje de descuento, se calculan los totales
-// var calcularDescuentoPorPorcentaje = function(){
-//     var dttoPor = $('#porcentaje').val();
-//     if(parseFloat(dttoPor) > 100){
-//         $('#descuento').val("");
-//         $('#porcentaje').val("");
-//     }else{
-//         var valDtto = parseFloat(parseFloat($('#precioventaCI').val())) * parseFloat(dttoPor)/100;       
-//         $('#descuento').val(valDtto);        
-//     }    
-//     calcularValorImpuesto();
-//     calcularTotalConDescuento();           
-// };
-
-// //a partir del valor de descuento, se calcula el porcentaje de descuento y los totales
-// var calcularDescuentoPorValor = function(){
-//     var dttoVal = $('#descuento').val();
-//     if(parseFloat(dttoVal) > parseFloat($('#precioventa').val())){
-//         $('#descuento').val("");
-//         $('#porcentaje').val("");
-//     }else{
-//         var porDtto = ((parseFloat(dttoVal) * 100)/parseFloat($('#precioventaCI').val()));
-//         $('#porcentaje').val(porDtto.toFixed(3));        
-//     }
-//     calcularValorImpuesto();
-//     calcularTotalConDescuento(); 
-// };
-
-
-
-
-
 /////////////////////////////ACTUALIZAR VALORES EN LA TABLA////////////////////////////////////////
 
-//se calcula el valor base del producto en la tabla de productos para la factura
-var calcularPrecioAntesDeIva = function(campName){
-    var cantidad = parseFloat($('#cant_' + campName).val());
-    var precioUnit = parseFloat($('#precio_' + campName).val());    
-    var prcImpuesto = parseFloat($('#prcimpuesto_' + campName).val());
-    precioTtalAI = 0;
-    if(prcImpuesto <= 0){
-        var precioTtalAI = (cantidad * precioUnit);
-    }else{
-        var precioTtalAI = (cantidad * precioUnit)/parseFloat(prcImpuesto);
+
+// Setea los valores en el formulario
+var setearValoresTabla = function( objResultados, campName ) {
+
+    $('#total_' + campName).val(objResultados.valorBaseUnitario);
+    $('#valor_iva_' + campName).val(objResultados.valorIVA);
+    $('#valor_ica_' + campName).val(objResultados.valorINC);
+    $('#valor_con_iva_' + campName).val(objResultados.precioUnitarioFinal); 
+    $('#valdtto_' + campName).val(objResultados.descuento); 
+
+}
+
+// Obtiene los valores base para recalculo de valores desde la base
+var obtenerValoresBaseTabla = function(campName) {
+
+    return {
+        'unidadesProd': $('#cant_' + campName).val(), 
+        'precioVenta': $('#precio_' + campName).val(),
+        'porcentajeDesc': $('#pordtto_' + campName).val(),
+        'prcIVA': parseFloat($('#porc_iva_' + campName).val() / 100),
+        'prcINC': parseFloat($('#porc_ica_' + campName).val() / 100),
+        'valBolsa': parseFloat($('#inc_bolsa_' + campName).val())
     }
-    
-    $('#total_' + campName).val(precioTtalAI);
+}
+
+// Recalculo de valores por cambios en el formulario
+var recalculoValoresTabla = function(campName) {
+        var objValoresBase = obtenerValoresBaseTabla(campName);
+        // 1. Obtener los resultados del cálculo
+        var objResultados = obtenerValorBaseProducto( objValoresBase );
+        // 2. Setear los valores en el formulario
+        setearValoresTabla( objResultados, campName );
 };
 
-//se calcula el valor del descuento con la base del producto
-var calcularValorDescuento = function(campName){
-    var dttoPor = parseFloat($('#pordtto_' + campName).val());   
-    
-    if(parseFloat(dttoPor) > 100){
-        $('#valdtto_' + campName).val("");
-        $('#pordtto_' + campName).val("");
-    }else{
-        var valDtto = parseFloat(parseFloat($('#total_' + campName).val())) * parseFloat(dttoPor)/100;
-        $('#valdtto_' + campName).val(valDtto);        
+
+////////////////////////////////////////////////OBTIENE VALORES TABLA POR BARCODE////////////////////////////////
+
+// Organiza la información necesaria basada en los datos que llegan por la implementación del barcode
+var obtenerValoresInicialesTablaBarCode = function( prefactura ) {
+
+    return {
+        'unidadesProd': '1', 
+        'precioVenta': prefactura.producto['0'].Cargueinventario.precioventa,
+        'porcentajeDesc': '0',
+        'prcIVA': parseFloat(parseFloat(prefactura.tasaIvaPorc) / 100),
+        'prcINC': parseFloat(parseFloat(prefactura.tasaIncPorc) / 100),
+        'valBolsa': parseFloat(prefactura.tasaBolsaVal),
     }
+}
+
+// Orquesta la generación de valores por datos que llegan desde el formulario directo a la tabla por barcode
+var obtenerValoresTablaBC = function( prefactura ) {
+
+    var objValoresBase = obtenerValoresInicialesTablaBarCode( prefactura );
+
+    return obtenerValorBaseProducto( objValoresBase );
+
+}
+
+////////////////////////////////////////////////OBTIENE VALORES PARA PREFACTURA////////////////////////////////
+
+// Organiza la información necesaria basada en los datos que llegan para la prefactura
+var obtenerValoresInicialesPrefactura = function( prefactura ) {
+
+    return {
+        'unidadesProd': prefactura.producto['0'].Prefacturasdetalle.cantidad, 
+        'precioVenta': prefactura.producto['0'].Prefacturasdetalle.costoventa,
+        'porcentajeDesc': prefactura.producto['0'].Prefacturasdetalle.porcentaje,
+        'prcIVA': parseFloat(parseFloat(prefactura.tasaIvaPorc) / 100),
+        'prcINC': parseFloat(parseFloat(prefactura.tasaIncPorc) / 100),
+        'valBolsa': parseFloat(prefactura.tasaBolsaVal),
+    }
+}
+
+// Orquesta la generación de valores por datos que llegan desde el formulario directo a la tabla por barcode
+var obtenerValoresTablaPrefactura = function( prefactura ) {
+
+    var objValoresBase = obtenerValoresInicialesPrefactura( prefactura );
+
+    return obtenerValorBaseProducto( objValoresBase );
+
+}
+
+////////////////////////////////////////////////OBTIENE VALORES TABLA PARA LAS COTIZACIONES////////////////////////////////
+
+// Organiza la información necesaria basada en los datos que llegan por la implementación del barcode
+var obtenerValoresInicialesTablaCotizacion = function( precioVenta, prcIva, prcINC, valBolsa, unidades, porcDesc ) {
+
+    return {
+        'unidadesProd': unidades, 
+        'precioVenta': precioVenta,
+        'porcentajeDesc': porcDesc,
+        'prcIVA': parseFloat(parseFloat(prcIva) / 100),
+        'prcINC': parseFloat(parseFloat(prcINC) / 100),
+        'valBolsa': parseFloat(valBolsa),
+    }
+}
+
+// Orquesta la generación de valores por datos que llegan desde el formulario directo a la tabla por barcode
+var obtenerValoresTablaCotizacion = function( precioVenta, prcIva, prcINC, valBolsa, unidades, porcDesc ) {
+
+    var objValoresBase = obtenerValoresInicialesTablaCotizacion( precioVenta, prcIva, prcINC, valBolsa, unidades, porcDesc );
+
+    return obtenerValorBaseProducto( objValoresBase );
+
+}
+
+
+/*funciones de la tabla prefactura*/
+function actualizarCantidadPrefact(dato){  
+    var arrName = dato.name.split('_');
+    var cantidad = $('#' + dato.name).val();
+    if(typeof(cantidad) == "undefined" || cantidad == ""){
+        bootbox.alert('- Debe ingresar una cantidad de productos.');
+    }else{
+        $.ajax({
+            url: $('#url-proyecto').val() + 'prefacturasdetalles/actalizarcantidad',
+            data: {cantidad: cantidad, id: arrName['1']},
+            type: "POST",
+            success: function(data) { 
+                var respuesta = JSON.parse(data);
+                if(respuesta.resp){
+
+                    recalculoValoresTabla(arrName['1']);
+
+                }else{
+                    bootbox.alert('Ha excedido la cantidad actual del Stock. ' + respuesta.cantStock); 
+                    $('#' + dato.name).val(respuesta.cantidad);
+                }
+                sumarTotales();            
+            }            
+        });         
+    }
+}
+
+/**
+ * Actualiza el registro en base de datos del valor y el porcentaje de descuento sobre el producto
+ * @param {type} nuevoPor
+ * @param {type} valDtto
+ * @param {type} idPref
+ * @returns {undefined}
+ */
+var actualizarValorPorcentajeDtto = function( inputId ){
+
+    var nuevoPor = $('#pordtto_' + inputId).val();
+    var valDtto = $('#valdtto_' + inputId).val();
+
+    $.ajax({
+        url: $('#url-proyecto').val() + 'prefacturas/actualizarPorcentajeValorDtto',
+        data: {nuevoPor: nuevoPor, valDtto: valDtto, idPref: inputId},
+        type: "POST",
+        success: function(data) {
+            var resp = JSON.parse(data);
+            if(resp == '0'){
+                bootbox.alert('No fue posible realizar la actualización del registro. Por favor, inténtelo de nuevo');                
+            }
+        }
+    });  
     
 };
 
-//calcula el valor del impuesto del iva
-var calcularValorIvaTabla = function(campName){
-    var precioVentaAI = parseFloat($('#total_' + campName).val());
-    var descuento = parseFloat($('#valdtto_' + campName).val()); 
-    var prcImpuesto = $('#prcimpuesto_' + campName).val() - 1;            
-    var prcInc = parseFloat($('#porc_ica_' + campName).val()/100);
-    var baseSubTtal = precioVentaAI - descuento;
-    var ttalIimp = baseSubTtal * prcImpuesto;     
-    var ttalInc = baseSubTtal * prcInc;
+/**funciones de la tabla de prefactura */
+function actualizarPrecioPrefact(dato){
+    var arrName = dato.name.split('_');
+    var precioventa = $('#' + dato.name).val();    
+    if(typeof(precioventa) == 'undefined' || precioventa == ""){
+        bootbox.alert('- Debe ingresar el precio de venta del producto.');
+    }else{
+        $.ajax({
+            url: $('#url-proyecto').val() + 'prefacturasdetalles/actualizarcostoventa',
+            data: {precioventa: precioventa, id: arrName['1']},
+            type: "POST",
+            success: function(data) { 
+                var respuesta = JSON.parse(data);
+                if(respuesta.resp){
+
+                    recalculoValoresTabla(arrName['1']);
+
+                }else{
+                    $('#' + dato.name).val(respuesta.precioventa);
+                    bootbox.alert('El precio de venta no puede ser menor al mínimo establecido.');
+                }
+                sumarTotales();
+            }
+        });        
+    }
+}
+
+/**
+ * Actualiza el valor del descuento basado en el porcentaje
+ * @param {type} data
+ * @returns {undefined}
+ */
+var actualizarPorcentajeDtto = function(data){
+
+    var arrId = (data.id).split("_");
         
-    $('#valor_iva_' + campName).val(ttalIimp);    
-    $('#valor_ica_' + campName).val(ttalInc);   
-};
+    recalculoValoresTabla(arrId['1']);
 
+    sumarTotales();
 
-//se calcula el total del producto con descuento mas iva
-var calcularTotalConDescuentoTabla = function(campName){
-    var precioVentaAI = parseFloat($('#total_' + campName).val());  
-    var descuento = parseFloat($('#valdtto_' + campName).val());
-    var valorIva = parseFloat($('#valor_iva_' + campName).val());
-    var valorICA = parseFloat($('#valor_ica_' + campName).val());
-    
-    var ttalFinalVenta = (precioVentaAI - parseFloat(descuento) + valorIva + valorICA);
-    
-    $('#valor_con_iva_' + campName).val(ttalFinalVenta);        
-};
+    actualizarValorPorcentajeDtto( arrId['1'] );
 
-//se calcula el porcentaje de descuento a partir del valor del descuento
-var actualizarDescuentoPorValorTabla = function(campName){
-    var dttoVal = $('#valdtto_' + campName).val();
-    if(parseFloat(dttoVal) > parseFloat($('#valor_con_iva_' + campName).val())){
-        $('#pordtto_' + campName).val("");
-        $('#valdtto_' + campName).val("");
-    }else{
-        var porDtto = ((parseFloat(dttoVal) * 100)/parseFloat($('#total_' + campName).val())).toFixed(3);
-        $('#pordtto_' + campName).val(porDtto);
-    }        
 };

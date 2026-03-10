@@ -642,49 +642,40 @@ class ReportesController extends AppController
         $arrFacts = array();
         foreach ($facturas as $f){ 
 
-            if($f['Factura']['factura'] == '1'){
-                $valorBase = 0;
-                $descuento = 0;
+            $arrInfoProds = [
+                'unidadesProd' => (float)($f['FD']['cantidad']),
+                'precioVenta' => (float)($f['FD']['costoventa']),
+                'porcentajeDesc' => (float)($f['FD']['porcentaje']),
+                'prcIVA' => (float)($f['FD']['impuesto'] / 100),
+                'prcINC' => (float)($f['FD']['impoconsumo'] / 100),
+                'valBolsa' => (float)($f['FD']['incbolsa'])
+            ];
 
-                if (!empty($f['FD']['impuesto'])){
-                    $valorBase = ceil($f['FD']['costoventa'] / (($f['FD']['impuesto'] / 100) +1));
-                } else {
-                    $valorBase = ceil($f['FD']['costoventa']);
-                }
-
-                if (!empty($f['FD']['porcentaje'])){
-                    $descuento = ceil(($valorBase * ($f['FD']['porcentaje'])/100) * $f['FD']['cantidad']);
-                }
-
-                $valorXCantidad = $valorBase * $f['FD']['cantidad'];
-                $iva = ceil(($valorXCantidad - $descuento) * ($f['FD']['impuesto']/100));
-            }else{
-                $iva = 0;
-                $valorBase = $f['FD']['costoventa'];
-                $valorXCantidad = ceil($valorBase * $f['FD']['cantidad']);
-                $descuento = $valorXCantidad * ($f['FD']['porcentaje']/100);
-            }
-
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
 
             $arrFacts[] = [
-                'consecutivodian' => $f['Factura']['consecutivodian'],
                 'consecutivodv' => $f['Factura']['consecutivodv'],
+                'consecutivodian' => $f['Factura']['consecutivodian'],
                 'fecha' => $f['Factura']['created'],
                 'nombreCliente' => $f['CL']['nombre'],
                 'identificacion' => $f['CL']['nit'],
                 'vendedor' => $f['US']['nombre'],
                 'telefono' => $f['CL']['celular'],
-                'cantidad' => $f['FD']['cantidad'],
                 'producto' => $f['PR']['descripcion'],
-                'valor' => $valorBase,
-                'valor_ttal' => $valorBase * $f['FD']['cantidad'],
-                'descuento' => $descuento,
-                'subtotal' => ($valorBase * $f['FD']['cantidad']) - $descuento,
-                'iva' => $iva,
-                'impuesto_iva' => $f['FD']['impuesto']
+                'codigo' => $f['PR']['codigo'],
+                'cantidad' => $f['FD']['cantidad'],
+                'precioUnitario' => number_format(($objValoresBase['valorBaseUnitario']+$objValoresBase['descuento'])/$f['FD']['cantidad'], 2, ',', ''),
+                'prcDescuento' => number_format($f['FD']['porcentaje'], 2, ',', ''),
+                'descuento' => number_format($objValoresBase['descuento'], 2, ',', ''),
+                'prcIVA' => number_format($f['FD']['impuesto'], 2, ',', ''),
+                'IVA' => number_format($objValoresBase['valorIVA'], 2, ',', ''),
+                'prcICA' => number_format($f['FD']['impoconsumo'], 2, ',', ''),
+                'INC' => number_format($objValoresBase['valorINC'], 2, ',', ''),
+                'INCBolsa' => number_format($objValoresBase['varorINCBolsa'], 2, ',', ''),
+                'totalLinea' => number_format($objValoresBase['precioUnitarioFinal'], 2, ',', '')
             ];
         }
-                
+
         $texto_tit = "Facturas";
         $this->set(compact('arrFacts'));
         $this->set('texto_tit', $texto_tit);
@@ -697,14 +688,18 @@ class ReportesController extends AppController
             'Identificacion',
             'Vendedor',
             'Telefono',
+            'Nombre',
+            'Codigo',
             'Cantidad',
-            'Descripcion',
-            'Valor Unitario',
-            'Valor Total',
+            'Precio unitario',
+            'Porcentaje desc',
             'Descuento',
-            'Subtotal',
+            'Porcentaje IVA',
             'IVA',
-            '% IVA'
+            'Porcentaje INC',
+            'INC',
+            'INC bolsa',
+            'Total linea'
             );
 
         $this->set('titulos', $arr_titulos);
@@ -896,19 +891,19 @@ class ReportesController extends AppController
             'Deposito',
             'Proveedor',
             'Vendedor',
-            'Canal de Ventas',
-            'Costo del Producto',
-            'Costo Total',
+            'Canal de ventas',
+            'Costo del producto',
+            'Costo total',
             'Cantidad',
-            'Precio Venta',
-            'Total Venta',
-            'Utilidad Bruta',
-            'Utilidad Porcentual',
-            'Tipo de Utilidad',
+            'Precio venta unitario',
+            'Total venta',
+            'Utilidad bruta',
+            'Utilidad porcentual',
+            'Tipo de utilidad',
             'Fecha',
             'Factura',
-            'Tipo de Pago',
-            'Credito Interno',
+            'Tipo de pago',
+            'Credito interno',
         );
         $this->set('titulos', $arr_titulos);
         $this->render('export_xls', 'export_xls');

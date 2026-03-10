@@ -161,15 +161,12 @@ class PrefacturasController extends AppController {
  * @return void
  */
     public function add() {
-        /*se reagistra la actividad del uso de la aplicacion*/
-        $usuariosController = new UsuariosController();
-        $usuarioAct = $this->Auth->user('id');
-        $usuariosController->registraractividad($usuarioAct);
-
         $this->loadModel('Prefacturasdetalle');
         $this->loadModel('Cargueinventario');
         $this->loadModel('OrdentrabajosSuministro');
+
         $this->autoRender = false;
+
         $posData = $this->request->data;
         $usuarioId = $posData['usuarioId'];            
         $clienteId = $posData['clienteId'];
@@ -177,10 +174,11 @@ class PrefacturasController extends AppController {
         $cargueinventarioId = $posData['cargueinventarioId'];
         $cantidadventa = $posData['cantidadventa'];
         $precioventa = $posData['precioventa'];
-        $valorDescuento = isset($posData['valorDescuento']) && !empty($posData['valorDescuento']) ? $posData['valorDescuento'] : 0;
-        $porcentajeDescuento = isset($posData['porcentajeDescuento']) && !empty($posData['porcentajeDescuento']) ? $posData['porcentajeDescuento'] : 0;
+        $valorDescuento = $posData['valorDescuento'];
+        $porcentajeDescuento = $posData['porcentajeDescuento'];
         $impuesto = $posData['impuesto'];
-        $prcINC = isset($posData['prcINC']) && !empty($posData['prcINC']) ? $posData['prcINC'] : 0;
+        $prcINC = $posData['prcINC'];
+        $valINCBolsa = $posData['valINCBolsa'];
         
         if(isset($posData['prefactId']) && !empty($posData['prefactId'])){
             $prefactId = $posData['prefactId'];
@@ -204,10 +202,8 @@ class PrefacturasController extends AppController {
 
         if($prefactId != '0'){
 
-            $prcINC = $esFactura == '1' ? $prcINC : '0';
-
             $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa,$precioventa,$cargueinventarioId,
-                    $prefactId, $valorDescuento, $porcentajeDescuento, $impuesto, $prcINC);
+                    $prefactId, $valorDescuento, $porcentajeDescuento, $impuesto, $prcINC, $valINCBolsa);
             
             //guarda el producto en la orden de trabajo
             if(!empty($arrPrefactId['Prefactura']['ordentrabajo_id'])){            
@@ -283,14 +279,6 @@ class PrefacturasController extends AppController {
                     /*Se guarda la prefactura y se obtiene el id para almacenar el detalle*/
                     $prefactId = $this->Prefactura->guardarPrefactura($usuarioId, $clienteId, null, $esFactura);                 
                 }   
-
-                /*Se obtiene el impuesto del producto */
-                $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
-                if(empty($impuesto) || $esFactura == '0'){
-                    $impto = 0;
-                }else{
-                    $impto = $impuesto['0']['Impuesto']['valor'];
-                }
                 
                 if($produtoInfo['0']['Producto']['inventario'] == '1'){
                     /*se descuenta la cantidad del producto prefacturado del inventario*/
@@ -313,14 +301,35 @@ class PrefacturasController extends AppController {
 
                     if($prefactId != '0'){
 
-                        $prcINC = isset($produtoInfo['0']['Cargueinventario']['valor_impuesto']) && !empty($produtoInfo['0']['Cargueinventario']['valor_impuesto']) ? $produtoInfo['0']['Cargueinventario']['valor_impuesto'] : '0';
+                        $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
+                        
+                        $tasaIvaPorc = 0;
+                        $tasaIncPorc = 0;
+                        $tasaBolsaVal = 0;
+                        if ( $esFactura == '1') {
+                            foreach( $impuesto as $imp ) {
+    
+                                // tratamiento para el IVA
+                                if( $imp['TX']['code'] ==  '01' ) {
+                                    $tasaIvaPorc = (string) ($imp['IMP']['valor'] ?? 0);
+                                }
+                                
+                                // tratamiento para el INC
+                                if( $imp['TX']['code'] == '04' ) {
+                                    $tasaIncPorc = (string) ($imp['IMP']['valor'] ?? 0);     
+                                }
+    
+                                // tratamiento para el impuesto a la bolsa
+                                if( $imp['TX']['code'] == '22' ) {
+                                    $tasaBolsaVal = (string) ($imp['IMP']['valor'] ?? 0);
+                                }   
+                            }
+                        }
 
-                        $prcINC = $esFactura == '1' ? $prcINC : '0';
-
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefactId, 0, 0, $impto, $prcINC);
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefactId, 0, 0, $tasaIvaPorc, $tasaIncPorc, $tasaBolsaVal);
 
                         if($detalleId != '0' && $detalleId != ""){
-                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefactId));
+                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'tasaIvaPorc' => $tasaIvaPorc, 'tasaIncPorc' => $tasaIncPorc, 'tasaBolsaVal' => $tasaBolsaVal,  'prefactId' => $prefactId));
                         }else{
                             echo json_encode(array('resp' => $detalleId, 'valido' => false));
                         }
@@ -398,20 +407,43 @@ class PrefacturasController extends AppController {
                     $mensaje = "Por favor valide la disponibilidad del producto en stock";
                     echo json_encode(array('valido' => false, 'mensaje' => $mensaje));
                 }else{
+
                     if($produtoInfo['0']['Producto']['inventario'] == '1'){
                         /*se actualiza la cantidad en stock tras la prefactura*/
                         $this->Cargueinventario->actalizarExistenciaStock($cargueinventarioId, $existFinal);
                     }
 
-                    if($prefactId != '0') {
-
-                        $prcINC = isset($produtoInfo['0']['Cargueinventario']['valor_impuesto']) && !empty($produtoInfo['0']['Cargueinventario']['valor_impuesto']) ? $produtoInfo['0']['Cargueinventario']['valor_impuesto'] : '0';
-                        $prcINC = $esFactura == '1' ? $prcINC : '0';
+                    if($prefacturaId != '0') {
                         
-                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefacturaId, 0, 0, $impto, $prcINC);
+                        $impuesto = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($cargueinventarioId);
+                        
+                        $tasaIvaPorc = 0;
+                        $tasaIncPorc = 0;
+                        $tasaBolsaVal = 0;
+                        if ( $esFactura == '1') {
+                            foreach( $impuesto as $imp ) {
+
+                                // tratamiento para el IVA
+                                if( $imp['TX']['code'] ==  '01' ) {
+                                    $tasaIvaPorc = (string) ($imp['IMP']['valor'] ?? 0);
+                                }
+                                
+                                // tratamiento para el INC
+                                if( $imp['TX']['code'] == '04' ) {
+                                    $tasaIncPorc = (string) ($imp['IMP']['valor'] ?? 0);     
+                                }
+
+                                // tratamiento para el impuesto a la bolsa
+                                if( $imp['TX']['code'] == '22' ) {
+                                    $tasaBolsaVal = (string) ($imp['IMP']['valor'] ?? 0);
+                                }   
+                            }
+                        }
+                        
+                        $detalleId = $this->Prefacturasdetalle->guardarDetallePrefactura($cantidadventa, $precioventa, $cargueinventarioId, $prefacturaId, 0, 0, $tasaIvaPorc, $tasaIncPorc, $tasaBolsaVal);
                         
                         if($detalleId != '0' && $detalleId != ""){
-                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'impuesto' => $impto, 'prefactId' => $prefacturaId));
+                            echo json_encode(array('resp' => $detalleId, 'valido' => true, 'producto' => $produtoInfo, 'tasaIvaPorc' => $tasaIvaPorc, 'tasaIncPorc' => $tasaIncPorc, 'tasaBolsaVal' => $tasaBolsaVal,  'prefactId' => $prefacturaId));
                         }else{
                             echo json_encode(array('resp' => $detalleId, 'valido' => false));
                         }

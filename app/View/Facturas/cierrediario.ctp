@@ -24,7 +24,7 @@
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                    <th><?php echo ('Código'); ?></th>
+                    <th><?php echo ('Consecutivo'); ?></th>
                     <th><?php echo ('# Factura'); ?></th>
                     <th><?php echo ('Fecha Factura'); ?></th>
                     <th><?php echo ('Cliente'); ?></th>
@@ -62,7 +62,7 @@
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
-                    <th><?php echo ('Código'); ?></th>
+                    <th><?php echo ('Consecutivo'); ?></th>
                     <th><?php echo ('# Factura'); ?></th>
                     <th><?php echo ('Fecha Factura'); ?></th>
                     <th><?php echo ('Cliente'); ?></th>

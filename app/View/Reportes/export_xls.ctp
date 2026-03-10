@@ -3,7 +3,7 @@
     border-width: 0.5pt;
     border: solid;
     font-family: Arial, Verdana;
-    font-size: 9px;
+    font-size: 13px;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -147,14 +147,18 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['identificacion']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['vendedor']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['telefono']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['producto']); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($fact['valor'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($fact['valor_ttal'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($fact['descuento'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($fact['subtotal'])); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['iva']); ?></td>
-            <td class="tableTdContent" ><?php echo h($fact['impuesto_iva']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['codigo']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['precioUnitario']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['prcDescuento']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['descuento']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['prcIVA']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['IVA']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['prcICA']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['INC']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['INCBolsa']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['totalLinea']); ?></td>
         </tr>
     <?php
 endforeach;
@@ -167,14 +171,14 @@ endforeach;
             <td class="tableTdContent" ><?php echo h($utilidade['DP']['descripcion']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['PV']['nombre']); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['US']['nombre']); ?></td>
-            <td class="tableTdContent" ><?php echo h($utilidade['CV']['descripcion']); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad'])); ?></td>
-            <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['cantidad']); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['precioventa'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(intval($utilidade['Utilidade']['utilidadbruta'])); ?></td>
-            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'], 4)); ?></td>
+            <td class="tableTdContent" ><?php echo h($utilidade['CV']['descripcion']) ? $utilidade['CV']['descripcion'] : "Sin Canal"; ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['costo_producto'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['cantidad'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['precioventa'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadbruta'] * $utilidade['Utilidade']['cantidad'], 2, ',', '')); ?></td>
+            <td class="tableTdContent" ><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],2) . "%"); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?></td>
             <td class="tableTdContent" ><?php echo h($utilidade['Utilidade']['created']); ?></td>
             <td class="tableTdContent" ><?php echo h(!empty($utilidade['F']['consecutivodian']) ? $utilidade['F']['consecutivodian'] : $utilidade['F']['consecutivodv']); ?></td>

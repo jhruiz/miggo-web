@@ -11,16 +11,7 @@ echo $this->Html->script('utilsjs/utilArchivos.js');
 <div class="cargueinventarios form">
 <br>
      <div class="x_title">
-                    <h2><?php echo __('Selección de Productos'); ?></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-
-                  </li>
-                  <li class="dropdown">
-
-                  </li>
-
-                  </li>
-                </ul>
+                    <h2><?php echo __('Cargue de inventarios'); ?></h2>
 </div>
 	<fieldset>
 		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '11', 'id' => 'menuvert')) ?>
@@ -29,10 +20,10 @@ echo $this->Html->script('utilsjs/utilArchivos.js');
                 <div class="row">
                     <div class="col-md-12">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#cuadro" aria-controls="cuadro" data-toggle="tab" role="tab">Cuadro</a></li>
-                                <!--<li role="presentation"><a href="#listado" aria-controls="listado" data-toggle="tab" role="tab">Listado</a></li>-->
-                            </ul>
+                            <!-- <ul class="nav nav-tabs" role="tablist">
+                                 <li role="presentation" class="active"><a href="#cuadro" aria-controls="cuadro" data-toggle="tab" role="tab">Cuadro</a></li>
+                                <li role="presentation"><a href="#listado" aria-controls="listado" data-toggle="tab" role="tab">Listado</a></li>
+                            </ul> -->
                             <div class="tab-content">
                                 <br><br>
                                 <!--Aqui inicia el panel para el cargue en el inventario en cuadro-->
@@ -59,45 +50,44 @@ echo $this->Html->script('utilsjs/utilArchivos.js');
                                     </div>
 
 
-                                    <?php $contador = 6;
-                                        $k = 0;?>
-                                    <?php for ($i = 0; $i < ceil(count($productos) / 6); $i++) {?>
-                                    <div class="row">
-                                        <?php for ($k; $k < $contador; $k++) {?>
-                                            <?php if (isset($productos[$k])) {?>
-                                                <div class="col-md-2">
+                                    <?php //$contador = 6; $k = 0;?>
+                                    <?php //for ($i = 0; $i < ceil(count($productos) / 6); $i++) {?>
+                                    <!-- <div class="row"> -->
+                                        <?php //for ($k; $k < $contador; $k++) {?>
+                                            <?php //if (isset($productos[$k])) {?>
+                                                <!-- <div class="col-md-2">
                                                  <div class="thumbnail">
-                                                    <div id="dv_<?php echo $productos[$k]['Producto']['id']; ?>" class="">
+                                                    <div id="dv_<?php //echo $productos[$k]['Producto']['id']; ?>" class="">
                                                         <div class="image view view-first">
-                                                            <?php if (empty($productos[$k]['Producto']['imagen'])) {?>
+                                                            <?php //if (empty($productos[$k]['Producto']['imagen'])) {?>
                                                             <img src="/app/torque/img/png/multiply.png" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />
-                                                            <?php } else {?>
-                                                            <img src="<?php echo $urlImg . $productos[$k]['Producto']['empresa_id'] . '/' . $productos[$k]['Producto']['imagen']; ?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />               <?php }?>
+                                                            <?php //} else {?>
+                                                            <img src="<?php //echo $urlImg . $productos[$k]['Producto']['empresa_id'] . '/' . $productos[$k]['Producto']['imagen']; ?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />               <?php //}?>
                                                         </div>
                                                         <div class="mask">
-                                                                <strong><?php echo $productos[$k]['Producto']['descripcion'] ?></strong><br>
-                                                                <input type="checkbox" class="chkPdr" name="<?php echo $productos[$k]['Producto']['id']; ?>" id="chk_<?php echo $productos[$k]['Producto']['id']; ?>" value="<?php echo $productos[$k]['Producto']['id']; ?>" onclick="habilitarCargueInventario(this);"> Agregar<br>
+                                                                <strong><?php //echo $productos[$k]['Producto']['descripcion'] ?></strong><br>
+                                                                <input type="checkbox" class="chkPdr" name="<?php //echo $productos[$k]['Producto']['id']; ?>" id="chk_<?php //echo $productos[$k]['Producto']['id']; ?>" value="<?php //echo $productos[$k]['Producto']['id']; ?>" onclick="habilitarCargueInventario(this);"> Agregar<br>
                                                         </div>
                                                     </div>
-</div><!--thumbnail-->
                                                 </div>
-                                            <?php } else {break;}?>
-                                        <?php }
-    $contador = $contador + 6;?>
-                                    </div>
-                                    <?php }?>
+                                                </div> -->
+                                            <?php //} else {break;}?>
+                                        <?php //}
+                                    // $contador = $contador + 6;?>
+                                    <!-- </div> -->
+                                    <?php //}?>
                                     <input type="hidden" id="usuarioId" value="<?php echo $usuarioId; ?>">
                                     <input type="hidden" id="empresaId" value="<?php echo $empresaId; ?>">
                                     <input type="hidden" id="urlImg" value="<?php echo $urlImg; ?>">
 
-                                    <div class="container">
+                                    <!-- <div class="container">
                                         <br>
                                         <div class="btn-group">
                                             <button id="butCargarInventarioDown" class="btn btn-primary" onclick="cargueInventarioCuadro();" disabled="disabled">Cargar Inventario</button>
                                             <button id="butNuevoProducto" class="btn btn-primary" onclick="nuevoProducto();">Nuevo Producto</button>
                                             <button  class="btn btn-primary" ><?php echo $this->Html->link("Ver Cargue Parcial", array('controller' => 'precargueinventarios', 'action' => 'index'), ["style" => "color:white;"]) ?></button>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="clearfix visible-sm-block"></div>
                                 </div>
                                 <!--Aqui finaliza el panel para el cargue en el inventario en cuadro-->

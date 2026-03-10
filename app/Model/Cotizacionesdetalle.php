@@ -66,25 +66,7 @@ class Cotizacionesdetalle extends AppModel {
     }
     
     public function obtenerCotizacionProductos($idCotizacion){
-            $arr_join = array();                  
-            
-            array_push($arr_join, array(
-                'table' => 'cargueinventarios_impuestos',
-                'alias' => 'CII',
-                'type' => 'LEFT',
-                'conditions' => array(
-                    'Cotizacionesdetalle.cargueinventario_id = CII.cargueinventario_id'
-                )
-            ));    
-
-            array_push($arr_join, array(
-                'table' => 'impuestos',
-                'alias' => 'I',
-                'type' => 'LEFT',
-                'conditions' => array(
-                    'CII.impuesto_id=I.id'
-                )
-            ));            
+            $arr_join = array();                        
             
             array_push($arr_join, array(
                 'table' => 'cotizaciones',
@@ -94,14 +76,92 @@ class Cotizacionesdetalle extends AppModel {
                     'C.id=Cotizacionesdetalle.cotizacione_id'
                 )
             ));            
+            
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=C.usuario_id'
+                )
+            ));      
+            
+            array_push($arr_join, array(
+                'table' => 'clientes',
+                'alias' => 'CL',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CL.id=C.cliente_id'
+                )
+            )); 
+
+            array_push($arr_join, array(
+                'table' => 'empresas',
+                'alias' => 'EM',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'EM.id=U.empresa_id'
+                )
+            )); 
+            
+            array_push($arr_join, array(
+                'table' => 'ciudades',
+                'alias' => 'CIU',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CIU.id=EM.ciudade_id'
+                )
+            )); 
+
+            array_push($arr_join, array(
+                'table' => 'paises',
+                'alias' => 'PAI',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'PAI.id=CIU.paise_id'
+                )
+            ));  
+
+            array_push($arr_join, array(
+                'table' => 'cargueinventarios',
+                'alias' => 'CI',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'CI.id=Cotizacionesdetalle.cargueinventario_id'
+                )
+            )); 
+
+            array_push($arr_join, array(
+                'table' => 'productos',
+                'alias' => 'P',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=CI.producto_id'
+                )
+            ));
+
+            array_push($arr_join, array(
+                'table' => 'relacionempresas',
+                'alias' => 'RE',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'RE.empresa_id=EM.id'
+                )
+            ));
 
             $infoInventario = $this->find('all', array(
                 'joins' => $arr_join, 
                 'conditions' => array('Cotizacionesdetalle.cotizacione_id' => $idCotizacion),
                 'fields' => array(
                     'C.*',
-                    'CII.*',
-                    'I.*',
+                    'U.*',
+                    'CL.*',
+                    'EM.*',
+                    'CIU.*',
+                    'PAI.*',
+                    'CI.*',
+                    'P.*',
+                    'RE.*',
                     'Cotizacionesdetalle.*'
                 ),
                 'recursive' => '-1'                

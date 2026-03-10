@@ -37,19 +37,19 @@
                     <th><?php echo h('Deposito'); ?></th>
                     <th><?php echo h('Proveedor'); ?></th>
                     <th><?php echo h('Vendedor'); ?></th>
-                    <th><?php echo h('Canal de Ventas'); ?></th>
-                    <th><?php echo h('Costo del Producto'); ?></th>
-                    <th><?php echo h('Costo Total'); ?></th>
-                    <th><?php echo h('cantidad'); ?></th>
-                    <th><?php echo h('Precio de Venta'); ?></th>                    
-                    <th><?php echo h('Total Venta'); ?></th>                    
-                    <th><?php echo h('Utilidad Bruta'); ?></th>
-                    <th><?php echo h('Utilidad Porcentual'); ?></th>
-                    <th><?php echo h('Tipo Utilidad'); ?></th>
+                    <th><?php echo h('Canal de ventas'); ?></th>
+                    <th><?php echo h('Costo del producto'); ?></th>
+                    <th><?php echo h('Costo total'); ?></th>
+                    <th><?php echo h('Cantidad'); ?></th>
+                    <th><?php echo h('Precio de venta unitario'); ?></th>                    
+                    <th><?php echo h('Total venta'); ?></th>                    
+                    <th><?php echo h('Utilidad bruta'); ?></th>
+                    <th><?php echo h('Utilidad porcentual'); ?></th>
+                    <th><?php echo h('Tipo utilidad'); ?></th>
                     <th><?php echo h('Fecha'); ?></th>
                     <th><?php echo h('Factura'); ?></th>
-                    <th><?php echo h('Tipo Pago'); ?></th>
-                    <th><?php echo h('Crédito Interno'); ?></th>
+                    <th><?php echo h('Tipo pago'); ?></th>
+                    <th><?php echo h('Crédito interno'); ?></th>
                 </tr>
                 <?php foreach ($utilidades as $utilidade): ?>
                 <tr>
@@ -59,13 +59,13 @@
                     <td><?php echo h(!empty($utilidade['PV']['nombre']) ? $utilidade['PV']['nombre'] : "Sin Proveedor"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['US']['nombre']) ? $utilidade['US']['nombre'] : "Sin Vendedor"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['CV']['descripcion']) ? $utilidade['CV']['descripcion'] : "Sin Canal"); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['costo_producto']),2)); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h($utilidade['Utilidade']['cantidad']); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['precioventa']),2)); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>                    
-                    <td class="text-right"><?php echo h("$" . number_format(intval($utilidade['Utilidade']['utilidadbruta']),2)); ?>&nbsp;</td>
-                    <td class="text-right"><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],4) . "%"); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h("$" . number_format(($utilidade['Utilidade']['costo_producto']),2)); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h("$" . number_format(($utilidade['Utilidade']['costo_producto'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h(number_format($utilidade['Utilidade']['cantidad'],2)); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h("$" . number_format(($utilidade['Utilidade']['precioventa']),2)); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h("$" . number_format(($utilidade['Utilidade']['precioventa'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>                    
+                    <td class="text-right"><?php echo h("$" . number_format(($utilidade['Utilidade']['utilidadbruta'] * $utilidade['Utilidade']['cantidad']),2)); ?>&nbsp;</td>
+                    <td class="text-right"><?php echo h(number_format($utilidade['Utilidade']['utilidadporcentual'],2) . "%"); ?>&nbsp;</td>
                     <td><?php echo h(!empty($utilidade['F']['factura']) ? "Factura" : "Remision"); ?>&nbsp;</td>
                     <td><?php echo h($utilidade['Utilidade']['created']); ?>&nbsp;</td>
                     <td><?php echo $this->Html->link($utilidade['F']['consecutivodian'] != NULL ? $utilidade['F']['consecutivodian'] : $utilidade['F']['consecutivodv'], 

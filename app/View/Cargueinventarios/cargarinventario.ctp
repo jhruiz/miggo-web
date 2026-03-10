@@ -23,11 +23,11 @@
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <?php if($producto['Producto']['imagen'] == ""){ ?>
-                                <?php echo $this->Html->image('png/image-4.png', array('alt' => 'CakePHP', 'width' => '240')); ?>  
-                            <?php }else{?>
-                                <img src="<?php echo $urlImg . $producto['Producto']['imagen'];?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" />
-                            <?php }?>                            
+                            <?php // if($producto['Producto']['imagen'] == ""){ ?>
+                                <?php //echo $this->Html->image('png/image-4.png', array('alt' => 'CakePHP', 'width' => '240')); ?>  
+                            <?php //}else{?>
+                                <!-- <img src="<?php //echo $urlImg . $producto['Producto']['imagen'];?>" class="img-responsive img-rounded center-block" style="max-width: 150px; max-height: 150px" /> -->
+                            <?php //}?>                            
                         </div>   
                         <div class="panel-body">
                             <b>Código: <?php echo $producto['Producto']['codigo'];?></b><br>
@@ -124,12 +124,9 @@
                     </div>  
                 <?php foreach ($impuestos as $imp){ ?>
                     <div class="form-group form-inline"> 
-                        <b><?php echo $imp['Impuesto']['descripcion'];?></b> <input type="checkbox" name="data[impuestos][<?php echo $imp['Impuesto']['id'];?>]" value="<?php echo $imp['Impuesto']['id'];?>"><br>
+                        <b><?php echo $imp['Taxes']['name'] . ' ' . $imp['Impuesto']['valor'];?></b> <input type="checkbox" name="data[impuestos][<?php echo $imp['Impuesto']['id'];?>]" value="<?php echo $imp['Impuesto']['id'];?>"><br>
                     </div>                           
-               <?php } ?> 
-                    <div class="form-group form-inline">
-                        <b>Impoconsumo</b><input type="checkbox" name="impoconsumo" value="1">
-                    </div>                
+               <?php } ?>               
                 </div>
                 <div class="col-md-4">
                     <div class="form-group form-inline"> 

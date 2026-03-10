@@ -216,28 +216,50 @@ class CargueinventariosController extends AppController {
 
 public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, string $esFactura): array 
 {
+
     $precision = 4;
     
     // Extracción de datos con manejo de valores nulos/ausentes
     $valorTotalString = (string) ($arrProducto['Cargueinventario']['precioventa'] ?? 0);
-    $tasaIvaPorc = (string) ($arrImpuestos['0']['Impuesto']['valor'] ?? 0);
-    
-    $tasaIncPorc = '0';
-    if (($arrProducto['Cargueinventario']['impuesto'] ?? '0') === '1') {
-        $tasaIncPorc = (string) ($arrProducto['Cargueinventario']['valor_impuesto'] ?? 0);
-    }
-    
-    // Valores decimales para el cálculo
-    $tasaIvaDecimal = bcdiv($tasaIvaPorc, '100', $precision);
-    $tasaIncDecimal = bcdiv($tasaIncPorc, '100', $precision);
 
     // Valores iniciales (se calculan a continuación)
     $valorBase = $valorTotalString;
     $valIVA = '0';
     $valINC = '0';
 
+    $tasaIncPorc = '0';
+    $tasaIvaPorc = '0';
+    $tasaIncBolsa = '0';
+    $tasaIvaDecimal = '0';
+    $tasaIncDecimal = '0';
+
     // --- 2. Lógica de Cálculo Inverso
     if ($esFactura === '1') {
+
+        foreach( $arrImpuestos as $imp ) {
+            // tratamiento para el IVA
+            if( $imp['TX']['code'] ==  '01' ) {
+
+                $tasaIvaPorc = (string) ($imp['IMP']['valor'] ?? 0);
+
+                // Valores decimales para el cálculo
+                $tasaIvaDecimal = bcdiv($tasaIvaPorc, '100', $precision);
+            }
+            
+            // tratamiento para el INC
+            if( $imp['TX']['code'] == '04' ) {
+
+                $tasaIncPorc = (string) ($imp['IMP']['valor'] ?? 0);
+                // Valores decimales para el cálculo
+                $tasaIncDecimal = bcdiv($tasaIncPorc, '100', $precision);        
+            }
+
+            // tratamiento para el impuesto a la bolsa
+            if( $imp['TX']['code'] == '22' ) {
+                $tasaIncBolsa = (string) ($imp['IMP']['valor'] ?? 0);
+            }   
+        }
+
         // Cálculo del Factor de Retiro: 1 + tIVA + tINC
         $factorRetiro = bcadd('1', bcadd($tasaIvaDecimal, $tasaIncDecimal, $precision), $precision);
         
@@ -261,6 +283,7 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
     return [
         'tasaIvaDecimal' => $tasaIvaDecimal,
         'tasaIncDecimal' => $tasaIncDecimal,
+        'tasaIncBolsa' => $tasaIncBolsa,
         'valorIva' => (float) $valIVA, // Convierte a float para compatibilidad si es necesario
         'valorInc' => (float) $valINC, // Convierte a float para compatibilidad si es necesario
         'valorBase' => (float) $valorBase, // Convierte a float para compatibilidad si es necesario
@@ -375,7 +398,7 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
             /*Se obtiene la url para la foto del producto*/
             $strDato = "urlImgProducto";
             $urlImgProducto = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
-            
+
             /*Se obtienen los impuestos grabados al producto*/
             $arrImpuestos = $this->CargueinventariosImpuesto->obtenerImpuestosProducto($arrProducto['Cargueinventario']['id']);
             

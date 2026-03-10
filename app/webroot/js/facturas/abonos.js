@@ -23,10 +23,10 @@ var dialogAbonos;
 var abonosPrefactura = function(){
     var ttales = 0;
     $(".valor_con_iva").each(function() {
-        ttales = (Number(ttales) + Number($(this).val()));
+        ttales = (parseFloat(ttales) + parseFloat($(this).val()));
     });       
     
-    ttales = ttales - parseFloat($('.ttalAbonos').val());
+    ttales = (parseFloat(ttales) + parseFloat($('#inp_imp_bolsa').val())) - parseFloat($('.ttalAbonos').val());
 
     // if(parseFloat(ttales) > 0){
         $("#div_abono").load(
@@ -76,13 +76,14 @@ function realizarAbono(){
                     });
                     
                     var abonosFact = $('.ttalAbonos').val();
+                    var valINCBolsa = parseFloat($('#inp_imp_bolsa').val());
                     var ttalFinAbono = (parseFloat(ttalAbono) + parseFloat(abonosFact));
                     
-                    abn += "<tr><th colspan='9' class='text-right'>Abonos</th>";
+                    abn += "<tr><th colspan='12' class='text-right'>Abonos</th>";
                     abn += "<th class='text-right'>" + formatNumber(ttalFinAbono) + "</th>";
                     abn += "<th><input type='button' class='btn btn-primary btn-xs' value='Ver' id='ver_abonos' onclick='obtenerAbonos()'></th></tr>"
-                    abn += "<tr><th colspan='9' class='text-right'>TOTAL</th>";
-                    abn += "<th class='text-right'>" + formatNumber(ttales - parseFloat(ttalFinAbono)) + "</th></tr>";
+                    abn += "<tr><th colspan='12' class='text-right'>TOTAL</th>";
+                    abn += "<th class='text-right'>" + formatNumber(parseFloat(ttales) + parseFloat(valINCBolsa) - parseFloat(ttalFinAbono)) + "</th></tr>";
                     $('#tBodAbonos').html(abn);                                        
                     $('.ttalAbonos').attr('value', ttalFinAbono);
                     alert('Abono realizado de forma correcta.');

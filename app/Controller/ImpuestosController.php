@@ -22,14 +22,15 @@ class ImpuestosController extends AppController {
  * @return void
  */
 	public function index() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
             	
 		$empresaId = $this->Auth->user('empresa_id');
 		$paginate['Impuesto.empresa_id'] = $empresaId; 
 		$this->Impuesto->recursive = 0;
+
 		$this->set('impuestos', $this->Paginator->paginate('Impuesto',$paginate));
 	}
 
@@ -59,10 +60,12 @@ class ImpuestosController extends AppController {
  * @return void
  */
 	public function add() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+		$this->loadModel('Tax');
+
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
             	
 		if ($this->request->is('post')) {
 			$this->Impuesto->create();
@@ -73,10 +76,11 @@ class ImpuestosController extends AppController {
 				$this->Session->setFlash(__('El impuesto no pudo ser guardado. Por favor, inténtelo de nuevo.'));
 			}
 		}
-                $arrEmpresa = $this->Auth->user('Empresa');
-                $empresaId = $arrEmpresa['id'];
+		$arrEmpresa = $this->Auth->user('Empresa');
+		$empresaId = $arrEmpresa['id'];
+		$taxes = $this->Tax->obtenerListadoImp();
                 
-		$this->set(compact('empresaId'));
+		$this->set(compact('empresaId', 'taxes'));
 	}
 
 /**
@@ -87,10 +91,12 @@ class ImpuestosController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+		$this->loadModel('Tax');
+
+		/*se reagistra la actividad del uso de la aplicacion*/
+		$usuariosController = new UsuariosController();
+		$usuarioAct = $this->Auth->user('id');
+		$usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Impuesto->exists($id)) {
 			throw new NotFoundException(__('El impuesto no existe.'));
@@ -106,10 +112,11 @@ class ImpuestosController extends AppController {
 			$options = array('conditions' => array('Impuesto.' . $this->Impuesto->primaryKey => $id));
 			$this->request->data = $this->Impuesto->find('first', $options);
 		}
-                $arrEmpresa = $this->Auth->user('Empresa');
-                $empresaId = $arrEmpresa['id'];
+		$arrEmpresa = $this->Auth->user('Empresa');
+		$empresaId = $arrEmpresa['id'];
+		$taxes = $this->Tax->obtenerListadoImp();
                 
-		$this->set(compact('empresaId'));
+		$this->set(compact('empresaId', 'taxes'));
 	}
 
 /**

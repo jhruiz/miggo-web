@@ -67,12 +67,12 @@
                     <?php echo $this->Form->input('inventario', array('label' => '', 'type' => 'checkbox', 'class' => 'form-control')); ?>
                 </div>                
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="form-group">
-                        <?php echo $this->Form->input('imagen', array('type' => 'file')); ?>
+                        <?php //echo $this->Form->input('imagen', array('type' => 'file')); ?>
                         <p class="help-block">Máximo 1MB</p>
                     </div>
-                </div>
+                </div> -->
 	</fieldset>
         <br>
         <?php echo $this->Form->submit('Guardar', array('class' => 'btn btn-primary')); ?>

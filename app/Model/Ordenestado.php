@@ -41,4 +41,12 @@ class Ordenestado extends AppModel {
         return $estados;
     }
 
+    /**
+     * Se obtiene un estado por su orden final
+     */
+    public function obtenerEstadoOrdenFinal( $ordenFinal ){
+        $estado = $this->find('first', array('conditions' => array('Ordenestado.ordenfinal' => $ordenFinal), 'recursive' => '-1'));
+        return $estado;
+    }
+
 }

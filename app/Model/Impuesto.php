@@ -47,10 +47,16 @@ class Impuesto extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Taxes' => array(
+			'className' => 'Taxes',
+			'foreignKey' => 'tax_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
-
-        
+  
 /**
  * Se obtienen los impuestos que se han creado por empresa
  *

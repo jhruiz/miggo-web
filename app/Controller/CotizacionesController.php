@@ -94,62 +94,51 @@ class CotizacionesController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {            
-            $this->loadModel('Cotizacione');
+	public function edit($id = null) {      
             $this->loadModel('Usuario');
-            $this->loadModel('Empresa');
-            $this->loadModel('Ciudade');
             $this->loadModel('Configuraciondato');
             $this->loadModel('Vehiculo');
+            $this->loadModel('Cotizacionesdetalle');
+            $this->loadModel('Factura');
             
             //se obtienen los datos de la cotizacion
-            $arrCotiza = $this->Cotizacione->obtenerCotizacionCliDet($id);
+            $arrCotiza = $this->Cotizacionesdetalle->obtenerCotizacionProductos($id);
+
+            for ($i = 0; $i < count($arrCotiza); $i++) {
+
+                $arrInfoProds = [
+                    'unidadesProd' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['cantidad']),
+                    'precioVenta' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['costoventa']),
+                    'porcentajeDesc' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['porcentaje']),
+                    'prcIVA' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['impuesto'] / 100),
+                    'prcINC' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['impoconsumo'] / 100),
+                    'valBolsa' => (float)($arrCotiza[$i]['Cotizacionesdetalle']['incbolsa'])
+                ];
+
+                $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
+
+                $arrCotiza[$i]['valoresBase'] = $objValoresBase;
+
+            }
             
             //se obtiene la url de la imagend e whatsapp
             $strDatoWP = "ulrImgWP";
             $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);             
             
-            //se saca la informacion del cliente registrado si existe
-            $cliName = !empty($arrCotiza['0']['C']['nombre']) ? $arrCotiza['0']['C']['nombre'] : ""; 
-            $cliDir = !empty($arrCotiza['0']['C']['direccion']) ? $arrCotiza['0']['C']['direccion'] : ""; 
-            $cliNit = !empty($arrCotiza['0']['C']['nit']) ? $arrCotiza['0']['C']['nit'] : ""; 
-            $cliDias = !empty($arrCotiza['0']['C']['diascredito']) ? $arrCotiza['0']['C']['diascredito'] : ""; 
-            $cliTel = !empty($arrCotiza['0']['C']['celular']) ? $arrCotiza['0']['C']['celular'] : ""; 
-            $cliLimC = !empty($arrCotiza['0']['C']['limitecredito']) ? $arrCotiza['0']['C']['limitecredito'] : ""; 
-            $obs = !empty($arrCotiza['0']['Cotizacione']['observacion']) ? $arrCotiza['0']['Cotizacione']['observacion'] : ""; 
-            
             //se obtiene la informacion del vehiculo
-            $arrVehiculo = $this->Vehiculo->obtenerVehiculoPorId($arrCotiza['0']['Cotizacione']['vehiculo_id']);
-            
-            if(empty($arrCotiza['0']['C']['nombre'])){
-                //se obtienen la informacion del cliente anonimo            
-                $anomName = !empty($arrCotiza['0']['Cotizacione']['nombre_cliente']) ? $arrCotiza['0']['Cotizacione']['nombre_cliente'] : "";
-                $anomCC = !empty($arrCotiza['0']['Cotizacione']['identificacion_cliente']) ? $arrCotiza['0']['Cotizacione']['identificacion_cliente'] : "";
-                $anomTel = !empty($arrCotiza['0']['Cotizacione']['telefono_cliente']) ? $arrCotiza['0']['Cotizacione']['telefono_cliente'] : "";
-                $anomDir = !empty($arrCotiza['0']['Cotizacione']['direccion_cliente']) ? $arrCotiza['0']['Cotizacione']['direccion_cliente'] : "";
-            }else{
-                $anomName = "";
-                $anomCC = "";
-                $anomTel = "";
-                $anomDir = "";               
-            }
+            $arrVehiculo = $this->Vehiculo->obtenerVehiculoPorId($arrCotiza['0']['C']['vehiculo_id']);
+
             $empresaId = $this->Auth->user('empresa_id');
-            $arrEmprea = $this->Empresa->obtenerEmpresaPorId($empresaId);
             $vendedor = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
             
             /*Se obtiene la url de las imagenes de las empresas*/
             $strDato = "urlImgEmpresa";
-            $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);             
-            
-            //se obtiene la ciudad y el pais
-            $arrUbicacion = $this->Ciudade->obtenerCiudadPais($arrEmprea['Empresa']['ciudade_id']);             
+            $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);              
             
             $fecha = $this->obtenerFechaActual();
             
-            $this->set(compact('arrCotiza', 'empresaId', 'arrVehiculo', 'urlImgWP'));
-            $this->set(compact('cliName', 'cliDir', 'cliNit', 'cliDias', 'cliTel', 'cliLimC'));
-            $this->set(compact('anomName', 'anomCC', 'anomTel', 'anomDir', 'vendedor'));
-            $this->set(compact('arrEmprea', 'arrUbicacion', 'fecha', 'urlImg', 'obs'));
+            $this->set(compact('arrCotiza', 'empresaId', 'arrVehiculo', 'urlImgWP', 'vendedor'));
+            $this->set(compact('fecha', 'urlImg'));
 	}
 
 /**
@@ -200,6 +189,7 @@ class CotizacionesController extends AppController {
             $data['identificacion_cliente'] = null;
             $data['telefono_cliente'] = null;
             $data['direccion_cliente'] = null;
+            $data['calculaimpuestos'] = $posData['Cotizacione']['tipo_cotizacion'];
 
             $cotizacionId = $this->Cotizacione->crearActualizarCotizacion($data);
 
@@ -374,7 +364,7 @@ class CotizacionesController extends AppController {
             
             $data['id'] = $this->request->data['cotizacionId'];
             $data['vehiculo_id'] = $this->request->data['vehiculoId'];
-            
+
             $resp = $this->Cotizacione->crearActualizarCotizacion($data);
                             
             if($resp == '0'){
