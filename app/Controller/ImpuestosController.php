@@ -60,7 +60,7 @@ class ImpuestosController extends AppController {
  * @return void
  */
 	public function add() {
-		$this->loadModel('Tax');
+		$this->loadModel('Taxe');
 
 		/*se reagistra la actividad del uso de la aplicacion*/
 		$usuariosController = new UsuariosController();
@@ -78,7 +78,7 @@ class ImpuestosController extends AppController {
 		}
 		$arrEmpresa = $this->Auth->user('Empresa');
 		$empresaId = $arrEmpresa['id'];
-		$taxes = $this->Tax->obtenerListadoImp();
+		$taxes = $this->Taxe->obtenerListadoImp();
                 
 		$this->set(compact('empresaId', 'taxes'));
 	}
@@ -91,7 +91,7 @@ class ImpuestosController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->loadModel('Tax');
+		$this->loadModel('Taxe');
 
 		/*se reagistra la actividad del uso de la aplicacion*/
 		$usuariosController = new UsuariosController();
@@ -114,7 +114,7 @@ class ImpuestosController extends AppController {
 		}
 		$arrEmpresa = $this->Auth->user('Empresa');
 		$empresaId = $arrEmpresa['id'];
-		$taxes = $this->Tax->obtenerListadoImp();
+		$taxes = $this->Taxe->obtenerListadoImp();
                 
 		$this->set(compact('empresaId', 'taxes'));
 	}

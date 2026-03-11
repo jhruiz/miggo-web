@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-class Tax extends AppModel {
+class Taxe extends AppModel {
 
 /**
  * Display field
