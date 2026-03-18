@@ -1,53 +1,45 @@
-/* Forzar que el cuerpo de la modal no limite el texto */
-#cuerpoModalIA {
-    padding: 40px !important; /* Más aire en los bordes */
-    background-color: #ffffff !important;
-}
-
-/* Contenedor de la IA - Letra de 18px Legible */
+/* Contenedor con letra grande 18px */
 .analisis-ia-content {
     font-family: 'Segoe UI', Arial, sans-serif !important;
     color: #1e293b !important;
-    line-height: 1.7 !important; /* Espaciado generoso */
-    font-size: 18px !important;    /* LETRA GRANDE */
-    width: 100% !important;
+    font-size: 18px !important;    /* LETRA GRANDE GARANTIZADA */
+    line-height: 1.6 !important;
+    text-align: left !important;
 }
 
-/* Títulos de secciones */
+/* Títulos en el AZUL que te gusta */
 .analisis-ia-content strong {
-    color: #093aa5 !important;
-    display: block !important;
-    font-size: 22px !important; /* Títulos aún más grandes */
-    margin-top: 25px !important;
-    margin-bottom: 10px !important;
-    border-bottom: 2px solid #f1f5f9 !important;
-    padding-bottom: 5px !important;
+    color: #2563eb !important; /* Azul Rey / Profesional */
+    display: inline-block !important;
+    margin-top: 15px !important;
+    margin-bottom: 5px !important;
+    font-size: 19px !important;
+    font-weight: 700 !important;
 }
 
-/* Listas claras */
+/* Párrafos con separación justa */
+.analisis-ia-content p {
+    margin-bottom: 15px !important;
+}
+
+/* Listas sin amontonar */
 .analisis-ia-content ul {
-    margin: 20px 0 !important;
-    padding-left: 35px !important;
+    margin: 10px 0 !important;
+    padding-left: 30px !important;
 }
 
 .analisis-ia-content li {
-    margin-bottom: 15px !important; /* Espacio entre puntos clave */
-    list-style-type: none !important;
+    margin-bottom: 10px !important;
     position: relative !important;
+    list-style-type: none !important;
 }
 
-/* Flecha azul grande */
+/* Flecha azul */
 .analisis-ia-content li::before {
     content: "→" !important;
     color: #2563eb !important;
     font-weight: bold !important;
     position: absolute !important;
     left: -25px !important;
-    font-size: 22px !important;
-}
-
-/* Saltos de línea consistentes */
-.analisis-ia-content br {
-    display: block !important;
-    margin-bottom: 12px !important;
+    font-size: 20px !important;
 }

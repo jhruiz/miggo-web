@@ -4,22 +4,30 @@ var generarAnalisis = function( settings ) {
     $('#modalAnalisisIA').modal('show');
 
     $.ajax(settings).done(function (response) {
-        var textoMarkdown = response.candidates[0].content.parts[0].text;
+        var rawText = response.candidates[0].content.parts[0].text;
 
-        // Limpiamos el texto antes de mostrarlo
-        var htmlConvertido = textoMarkdown
-            .replace(/### /g, '') // Quitamos los ###
+        // LIMPIEZA MÍNIMA Y EFECTIVA
+        var textoProcesado = rawText
+            .replace(/###/g, '')                      // Quita los hash de títulos
+            .replace(/^\s*[,.]\s+/gm, '')            // Quita puntos o comas locos al inicio de línea
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Negritas
-            .replace(/^\s*[\-\*]\s+(.*)$/gm, '<li>$1</li>')    // Listas
-            .replace(/\n\n/g, '<br>') 
-            .replace(/\n/g, '<br>');
+            .replace(/^\s*[\-\*→]\s+(.*)$/gm, '<li>$1</li>'); // Viñetas
 
-        // Envolver listas
-        htmlConvertido = htmlConvertido.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        // Convertimos saltos de línea en espacios para que el texto fluya, 
+        // pero mantenemos los párrafos dobles.
+        var htmlFinal = textoProcesado
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>'); 
 
-        $('#cuerpoModalIA').html('<div class="analisis-ia-content">' + htmlConvertido + '</div>');
+        $('#cuerpoModalIA').html('<div class="analisis-ia-content"><p>' + htmlFinal + '</p></div>');
+
+        // Forzamos que las listas no tengan saltos de línea extraños
+        $('.analisis-ia-content').html(function(i, html) {
+            return html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>').replace(/<\/li><br><li>/g, '</li><li>');
+        });
+
     }).fail(function () {
-        $('#cuerpoModalIA').html('<div class="alert alert-danger">No se pudo generar el análisis en este momento.</div>');
+        $('#cuerpoModalIA').html('<div class="alert alert-danger">Error en el análisis financiero.</div>');
     });
 }
 
