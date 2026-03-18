@@ -1,7 +1,7 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas.js'));?>
 <?php echo ($this->Html->script('bandeja/observacioncierre.js'));?>
-<?php echo ($this->Html->script('ia/analizarIA.js'));?>
+<?php echo ($this->Html->script('utilitario_reportes/utilitario_reportes.js'));?>
 <?php echo $this->Html->css('cierrediario/analisiscierrediario.css');?>
 
 

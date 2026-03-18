@@ -12,13 +12,37 @@ class IaconsultasController extends AppController {
 
 
 
-    public function proxygemini(){
+    public function obteneranalisisgerencial(){
         $this->autoRender = false;
-        $apiKey = 'AIzaSyBhb1FAx0tGBX9QXk8XEVwDuOzFM6PfJH8'; 
+        $apiKey = 'AIzaSyBnIiW3KrCJCKa1YR0ywdtl3k-BgUlqDqA'; 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
 
         // 1. Capturamos lo que envía el JS
-        $json_input = file_get_contents('php://input');
+        $input = json_decode(file_get_contents('php://input'), true);
+
+
+        $promptCierreDiario = "Eres el Director Financiero (CFO) de "; //+ datos.nombreEmpresa;
+        $promptCierreDiario .= "Tu función NO es resumir datos (el usuario ya tiene los totales), sino realizar un análisis crítico. ";
+        $promptCierreDiario .= "Debes identificar riesgos (como gastos altos, cuentas sin especificar, cómo gestionar abonos, consejos de compras a credito), "; 
+        $promptCierreDiario .= "evaluar la liquidez según los medios de pago y dar 2 recomendaciones estratégicas de negocio. ";
+        $promptCierreDiario .= "Usa un tono ejecutivo, directo y analítico. ";
+
+
+    
+        // AQUÍ ARMAMOS EL CUERPO PARA GOOGLE (Oculto del navegador)
+        $cuerpoParaGoogle = [
+            "system_instruction" => [
+                "parts" => [["text" => $promptCierreDiario]]
+            ],
+            "contents" => [
+                "parts" => [["text" => $input['cuerpo']]]
+            ],
+            "generationConfig" => [
+                "temperature" => 0.2,
+                "maxOutputTokens" => 1000,
+                "responseMimeType" => "text/plain"
+            ]
+        ];
 
         // 2. Configuramos la petición
         $opciones = array(
@@ -26,15 +50,25 @@ class IaconsultasController extends AppController {
                 'method'  => 'POST',
                     'header'  => "Content-Type: application/json\r\n" .
                     'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n',
-                'content' => $json_input,
+                'content' => json_encode($cuerpoParaGoogle),
                 'ignore_errors' => true // Para capturar errores de Google si los hay
+            )
+        );
+
+        $opciones = array(
+            'http' => array(
+                'method'  => 'POST',
+                'header'  => "Content-Type: application/json\r\n" .
+                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n", 
+                'content' => json_encode($cuerpoParaGoogle),
+                'ignore_errors' => true 
             )
         );
 
         $contexto = stream_context_create($opciones);
         
         // 3. Ejecutamos la llamada
-        $resultado = file_get_contents($url, false, $contexto);
+        $resultado = @file_get_contents($url, false, $contexto);
 
         // 4. Devolvemos la respuesta al JS
         header('Content-Type: application/json');
