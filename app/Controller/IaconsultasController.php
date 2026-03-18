@@ -14,7 +14,7 @@ class IaconsultasController extends AppController {
 
     public function proxygemini(){
         $this->autoRender = false;
-        $apiKey = 'AIzaSyDvRaMLNe49SzIZOWpI3Z2vsdlGQ_Fl89g'; 
+        $apiKey = 'AIzaSyBhb1FAx0tGBX9QXk8XEVwDuOzFM6PfJH8'; 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
 
         // 1. Capturamos lo que envía el JS
@@ -24,7 +24,8 @@ class IaconsultasController extends AppController {
         $opciones = array(
             'http' => array(
                 'method'  => 'POST',
-                'header'  => "Content-Type: application/json\r\n",
+                    'header'  => "Content-Type: application/json\r\n" .
+                    'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n',
                 'content' => $json_input,
                 'ignore_errors' => true // Para capturar errores de Google si los hay
             )
