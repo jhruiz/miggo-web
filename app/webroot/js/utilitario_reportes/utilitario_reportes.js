@@ -160,7 +160,7 @@ var generarSettings = function( datos ) {
 
     var settings = {
         // Asegúrate de que esta URL sea el NUEVO nombre de tu función en PHP
-        "url": $('#url-proyecto').val() + "iaconsultas/obtener_analisis_gerencial", 
+        "url": $('#url-proyecto').val() + "iaconsultas/obteneranalisisgerencial", 
         "method": "POST",
         "data": JSON.stringify(payload),
         "contentType": "application/json"
