@@ -32,10 +32,16 @@ class IaconsultasController extends AppController {
         // AQUÍ ARMAMOS EL CUERPO PARA GOOGLE (Oculto del navegador)
         $cuerpoParaGoogle = [
             "system_instruction" => [
-                "parts" => [["text" => $promptCierreDiario]]
+                "parts" => [
+                    ["text" => $promptCierreDiario] 
+                ]
             ],
             "contents" => [
-                "parts" => [["text" => $input['cuerpo']]]
+                [
+                    "parts" => [
+                        ["text" => $input['reporte_data']] // <--- AQUÍ: Debe decir 'text', NO 'data'
+                    ]
+                ]
             ],
             "generationConfig" => [
                 "temperature" => 0.2,
