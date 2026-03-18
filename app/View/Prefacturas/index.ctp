@@ -65,6 +65,7 @@
                                             <th><?php echo ('Cliente'); ?></th>
                                             <th><?php echo ('Vehículo'); ?></th>
                                             <th><?php echo ('Fecha'); ?></th>
+                                            <th><?php echo ('Tipo'); ?></th>
                                             <th><?php echo ('Estado'); ?></th>
                                             <th class="actions"><?php echo __('Acciones'); ?></th>
                                         </tr>
@@ -75,18 +76,18 @@
                                             <td><?php echo h($prefactura['CL']['nombre']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['VH']['placa']); ?>&nbsp;</td>
                                             <td><?php echo h($prefactura['Prefactura']['created']); ?>&nbsp;</td>
-                                            <td><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id'])
-    ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?>&nbsp;</td>
+                                            <td><?php echo h(($prefactura['Prefactura']['esfactura'] == '1') ? "Factura" : "Documento de venta"); ?>&nbsp;</td>
+                                            <td><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id']) ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?>&nbsp;</td>
                                             <td class="actions">
                                                 <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Orden de Compra', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $prefactura['Prefactura']['id']))); ?>
                                                 <?php
-echo $this->Form->postLink(
-    $this->Html->image('png/list-2.png', array('title' => 'Eliminar Orden de Compra', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
-    array('action' => 'delete', $prefactura['Prefactura']['id']), //url
-    array('escape' => false), //el escape
-    __('Está seguro que desea eliminar la orden de Compra?') //la confirmacion
-);
-?>
+                                                    echo $this->Form->postLink(
+                                                        $this->Html->image('png/list-2.png', array('title' => 'Eliminar Orden de Compra', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
+                                                        array('action' => 'delete', $prefactura['Prefactura']['id']), //url
+                                                        array('escape' => false), //el escape
+                                                        __('Está seguro que desea eliminar la orden de Compra?') //la confirmacion
+                                                    );
+                                                ?>
                                             </td>
                                         </tr>
                                         <?php endforeach;?>

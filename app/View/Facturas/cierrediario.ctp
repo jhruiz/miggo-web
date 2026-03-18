@@ -1,6 +1,9 @@
 <?php $this->layout='inicio'; ?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas.js'));?>
 <?php echo ($this->Html->script('bandeja/observacioncierre.js'));?>
+<?php echo ($this->Html->script('ia/analizarIA.js'));?>
+<?php echo $this->Html->css('cierrediario/analisiscierrediario.css');?>
+
 
 <div class="index">
     
@@ -347,17 +350,39 @@
                 <textarea class="form-control" rows="5" id="obs_cierre" <?php echo ($flgCierre ? '' : 'disabled'); ?>><?php echo ($obsCierre);?></textarea>
         </div><br>
 
+        <div class="container-fluid text-center">
+            <button id="btn_analisis_ia" class="btn btn-success" onclick="analizarCierreDiarioIA();">Análisis con IA</button>
+        </div>  
+
         <?php if($flgCierre){?>    
 
-            <div class="container-fluid">
-                <button id="btn_cerrar" class="btn btn-primary center-block" onclick="facturarCerrarCajas();">Cerrar Cajas</button>
-            </div>          
+            <div class="container-fluid text-center">
+                <button id="btn_cerrar" class="btn btn-primary" onclick="facturarCerrarCajas();">Cerrar Cajas</button>
+            </div>      
         <?php }?>
         <?php echo $this->Form->create('Reporte',array( 'controller' => 'reportes','action'=>'descargarCierreDiario')); ?>
             <fieldset>    
                 <?php echo $this->Form->input('rpfechacierre', array('type' => 'hidden', 'name' => 'rpfechacierre', 'value' => $rpfechacierre))?>
-                <?php echo $this->Form->input('rpcuenta', array('type' => 'hidden', 'name' => 'rpcuenta', 'value' => $rpcuenta))?>
+                <?php echo $this->Form->input('rpcuenta', array('label' => '', 'hidden' => 'hidden', 'name' => 'rpcuenta', 'value' => $rpcuenta))?>
                 <?php echo $this->Form->submit('Descargar',array('class'=>'btn btn-primary')); ?>
             </fieldset>
         </form>        
+</div>
+
+<div class="modal fade" id="modalAnalisisIA" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document" style="width: 90% !important; max-width: 1200px !important;">
+    <div class="modal-content" style="border-radius: 15px; border: none;">
+      <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 20px;">
+        <h4 class="modal-title" style="font-weight: 700; color: #0f172a;">
+            <i class="fa fa-chart-line" style="color: #2563eb;"></i> Diagnóstico Financiero Miggo
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body" id="cuerpoModalIA" style="padding: 30px; min-height: 200px;">
+        </div>
+      <div class="modal-footer" style="background: #f8fafc; border-radius: 0 0 15px 15px;">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" style="background: #2563eb; border-radius: 8px; padding: 8px 25px;">Entendido</button>
+      </div>
+    </div>
+  </div>
 </div>

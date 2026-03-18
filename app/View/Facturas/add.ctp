@@ -161,6 +161,7 @@
                                         <th colspan="9">&nbsp</th>
                                     </tr>
                                 </tbody> -->
+
                                 <tbody id="imp_bolsa">
                                     <tr>
                                         <th colspan="11">&nbsp</th>
@@ -168,6 +169,7 @@
                                         <th class="text-right"><?php echo $this->Form->input('inp_imp_bolsa', array('type' => 'text', 'label' => false, 'class' => 'form-control numericPrice', 'value' => '', 'id' => 'inp_imp_bolsa', 'disabled' => true)); ?></th>
                                     </tr>
                                 </tbody>
+
                                 <tbody id="totalFacturas">
                                     <tr>
                                         <th>&nbsp</th>
@@ -225,8 +227,8 @@
                     <?php echo $this->Form->input('prefacturaId', array('label' => '', 'value' => '', 'type' => 'hidden', 'id' => 'prefacturaId')); ?>
 
                     </form>
-</div><!-- class="container body-->
-</div><!-- class="main_container">-->
+                </div><!-- class="container body-->
+            </div><!-- class="main_container">-->
 
 
         <div class="container-fluid">
