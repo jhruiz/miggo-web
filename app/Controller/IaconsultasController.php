@@ -13,13 +13,14 @@ class IaconsultasController extends AppController {
 
 
     public function obteneranalisisgerencial(){
+        $this->loadModel('Configuraciondato');
+
         $this->autoRender = false;
-        $apiKey = 'AIzaSyBnIiW3KrCJCKa1YR0ywdtl3k-BgUlqDqA'; 
+        $apiKey = $this->Configuraciondato->obtenerValorDatoConfig('IAApiKey'); 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
 
         // 1. Capturamos lo que envía el JS
         $input = json_decode(file_get_contents('php://input'), true);
-
 
         $promptCierreDiario = "Eres el Consultor Experto de " . $input['empresa'];
         $promptCierreDiario .= "Tu función NO es resumir datos (el usuario ya tiene los totales), sino realizar un análisis crítico. ";
@@ -54,10 +55,9 @@ class IaconsultasController extends AppController {
         $opciones = array(
             'http' => array(
                 'method'  => 'POST',
-                    'header'  => "Content-Type: application/json\r\n" .
-                    'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n',
+                'header'  => "Content-Type: application/json\r\n", // QUITAMOS EL USER-AGENT y cualquier rastro de Miggo
                 'content' => json_encode($cuerpoParaGoogle),
-                'ignore_errors' => true // Para capturar errores de Google si los hay
+                'ignore_errors' => true 
             )
         );
 
