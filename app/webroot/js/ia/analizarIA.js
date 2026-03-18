@@ -1,33 +1,51 @@
 var generarAnalisis = function( settings ) {
-    // 1. Mostrar la modal con un cargando antes de la petición
-    $('#cuerpoModalIA').html('<div class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i><p>Analizando datos financieros...</p></div>');
+    // 1. Mostrar la modal con el cargando
+    $('#cuerpoModalIA').html('<div class="text-center" style="padding:40px;"><i class="fa fa-spinner fa-spin fa-3x" style="color:#2563eb;"></i><p style="margin-top:20px; font-weight:bold;">Analizando datos del cierre diario...</p></div>');
     $('#modalAnalisisIA').modal('show');
 
-    $.ajax(settings).done(function (response) {
-        var rawText = response.candidates[0].content.parts[0].text;
+    $.ajax({
+        url: settings.url,
+        method: settings.method,
+        data: settings.data,
+        contentType: "application/json",
+        success: function (data) {
+            try {
+                // --- EL TRUCO ESTÁ AQUÍ ---
+                // Si data ya es objeto, lo usamos. Si es texto, lo convertimos.
+                var response = (typeof data === "object") ? data : JSON.parse(data);
 
-        // LIMPIEZA MÍNIMA Y EFECTIVA
-        var textoProcesado = rawText
-            .replace(/###/g, '')                      // Quita los hash de títulos
-            .replace(/^\s*[,.]\s+/gm, '')            // Quita puntos o comas locos al inicio de línea
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Negritas
-            .replace(/^\s*[\-\*→]\s+(.*)$/gm, '<li>$1</li>'); // Viñetas
+                if (response.candidates && response.candidates[0].content.parts[0].text) {
+                    var rawText = response.candidates[0].content.parts[0].text;
 
-        // Convertimos saltos de línea en espacios para que el texto fluya, 
-        // pero mantenemos los párrafos dobles.
-        var htmlFinal = textoProcesado
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/\n/g, '<br>'); 
+                    // --- Tu lógica de limpieza que ya funciona ---
+                    var textoProcesado = rawText
+                        .replace(/###/g, '')
+                        .replace(/^\s*[,.]\s+/gm, '')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/^\s*[\-\*→]\s+(.*)$/gm, '<li>$1</li>');
 
-        $('#cuerpoModalIA').html('<div class="analisis-ia-content"><p>' + htmlFinal + '</p></div>');
+                    var htmlFinal = textoProcesado
+                        .replace(/\n\n/g, '</p><p>')
+                        .replace(/\n/g, '<br>'); 
 
-        // Forzamos que las listas no tengan saltos de línea extraños
-        $('.analisis-ia-content').html(function(i, html) {
-            return html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>').replace(/<\/li><br><li>/g, '</li><li>');
-        });
+                    // Inyectamos con la clase de 18px
+                    $('#cuerpoModalIA').html('<div class="analisis-ia-content"><p>' + htmlFinal + '</p></div>');
 
-    }).fail(function () {
-        $('#cuerpoModalIA').html('<div class="alert alert-danger">Error en el análisis financiero.</div>');
+                    // Arreglamos las listas
+                    $('.analisis-ia-content').html(function(i, html) {
+                        return html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>').replace(/<\/li><br><li>/g, '</li><li>');
+                    });
+                } else {
+                    $('#cuerpoModalIA').html('<div class="alert alert-warning">Estructura de respuesta inesperada de la IA.</div>');
+                }
+            } catch (e) {
+                console.error("Error al procesar JSON:", e);
+                $('#cuerpoModalIA').html('<div class="alert alert-danger">Error al procesar la respuesta del servidor.</div>');
+            }
+        },
+        error: function (xhr) {
+            $('#cuerpoModalIA').html('<div class="alert alert-danger">Error de conexión con el puente PHP.</div>');
+        }
     });
 }
 
@@ -55,46 +73,30 @@ var analizarCierreDiarioIA = function() {
     });
 }
 
+
 var generarSettings = function( datos ) {
 
+    // El prompt sigue igual, eso no cambia
     var promptCierreDiario = "Eres el Director Financiero (CFO) de " + datos.nombreEmpresa;
     promptCierreDiario += "Tu función NO es resumir datos (el usuario ya tiene los totales), sino realizar un análisis crítico. ";
     promptCierreDiario += "Debes identificar riesgos (como gastos altos, cuentas sin especificar, cómo gestionar abonos, consejos de compras a credito), "; 
     promptCierreDiario += "evaluar la liquidez según los medios de pago y dar 2 recomendaciones estratégicas de negocio. ";
     promptCierreDiario += "Usa un tono ejecutivo, directo y analítico. ";
 
+    // Solo estamos armando el "mapa" para el AJAX
     var settings = {
-    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=AIzaSyAYvqujExkCmQPc2vMEFKkVsHEbKHjKCZc",
-    "method": "POST",
-    "timeout": 0,
-    "headers": {
-        "Content-Type": "application/json"
-    },
-    "data": JSON.stringify({
-        "system_instruction": {
-        "parts": [
-            {
-            "text": promptCierreDiario
+        "url": $('#url-proyecto').val() + "iaconsultas/proxygemini", // <--- TU CONTROLADOR
+        "method": "POST",
+        "data": JSON.stringify({
+            "system_instruction": { "parts": [{ "text": promptCierreDiario }] },
+            "contents": [{ "parts": [{ "text": JSON.stringify(datos) }] }],
+            "generationConfig": {
+                "temperature": 0.2,
+                "maxOutputTokens": 1000,
+                "responseMimeType": "text/plain"
             }
-        ]
-        },
-        "contents": [
-        {
-            "parts": [
-            {
-                "text": JSON.stringify(datos)
-            }
-            ]
-        }
-        ],
-        "generationConfig": {
-        "temperature": 0.1,
-        "maxOutputTokens": 1000,
-        "responseMimeType": "text/plain"
-        }
-    }),
+        })
     };
-
     return settings;
 
 }

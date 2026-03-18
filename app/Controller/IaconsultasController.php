@@ -10,6 +10,36 @@ class IaconsultasController extends AppController {
  */
 	public $components = array('Paginator');
 
+
+
+    public function proxygemini(){
+        $this->autoRender = false;
+        $apiKey = 'AIzaSyDvRaMLNe49SzIZOWpI3Z2vsdlGQ_Fl89g'; 
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
+
+        // 1. Capturamos lo que envía el JS
+        $json_input = file_get_contents('php://input');
+
+        // 2. Configuramos la petición
+        $opciones = array(
+            'http' => array(
+                'method'  => 'POST',
+                'header'  => "Content-Type: application/json\r\n",
+                'content' => $json_input,
+                'ignore_errors' => true // Para capturar errores de Google si los hay
+            )
+        );
+
+        $contexto = stream_context_create($opciones);
+        
+        // 3. Ejecutamos la llamada
+        $resultado = file_get_contents($url, false, $contexto);
+
+        // 4. Devolvemos la respuesta al JS
+        header('Content-Type: application/json');
+        echo $resultado;
+    }
+
 /**
  * index method
  *
