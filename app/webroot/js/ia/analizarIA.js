@@ -64,7 +64,7 @@ var generarSettings = function( datos ) {
     promptCierreDiario += "Usa un tono ejecutivo, directo y analítico. ";
 
     var settings = {
-    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=AIzaSyDpvXIyqZ_CmU5LQm-jqVqIQZCJpCyNlNE",
+    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=AIzaSyAYvqujExkCmQPc2vMEFKkVsHEbKHjKCZc",
     "method": "POST",
     "timeout": 0,
     "headers": {
