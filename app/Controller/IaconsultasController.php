@@ -21,7 +21,7 @@ class IaconsultasController extends AppController {
         $input = json_decode(file_get_contents('php://input'), true);
 
 
-        $promptCierreDiario = "Eres el Director Financiero (CFO) de "; //+ datos.nombreEmpresa;
+        $promptCierreDiario = "Eres el Consultor Experto de " . $input['empresa'];
         $promptCierreDiario .= "Tu función NO es resumir datos (el usuario ya tiene los totales), sino realizar un análisis crítico. ";
         $promptCierreDiario .= "Debes identificar riesgos (como gastos altos, cuentas sin especificar, cómo gestionar abonos, consejos de compras a credito), "; 
         $promptCierreDiario .= "evaluar la liquidez según los medios de pago y dar 2 recomendaciones estratégicas de negocio. ";
