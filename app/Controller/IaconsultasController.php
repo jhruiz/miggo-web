@@ -84,9 +84,13 @@ class IaconsultasController extends AppController {
 
         // --- REGISTRO DE CONSUMO ---
         // Llamamos al modelo para guardar la auditoría
+        $respuestaJson = json_decode($resultado, true);
+
+        // --- REGISTRO DE CONSUMO ---
         $empresaId = $this->Auth->user('empresa_id');
-        $modulo = $input['modulo'];
-        $this->Iaconsulta->registrarConsumo($empresaId, $modulo, $resultado, $statusHttp);
+        $modulo = isset($input['modulo']) ? $input['modulo'] : 'desconocido';
+        
+        $this->Iaconsulta->registrarConsumo($empresaId, $modulo, $respuestaJson, $statusHttp);
 
         // 5. Devolvemos la respuesta al JS
         header('Content-Type: application/json');
