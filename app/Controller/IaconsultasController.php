@@ -81,12 +81,12 @@ class IaconsultasController extends AppController {
             // Si no existe, es que ni siquiera hubo respuesta del servidor
             $statusHttp = 500; 
         }
-        
+
         // --- REGISTRO DE CONSUMO ---
         // Llamamos al modelo para guardar la auditoría
         $empresaId = $this->Auth->user('empresa_id');
         $modulo = $input['modulo'];
-        $this->Iaconsultas->registrarConsumo($empresaId, $modulo, $resultado, $statusHttp);
+        $this->Iaconsulta->registrarConsumo($empresaId, $modulo, $resultado, $statusHttp);
 
         // 5. Devolvemos la respuesta al JS
         header('Content-Type: application/json');
