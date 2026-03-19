@@ -29,7 +29,7 @@ class IaconsultasController extends AppController {
         $cuerpoParaIA = [
             "system_instruction" => [
                 "parts" => [
-                    ["text" => $promptCierreDiario] 
+                    ["text" => $promptSistema] 
                 ]
             ],
             "contents" => [
