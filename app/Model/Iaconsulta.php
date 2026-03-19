@@ -25,4 +25,36 @@ class Iaconsulta extends AppModel {
         return $prompts[$input['modulo']];
     }
 
+    /**
+     * Registrar consumos de IA por petición
+     */
+    public function registrarConsumo($empresaId, $modulo, $respuestaGoogle, $statusHttp) {
+        // Extraer metadata de consumo
+        $usage = isset($respuestaGoogle['usageMetadata']) ? $respuestaGoogle['usageMetadata'] : null;
+        $candidate = isset($respuestaGoogle['candidates'][0]) ? $respuestaGoogle['candidates'][0] : null;
+
+        // Precios Gemini 1.5 Flash (estimados por 1M de tokens)
+        $p_input = 0.075 / 1000000;
+        $p_output = 0.30 / 1000000;
+
+        $tInput = $usage['promptTokenCount'] ?? 0;
+        $tOutput = $usage['candidatesTokenCount'] ?? 0;
+        $costo = ($tInput * $p_input) + ($tOutput * $p_output);
+
+        $data = [
+            'empresa_id' => $empresaId,
+            'modelo' => $respuestaGoogle['modelVersion'] ?? 'gemini-1.5-flash',
+            'endpoint' => $modulo,
+            'tokens_prompt' => $tInput,
+            'tokens_candidates' => $tOutput,
+            'tokens_total' => $usage['totalTokenCount'] ?? 0,
+            'costo_estimado_usd' => $costo,
+            'status_http' => $statusHttp,
+            'finish_reason' => $candidate['finishReason'] ?? 'STOP'
+        ];
+
+        $entidad = $this->newEntity($data);
+        return $this->save($entidad);
+    }
+
 }

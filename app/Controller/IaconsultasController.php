@@ -71,6 +71,23 @@ class IaconsultasController extends AppController {
         // 4. Ejecutamos la llamada
         $resultado = @file_get_contents($url, false, $contexto);
 
+        // Validamos si la variable mágica existe
+        $statusHttp = 0;
+        if (isset($http_response_header) && is_array($http_response_header)) {
+            // Buscamos el código 200, 403, 400, etc. en la primera línea
+            preg_match('{HTTP\/\S*\s(\d{3})}', $http_response_header[0], $matches);
+            $statusHttp = intval($matches[1]);
+        } else {
+            // Si no existe, es que ni siquiera hubo respuesta del servidor
+            $statusHttp = 500; 
+        }
+        
+        // --- REGISTRO DE CONSUMO ---
+        // Llamamos al modelo para guardar la auditoría
+        $empresaId = $this->Auth->user('empresa_id');
+        $modulo = $input['modulo'];
+        $this->Iaconsultas->registrarConsumo($empresaId, $modulo, $resultado, $statusHttp);
+
         // 5. Devolvemos la respuesta al JS
         header('Content-Type: application/json');
         echo $resultado;
