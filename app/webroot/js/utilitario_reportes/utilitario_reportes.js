@@ -1,4 +1,12 @@
+/**
+ * --------------------------------------INICIO DE FUNCIONES TRANSVERSALES--------------------------------------
+ */
 
+
+/**
+ * Función transversal para formateo de respuesta de IA
+ * @param {*} settings 
+ */
 var generarAnalisis = function( settings ) {
     // 1. Mostrar modal de carga
     $('#cuerpoModalIA').html('<div class="text-center" style="padding:40px;"><i class="fa fa-spinner fa-spin fa-3x" style="color:#2563eb;"></i><p style="margin-top:20px; font-weight:bold; font-size:18px;">Preparando diagnóstico financiero...</p></div>');
@@ -41,7 +49,11 @@ var generarAnalisis = function( settings ) {
     });
 }
 
-// Función auxiliar para no ensuciar el success
+/**
+ * Función auxiliar transversal para interpretar y mostrar la información retornada por la IA
+ * @param {*} texto 
+ * @returns 
+ */
 function procesarTextoIA(texto) {
     return texto
         .replace(/###/g, '')
@@ -52,6 +64,46 @@ function procesarTextoIA(texto) {
         .replace(/\n/g, '<br>');
 }
 
+/**
+ * Función transversal para generar los settings (datos y url) que se enviaran a la
+ * función en PHP para el consumo del análisis IA
+ * @param {*} datos 
+ * @param {*} url 
+ * @returns 
+ */
+var generarSettings = function( datos, url, moduloSolicitado ) {
+
+    // Solo enviamos lo básico. El PHP se encarga del resto.
+    var payload = {
+        "empresa": datos.nombreEmpresa,
+        "modulo": moduloSolicitado,
+        "reporte_data": JSON.stringify(datos) 
+    };
+
+    var settings = {
+        // Asegúrate de que esta URL sea el NUEVO nombre de tu función en PHP
+        "url": url, 
+        "method": "POST",
+        "data": JSON.stringify(payload),
+        "contentType": "application/json"
+    };
+
+    return settings;
+
+}
+
+/**
+ * --------------------------------------FIN DE FUNCIONES TRANSVERSALES--------------------------------------
+ */
+
+
+/**
+ * --------------------------------------INICIO FUNCIONES POR MODULOS ESPECÍFICOS-----------------------------------------
+ */
+
+/**
+ * Función enfocada en análisis del cierre diario
+ */
 var analizarCierreDiarioIA = function() {
 
     var fechaCierre = $('#ReporteRpfechacierre').val();
@@ -65,7 +117,9 @@ var analizarCierreDiarioIA = function() {
         success: function(data) {
             var resp = JSON.parse(data);
 
-            var settings = generarSettings( resp );
+            var url = $('#url-proyecto').val() + "iaconsultas/obteneranalisisgerencial";
+            var modulo = 'cierre_diario';
+            var settings = generarSettings( resp, url, modulo );
 
             generarAnalisis(settings);
 
@@ -75,26 +129,3 @@ var analizarCierreDiarioIA = function() {
         }
     });
 }
-
-
-var generarSettings = function( datos ) {
-
-    // Solo enviamos lo básico. El PHP se encarga del resto.
-    var payload = {
-        "empresa": datos.nombreEmpresa,
-        "reporte_data": JSON.stringify(datos) 
-    };
-
-    var settings = {
-        // Asegúrate de que esta URL sea el NUEVO nombre de tu función en PHP
-        "url": $('#url-proyecto').val() + "iaconsultas/obteneranalisisgerencial", 
-        "method": "POST",
-        "data": JSON.stringify(payload),
-        "contentType": "application/json"
-    };
-
-    return settings;
-
-}
-
-

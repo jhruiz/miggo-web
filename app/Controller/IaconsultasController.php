@@ -22,16 +22,14 @@ class IaconsultasController extends AppController {
         // 1. Capturamos lo que envía el JS
         $input = json_decode(file_get_contents('php://input'), true);
 
-        $promptCierreDiario = "Eres el Consultor Experto de " . $input['empresa'];
-        $promptCierreDiario .= "Tu función NO es resumir datos (el usuario ya tiene los totales), sino realizar un análisis crítico. ";
-        $promptCierreDiario .= "Debes identificar riesgos (como gastos altos, cuentas sin especificar, cómo gestionar abonos, consejos de compras a credito), "; 
-        $promptCierreDiario .= "evaluar la liquidez según los medios de pago y dar 2 recomendaciones estratégicas de negocio. ";
-        $promptCierreDiario .= "Usa un tono ejecutivo, directo y analítico. ";
+        // 2. Obtiene el prompt por módulo y se envían datos adicionales en el input
+        $promptSistema = $this->Iaconsulta->obtenerPrompt($input);
 
 
+        print_r($promptSistema); die();
     
-        // AQUÍ ARMAMOS EL CUERPO PARA GOOGLE (Oculto del navegador)
-        $cuerpoParaGoogle = [
+        // se crea el cuerpo para la petición
+        $cuerpoParaIA = [
             "system_instruction" => [
                 "parts" => [
                     ["text" => $promptCierreDiario] 
@@ -40,7 +38,7 @@ class IaconsultasController extends AppController {
             "contents" => [
                 [
                     "parts" => [
-                        ["text" => $input['reporte_data']] // <--- AQUÍ: Debe decir 'text', NO 'data'
+                        ["text" => $input['reporte_data']]
                     ]
                 ]
             ],
@@ -51,12 +49,12 @@ class IaconsultasController extends AppController {
             ]
         ];
 
-        // 2. Configuramos la petición
+        // 3. Configuramos la petición
         $opciones = array(
             'http' => array(
                 'method'  => 'POST',
-                'header'  => "Content-Type: application/json\r\n", // QUITAMOS EL USER-AGENT y cualquier rastro de Miggo
-                'content' => json_encode($cuerpoParaGoogle),
+                'header'  => "Content-Type: application/json\r\n",
+                'content' => json_encode($cuerpoParaIA),
                 'ignore_errors' => true 
             )
         );
@@ -66,26 +64,24 @@ class IaconsultasController extends AppController {
                 'method'  => 'POST',
                 'header'  => "Content-Type: application/json\r\n" .
                             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n", 
-                'content' => json_encode($cuerpoParaGoogle),
+                'content' => json_encode($cuerpoParaIA),
                 'ignore_errors' => true 
             )
         );
 
         $contexto = stream_context_create($opciones);
         
-        // 3. Ejecutamos la llamada
+        // 4. Ejecutamos la llamada
         $resultado = @file_get_contents($url, false, $contexto);
 
-        // 4. Devolvemos la respuesta al JS
+        // 5. Devolvemos la respuesta al JS
         header('Content-Type: application/json');
         echo $resultado;
     }
 
-/**
- * index method
- *
- * @return void
- */
+    /**
+     * Función que obtiene la información del cierre diario para el análisis de IA
+     */
 	public function analisiscierrediario() {
         $this->autoRender = false;
         $this->loadModel('Gasto');
