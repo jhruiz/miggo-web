@@ -24,9 +24,6 @@ class IaconsultasController extends AppController {
 
         // 2. Obtiene el prompt por módulo y se envían datos adicionales en el input
         $promptSistema = $this->Iaconsulta->obtenerPrompt($input);
-
-
-        print_r($promptSistema); die();
     
         // se crea el cuerpo para la petición
         $cuerpoParaIA = [
