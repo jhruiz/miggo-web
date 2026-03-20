@@ -75,10 +75,6 @@ var validarFomulario = function() {
         mensaje += "- Debe seleccionar un estado para la orden. <br>";
     }
 
-    if ($('#OrdentrabajoKilometraje').val() == "") {
-        mensaje += "- Debe ingresar el kilometraje actual del vehículo. <br>";
-    }
-
     if ($('#OrdentrabajoPlaca').val() == "") {
         mensaje += "- Debe seleccionar un vehículo. <br>";
     }
@@ -99,24 +95,8 @@ var validarFomulario = function() {
         mensaje += "- Debe seleccionar un cliente. <br>";
     }
 
-    if ($('#OrdentrabajoPlantaservicioId').val() == "") {
-        mensaje += "- Debe seleccionar una planta de servicio. <br>";
-    }
-
     if ($('#fecha_ingreso').val() == "") {
         mensaje += "- Debe seleccionar una fecha de ingreso del vehículo. <br>";
-    }
-
-    // if ($('#fecha_salida').val() == "") {
-    //     mensaje += "- Debe seleccionar una fecha de salida del vehículo. <br>";
-    // }
-
-    if ($('#fecha_soat').val() == "") {
-        mensaje += "- Debe seleccionar una fecha de vencimiento de Soat. <br>";
-    }
-
-    if ($('#fecha_tecno').val() == "") {
-        mensaje += "- Debe seleccionar una fecha de vencimiento de Tecnomecánica. <br>";
     }
 
     return mensaje;

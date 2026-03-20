@@ -56,16 +56,6 @@ class IaconsultasController extends AppController {
             )
         );
 
-        $opciones = array(
-            'http' => array(
-                'method'  => 'POST',
-                'header'  => "Content-Type: application/json\r\n" .
-                            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n", 
-                'content' => json_encode($cuerpoParaIA),
-                'ignore_errors' => true 
-            )
-        );
-
         $contexto = stream_context_create($opciones);
         
         // 4. Ejecutamos la llamada
@@ -89,7 +79,7 @@ class IaconsultasController extends AppController {
         // --- REGISTRO DE CONSUMO ---
         $empresaId = $this->Auth->user('empresa_id');
         $modulo = isset($input['modulo']) ? $input['modulo'] : 'desconocido';
-        
+
         $this->Iaconsulta->registrarConsumo($empresaId, $modulo, $respuestaJson, $statusHttp);
 
         // 5. Devolvemos la respuesta al JS
