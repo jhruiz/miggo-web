@@ -23,6 +23,12 @@ echo $this->Html->script('qr/jquery.classyqr.min.js');
 echo $this->Html->script('jquery-ui/js/jquery-ui-1.10.3.custom.min');
 echo $this->Html->script('bootbox.min.js');
 echo $this->Html->css('jquery-ui-css/redmond/jquery-ui.css');
+
+echo $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', array('rel' => 'stylesheet'));
+echo $this->Html->css('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css', array('rel' => 'stylesheet'));
+echo $this->Html->script('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js');
+echo $this->Html->script('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/lang/summernote-es-ES.min.js');
+
 /** Adicionamos la librer��a para el menu * */
 echo $this->Html->script('menu');
 

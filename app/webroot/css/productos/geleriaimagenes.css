@@ -1,0 +1,65 @@
+/* 1. Limpieza total del contenedor gris de fondo */
+#galeria-actual {
+    background-color: #f5f5f5 !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    border: 1px solid #ddd !important;
+    display: flex !important; /* Usamos Flexbox para alinear las columnas */
+    flex-wrap: wrap !important; /* Permitimos múltiples filas */
+    gap: 10px !important; /* Espaciado moderno entre imágenes */
+}
+
+/* 2. Limpieza de la columna de Bootstrap (importante para Flexbox) */
+#galeria-actual .col-md-2, 
+#galeria-actual .col-sm-3, 
+#galeria-actual .col-xs-6 {
+    display: flex !important; /* Cada columna es un flex container */
+    margin-bottom: 0 !important; /* Quitamos margen inferior */
+}
+
+/* 3. Estilo para el .thumbnail (Contenedor de la imagen) */
+#galeria-actual .thumbnail {
+    padding: 0 !important; /* ¡FUNDAMENTAL! Quita el borde blanco interno */
+    margin: 0 !important; /* Quita márgenes externos */
+    border: 2px solid #ddd !important; /* Borde sutil */
+    border-radius: 8px !important; /* Bordes redondeados */
+    overflow: hidden !important; /* Asegura que la imagen siga los bordes redondeados */
+    position: relative !important; /* Para posicionar la X roja */
+    display: flex !important; /* Forzamos Flexbox AQUÍ TAMBIÉN */
+    flex-direction: column !important; /* Alineación vertical */
+    width: 100% !important; /* Ocupa todo el ancho de la columna */
+    height: auto !important; /* Altura automática */
+}
+
+/* 4. Estilo para la IMAGEN (Aseguramos que llene todo) */
+#galeria-actual .thumbnail img {
+    display: block !important; /* Quita el espacio de línea base */
+    width: 100% !important; /* Ocupa todo el ancho del .thumbnail */
+    height: 130px !important; /* Altura fija para todas las miniaturas */
+    object-fit: cover !important; /* ¡LA CLAVE! Recorta inteligente para llenar */
+    margin: 0 !important; /* Quita márgenes */
+    padding: 0 !important; /* Quita padding */
+}
+
+/* 5. El botón de eliminar (X roja) */
+.btn-eliminar-foto {
+    position: absolute !important;
+    top: 5px !important;
+    right: 5px !important;
+    border-radius: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #d9534f !important; /* Rojo BS3 */
+    color: #fff !important;
+    border: none !important;
+    opacity: 0.8 !important;
+    z-index: 10 !important;
+}
+
+.btn-eliminar-foto:hover {
+    opacity: 1 !important;
+}

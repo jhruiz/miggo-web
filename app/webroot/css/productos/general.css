@@ -1,0 +1,112 @@
+    .form-group label { font-size: 1.5rem; color: #555; }
+    .card { border: none; border-radius: 12px; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important; }
+    input.form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 0.2rem rgba(37,99,235,.15); }
+    .upload-area:hover { border-color: #2563eb !important; background-color: #f8fbff !important; transition: 0.3s; }
+
+    #tagsContainer {
+        min-height: 40px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #fafafa;
+    }
+
+    .tag-miggo {
+        display: inline-block; /* Para que fluyan uno al lado del otro */
+        background-color: #5bc0de; /* Un azul más suave tipo info */
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin: 4px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .tag-miggo i {
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .tag-miggo i:hover {
+        color: #d9534f; /* Rojo al pasar por la X */
+    }
+
+
+/* Contenedor principal */
+.switch-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* El interruptor en sí */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    margin-bottom: 0; /* Reset de BS3 */
+}
+
+/* Ocultar el checkbox original */
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* El slider (fondo del switch) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+}
+
+/* Color cuando está activo (Azul Miggo) */
+input:checked + .slider {
+    background-color: #337ab7;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #337ab7;
+}
+
+/* Movimiento del círculo */
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* Forma redondeada */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Etiqueta de texto al lado del switch */
+.switch-label {
+    margin-left: 12px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+}

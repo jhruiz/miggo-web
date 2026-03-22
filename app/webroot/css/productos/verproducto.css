@@ -1,0 +1,125 @@
+/* Estilo Moderno para Panel (Contenedores) */
+.panel-moderno {
+    border-radius: 12px !important;
+    border: 1px solid #eaeaea !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+    overflow: hidden;
+}
+
+/* Títulos Climpiso y Limpios */
+#fichaView h1 {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    color: #333;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+/* Ref y Código sutiles */
+#fichaView .text-muted {
+    font-size: 14px;
+    color: #888;
+}
+
+/* Layout Técnico - Alineado a la Izquierda */
+#fichaView .info-tec label {
+    color: #337ab7; /* Azul BS3 */
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#fichaView .info-tec p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Badges de Stock - Modernizados y Redondeados */
+.stock-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px !important;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+/* Palabras Clave - Píldoras */
+.tag-pildora {
+    display: inline-block;
+    background: #f0f7ff;
+    color: #337ab7;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin: 4px;
+    font-size: 12px;
+    border: 1px solid #cce5ff;
+}
+
+/* Miniaturas de Galería */
+.thumb-pildora {
+    border-radius: 8px !important;
+    height: 65px;
+    width: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.thumb-pildora:hover {
+    transform: scale(1.05);
+    border-color: #337ab7;
+}
+
+/* Estilizamos el contenido generado por el editor */
+    .descripcion-mercado {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #333 !important; /* Un negro más fuerte para que se lea mejor que el gris #555 */
+        word-wrap: break-word;
+    }
+
+    .descripcion-mercado p {
+        margin-bottom: 15px;
+        font-size: 18px; /* Un poco más grande para facilitar la lectura */
+        line-height: 1.6;
+    }
+
+    /* Aseguramos que los resaltados (como el amarillo de tu foto) se vean bien */
+    .descripcion-mercado span {
+        padding: 2px 4px;
+        border-radius: 3px;
+    }
+
+    /* Si el usuario mete imágenes en la descripción, que no se desborden */
+    .descripcion-mercado img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+
+    /* Forzamos el color del texto para que no sea blanco */
+    .render-summernote {
+        color: #333 !important; /* Negro suave profesional */
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+        background-color: #ffffff !important;
+        text-align: left !important; /* Evita que se centre si el padre lo está */
+    }
+
+    /* Forzamos a todos los elementos hijos (p, span, b, u) */
+    .render-summernote p, 
+    .render-summernote span, 
+    .render-summernote b, 
+    .render-summernote strong, 
+    .render-summernote u,
+    .render-summernote em {
+        color: #333 !important;
+        font-family: inherit !important;
+    }
+
+    /* Si el usuario puso un resaltado amarillo, mantenemos el fondo pero aseguramos texto negro */
+    .render-summernote span[style*="background-color"] {
+        color: #000 !important;
+    }
