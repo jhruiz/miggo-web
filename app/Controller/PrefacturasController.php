@@ -146,12 +146,16 @@ class PrefacturasController extends AppController {
             // Se obtiene el listado de canal de ventas
             $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
+            // Datos de la orden
+            $numOrden = $prefactura['Prefactura']['numeroorden'];
+            $fechaOrden = $prefactura['Prefactura']['fechaorden'];
+
             $ttalAbonos = 0;
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
-            
-            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg'));
+
+            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg', 'numOrden', 'fechaOrden'));
             $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas')); 
 	}
 
@@ -627,5 +631,36 @@ class PrefacturasController extends AppController {
             
             echo json_encode(array('resp' => $resp));
         }
+
+        /**
+         * Guarda la fecha de la orden
+         */
+        public function guardarFechaOrden(){
+            $this->loadModel('Prefactura');
+            $this->autoRender = false;
+
+            $fechaOrden = $this->request->data['fechaorden'];
+            $prefacturaId = $this->request->data['prefact'];
+
+            $resp = $this->Prefactura->guardarFechaOrdenPrefact($prefacturaId, $fechaOrden);
+
+            echo json_encode(array('resp' => $resp));
+        }
+
+        /**
+         * Guarda la fecha de la orden
+         */
+        public function guardarNumeroOrden(){
+            $this->loadModel('Prefactura');
+            $this->autoRender = false;
+
+            $numOrden = $this->request->data['numeroorden'];
+            $prefacturaId = $this->request->data['prefact'];
+
+            $resp = $this->Prefactura->guardarNumOrdenPrefact($prefacturaId, $numOrden);
+
+            echo json_encode(array('resp' => $resp));
+        }
+
         
 }

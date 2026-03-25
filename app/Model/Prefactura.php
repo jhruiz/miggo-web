@@ -530,7 +530,45 @@ class Prefactura extends AppModel {
             }else{
                 return '0';
             }
-        }        
+        }   
+        
+        /**
+         * Actualiza la fecha de la orden
+         */
+        public function guardarFechaOrdenPrefact($id, $fechaOrden){
+            $data = array();
+
+            $prefactura = new Prefactura();
+
+            $data['id'] = $id;
+            $data['fechaorden'] = $fechaOrden;
+
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }
+
+        /**
+         * Actualiza el número de la orden
+         */
+        public function guardarNumOrdenPrefact($id, $numOrden){
+            $data = array();
+
+            $prefactura = new Prefactura();
+
+            $data['id'] = $id;
+            $data['numeroorden'] = $numOrden;
+
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }
+
+        
         public function obtenerInfoAlertaPreFactura($filtros){
 
             $arr_join = array(); 
@@ -555,41 +593,6 @@ class Prefactura extends AppModel {
                 'type' => 'LEFT',
                 'conditions' => array('Prefactura.cliente_id=CL.id')                
             ));
-            
-            // array_push($arr_join, array(
-            //     'table' => 'estadoalertas', 
-            //     'alias' => 'EA', 
-            //     'type' => 'INNER',
-            //     'conditions' => array('EA.id=Alertaordene.estadoalerta_id')                
-            // ));
-            
-            // array_push($arr_join, array(
-            //     'table' => 'unidadesmedidas', 
-            //     'alias' => 'UM', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('Alertaordene.unidadesmedida_id=UM.id')                
-            // ));
-            
-            // array_push($arr_join, array(
-            //     'table' => 'alertas', 
-            //     'alias' => 'AL', 
-            //     'type' => 'INNER',
-            //     'conditions' => array('Alertaordene.alerta_id=AL.id')                
-            // ));
-            
-            // array_push($arr_join, array(
-            //     'table' => 'plantaservicios', 
-            //     'alias' => 'PS', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('O.plantaservicio_id=PS.id')                
-            // ));
-            
-            // array_push($arr_join, array(
-            //     'table' => 'ordenestados', 
-            //     'alias' => 'OE', 
-            //     'type' => 'LEFT',
-            //     'conditions' => array('O.ordenestado_id=OE.id')                
-            // ));
             
             $alertasOrdenes = $this->find('all', array(                
                 'joins' => $arr_join, 

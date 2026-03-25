@@ -130,7 +130,7 @@
                             <div class="upload-area border-dashed p-4 text-center bg-white" style="border: 2px dashed #ccc; border-radius: 10px;">
                                 <i class="fa fa-cloud-upload fa-3x text-muted"></i>
                                 <p class="mb-2">Selecciona múltiples imágenes para este producto</p>
-                                <?php echo $this->Form->input('imagenes.', array('type' => 'file', 'multiple' => 'multiple', 'label' => false, 'accept' => '.jpg, .jpeg', 'class' => 'form-control-file d-inline-block')); ?>
+                                <?php echo $this->Form->input('imagenes.', array('type' => 'file', 'multiple' => 'multiple', 'label' => false, 'required' => false, 'accept' => '.jpg, .jpeg', 'class' => 'form-control-file d-inline-block')); ?>
                                 <small class="text-muted d-block mt-2">Formatos permitidos: JPG, JPEG (Máx 1MB cada una)</small>
                             </div>
                         </div>

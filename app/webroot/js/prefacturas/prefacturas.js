@@ -1249,6 +1249,53 @@ var guardarObsFactura = function(){
         $(this).val("");
     }
 };
+
+/**
+ * Se guarda la fecha de la orden
+ */
+var guardarFechaOrden = function() {
+    var prefacturaId = $('#prefacturaId').val();
+    if(prefacturaId != ""){        
+        $.ajax({
+            url: $('#url-proyecto').val() + 'prefacturas/guardarFechaOrden',
+            data: {prefact: prefacturaId, fechaorden: $('#PrefacturaFRefOr').val()},
+            type: "POST",
+            success: function(data) {
+                var resp = JSON.parse(data);
+                if(resp == '0'){
+                    bootbox.alert('No fue posible guardar la fecha de la orden. Por favor, inténtelo de nuevo.');                
+                }
+            }
+        });         
+    }else{        
+        bootbox.alert('Debe seleccionar un cliente y agregar un producto para ingresar la fecha de orden.');
+        $(this).val("");
+    }
+}
+
+/**
+ * Se guarda el número de orden
+ */
+var guardarNumeroOrden = function() {
+    var prefacturaId = $('#prefacturaId').val();
+    if(prefacturaId != ""){        
+        $.ajax({
+            url: $('#url-proyecto').val() + 'prefacturas/guardarNumeroOrden',
+            data: {prefact: prefacturaId, numeroorden: $('#PrefacturaNRefOr').val()},
+            type: "POST",
+            success: function(data) {
+                var resp = JSON.parse(data);
+                if(resp == '0'){
+                    bootbox.alert('No fue posible guardar el número de orden. Por favor, inténtelo de nuevo.');                
+                }
+            }
+        });         
+    }else{        
+        bootbox.alert('Debe seleccionar un cliente y agregar un producto para ingresar el número de orden.');
+        $(this).val("");
+    }
+}
+
 var generarAlertaPreFactura = function() {
     //valida que tenga todos los datos ingresados
     var vehiculo = $('#vehiculo_id').val();
@@ -1274,4 +1321,6 @@ $( function() {
     $('#editOrden').click(editarOrdenTrabajo);    
     $('#obs_fact').blur(guardarObsFactura);
     $('#btn_alerta').click(generarAlertaPreFactura);
+    $('#PrefacturaFRefOr').change(guardarFechaOrden);
+    $('#PrefacturaNRefOr').change(guardarNumeroOrden);
 });

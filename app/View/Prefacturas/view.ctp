@@ -277,11 +277,11 @@
                         </div>       
                         
                         <div class="form-group col-md-2">
-                            <?php echo $this->Form->input('f_ref_or', array('label' => 'Fecha Orden', 'type' => 'text', 'class' => 'date form-control', 'autocomplete' => 'off', 'placeholder' => 'Fecha Orden', 'name' => 'data[Factura][f_ref_or]')); ?>
+                            <?php echo $this->Form->input('f_ref_or', array('label' => 'Fecha Orden', 'type' => 'text', 'class' => 'date form-control', 'autocomplete' => 'off', 'placeholder' => 'Fecha Orden', 'name' => 'data[Factura][f_ref_or]', 'value' => "$fechaOrden")); ?>
                         </div>
                         
                         <div class="form-group col-md-2">
-                            <?php echo $this->Form->input('n_ref_or', array('label' => 'Prefijo - No. Orden', 'type' => 'text', 'autocomplete' => 'off', 'class' => 'form-control', 'placeholder' => 'Número de Orden', 'name' => 'data[Factura][n_ref_or]')); ?>
+                            <?php echo $this->Form->input('n_ref_or', array('label' => 'Prefijo - No. Orden', 'type' => 'text', 'autocomplete' => 'off', 'class' => 'form-control', 'placeholder' => 'Número de Orden', 'name' => 'data[Factura][n_ref_or]', 'value' => "$numOrden")); ?>
                         </div>
                     </div>
 
