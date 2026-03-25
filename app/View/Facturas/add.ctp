@@ -13,7 +13,7 @@
 <br>
 <div class="x_panel">
         <div class="x_title">
-                    <h2><?php echo __('Venta de Productos'); ?></h2>
+                    <h2><?php if($esFactura == '1') { echo __('Factura electrónica'); } else { echo __('Documento de venta'); } ?></h2>
                  </div>
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '31', 'id' => 'menuvert')) ?>
             <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => 0)) ?>
