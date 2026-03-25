@@ -1674,7 +1674,7 @@ class FacturasController extends AppController
         if ($this->validateArrays($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)) {
 
             $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral));
-            print_r($jsonFactura); die();
+
             echo json_encode(array(
                 'token' => $factura['Empresa']['tokendian'],
                 'nitEmpresa' => $factura['Empresa']['nit'],
