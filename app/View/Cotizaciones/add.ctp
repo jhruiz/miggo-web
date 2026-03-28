@@ -9,8 +9,6 @@
             <div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#registrado" aria-controls="registrado" data-toggle="tab" role="tab">Cotización cliente registrado</a></li>
-<!--                    <li role="presentation"><a href="#nuevo" aria-controls="nuevo" data-toggle="tab" role="tab">Cotización cliente Nuevo</a></li>
-                    <li role="presentation"><a href="#cotizacionrapida" aria-controls="cotizacionrapida" data-toggle="tab" role="tab">Cotización rápida</a></li>                        -->
                 </ul>
             </div>
             

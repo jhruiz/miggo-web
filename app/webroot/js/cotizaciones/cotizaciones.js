@@ -498,7 +498,7 @@ var fnObtenerProductoCotizacion = function() {
 
                     var prod = {
                         'text': producto.resp[0].Producto.descripcion,
-                        'name': producto.resp[0].Cargueinventario.id
+                        'name': producto.resp[0].Producto.id
                     }
 
                     seleccionarProductoCotizacion(prod)
@@ -520,7 +520,7 @@ var fnObtenerProductoCotizacion = function() {
                     var producto = JSON.parse(data);
                     var uls = "";
                     for (var i = 0; i < producto.resp.length; i++) {
-                        uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Cargueinventario.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
+                        uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Producto.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
                     }
 
                     $('#datosProducto').show();
