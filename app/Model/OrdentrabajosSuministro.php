@@ -159,7 +159,7 @@ class OrdentrabajosSuministro extends AppModel {
             ),
             'conditions' => array(                    
                 'OrdentrabajosSuministro.cargueinventario_id' => $idCargueInv,
-                'OE.ordenfinal <> 1'
+                'OE.ordenfinal = 0'
                 )
         ));
 
