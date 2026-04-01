@@ -186,7 +186,7 @@
                                 <tbody id="totalFacturas">
                                     <tr>
                                         <th>&nbsp</th>
-                                        <th colspan="3"><b>TOTAL</b></th>
+                                        <th colspan="2"><b>TOTAL</b></th>
                                         <th class="text-right"><b class="thTUnit"></b></th>
                                         <th class="text-right"><b class="thTTotal"></b></th>
                                         <th>&nbsp;</th>
@@ -195,6 +195,7 @@
                                         <th class="text-right"><b class="thPorcIVA"></b></th>
                                         <th class="text-right"><b class="thICA"></b></th>
                                         <th class="text-right"><b class="thPorcICA"></b></th>
+                                        <th>&nbsp;</th>
                                         <th class="text-right"><b class="thTFCIVA"></b></th>
                                     </tr>
                                 </tbody>

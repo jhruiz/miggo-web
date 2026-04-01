@@ -1977,6 +1977,23 @@ class FacturasController extends AppController
                 $valImpBolsa = $objValoresBase['varorINCBolsa'];
             } 
 
+            // --- AQUÍ EL AJUSTE ---
+            // Si el producto no entró a ninguno de los anteriores, es un producto sin impuesto.
+            // Creamos un IVA 0% manual para que la base imponible sume en la DIAN.
+            if ( empty($arrImpuestosLinea) ) {
+                $ivaCero = [
+                    'tax_id'         => '1', // ID de IVA según la DIAN
+                    'tax_amount'     => '0.00',
+                    'taxable_amount' => number_format($objValoresBase['valorBaseUnitario'], 2, '.', ''),
+                    'percent'        => '0.00'
+                ];
+                $arrImpuestosLinea[] = $ivaCero;
+                
+                // También lo sumamos a los totales para que el nodo global de impuestos cuadre
+                $arrImpuestosTotales[] = $ivaCero;
+            }
+            // -----------------------
+
             $valorProducto = $objValoresBase['valorBaseUnitario'] + $objValoresBase['valorIVA'] + $objValoresBase['valorINC'];
 
             //Sumatoria de valores con y sin impuestos
@@ -2096,7 +2113,7 @@ class FacturasController extends AppController
             'description' => $val['P']['descripcion'],
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
-            'price_amount' => $objValoresBase['precioUnitarioFinal'],
+            'price_amount' => ($objValoresBase['precioUnitarioFinal']/$val['Facturasdetalle']['cantidad']),
             'base_quantity' => $val['Facturasdetalle']['cantidad']
         ];
     
