@@ -173,7 +173,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group col-md-6">
-                                    <label>Crar orde de trabajo</label>
+                                    <label>Crear orde de trabajo</label>
                                     <?php 
                                         echo $this->Form->input('crear_ot', array(
                                             'type' => 'select',
