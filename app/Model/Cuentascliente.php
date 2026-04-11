@@ -242,7 +242,8 @@ class Cuentascliente extends AppModel {
                     'DC.codigo',
                     'F.id',
                     'F.consecutivodian',
-                    'F.codigo',
+                    'F.consecutivodv',
+                    'F.prefijo',
                     'Cuentascliente.*',
                     'TP.*'
                 ),

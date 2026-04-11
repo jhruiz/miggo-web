@@ -303,8 +303,9 @@ function fnObtenerDatosProducto(e){
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
                                 uls += "onClick ='seleccionarProducto(this)'>" + producto.resp[i].Producto.descripcion;
                                 uls += " - " + producto.resp[i].Producto.codigo;
-                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") ";
-                                uls += producto.resp[i].Deposito.descripcion;
+                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") bod. ";
+                                uls += producto.resp[i].Deposito.descripcion + " - prov. ";
+                                uls += producto.resp[i].Proveedore.nombre;
                                 uls += "</a>";
                             }
                         }
@@ -663,8 +664,9 @@ function fnObtenerDatosProductoUsuarioNuevo(e){
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
                                 uls += "onClick ='seleccionarProducto(this)'>" + producto.resp[i].Producto.descripcion;
                                 uls += " - " + producto.resp[i].Producto.codigo;
-                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") ";
-                                uls += producto.resp[i].Deposito.descripcion;
+                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") bod. ";
+                                uls += producto.resp[i].Deposito.descripcion + " - prov. ";
+                                uls += producto.resp[i].Proveedore.nombre;
                                 uls += "</a>";                                                                                          
                             }
                         }
@@ -791,8 +793,9 @@ function fnObtenerDatosProductoVentaRapida(e){
                                 uls += "id='" + producto.resp[i].Cargueinventario.id + "' ";
                                 uls += "onClick ='seleccionarProducto(this)'>" + producto.resp[i].Producto.descripcion;
                                 uls += " - " + producto.resp[i].Producto.codigo;
-                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") ";
-                                uls += producto.resp[i].Deposito.descripcion;
+                                uls += " Ref (" + producto.resp[i].Producto.referencia + ") bod. ";
+                                uls += producto.resp[i].Deposito.descripcion + " - prov. ";
+                                uls += producto.resp[i].Proveedore.nombre;
                                 uls += "</a>";
                             } 
                         }

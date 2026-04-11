@@ -28,15 +28,7 @@ function fnObtenerDatosProducto(e){
                 bootbox.alert('No hay productos disponibles en Stock.');
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                 
-            }else if(productos.boolResp === '2'){
-                // $('#descInventario').append('<tr id="tr_' + productos.descId + '">' +
-                //         '<td>' + productos.resp['0']['Producto']['descripcion'] + '</td>' + 
-                //         '<td>' + productos.resp['0']['Producto']['codigo'] + '</td>' + 
-                //         '<td>' + productos.resp['0']['Cargueinventario']['costoproducto'] + '</td>' + 
-                //         '<td>' + productos.resp['0']['Cargueinventario']['existenciaactual'] + '</td>' + 
-                //         '<td><input type="text" name="cant_' + productos.descId + '" class="form-control" id="cant_' + productos.descId + '" value="1" onblur="actualizarCantidadDescargue(this);">&nbsp;</td>' +
-                //         '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + productos.descId + '" onclick="eliminarRegistroDescargue(this)"></td></tr>'
-                //     );                
+            }else if(productos.boolResp === '2'){              
                 $('#buscarproducto').val("");
                 $('#datosProducto').hide();                
             }else if(productos.boolResp === '3'){

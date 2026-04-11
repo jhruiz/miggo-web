@@ -321,9 +321,22 @@ class Cargueinventario extends AppModel {
         }
 
         public function cantidadStockEmpresa($empresaId){
-            $stock = $this->find('all', array(
+            $arr_join = array(); 
+
+            array_push($arr_join, array(
+                'table' => 'productos',
+                'alias' => 'P',
+                'type' => 'INNER',
                 'conditions' => array(
-                    'Cargueinventario.empresa_id' => $empresaId
+                    'P.id=Cargueinventario.producto_id'
+                )
+            ));
+
+            $stock = $this->find('all', array(
+                'joins' => $arr_join, 
+                'conditions' => array(
+                    'Cargueinventario.empresa_id' => $empresaId,
+                    'P.inventario' => '1'
                 ),
                 'fields' => array(
                     'SUM(Cargueinventario.existenciaactual) as stock'
@@ -334,11 +347,24 @@ class Cargueinventario extends AppModel {
         }
 
         public function informacionInventario($empresaId){
+            $arr_join = array(); 
+
+            array_push($arr_join, array(
+                'table' => 'productos',
+                'alias' => 'P',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'P.id=Cargueinventario.producto_id'
+                )
+            ));
+
             $inventario = $this->find('all', array(
+                'joins' => $arr_join,
                 'conditions' => array(
                     'Cargueinventario.empresa_id' => $empresaId
                 ),
                 'fields' => array(
+                    'P.inventario',
                     'Cargueinventario.costoproducto',
                     'Cargueinventario.existenciaactual'
                 ),

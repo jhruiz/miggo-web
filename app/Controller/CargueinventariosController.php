@@ -75,7 +75,13 @@ class CargueinventariosController extends AppController {
                     $cargueinventariosP[$i]['Cargueinventario']['color'] = 'danger';
                 }else{
                     $cargueinventariosP[$i]['Cargueinventario']['color'] = 'success';
-                }                
+                }  
+                
+                $cargueinventariosP[$i]['Cargueinventario']['unidadesReponer'] = 0;
+                if(($cargueinventariosP[$i]['Cargueinventario']['existenciaactual'] < $cargueinventariosP[$i]['Producto']['existenciamaxima']) && ($cargueinventariosP[$i]['Producto']['inventario'] == '1')) {
+                    $cargueinventariosP[$i]['Cargueinventario']['unidadesReponer'] = $cargueinventariosP[$i]['Producto']['existenciamaxima'] - $cargueinventariosP[$i]['Cargueinventario']['existenciaactual'];
+                }
+
             }
             
             /*Se obtienen las cuentas pendientes que tiene la empresa*/
@@ -92,7 +98,9 @@ class CargueinventariosController extends AppController {
             /** Se obtiene la información del valor del inventario*/
             $infoInventario = $this->Cargueinventario->informacionInventario($empresaId);
             foreach($infoInventario as $val){
-                $valorInventario += ((double)$val['Cargueinventario']['costoproducto'] * (double)$val['Cargueinventario']['existenciaactual']);
+                if($val['P']['inventario'] == 1 ){
+                    $valorInventario += ((double)$val['Cargueinventario']['costoproducto'] * (double)$val['Cargueinventario']['existenciaactual']);
+                }
             }
 
             //Se obtienen los depositos de la empresa del usaurio que se encuentra en sesion

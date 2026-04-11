@@ -520,7 +520,14 @@ var fnObtenerProductoCotizacion = function() {
                     var producto = JSON.parse(data);
                     var uls = "";
                     for (var i = 0; i < producto.resp.length; i++) {
-                        uls += "<a href='#' class='list-group-item list-group-item-info' name='" + producto.resp[i].Producto.id + "' onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion + " - " + producto.resp[i].Producto.codigo + "</a>";
+                        uls += "<a href='#' class='list-group-item list-group-item-info' ";
+                        uls += "name='" + producto.resp[i].Producto.id + "' ";
+                        uls += "onClick ='seleccionarProductoCotizacion(this)'>" + producto.resp[i].Producto.descripcion;
+                        uls += " - " + producto.resp[i].Producto.codigo;
+                        uls += " Ref (" + producto.resp[i].Producto.referencia + ") bod. ";
+                        uls += producto.resp[i].Deposito.descripcion + " - prov. ";
+                        uls += producto.resp[i].Proveedore.nombre;
+                        uls += "</a>";
                     }
 
                     $('#datosProducto').show();

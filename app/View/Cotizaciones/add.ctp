@@ -87,7 +87,7 @@
                                         <?php echo $this->Form->input('producto', array('label' => false, 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto')); ?>                                        
                                     </div>
                                     <div>
-                                        <div id="datosProducto" style="position:absolute; z-index:1;"></div>
+                                        <div id="datosProducto" style="position:absolute; z-index:1000;"></div>
                                     </div>
                                 </div>  
                             </div>
@@ -163,7 +163,7 @@
                                             'class' => 'form-control', 
                                             'placeholder' => 'Placa Vehículo',
                                             'autocomplete' => 'off',                                            
-                                            'style' => 'z-index:3; position: relative'
+                                            'style' => 'z-index:1'
                                             )
                                     ); 
                                 ?> 

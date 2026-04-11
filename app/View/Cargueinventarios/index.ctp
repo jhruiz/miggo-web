@@ -64,6 +64,7 @@ $this->layout = 'inicio';
                                 <th><?php echo h('Proveedor'); ?></th>
                                 <th><?php echo h('Valor'); ?></th>
                                 <th><?php echo h('Existencia Actual'); ?></th>
+                                <th><?php echo h('Unidades a reponer'); ?></th>
                                 <th><?php echo h('En Prefacturas'); ?></th>
                                 <th><?php echo h('En Ordenes'); ?></th>
                                 <th><?php echo h('Precio de Venta'); ?></th>
@@ -84,6 +85,7 @@ $this->layout = 'inicio';
                         <td><?php echo h($cargueinventario['Proveedore']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['costoproducto'], 2)); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Producto']['inventario'] == '1' ? $cargueinventario['Cargueinventario']['existenciaactual'] : 'N/A'); ?>&nbsp;</td>
+                        <td><?php echo h($cargueinventario['Producto']['inventario'] == '1' ? $cargueinventario['Cargueinventario']['unidadesReponer'] : 'N/A'); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['prefacturas']); ?>&nbsp;</td>
                         <td><?php echo h($cargueinventario['Cargueinventario']['ordeninsumos']); ?>&nbsp;</td>
                         <td><?php echo h("$" . number_format($cargueinventario['Cargueinventario']['precioventa'], 2)); ?>&nbsp;</td>
