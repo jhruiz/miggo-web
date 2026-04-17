@@ -40,7 +40,7 @@ class Cotizacione extends AppModel {
             'alias' => 'CL',
             'type' => 'INNER',
             'conditions' => array(
-                'CL.id=cotizacione.cliente_id'
+                'CL.id=Cotizacione.cliente_id'
             )
         ));
 
@@ -53,7 +53,8 @@ class Cotizacione extends AppModel {
                 'CL.*'
             ),
             'conditions' => array($arrFilter),
-            'order' => 'Cotizacione.id',
+            'order' => 'Cotizacione.id DESC',
+            'limit' => '100',
             'recursive' => '-1'                
             ));            
         
