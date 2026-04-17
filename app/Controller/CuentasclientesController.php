@@ -21,59 +21,105 @@ class CuentasclientesController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->loadModel('Ventarapida');
+        $this->loadModel('Ventarapida');
+        $this->loadModel('Tipopago');
 
-            $empresaId = $this->Auth->user('empresa_id');
-            $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($empresaId);
-            
-            $fechaActual = date('Y-m-d');
-            
-            $costoTotal = 0;
-            $costoVencido = 0;
-            $costoVigente = 0;
-            for($i = 0; $i < count($cuentasclientes); $i++){
-                if($cuentasclientes[$i]['Cuentascliente']['cliente_id'] != ""){
-                    $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = $this->sumarDiasFecha($cuentasclientes[$i]['Cuentascliente']['created'],$cuentasclientes[$i]['CL']['diascredito']);
+        if (isset($this->passedArgs['cliente']) && $this->passedArgs['cliente'] != "") {
+            $paginate['CL.nombre LIKE'] = '%' . $this->passedArgs['cliente'] . '%';
+            $rpcliente = $this->passedArgs['cliente'];
+        }
+
+        if (isset($this->passedArgs['tipopago']) && $this->passedArgs['tipopago'] != "") {
+            $paginate['Cuentascliente.tipopago_id'] = $this->passedArgs['tipopago'];
+            $rptipopago = $this->passedArgs['tipopago'];
+        }
+
+        if (isset($this->passedArgs['consecutivodian']) && $this->passedArgs['consecutivodian'] != "") {
+            $paginate['F.consecutivodian'] = $this->passedArgs['consecutivodian'];
+            $rpconsecutivodian = $this->passedArgs['consecutivodian'];
+        }
+
+        if (isset($this->passedArgs['consecutivodv']) && $this->passedArgs['consecutivodv'] != "") {
+            $paginate['F.consecutivodv'] = $this->passedArgs['consecutivodv'];
+            $rpconsecutivodv = $this->passedArgs['consecutivodv'];
+        }
+
+        if (!empty($this->passedArgs['fechafactura']) && empty($this->passedArgs['fechafactura_fin'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura'] . ' 00:00:00', $this->passedArgs['fechafactura'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura'] . ' 23:59:59';
+        }
+
+        if (!empty($this->passedArgs['fechafactura_fin']) && empty($this->passedArgs['fechafactura'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura_fin'] . ' 00:00:00', $this->passedArgs['fechafactura_fin'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura_fin'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura_fin'] . ' 23:59:59';
+        }
+
+        if (!empty($this->passedArgs['fechafactura']) && !empty($this->passedArgs['fechafactura_fin'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($this->passedArgs['fechafactura'] . ' 00:00:00', $this->passedArgs['fechafactura_fin'] . ' 23:59:59');
+            $rpfecha = $this->passedArgs['fechafactura'] . ' 00:00:00';
+            $rpfechaFin = $this->passedArgs['fechafactura_fin'] . ' 23:59:59';
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $paginate['Cuentascliente.empresa_id'] = $empresaId;
+        $paginate['Cuentascliente.eliminar'] = '0';
+
+        $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($paginate);
+        
+        $fechaActual = date('Y-m-d');
+        
+        $costoTotal = 0;
+        $costoVencido = 0;
+        $costoVigente = 0;
+        for($i = 0; $i < count($cuentasclientes); $i++){
+            if($cuentasclientes[$i]['Cuentascliente']['cliente_id'] != ""){
+                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = $this->sumarDiasFecha($cuentasclientes[$i]['Cuentascliente']['created'],$cuentasclientes[$i]['CL']['diascredito']);
+            }else{
+                $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($cuentasclientes[$i]['Factura']['id']);
+
+                if(count($infoVentaRapida) > 0){
+                    $cuentasclientes[$i]['CL']['nombre'] = $infoVentaRapida['Ventarapida']['cliente'];
                 }else{
-                    $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($cuentasclientes[$i]['Factura']['id']);
-
-                    if(count($infoVentaRapida) > 0){
-                        $cuentasclientes[$i]['CL']['nombre'] = $infoVentaRapida['Ventarapida']['cliente'];
-                    }else{
-                        $cuentasclientes[$i]['CL']['nombre'] = "";
-                    }
-                    $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = "";
+                    $cuentasclientes[$i]['CL']['nombre'] = "";
                 }
-           
-                $diff = $this->diffFechas($fechaActual, $cuentasclientes[$i]['Cuentascliente']['fechalimitepago']);                
+                $cuentasclientes[$i]['Cuentascliente']['fechalimitepago'] = "";
+            }
+        
+            $diff = $this->diffFechas($fechaActual, $cuentasclientes[$i]['Cuentascliente']['fechalimitepago']);                
+                    
+            if($cuentasclientes[$i]['Cuentascliente']['totalobligacion'] > $cuentasclientes[$i]['CL']['limitecredito']){                    
+                $cuentasclientes[$i]['Cuentascliente']['limitecredito'] = 'text-danger';
+            }else{
+                $cuentasclientes[$i]['Cuentascliente']['limitecredito'] = 'text';                    
+            }                
                         
-                if($cuentasclientes[$i]['Cuentascliente']['totalobligacion'] > $cuentasclientes[$i]['CL']['limitecredito']){                    
-                    $cuentasclientes[$i]['Cuentascliente']['limitecredito'] = 'text-danger';
-                }else{
-                    $cuentasclientes[$i]['Cuentascliente']['limitecredito'] = 'text';                    
-                }                
-                            
-                if($diff <= '0'){
-                    $cuentasclientes[$i]['Cuentascliente']['color'] = 'danger';
-                    $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
-                    $costoVencido += $cuentasclientes[$i]['Cuentascliente']['totalobligacion'];
-                }else{
-                    $cuentasclientes[$i]['Cuentascliente']['color'] = 'success';
-                    $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
-                    $costoVigente += $cuentasclientes[$i]['Cuentascliente']['totalobligacion'];
-                }
-            } 
-            $costoTotal = $costoVencido + $costoVigente;
-            $this->set(compact('cuentasclientes', 'costoVencido', 'costoVigente', 'costoTotal'));
+            if($diff <= '0'){
+                $cuentasclientes[$i]['Cuentascliente']['color'] = 'danger';
+                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
+                $costoVencido += $cuentasclientes[$i]['Cuentascliente']['totalobligacion'];
+            }else{
+                $cuentasclientes[$i]['Cuentascliente']['color'] = 'success';
+                $cuentasclientes[$i]['Cuentascliente']['diasvencido'] = $diff;
+                $costoVigente += $cuentasclientes[$i]['Cuentascliente']['totalobligacion'];
+            }
+        } 
+
+        $tipopago = $this->Tipopago->obtenerListaTiposPagos($empresaId);    
+
+        $costoTotal = $costoVencido + $costoVigente;
+        $this->set(compact('cuentasclientes', 'costoVencido', 'costoVigente', 'costoTotal', 'tipopago'));
+        $this->set(compact('rpcliente', 'rptipopago', 'rpconsecutivodian', 'rpconsecutivodv', 'rpfecha', 'rpfechaFin'));
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+    /**
+     * view method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
 	public function view($id = null) {
 		if (!$this->Cuentascliente->exists($id)) {
 			throw new NotFoundException(__('Invalid cuentascliente'));
@@ -82,11 +128,11 @@ class CuentasclientesController extends AppController {
 		$this->set('cuentascliente', $this->Cuentascliente->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
+    /**
+     * add method
+     *
+     * @return void
+     */
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Cuentascliente->create();
@@ -106,13 +152,13 @@ class CuentasclientesController extends AppController {
 		$this->set(compact('documentos', 'depositos', 'clientes', 'usuarios', 'empresas', 'facturas'));
 	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+    /**
+     * edit method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
 	public function edit($id = null) {
 		if (!$this->Cuentascliente->exists($id)) {
 			throw new NotFoundException(__('Invalid cuentascliente'));
@@ -137,13 +183,13 @@ class CuentasclientesController extends AppController {
 		$this->set(compact('documentos', 'depositos', 'clientes', 'usuarios', 'empresas', 'facturas'));
 	}
 
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+    /**
+     * delete method
+     *
+     * @throws NotFoundException
+     * @param string $id
+     * @return void
+     */
 	public function delete($id = null) {
 		$this->Cuentascliente->id = $id;
 		if (!$this->Cuentascliente->exists()) {
@@ -233,55 +279,68 @@ class CuentasclientesController extends AppController {
             echo json_encode(array('resp' => $resp));
         } 
         
-        public function eliminarcuentacliente(){
-            $this->autoRender = false;
-            $posData = $this->request->data;
-            $posData['id'];
-            $resp = $this->Cuentascliente->eliminarCuenta($posData['id']);
-            echo $resp;
-        }       
+    public function eliminarcuentacliente(){
+        $this->autoRender = false;
+        $posData = $this->request->data;
+        $posData['id'];
+        $resp = $this->Cuentascliente->eliminarCuenta($posData['id']);
+        echo $resp;
+    }       
+    
+    /**
+     * se obtienen los abonos por cuenta cliente id
+     * @param type $id
+     */
+    public function verabonos($id = null){
+        $this->loadModel('Abonofactura');
+        $this->loadModel('Configuraciondato');
+        $this->loadModel('Cuenta');
+
+        $empresaId = $this->Auth->user('empresa_id');
         
-        /**
-         * se obtienen los abonos por cuenta cliente id
-         * @param type $id
-         */
-        public function verabonos($id = null){
-            $this->loadModel('Abonofactura');
-            $this->loadModel('Configuraciondato');
-            $this->loadModel('Cuenta');
-
-            $empresaId = $this->Auth->user('empresa_id');
-            
-            //se obtiene la url de la imagend e whatsapp
-            $strDatoWP = "ulrImgWP";
-            $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);              
-            
-            //se obtiene el abono por cuenta cliente id
-            $abonos = $this->Abonofactura->obtenerAbonosCuentasCliente($id);
-
-            //se obtienen las cuentas de la empresa
-            $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
-
-            $this->set(compact('abonos', 'id', 'urlImgWP', 'cuentas'));
-        }
+        //se obtiene la url de la imagend e whatsapp
+        $strDatoWP = "ulrImgWP";
+        $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDatoWP);              
         
-        public function ajaxobtenerabonos(){
-            $this->loadModel('Abonofactura');
-            $this->loadModel('Empresa');
-            $this->loadModel('Relacionempresa');
-            $this->autoRender = false;
-            
-            $posData = $this->request->data;
-            $cuentaClienteId = $posData['cuentaClienteId'];
-            $empresaId = $this->Auth->user('empresa_id');
-            
-            //se obtiene la informacion de los abonos
-            $abonos = $this->Abonofactura->obtenerAbonosCuentasCliente($cuentaClienteId);            
-            
-            //se obtiene la informacion de la empresa relacionada
-            $empRelacionada = $this->Relacionempresa->obtenerDatosEmpresaRemision($empresaId);
-            
-            echo json_encode(array('abonos' => $abonos, 'subemp' => $empRelacionada));
-            
+        //se obtiene el abono por cuenta cliente id
+        $abonos = $this->Abonofactura->obtenerAbonosCuentasCliente($id);
+
+        //se obtienen las cuentas de la empresa
+        $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+
+        $this->set(compact('abonos', 'id', 'urlImgWP', 'cuentas'));
+    }
+        
+    public function ajaxobtenerabonos(){
+        $this->loadModel('Abonofactura');
+        $this->loadModel('Empresa');
+        $this->loadModel('Relacionempresa');
+        $this->autoRender = false;
+        
+        $posData = $this->request->data;
+        $cuentaClienteId = $posData['cuentaClienteId'];
+        $empresaId = $this->Auth->user('empresa_id');
+        
+        //se obtiene la informacion de los abonos
+        $abonos = $this->Abonofactura->obtenerAbonosCuentasCliente($cuentaClienteId);            
+        
+        //se obtiene la informacion de la empresa relacionada
+        $empRelacionada = $this->Relacionempresa->obtenerDatosEmpresaRemision($empresaId);
+        
+        echo json_encode(array('abonos' => $abonos, 'subemp' => $empRelacionada));
+        
+    }
+
+    public function search()
+    {
+        $url = array();
+        $url['action'] = 'index';
+
+        foreach ($this->data as $kk => $vv) {
+            $url[$kk] = $vv;
         }
+
+        // redirect the user to the url
+        $this->redirect($url, null, true);
+    }
 }

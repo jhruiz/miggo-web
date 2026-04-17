@@ -313,8 +313,30 @@ class ReportesController extends AppController
      */
     public function descargarCuentasClientes() {
 
+        if ($_POST['rpcliente'] != "") { $paginate['CL.nombre LIKE'] = '%' . $_POST['rpcliente'] . '%'; }
+        
+        if ($_POST['rptipopago'] != "") { $paginate['Cuentascliente.tipopago_id'] = $_POST['rptipopago']; }
+
+        if ($_POST['rpconsecutivodian'] != "") { $paginate['F.consecutivodian'] = $_POST['rpconsecutivodian']; }
+
+        if ($_POST['rpconsecutivodv'] != "") { $paginate['F.consecutivodv'] = $_POST['rpconsecutivodv']; }
+
+        if (!empty($_POST['rpfecha']) && empty($_POST['rpfechaFin'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($_POST['rpfecha'] . ' 00:00:00', $_POST['rpfecha'] . ' 23:59:59');
+        }
+
+        if (!empty($_POST['rpfechaFin']) && empty($_POST['rpfecha'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($_POST['rpfechaFin'] . ' 00:00:00', $_POST['rpfechaFin'] . ' 23:59:59');
+        }
+
+        if (!empty($_POST['rpfecha']) && !empty($_POST['rpfechaFin'])) {
+            $paginate['Cuentascliente.created BETWEEN ? AND ?'] = array($_POST['rpfecha'] . ' 00:00:00', $_POST['rpfechaFin'] . ' 23:59:59');
+        }
         $empresaId = $this->Auth->user('empresa_id');
-        $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($empresaId);
+        $paginate['Cuentascliente.empresa_id'] = $empresaId;
+        $paginate['Cuentascliente.eliminar'] = '0';
+        
+        $cuentasclientes = $this->Cuentascliente->obtenerCuentasClientes($paginate);
 
         for($i = 0; $i < count($cuentasclientes); $i++){
             if($cuentasclientes[$i]['Cuentascliente']['cliente_id'] != ""){

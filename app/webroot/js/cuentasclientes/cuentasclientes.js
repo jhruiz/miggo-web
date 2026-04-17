@@ -112,6 +112,12 @@ function verAbonos(id) {
     window.location.href = $('#url-proyecto').val() + 'cuentasclientes/verabonos/' + id;;
 }
 
+var datePicker = function(){
+    $(".date").datepicker({dateFormat: 'yy-mm-dd'});
+    $(".date").datepicker("option", "showAnim", "slideDown");    
+};
+
 $(function() {
+    datePicker();
     $('.numberPrice').number(true);
 });

@@ -2,6 +2,77 @@
 <?php $this->layout='inicio'; ?>
 <div class="cuentasclientes index">   
         <legend><h2><b><?php echo __('Cuentas por Cobrar'); ?></b></h2></legend> 
+
+
+    <div class="x_panel">
+
+        <div class="x_title">
+            <h2><b><?php echo __('Buscar Cuentas'); ?></b></h2>
+        </div>
+        <?php echo $this->Form->create('Cuentasclientes', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
+
+            <div class="row" style="margin-bottom: 20px">
+
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="cliente">Cliente</label><br>
+                            <input name="cliente" id="cliente" autocomplete="off" class="form-control" placeholder="Nombre del cliente" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="tipopago">Tipo de pago</label><br>
+                            <?php echo $this->Form->input('tipopago', array('label' => '', 'name' => 'tipopago', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $tipopago, 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="consecutivodian">Consecutivo Dian</label><br>
+                            <input name="consecutivodian" id="consecutivodian" autocomplete="off" class="form-control" placeholder="Consecutivo Dian" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="consecutivodv">Consecutivo DV</label><br>
+                            <input name="consecutivodv" id="consecutivodv" autocomplete="off" class="form-control" placeholder="Consecutivo DV" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="fechafactura">Fecha factura inicio</label><br>
+                            <input name="fechafactura" id="fechafactura" autocomplete="off" class="date form-control" placeholder="Fecha inicio" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="fechafactura_fin">Fecha factura fin</label><br>
+                            <input name="fechafactura_fin" id="fechafactura_fin" autocomplete="off" class="date form-control" placeholder="Fecha de fin" type="text">
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="form-group ">
+                <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary')); ?>
+                </div>
+            </div>
+            <div class="col-md-9">
+                &nbsp;
+            </div>
+        </div>
+
+        </form>
+    </div><!-- class="x_panel" -->
+
 	<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '35', 'id' => 'menuvert'))?>    
         <div class="table-responsive">
             <div class="container-fluid">         
@@ -80,6 +151,12 @@
 </div></div><br><br>
 <?php echo $this->Form->create('Reporte',array( 'controller' => 'reportes','action'=>'descargarCuentasClientes')); ?>
     <fieldset>    
+        <?php echo $this->Form->input('rpcliente', array('type' => 'hidden', 'name' => 'rpcliente', 'value' => $rpcliente)) ?>
+        <?php echo $this->Form->input('rptipopago', array('type' => 'hidden', 'name' => 'rptipopago', 'value' => $rptipopago)) ?>
+        <?php echo $this->Form->input('rpconsecutivodian', array('type' => 'hidden', 'name' => 'rpconsecutivodian', 'value' => $rpconsecutivodian)) ?>
+        <?php echo $this->Form->input('rpconsecutivodv', array('type' => 'hidden', 'name' => 'rpconsecutivodv', 'value' => $rpconsecutivodv)) ?>
+        <?php echo $this->Form->input('rpfecha', array('type' => 'hidden', 'name' => 'rpfecha', 'value' => $rpfecha)) ?>
+        <?php echo $this->Form->input('rpfechaFin', array('type' => 'hidden', 'name' => 'rpfechaFin', 'value' => $rpfechaFin)) ?>
         <?php echo $this->Form->submit('Descargar',array('class'=>'btn btn-primary')); ?>
     </fieldset>
 </form><br><br>

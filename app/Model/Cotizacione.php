@@ -35,12 +35,22 @@ class Cotizacione extends AppModel {
             )
         ));
 
+        array_push($arr_join, array(
+            'table' => 'clientes',
+            'alias' => 'CL',
+            'type' => 'INNER',
+            'conditions' => array(
+                'CL.id=cotizacione.cliente_id'
+            )
+        ));
+
         $arrCot = $this->find('all', array(
             'joins' => $arr_join,
             'fields' => array(
                 'U.id',
                 'U.nombre',
-                'Cotizacione.*'
+                'Cotizacione.*',
+                'CL.*'
             ),
             'conditions' => array($arrFilter),
             'order' => 'Cotizacione.id',

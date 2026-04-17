@@ -26,6 +26,7 @@ class CargueinventariosController extends AppController {
 	public function index() {
             $this->loadModel('Cuentaspendiente');
             $this->loadModel('Deposito');
+            $this->loadModel('Categoria');
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('OrdentrabajosSuministro');
 
@@ -42,7 +43,7 @@ class CargueinventariosController extends AppController {
             
             $data = array();
             if(isset($this->passedArgs['producto']) && $this->passedArgs['producto'] != ""){
-                $data['Cargueinventario.producto_id'] = $this->passedArgs['producto'];
+                $data['Producto.descripcion LIKE '] = '' . $this->passedArgs['producto'] . '%';
                 $producto = $this->passedArgs['producto'];
             }
             
@@ -51,6 +52,11 @@ class CargueinventariosController extends AppController {
                 $deposito = $this->passedArgs['deposito'];
             }
             
+            if(isset($this->passedArgs['categoria']) && $this->passedArgs['categoria'] != ""){
+                $data['Producto.categoria_id'] = $this->passedArgs['categoria'];
+                $categoria = $this->passedArgs['categoria'];
+            }
+
             $data['Cargueinventario.empresa_id'] = $empresaId;
             $data['Producto.estado'] = '1';
 
@@ -58,6 +64,7 @@ class CargueinventariosController extends AppController {
             
             /**se obtiene el inventario de la empresa */
             $cargueinventariosP = $this->Paginator->paginate('Cargueinventario',$data);
+
             $totalUnidades = 0;
             $valorInventario = 0;
             for ($i = 0; $i < count($cargueinventariosP); $i++){
@@ -105,9 +112,12 @@ class CargueinventariosController extends AppController {
 
             //Se obtienen los depositos de la empresa del usaurio que se encuentra en sesion
             $depositos = $this->Deposito->obtenerDepositoEmpresa($empresaId);
+
+            //Se obtienen las categorias de la empresa del usaurio que se encuentra en sesion
+            $categorias = $this->Categoria->obtenerCategoriasEmpresa($empresaId);
             
             $this->set(compact('cargueinventariosP', 'cuentasPendientes', 'totalUnidades', 'valorInventario', 'totalDeuda', 'depositos', 'empresaId'));
-            $this->set(compact('producto', 'deposito'));                        
+            $this->set(compact('producto', 'deposito', 'categorias'));                        
 	}        
 
 /**

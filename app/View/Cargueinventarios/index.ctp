@@ -1,37 +1,47 @@
 <?php
-echo ($this->Html->script('cargueinventario/cargueinventariosindex.js'));
 $this->layout = 'inicio';
 ?>
 <div class="cargueinventarios index">
 
-            <?php echo $this->Form->create('Cargueinventario', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
-            <legend><h2><b><?php echo __('Buscar Inventario'); ?></b></h2></legend>
+
+
+    <div class="x_panel">
+
+        <div class="x_title">
+            <h2><b><?php echo __('Buscar productos en inventario'); ?></b></h2>
+        </div>
+        <?php echo $this->Form->create('Cargueinventario', array('action' => 'search', 'method' => 'post', 'class' => 'form-inline')); ?>
+
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '11', 'id' => 'menuvert')) ?>
 
-            <div class="row">
-                <?php echo $this->Form->input('empresa', array('type' => 'hidden', 'value' => $empresaId, 'id' => 'empresa_id')) ?>
-                <?php echo $this->Form->input('producto', array('type' => 'hidden', 'name' => 'producto', 'value' => '', 'id' => 'producto_id')) ?>
-                <div class="col-md-3">
-                    <div class="form-group ">
-                        <label>Producto</label><br>
-                        <?php echo $this->Form->input('buscarproducto', array('label' => false, 'id' => 'buscarproducto', 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Selección de Producto', 'onkeyup' => 'fnObtenerDatosProducto(event);')); ?>
-                        <div id="datosProducto" style="position:absolute; z-index:1;"></div> <br>
-                    </div>
-                </div>
+            <div class="row" style="margin-bottom: 20px">
 
-                <div class="col-md-3">
-                    <div class="form-group ">
-                        <label>Bodega</label><br>
-                        <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'deposito', 'empty' => 'Seleccione uno', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
+                <div class="col-md-12">
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label for="producto">Producto</label><br>
+                            <?php echo $this->Form->input('producto', array('label' => false, 'name' => 'producto','id' => 'producto', 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Nombre de Producto')); ?>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6">
-                    &nbsp;
-                </div>
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label for="deposito">Bodega</label><br>
+                            <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'deposito', 'empty' => 'Seleccione una', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label for="categoria">Categoría del Producto</label><br>
+                            <?php echo $this->Form->input('categoria', array('label' => '', 'name' => 'categoria', 'empty' => 'Seleccione una', 'type' => 'select', 'options' => $categorias, 'class' => 'form-control')); ?>
+                        </div>
+                    </div>
             </div>
+        </div>
 
         <div class="row">
+
             <div class="col-md-3">
                 <div class="form-group ">
                 <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary')); ?>
@@ -42,7 +52,8 @@ $this->layout = 'inicio';
             </div>
         </div>
 
-        </form><br><br>
+        </form>
+    </div><!-- class="x_panel" -->
 
     <legend><h2><b><?php echo __('Inventario'); ?></b></h2></legend>
 

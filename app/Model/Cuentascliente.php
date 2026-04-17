@@ -179,7 +179,7 @@ class Cuentascliente extends AppModel {
             }     
         }
         
-        public function obtenerCuentasClientes($empresaId){
+        public function obtenerCuentasClientes($filtros){
             $arr_join = array(); 
             
             array_push($arr_join, array(
@@ -226,9 +226,6 @@ class Cuentascliente extends AppModel {
                     'TP.id=Cuentascliente.tipopago_id'
                     )                
             )); 
-
-
-                       
             $cuentasClientes = $this->find('all', array(
                 'joins' => $arr_join,
                 'fields' => array(
@@ -247,10 +244,7 @@ class Cuentascliente extends AppModel {
                     'Cuentascliente.*',
                     'TP.*'
                 ),
-                'conditions' => array(
-                    'Cuentascliente.empresa_id' => $empresaId,
-                    'Cuentascliente.eliminar = 0'
-                    ), 
+                'conditions' => $filtros, 
                 'recursive' => '-1'));
             return $cuentasClientes;            
         }

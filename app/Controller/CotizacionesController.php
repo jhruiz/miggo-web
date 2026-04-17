@@ -23,25 +23,39 @@ class CotizacionesController extends AppController {
     public function index() {            
         $this->loadModel('Cotizacione');
         $this->loadModel('Cliente');
+        $this->loadModel('Usuario');
             
         $perfilId = $this->Auth->user('perfile_id');
         $empresaId = $this->Auth->user('empresa_id');
         $usuarioId = $this->Auth->user('id');
         $arrFilter = array();
-               
-        $flgE = true;
-        if($perfilId != '1' && $perfilId != '4' && $perfilId != '5'){
-            $arrFilter['Cotizacione.usuario_id'] = $usuarioId;
-            $flgE = false;
+
+        if (isset($this->passedArgs['cliente']) && $this->passedArgs['cliente'] != "") {
+            $arrFilter['CL.nombre LIKE'] = '%' . $this->passedArgs['cliente'] . '%';
+        }
+
+        if (isset($this->passedArgs['usuario']) && $this->passedArgs['usuario'] != "") {
+            $arrFilter['Cotizacione.usuario_id'] = $this->passedArgs['usuario'];    
+        }
+
+        if (!empty($this->passedArgs['fechacotizacion']) && empty($this->passedArgs['fechacotizacion_fin'])) {
+            $arrFilter['Cotizacione.created BETWEEN ? AND ?'] = array($this->passedArgs['fechacotizacion'] . ' 00:00:00', $this->passedArgs['fechacotizacion'] . ' 23:59:59');
+        }
+
+        if (!empty($this->passedArgs['fechacotizacion_fin']) && empty($this->passedArgs['fechacotizacion'])) {
+            $arrFilter['Cotizacione.created BETWEEN ? AND ?'] = array($this->passedArgs['fechacotizacion_fin'] . ' 00:00:00', $this->passedArgs['fechacotizacion_fin'] . ' 23:59:59');
+        }
+
+        if (!empty($this->passedArgs['fechacotizacion']) && !empty($this->passedArgs['fechacotizacion_fin'])) {
+            $arrFilter['Cotizacione.created BETWEEN ? AND ?'] = array($this->passedArgs['fechacotizacion'] . ' 00:00:00', $this->passedArgs['fechacotizacion_fin'] . ' 23:59:59');
         }
         
         //se obtienen toda la informacion de cotizaciones
         $arrCot = $this->Cotizacione->obtenerCotizaciones($arrFilter, $empresaId);
+        
+        $usuario = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
 
-        //se obtiene el listado de clientes
-        $arrCli = $this->Cliente->obtenerClienteEmpresa($empresaId);
-            
-        $this->set(compact('arrCot', 'arrCli'));
+        $this->set(compact('arrCot', 'arrCli', 'usuario'));
             
     }
 
@@ -372,6 +386,19 @@ class CotizacionesController extends AppController {
             }else{
                 echo json_encode(array('resp' => '1')); 
             }                  
+        }
+
+        public function search()
+        {
+            $url = array();
+            $url['action'] = 'index';
+
+            foreach ($this->data as $kk => $vv) {
+                $url[$kk] = $vv;
+            }
+
+            // redirect the user to the url
+            $this->redirect($url, null, true);
         }
 
 }
