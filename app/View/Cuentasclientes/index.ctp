@@ -33,7 +33,7 @@
                         </td>                        
                         <td class="<?php echo $cuentascliente['Cuentascliente']['limitecredito']; ?>"><?php echo h("$" . number_format($cuentascliente['Cuentascliente']['totalobligacion'],2)); ?>&nbsp;</td>
                         <td>
-                            <?php if ($cuentascliente['F']['factura'] == "1"){?>
+                            <?php if (!empty($cuentascliente['F']['consecutivodian'])){?>
                                 <?php echo $this->Html->link($cuentascliente['F']['prefijo'] . " " . $cuentascliente['F']['consecutivodian'], array('controller' => 'facturas', 'action' => 'view', $cuentascliente['F']['id'])); ?>
                             <?php } else {?>
                                 <?php echo $this->Html->link($cuentascliente['F']['prefijo'] . " " . $cuentascliente['F']['consecutivodv'], array('controller' => 'facturas', 'action' => 'view', $cuentascliente['F']['id'])); ?>

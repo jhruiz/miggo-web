@@ -206,10 +206,10 @@ endforeach;
     <tr>
         <td class="tableTdContent"><?php echo h($cuentasCli['CL']['nombre']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['TP']['descripcion']); ?></td>
-        <td class="tableTdContent"><?php echo h(!empty($cuentasCli['F']['consecutivodian']) ? $cuentasCli['F']['consecutivodian'] : $cuentasCli['F']['codigo']); ?></td>
+        <td class="tableTdContent"><?php echo h(!empty($cuentasCli['F']['consecutivodian']) ? $cuentasCli['F']['prefijo'] . $cuentasCli['F']['consecutivodian'] : $cuentasCli['F']['prefijo'] . $cuentasCli['F']['consecutivodv']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['totalobligacion']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['created']); ?></td>
-        <td class="tableTdContent"><?php echo h($cuentasCli['CL']['diascredito']); ?></td>
+        <td class="tableTdContent"><?php echo h(!empty($cuentasCli['CL']['diascredito']) ? $cuentasCli['CL']['diascredito'] : '30'); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['fechalimitepago']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['Cuentascliente']['diasvencido']); ?></td>
         <td class="tableTdContent"><?php echo h($cuentasCli['U']['nombre']); ?></td>
