@@ -26,6 +26,13 @@ $this->layout = 'inicio';
 
                     <div class="col-md-3">
                         <div class="form-group ">
+                            <label for="codigo">Código</label><br>
+                            <?php echo $this->Form->input('codigo', array('label' => false, 'name' => 'codigo','id' => 'codigo', 'class' => 'form-control', 'autocomplete' => 'off', 'placeholder' => 'Código de Producto')); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group ">
                             <label for="deposito">Bodega</label><br>
                             <?php echo $this->Form->input('deposito', array('label' => '', 'name' => 'deposito', 'empty' => 'Seleccione una', 'type' => 'select', 'options' => $depositos, 'class' => 'form-control')); ?>
                         </div>

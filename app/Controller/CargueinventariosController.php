@@ -46,6 +46,11 @@ class CargueinventariosController extends AppController {
                 $data['Producto.descripcion LIKE '] = '' . $this->passedArgs['producto'] . '%';
                 $producto = $this->passedArgs['producto'];
             }
+
+            if(isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != ""){
+                $data['Producto.codigo LIKE '] = '' . $this->passedArgs['codigo'] . '%';
+                $producto = $this->passedArgs['codigo'];
+            }
             
             if(isset($this->passedArgs['deposito']) && $this->passedArgs['deposito'] != ""){
                 $data['Cargueinventario.deposito_id'] = $this->passedArgs['deposito'];
