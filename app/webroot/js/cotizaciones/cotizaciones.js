@@ -4,6 +4,7 @@ var poblarTablaCotizacion = function ( valoresTabla ) {
         '<td>' + valoresTabla.descProd + '</td>' + 
         '<td>' + valoresTabla.codProd + '</td>' +                         
         '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="cant_' + valoresTabla.idReg + '" value="' + valoresTabla.cantProd + '" onblur="actCantPrdCot(this);">&nbsp;</td>' +
+        '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="unitfalt_' + valoresTabla.idReg + '" value="' + valoresTabla.unidadesFaltantes + '" disabled>&nbsp;</td>' + 
         '<td><input type="text" name="precio_' + valoresTabla.idReg + '" class="form-control numericPrice ttalUnit" id="precio_' + valoresTabla.idReg + '" value="' + valoresTabla.precioventa + '" onblur="actValUnitPrdCot(this);">&nbsp;</td>' +
         '<td><input type="text" name="total_' + valoresTabla.idReg + '" class="form-control ttales numericPrice ttalTotal" id="total_' + valoresTabla.idReg + '" value="' + valoresTabla.valAntesImp + '" readonly>&nbsp;</td>' +
         '<td><input type="text" name="pordtto_' + valoresTabla.idReg + '" class="form-control ttalPorDtto" id="pordtto_' + valoresTabla.idReg + '" value="' + valoresTabla.prcDsc + '" onblur="actualizarPorcentajeDttoCot(this);">&nbsp;</td>' +
@@ -247,7 +248,6 @@ var aprobarCotizacion = function() {
 var actCantPrdCot = function(data) {
     var arrData = data.id.split("_");
     var nuevaCant = $('#' + data.id).val();
-
     if (nuevaCant != "") {
         $.ajax({
             url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxActualizarCantidadCotiza',
@@ -258,6 +258,12 @@ var actCantPrdCot = function(data) {
                 if (resp.resp != '1') {
                     bootbox.alert('No fue posible actualizar el registro. Por favor, inténtelo de nuevo.');
                 } else {
+
+                    var unidadesFaltantes = parseFloat(resp.cotizacion['0'].Cotizacionesdetalle.cantidad) - parseFloat(resp.cotizacion['0'].CI.existenciaactual);
+                    unidadesFaltantes = unidadesFaltantes > 0 ? unidadesFaltantes : 0;
+
+                    $('#unitfalt_' + arrData['1']).val(unidadesFaltantes);
+
                     recalculoValoresTabla(arrData['1']);
                     calcularTtalCot();
                 }
@@ -387,10 +393,12 @@ var seleccionarProductoCotizacion = function(data) {
             type: "POST",
             success: function(response) {
                 var resp = JSON.parse(response);
+                var unidadesFaltantes = 0;
                 if (resp.valid == '1') {
 
                     var valoresTablaBC = obtenerValoresTablaCotizacion( resp.data.costoventa , resp.data.impuesto, resp.data.impoconsumo, resp.data.incbolsa, '1', '0' );
 
+                    unidadesFaltantes = parseFloat(resp.data.cantidad) - parseFloat(resp.prod.Cargueinventario.existenciaactual);  
                     var valoresTabla = {
                         idReg: resp.resp,
                         cantProd: '1',
@@ -405,7 +413,8 @@ var seleccionarProductoCotizacion = function(data) {
                         prcINC: resp.data.impoconsumo,
                         valINC: valoresTablaBC.valorINC,
                         varorINCBolsa: valoresTablaBC.varorINCBolsa,
-                        valorConIva: valoresTablaBC.precioUnitarioFinal
+                        valorConIva: valoresTablaBC.precioUnitarioFinal,
+                        unidadesFaltantes: unidadesFaltantes > 0 ? unidadesFaltantes : 0
                     }
 
                     poblarTablaCotizacion ( valoresTabla );
@@ -434,6 +443,7 @@ var obtenerDetalleCotizacion = function(id) {
 
                 if( resp.est ) {
 
+                    var unidadesFaltantes = 0;
                     resp.resp.forEach(element => {
                         var valoresTablaBC = obtenerValoresTablaCotizacion( element.Cotizacionesdetalle.costoventa, 
                                                                             element.Cotizacionesdetalle.impuesto, 
@@ -442,6 +452,9 @@ var obtenerDetalleCotizacion = function(id) {
                                                                             element.Cotizacionesdetalle.cantidad,
                                                                             element.Cotizacionesdetalle.porcentaje
                                                                          );
+
+                        
+                        unidadesFaltantes = element.Cotizacionesdetalle.cantidad - element.CI.existenciaactual;
 
                         var valoresTabla = {
                             idReg: element.Cotizacionesdetalle.id,
@@ -457,7 +470,8 @@ var obtenerDetalleCotizacion = function(id) {
                             prcINC: element.Cotizacionesdetalle.impoconsumo,
                             valINC: valoresTablaBC.valorINC,
                             varorINCBolsa: element.Cotizacionesdetalle.incbolsa,
-                            valorConIva: valoresTablaBC.precioUnitarioFinal
+                            valorConIva: valoresTablaBC.precioUnitarioFinal,
+                            unidadesFaltantes: unidadesFaltantes > 0 ? unidadesFaltantes : 0
                         }
 
                         poblarTablaCotizacion ( valoresTabla );

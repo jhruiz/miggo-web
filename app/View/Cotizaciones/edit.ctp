@@ -109,6 +109,7 @@
                                         <th><?php echo ('Nombre'); ?></th>
                                         <th><?php echo ('Código'); ?></th>
                                         <th><?php echo ('Cantidad'); ?></th>
+                                        <th><?php echo ('Unidades faltantes'); ?></th>
                                         <th><?php echo ('Precio unitario'); ?></th>
                                         <th><?php echo ('Precio unitario base'); ?></th>
                                         <th><?php echo ('% Dtto'); ?></th>
@@ -126,7 +127,7 @@
                                 </tbody>
                                 <tbody id="imp_bolsa">
                                     <tr>
-                                        <th colspan="11">&nbsp</th>
+                                        <th colspan="12">&nbsp</th>
                                         <th><b>INC Bolsa</b></th>
                                         <th class="text-right"><?php echo $this->Form->input('inp_imp_bolsa', array('type' => 'text', 'label' => false, 'class' => 'form-control numericPrice', 'value' => '', 'id' => 'inp_imp_bolsa', 'disabled' => true)); ?></th>
                                     </tr>
@@ -134,7 +135,7 @@
                                 <tbody id="resultCot">
                                     <tr>
                                         <th>&nbsp</th>
-                                        <th colspan="2"><b>TOTAL</b></th>
+                                        <th colspan="3"><b>TOTAL</b></th>
                                         <th class="text-right"><b class="thTUnit"></b></th>
                                         <th class="text-right"><b class="thTTotal"></b></th>
                                         <th>&nbsp;</th>

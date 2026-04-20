@@ -118,6 +118,7 @@ class CotizacionesController extends AppController {
             //se obtienen los datos de la cotizacion
             $arrCotiza = $this->Cotizacionesdetalle->obtenerCotizacionProductos($id);
 
+            $unidadesFaltantes = 0;
             for ($i = 0; $i < count($arrCotiza); $i++) {
 
                 $arrInfoProds = [
@@ -132,6 +133,10 @@ class CotizacionesController extends AppController {
                 $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
 
                 $arrCotiza[$i]['valoresBase'] = $objValoresBase;
+
+                //se calculan las unidades faltantes en stock para completar el pedido
+                $unidadesFaltantes = $arrCotiza[$i]['Cotizacionesdetalle']['cantidad'] - $arrCotiza[$i]['CI']['existenciaactual'];
+                $arrCotiza[$i]['Cotizacionesdetalle']['unidades_faltantes'] = $unidadesFaltantes > 0 ? $unidadesFaltantes : 0;
 
             }
             

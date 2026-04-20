@@ -169,5 +169,33 @@ class Cotizacionesdetalle extends AppModel {
             
             return $infoInventario;         
     }
+
+    /**
+     * 
+     */
+    public function obtenerInfoDetallesCotizaInventario($cotDetId) {
+        $arr_join = array();                        
+        
+        array_push($arr_join, array(
+            'table' => 'cargueinventarios',
+            'alias' => 'CI',
+            'type' => 'INNER',
+            'conditions' => array(
+                'Ci.id=Cotizacionesdetalle.cargueinventario_id'
+            )
+        ));  
+
+        $infoCotizacion = $this->find('all', array(
+            'joins' => $arr_join, 
+            'conditions' => array('Cotizacionesdetalle.id' => $cotDetId),
+                'fields' => array(
+                    'CI.*',
+                    'Cotizacionesdetalle.*'
+                ),
+            'recursive' => '-1'                
+            ));            
+        
+        return $infoCotizacion;   
+    }
    
 }

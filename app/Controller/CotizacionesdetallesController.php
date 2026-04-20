@@ -155,10 +155,12 @@ class CotizacionesdetallesController extends AppController {
 
         $resp = $this->Cotizacionesdetalle->crearDetalleCotizacion($data);
 
+        $infoDetalle = $this->Cotizacionesdetalle->obtenerInfoDetallesCotizaInventario($posData['cotDetId']);
+
         if($resp){
-            echo json_encode(array('resp' => '1'));
+            echo json_encode(array('resp' => '1', 'cotizacion' => $infoDetalle));
         }else{
-            echo json_encode(array('resp' => '0'));
+            echo json_encode(array('resp' => '0', 'cotizacion' => null));
         }                
     }   
     
@@ -215,7 +217,6 @@ class CotizacionesdetallesController extends AppController {
 
         /*Se obtienen los depositos en los cuales está el usuario*/
         $arrCotDet = $this->Cotizacionesdetalle->obtenerCotizacionProductos($cotizacionId);
-     
         echo json_encode(array('est' => true, 'resp' => $arrCotDet));             
     }        
 
