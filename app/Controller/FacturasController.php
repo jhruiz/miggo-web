@@ -2101,23 +2101,32 @@ class FacturasController extends AppController
     /**
      * Genera la información de las lineas de la factura
      */
-    public function obtenerDetalleLineas( $val, $arrImpuestos, $objValoresBase ){
+    public function obtenerDetalleLineas($val, $arrImpuestos, $objValoresBase) {
+        
+        // 1. Determinar si es una línea gratuita
+        $esGratuito = $objValoresBase['valorBaseUnitario'] > 0 ? false : true;
 
-        // Inicializa el array de productos con los valores proporcionados
+        // 2. Inicializa el array de productos con los valores proporcionados
         $arrProductos = [
             'unit_measure_id' => '70',
             'invoiced_quantity' => $val['Facturasdetalle']['cantidad'],
             'line_extension_amount' => $objValoresBase['valorBaseUnitario'],
-            'free_of_charge_indicator' => $objValoresBase['valorBaseUnitario'] > 0 ? false : true,
+            'free_of_charge_indicator' => $esGratuito,
             'tax_totals' => $arrImpuestos,
             'description' => $val['P']['descripcion'],
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
-            'price_amount' => ($objValoresBase['precioUnitarioFinal']/$val['Facturasdetalle']['cantidad']),
+            'price_amount' => ($objValoresBase['precioUnitarioFinal'] / $val['Facturasdetalle']['cantidad']),
             'base_quantity' => $val['Facturasdetalle']['cantidad']
         ];
-    
-        // Verifica si hay descuento y lo añade al array de productos si es necesario
+
+        // 3. AGREGAR CAMPO OBLIGATORIO PARA REGALOS / MUESTRAS GRATIS
+        // Si es gratuito, el estándar exige reference_price_id (3 = Valor Comercial)
+        if ($esGratuito) {
+            $arrProductos['reference_price_id'] = '3';
+        }
+
+        // 4. Verifica si hay descuento y lo añade al array
         if ($val['Facturasdetalle']['descuento'] > 0) {
             $arrProductos['allowance_charges']['0'] = [
                 "discount_id" => '1',
@@ -2127,9 +2136,9 @@ class FacturasController extends AppController
                 "base_amount" => number_format(($objValoresBase['valorBaseUnitario'] + $val['Facturasdetalle']['descuento']), 2, '.', '')
             ];
         }
-    
+
         return $arrProductos;
-    }    
+    }  
 
     function validateArrays(...$arrays){
         foreach ($arrays as $array) {
