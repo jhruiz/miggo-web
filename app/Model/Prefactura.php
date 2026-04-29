@@ -148,10 +148,6 @@ class Prefactura extends AppModel {
             // Si la prefactura esta en estado eliminar 0 se muestra el registro 
             $filters['Prefactura.eliminar'] = 0;
 
-            // if(!empty($usuarioId)){
-            //     $filters['Prefactura.usuario_id'] = $usuarioId;                
-            // }
-            
             $filters['U.empresa_id'] = $empresaId;                
 
             if(!empty($placa)){
@@ -203,6 +199,15 @@ class Prefactura extends AppModel {
                     'U.id = Prefactura.usuario_id'
                 )
             ));                      
+            
+            array_push($arr_join, array(
+                'table' => 'estadopedidos',
+                'alias' => 'EP',
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'EP.id = Prefactura.estadopedido_id'
+                )
+            ));                      
 
             $prefacturas = $this->find('all', array(
                 'joins' => $arr_join,
@@ -210,6 +215,8 @@ class Prefactura extends AppModel {
                     'CL.id',
                     'CL.nombre',
                     'VH.placa',
+                    'EP.id',
+                    'EP.descripcion',
                     'Prefactura.*'
                 ),
                 'conditions' => array($filters),
@@ -503,6 +510,27 @@ class Prefactura extends AppModel {
             
             $data['id'] = $prefactId;
             $data['estadoprefactura_id'] = $estadoId;
+            
+            if($prefactura->save($data)){
+                return '1';
+            }else{
+                return '0';
+            }
+        }     
+        
+        /**
+         * Actualiza el estado del pedido de la prefactura
+         * @param type $prefactId
+         * @param type $estadoId
+         * @return string
+         */
+        public function actualizarEstadoPedido($prefactId, $estadopedidoId){
+            $data = array();
+            
+            $prefactura = new Prefactura();
+            
+            $data['id'] = $prefactId;
+            $data['estadopedido_id'] = $estadopedidoId;
             
             if($prefactura->save($data)){
                 return '1';

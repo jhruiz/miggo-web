@@ -54,7 +54,7 @@
 
         <div id="infoLegal" style="margin:0px; width:100%; font-family:sans-serif; font-size:8px; float:center;" align="center">
             <div>NIT: <?php echo h($infoEmpresa['Empresa']['nit'] . " - " . $infoEmpresa['Empresa']['texto1']); ?></div>
-            <div><?php echo h($infoResolucion['Resolucionfactura']['nombredocumento']); ?>  <?php echo h($infoResolucion['Resolucionfactura']['resolucion']); ?></div>
+            <div>RESOLUCIÓN No.  <?php echo h($infoResolucion['Resolucionfactura']['resolucion']); ?></div>
             <div>
                 de <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . ", Prefijo: " . $infoFact['Factura']['prefijo'] . ", Rango " . $infoResolucion['Resolucionfactura']['resolucioninicia'] . " al " . $infoResolucion['Resolucionfactura']['resolucionfin']); ?> -
                 Vigencia Desde: <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . " Hasta: " . $infoResolucion['Resolucionfactura']['fechafin'])?>

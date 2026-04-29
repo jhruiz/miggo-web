@@ -287,7 +287,17 @@
                     </div>
 
                     <legend>&nbsp;</legend>
-                    
+
+                    <?php if($prefactura['Prefactura']['numeropedido'] > 0) {?>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <?php $estadoAct = !empty($prefactura['Prefactura']['estadopedido_id']) ? $prefactura['Prefactura']['estadopedido_id'] : "";?>
+                                <?php echo $this->Form->input('estadopedido', array('label' => 'Estados del Pedido', 'type' => 'select', 'options' => $estadosPedido, 'class' => 'form-control', 'default' => $estadoAct));?>
+                            </div>  
+                        </div>
+                        <legend>&nbsp;</legend>  
+                    <?php } ?>
+
                     <div class="row">
                         <label for="obs_fact">Observaciones</label>
                         <textarea id="obs_fact" name="data[Factura][observacion]" class="md-textarea form-control" rows="3"><?php echo($prefactura['Prefactura']['observacion'])?></textarea>                              

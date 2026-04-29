@@ -67,6 +67,8 @@
                                             <th><?php echo ('Fecha'); ?></th>
                                             <th><?php echo ('Tipo'); ?></th>
                                             <th><?php echo ('Estado'); ?></th>
+                                            <th><?php echo ('Estado Pedido'); ?></th>
+                                            <th><?php echo ('# Pedido'); ?></th>
                                             <th class="actions"><?php echo __('Acciones'); ?></th>
                                         </tr>
                                     </thead>
@@ -78,6 +80,8 @@
                                             <td><?php echo h($prefactura['Prefactura']['created']); ?>&nbsp;</td>
                                             <td><?php echo h(($prefactura['Prefactura']['esfactura'] == '1') ? "Factura" : "Documento de venta"); ?>&nbsp;</td>
                                             <td><?php echo h(!empty($prefactura['Prefactura']['estadoprefactura_id']) ? $estados[$prefactura['Prefactura']['estadoprefactura_id']] : ""); ?>&nbsp;</td>
+                                            <td><?php echo h($prefactura['EP']['descripcion']); ?>&nbsp;</td>
+                                            <td><?php echo h($prefactura['Prefactura']['numeropedido']); ?>&nbsp;</td>
                                             <td class="actions">
                                                 <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Orden de Compra', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $prefactura['Prefactura']['id']))); ?>
                                                 <?php

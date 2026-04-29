@@ -103,6 +103,7 @@ class PrefacturasController extends AppController {
             $this->loadModel('Cuenta');
             $this->loadModel('Configuraciondato');
             $this->loadModel('Estadosprefactura');
+            $this->loadModel('Estadopedido');
             $this->loadModel('Empresa');
             $this->loadModel('Canalventa');
             
@@ -146,6 +147,9 @@ class PrefacturasController extends AppController {
             // Se obtiene el listado de canal de ventas
             $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
+            // Se obtiene el listaod de estados del pedido
+            $estadosPedido = $this->Estadopedido->obtenerListaEstadoPedidos(); 
+
             // Datos de la orden
             $numOrden = $prefactura['Prefactura']['numeroorden'];
             $fechaOrden = $prefactura['Prefactura']['fechaorden'];
@@ -155,7 +159,7 @@ class PrefacturasController extends AppController {
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
 
-            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg', 'numOrden', 'fechaOrden'));
+            $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg', 'numOrden', 'fechaOrden', 'estadosPedido'));
             $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas')); 
 	}
 
@@ -628,6 +632,18 @@ class PrefacturasController extends AppController {
             $prefactId = $this->request->data['prefactId'];
             
             $resp = $this->Prefactura->actualizarEstadoPrefactura($prefactId, $estadoId);
+            
+            echo json_encode(array('resp' => $resp));
+        }
+        
+        public function ajaxActualizarEstadoPedido(){
+            $this->loadModel('Prefactura');
+            $this->autoRender = false;
+            
+            $estadopedidoId = $this->request->data['estadoPedidoId'];
+            $prefactId = $this->request->data['prefactId'];
+            
+            $resp = $this->Prefactura->actualizarEstadoPedido($prefactId, $estadopedidoId);
             
             echo json_encode(array('resp' => $resp));
         }
