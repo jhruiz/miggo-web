@@ -71,9 +71,6 @@
 
 <div class="miggo-login-container">
     <div class="login-panel animated fadeInLeft">
-        <div class="login-logo-central">
-            <img src="/img/png/miggo.png" alt="Logo Miggo">
-        </div>
 
         <?php echo $this->Session->flash('auth'); ?>
 
