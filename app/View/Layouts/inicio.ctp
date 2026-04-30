@@ -154,14 +154,6 @@
                         <span class="count_top"><?php echo $this->Html->link(__('PRODS. POR AGOTARSE'), array('controller' => 'cargueinventarios', 'action' => 'index')); ?></span>
                         <div><b><?php echo (number_format($productosBajos['0']['0']['contador'], 0)); ?></b></div>
                     </div>
-                    <?php if($infoEmp['Empresa']['vercuentasdb'] == '1') { ?>
-                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top">
-                                <?php echo $this->Form->input('accounts', array('label' => '','type' => 'select','options' => $listCuentas,'id' => 'account')); ?>
-                            </span>
-                            <b><span class="value_account number">0</span></b>
-                        </div>
-                    <?php } ?>
                 </div>
 
                 <div class="row">
