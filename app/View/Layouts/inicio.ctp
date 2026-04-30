@@ -61,40 +61,16 @@
     ?>
 
     <style type="text/css">
-        html, body { overflow-x: hidden !important; width: 100%; }
+        html, body { overflow-x: hidden !important; width: 100%; font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif; }
         .nav-sm .container.body .col-md-3.left_col { position: absolute !important; }
         .body.nav-sm .container.body .left_col{ position: absolute !important; }
         
-        /* --- ELIMINACIÓN DE RUIDO VISUAL (FRANJA Y TEXTO VERDE) --- */
+        /* Ocultar ruido visual */
         span[style*="background-color: rgb(153, 204, 0)"], 
         div[style*="background-color: white"],
-        .login .alert:empty { display: none !important; visibility: hidden !important; }
+        .alert:empty { display: none !important; }
 
-        /* --- LOGIN --- */
-        .login {
-            color: #ffffff !important;
-            width: 400px;
-            background-color: #000000 !important;
-            height: 100vh;
-            position: relative;
-            z-index: 10;
-        }
-        .bg {
-            background-image: url("/img/login.jpg");
-            height: 100vh;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            width: 100vw;
-            display: flex;
-        }
-        .vcenter {
-            margin: auto 0;
-            padding: 0 50px;
-            width: 100%;
-        }
-
-        /* --- DASHBOARD TILES --- */
+        /* Estilo Dashboard Tiles */
         .tile_count { margin-bottom: 20px; margin-top: 10px; }
         .tile_stats_count {
             background: #ffffff !important;
@@ -144,6 +120,7 @@
                 </div>
 
                 <div class="right_col" role="main">
+                    
                     <div class="row tile_count">
                         <?php foreach ($ordenTrabajos as $ot): ?>
                             <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count">
@@ -172,15 +149,16 @@
                             <span class="count_top"><?php echo $this->Html->link(__('PRODS. POR AGOTARSE'), array('controller' => 'cargueinventarios', 'action' => 'index')); ?></span>
                             <div><b><?php echo (number_format($productosBajos['0']['0']['contador'], 0)); ?></b></div>
                         </div>
-                      <?php if($infoEmp['Empresa']['vercuentasdb'] == '1') { ?>
-                          <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                              <span class="count_top">
-                                  <?php echo $this->Form->input('accounts', array('label' => '','type' => 'select','options' => $listCuentas,'id' => 'account')); ?>
-                              </span>
-                              <b><div class="value_account number">0</div></b>
-                          </div>
-                      <?php } ?>
+                        <?php if($infoEmp['Empresa']['vercuentasdb'] == '1') { ?>
+                            <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                                <span class="count_top">
+                                    <?php echo $this->Form->input('accounts', array('label' => '','type' => 'select','options' => $listCuentas,'id' => 'account')); ?>
+                                </span>
+                                <div><b><span class="value_account number">0</span></b></div>
+                            </div>
+                        <?php } ?>
                     </div>
+
                     <div class="row">
                         <div class="col-md-12"><?php echo $this->fetch('content'); ?></div>
                     </div>
@@ -192,17 +170,7 @@
             </div>
         </div>
     <?php else: ?>
-        <div class="bg">
-            <div class="login">
-                <div class="vcenter">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <img src="/img/png/miggo.jpeg" alt="Logo" style="width: 250px;">
-                    </div>
-                    <?php echo $this->Session->flash(); ?>
-                    <?php echo $this->fetch('content'); ?>
-                </div>
-            </div>
-        </div>
+        <?php echo $this->fetch('content'); ?>
     <?php endif; ?>
 
     <header>
