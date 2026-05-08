@@ -13,6 +13,7 @@ function obtenerDatosGraficos(){
     type: 'POST',
     url: $('#url-proyecto').val() + 'reportes/estadisticastortas',
     data: dates,
+    async: false,
     success: function(data) {
       var respuesta = JSON.parse(data);     
 
@@ -22,6 +23,7 @@ function obtenerDatosGraficos(){
           var divTorta = generarDiv(respuesta.resp[prop].titulo);
           $('#graficos').append(divTorta);
           generarGraficoTorta(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
+          // generarGraficoBarras(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
         }
 
       }
@@ -30,56 +32,121 @@ function obtenerDatosGraficos(){
 }
 
 function generarDiv(idDiv){
-
-  var divHtml = "";
-
-  divHtml = '<div class="col-md-6 col-sm-4 col-xs-12">';
-  divHtml += '<div class="x_panel">';
-  divHtml += '<div class="x_title">';
-  divHtml += '<h2><b>' + idDiv.toUpperCase() + '</b></h2>';
-  divHtml += '</div>';
-  divHtml += '<div class="x_content">';
-  divHtml += '<div id="' + idDiv + '" style="height:450px;"></div>';
-  divHtml += '</div>';
-  divHtml += '</div>';
-  divHtml += '</div>';
-
-  return divHtml;
+    return `
+    <div class="col-md-4 col-sm-6" style="margin-bottom: 15px; padding: 5px;">
+        <div class="card shadow-sm" style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff;">
+            <div class="card-header bg-white py-2" style="border-bottom: 1px solid #eee;">
+                <h4 class="card-title mb-0" style="font-size: 12px; color: #333;">
+                    <b><i class="fa fa-pie-chart text-primary"></i> ${idDiv.toUpperCase()}</b>
+                </h4>
+            </div>
+            <div class="card-body" style="padding: 10px; background-color: #fcfcfc;">
+                <div id="${idDiv}" style="height:300px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>`;
 }
 
-function generarGraficoTorta(idDiv, legend_data, series_data){
+function generarGraficoTorta(idDiv, legend_data, series_data) {
+    var chartDom = document.getElementById(idDiv);
+    
+    // 1. Limpiar instancia previa si existe (evita errores de duplicados)
+    var instance = echarts.getInstanceByDom(chartDom);
+    if (instance) {
+        instance.dispose();
+    }
 
-  var colorPalette = [
-    '#FF0000','#F58634','#FFFF00','#0065D9','#00FFFF',
-    '#00FF00','#9900CC','#000000','#e4ef6b','#b5223d',
-    '#31ce18','#c9d9ff','#4ba2e5','#5379c6','#f98d66',
-    '#9a6bef','#d341b1','#e55242','#fcbfcb','#dd7b39'
-];
- 
-  var myChart = echarts.init(document.getElementById(idDiv), theme);
-  myChart.setOption({
-      
-    color: colorPalette,
+    var myChart = echarts.init(chartDom);
+    
+    var option = {
+        // Ahora puedes usar paletas mucho más limpias
+        color: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+        tooltip: { trigger: 'item' },
+        series: [{
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: true,
+            itemStyle: {
+                borderRadius: 8, // Bordes mucho más suaves
+                borderColor: '#fff',
+                borderWidth: 2
+            },
+            label: {
+                show: true,
+                formatter: '{b}: {d}%'
+            },
+            emphasis: {
+                label: {
+                    show: true,
+                    fontSize: '14',
+                    fontWeight: 'bold'
+                }
+            },
+            data: series_data
+        }]
+    };
 
-      tooltip: {
-        trigger: 'item',
-        formatter: "CANTIDAD: {c} <br/> {d}%"
-      },
-      legend: {
-        x: 'center',
-        y: 'bottom',
-        data: legend_data        
-      },
-      series: [{
-        name: idDiv,
-        type: 'pie',
-        radius: [30, 110],
-        center: ['50%', '50%'], //left,top
-        roseType: 'radius',
-        data: series_data
-      }]
-    });   
+    myChart.setOption(option);
+    
+    // 2. Hacer que el gráfico sea responsivo (se ajuste si cambias el tamaño de la ventana)
+    window.addEventListener('resize', function() {
+        myChart.resize();
+    });
+}
 
+function generarGraficoBarras(idDiv, legend_data, series_data){
+    var colorPalette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'];
+    var myChart = echarts.init(document.getElementById(idDiv));
+
+    myChart.setOption({
+        color: colorPalette,
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' }
+        },
+        grid: {
+            left: '3%',
+            right: '10%',
+            bottom: '5%',
+            top: '5%',
+            containLabel: true // Esto evita que los nombres largos se corten a la izquierda
+        },
+        xAxis: {
+            type: 'value',
+            splitLine: { show: false }, // Quitamos las líneas de fondo para que sea más limpio
+            axisLabel: { show: true }
+        },
+        yAxis: {
+            type: 'category',
+            data: legend_data, // Aquí van los nombres
+            axisTick: { show: false },
+            axisLine: { lineStyle: { color: '#ddd' } },
+            axisLabel: { 
+                fontSize: 11,
+                color: '#444'
+            }
+        },
+        series: [{
+            name: 'Cantidad',
+            type: 'bar',
+            data: series_data.map(item => item.value), // Extraemos solo los valores numéricos
+            barMaxWidth: 25, // Para que no se vean excesivamente gruesas si hay pocos datos
+            itemStyle: {
+                // Un degradado sutil y bordes redondeados a la derecha
+                borderRadius: [0, 5, 5, 0],
+                color: function(params) {
+                    // Esto aplica los colores de tu paleta a cada barra individualmente
+                    return colorPalette[params.dataIndex % colorPalette.length];
+                }
+            },
+            label: {
+                show: true,
+                position: 'right', // Muestra el número al final de la barra
+                formatter: '{c}',
+                textStyle: { fontWeight: 'bold', color: '#555' }
+            }
+        }]
+    });
 }
 
 var clearDate = function() {

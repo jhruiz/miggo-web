@@ -29,6 +29,7 @@
     echo $this->Html->css('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css', array('rel' => 'stylesheet'));
     echo $this->Html->script('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js');
     echo $this->Html->script('https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/lang/summernote-es-ES.min.js');
+    echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js');
 
     echo $this->Html->script('menu');
     echo $this->Html->script('modalCargar');
@@ -55,7 +56,7 @@
     echo $this->Html->script('template/js/custom.js');
     echo $this->Html->script('template/js/flot/jquery.flot.js');
     echo $this->Html->script('template/js/flot/jquery.flot.resize.js');
-    echo $this->Html->script('template/js/echart/echarts-all.js');
+    // echo $this->Html->script('template/js/echart/echarts-all.js');
     echo $this->Html->script('template/js/echart/green.js');
     echo $this->Html->script('template/js/bootstrap.min.js');
     ?>
@@ -88,6 +89,36 @@
 
         /* AJUSTE BARRA SUPERIOR */
         .nav_menu { margin-bottom: 0 !important; padding: 2px 0 !important; }
+
+        /* Para que los HR no corten tan fuerte */
+        hr {
+            border-top: 1px solid #eee;
+            margin: 25px 0;
+        }
+
+        /* Para que los labels se vean más profesionales */
+        label.font-weight-bold {
+            color: #555;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Suavizar los bordes de los inputs */
+        .form-control {
+            border-radius: 6px;
+            border: 1px solid #dce1e5;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: none;
+        }
+
+
     </style>
 </head>
 

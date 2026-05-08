@@ -3,37 +3,22 @@
 <?php
     $this->layout='inicio';
 ?>
-<div class='container-fluid'>
 
+<div class="container-fluid" style="padding-top: 20px;">
 
-    <?php if( $infoResolucion['porFecha'] != "" || $infoResolucion['porDias'] != "" ) { ?>
-        <div class="alert alert-danger" role="alert" style="margin-top: 15px;">
-            <?php if( isset($infoResolucion['porFecha']) && $infoResolucion['porFecha'] != "" ) { ?>
-                <div>
-                    <?php echo($infoResolucion['porFecha']); ?>
-                </div>
-            <?php } ?>
-
-            <?php if( isset($infoResolucion['porDias']) && $infoResolucion['porDias'] != "" ) { ?>
-                <div>
-                    <?php echo($infoResolucion['porDias']); ?>
-                </div>
-            <?php } ?>
-
-        </div> 
-    <?php } ?>
-
-    <div class='row'>    
-        <div class="form-group col-md-3">
-            <label for="fechaInicial">Fecha Inicial</label><br>
-            <input id="fechaInicial" autocomplete="off" class="date form-control" placeholder="Fecha inicial" type="text">
+    <div class="card-moderna" style="padding: 15px; margin-bottom: 20px;">
+        <div class="row">
+            <div class="form-group col-md-3 mb-0">
+                <label class="small"><b>FECHA INICIAL</b></label>
+                <input id="fechaInicial" class="date form-control" placeholder="YYYY-MM-DD" type="text">
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                <label class="small"><b>FECHA FINAL</b></label>
+                <input id="fechaFinal" class="date form-control" placeholder="YYYY-MM-DD" type="text">
+            </div>
         </div>
-
-        <div class="form-group col-md-3">
-            <label for="fechaFinal">Fecha Final</label><br>
-            <input id="fechaFinal" autocomplete="off" class="date form-control" placeholder="Fecha final" type="text">
-        </div>    
     </div>
 
+    <div id="graficos" class="row"></div>
+
 </div>
-<div id="graficos" style="magin:20px;"></div>

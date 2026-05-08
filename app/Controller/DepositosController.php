@@ -22,43 +22,43 @@ class DepositosController extends AppController {
  * @return void
  */
 	public function index() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            	
-            $this->loadModel('Usuario');
-            $this->loadModel('Ciudade');
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             
-            if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
-                $paginate['LOWER(Deposito.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
-            }
-            
-            if(isset($this->passedArgs['encargado']) && $this->passedArgs['encargado'] != ""){
-                $paginate['Deposito.usuario_id'] = $this->passedArgs['encargado'];
-            }
+        $this->loadModel('Usuario');
+        $this->loadModel('Ciudade');
+        
+        if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
+            $paginate['LOWER(Deposito.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
+        }
+        
+        if(isset($this->passedArgs['encargado']) && $this->passedArgs['encargado'] != ""){
+            $paginate['Deposito.usuario_id'] = $this->passedArgs['encargado'];
+        }
 
-            if(isset($this->passedArgs['ciudad']) && $this->passedArgs['ciudad'] != ""){
-                $paginate['Deposito.ciudade_id'] = $this->passedArgs['ciudad'];
-            }            
-            
-            $empresaId = $this->Auth->user('empresa_id');
-            
-            //se obtienen los usuarios de la empresa
-            $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
-            
-            //se obtiene el listado de ciudades
-            $ciudades = $this->Ciudade->obtenerListaCiudades();
-            
-            $nombre = $this->passedArgs['nombre'];
-            $ciudad = $this->passedArgs['ciudad'];
-            $encargado = $this->passedArgs['encargado'];
+        if(isset($this->passedArgs['ciudad']) && $this->passedArgs['ciudad'] != ""){
+            $paginate['Deposito.ciudade_id'] = $this->passedArgs['ciudad'];
+        }            
+        
+        $empresaId = $this->Auth->user('empresa_id');
+        
+        //se obtienen los usuarios de la empresa
+        $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+        
+        //se obtiene el listado de ciudades
+        $ciudades = $this->Ciudade->obtenerListaCiudades();
+        
+        $nombre = $this->passedArgs['nombre'];
+        $ciudad = $this->passedArgs['ciudad'];
+        $encargado = $this->passedArgs['encargado'];
 
 
-            $paginate['Deposito.empresa_id'] = $empresaId;
-            $this->Deposito->recursive = 0;
-            $this->set('depositos', $this->Paginator->paginate('Deposito',$paginate));
-            $this->set(compact('usuarios', 'ciudades','nombre','ciudad','encargado'));
+        $paginate['Deposito.empresa_id'] = $empresaId;
+        $this->Deposito->recursive = 0;
+        $this->set('depositos', $this->Paginator->paginate('Deposito',$paginate));
+        $this->set(compact('usuarios', 'ciudades','nombre','ciudad','encargado'));
 	}
 
 /**
@@ -87,10 +87,12 @@ class DepositosController extends AppController {
  * @return void
  */
 	public function add() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+        $this->loadModel('Paisesmiggo');
+
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             	
 		if ($this->request->is('post')) {
                     $this->request->data['Deposito']['numresolucionactual'] = $this->request->data['Deposito']['resolucioninicia'];
@@ -106,13 +108,14 @@ class DepositosController extends AppController {
                 $arrEmpresa = $this->Auth->user('Empresa');
                 $empresaId = $arrEmpresa['id'];
                 
-		$ciudades = $this->Deposito->Ciudade->find('list');
+		// $ciudades = $this->Deposito->Ciudade->find('list');
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
 		$estados = $this->Deposito->Estado->find('list');
 		$usuarios = $this->Deposito->Usuario->obtenerUsuarioEmpresa($empresaId);
 		$tipodepositos = $this->Deposito->Tipodeposito->obtenerDepositoEmpresa($empresaId);
 		$regimenes = $this->Deposito->Regimene->find('list');
 		$clientes = $this->Deposito->Cliente->find('list');
-		$this->set(compact('empresaId', 'ciudades', 'estados', 'usuarios', 'tipodepositos', 'regimenes', 'clientes'));
+		$this->set(compact('empresaId', 'paises', 'estados', 'usuarios', 'tipodepositos', 'regimenes', 'clientes'));
 	}
 
 /**
