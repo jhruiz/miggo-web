@@ -64,9 +64,9 @@ class Cliente extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Ciudade' => array(
-			'className' => 'Ciudade',
-			'foreignKey' => 'ciudade_id',
+		'Ciudadesmiggo' => array(
+			'className' => 'Ciudadesmiggo',
+			'foreignKey' => 'ciudadesmiggo_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

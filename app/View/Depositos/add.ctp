@@ -40,19 +40,19 @@
                     <div class="col-md-4">
                         <div class="form-group mb-3">
                             <label class="font-weight-bold">País</label>
-                            <?php echo $this->Form->input('pais_id', array('label' => false, 'class' => 'form-control select2', 'empty' => 'Seleccione País', 'options' => $paises, 'onchange' => 'obtenerDptos();')); ?>
+                            <?php echo $this->Form->input('pais_id', array('label' => false, 'class' => 'form-control select2 selectPais', 'empty' => 'Seleccione País', 'options' => $paises, 'onchange' => 'obtenerDptos();')); ?>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group mb-3">
                             <label class="font-weight-bold">Departamento</label>
-                            <?php echo $this->Form->input('departamento_id', array('label' => false, 'class' => 'form-control select2', 'empty' => 'Seleccione Departamento', 'onchange' => 'obtenerCiudades();')); ?>
+                            <?php echo $this->Form->input('departamento_id', array('label' => false, 'class' => 'form-control select2 selectDpto', 'empty' => 'Seleccione Departamento', 'onchange' => 'obtenerCiudades();')); ?>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group mb-3">
                             <label class="font-weight-bold">Ciudad</label>
-                            <?php echo $this->Form->input('ciudade_id', array('label' => false, 'class' => 'form-control select2', 'empty' => 'Seleccione Ciudad')); ?>
+                            <?php echo $this->Form->input('ciudade_id', array('label' => false, 'class' => 'form-control select2 selectCiudad', 'empty' => 'Seleccione Ciudad')); ?>
                         </div>
                     </div>
                 </div>

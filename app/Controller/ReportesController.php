@@ -26,16 +26,17 @@ class ReportesController extends AppController
         } 
 
         $tortas = [];
+        $barras = [];
 
-        $tortas[] = $this->obtnerAlertasOrdenes($fechaIncial, $fechaFinal);
+        $barras[] = $this->obtnerAlertasOrdenes($fechaIncial, $fechaFinal);
 
-        $tortas[] = $this->obtenerTecnicosOrdenes($fechaIncial, $fechaFinal);
+        $barras[] = $this->obtenerTecnicosOrdenes($fechaIncial, $fechaFinal);
 
-        $tortas[] = $this->obtenerClientesVisitas($fechaIncial, $fechaFinal);
+        $barras[] = $this->obtenerClientesVisitas($fechaIncial, $fechaFinal);
 
-        $tortas[] = $this->obtenerVentasProductos($fechaIncial, $fechaFinal);
+        $barras[] = $this->obtenerVentasProductos($fechaIncial, $fechaFinal);
 
-        $tortas[] = $this->obtenerVentasServicios($fechaIncial, $fechaFinal);
+        $barras[] = $this->obtenerVentasServicios($fechaIncial, $fechaFinal);
 
         $empresaId = $this->Auth->user('empresa_id');
         $bodegas = $this->Deposito->obtenerBodegasEstadisticas($empresaId);
@@ -43,7 +44,7 @@ class ReportesController extends AppController
             $tortas[] = $this->obtenerUtilidadBodegas($key, $val, $fechaIncial, $fechaFinal);
         }
 
-        echo json_encode(array('resp' => $tortas));
+        echo json_encode(array('tortas' => $tortas, 'barras' => $barras));
 
     }
 

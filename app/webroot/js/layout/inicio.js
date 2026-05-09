@@ -41,23 +41,12 @@ var intervalUsoAplicacion=0;
                     if(!data.success){                        
                         ///Si la sesion esta inactiva se detiene el setInterval y se direcciona a la pantalla de loggin
                         clearInterval(idIntervalVerificaSesion);                        
-//                        bootbox.alert(
-//                            "La sesion ha expirado, por favor ingrese de nuevo.",
-//                            function(){
                                 location.href=$('#url-proyecto').val() + 'usuarios/logout';   
-//                            }
-//                        );                                                              
                     }
                  },"json"
             ).fail(function(data){
                 clearInterval(idIntervalVerificaSesion);
-//                bootbox.alert(
-//                    "La sesion ha expirado, por favor ingrese de nuevo.",
-//                    function(){
                         location.href=$('#url-proyecto').val() + 'usuarios/logout';                
-//                    }
-//                );
-                
             });
         }else{
             ///Si esta en la pantalla de loggin se cancela el setInterval
@@ -70,7 +59,6 @@ var intervalUsoAplicacion=0;
         ///Se verifica si la sesion ha expirado, se pone en milisegundos el mismo tiempo q expira la sesion configurado en el cakephp mas 1 segundo y medio
         idIntervalVerificaSesion=setInterval(
                 verificarSesion,61500
-//              61500
         );
     }
     
@@ -103,9 +91,6 @@ var intervalUsoAplicacion=0;
     }    
     
     $(document).ready(function () {   
-       
-        //validarusoaplicacion();
-        //verificarSesionIntervaloTiempo();
 
         obtenerValorCaja();
 

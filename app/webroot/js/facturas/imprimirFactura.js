@@ -64,8 +64,8 @@ var imprimirFactura = function() {
             
             // Información de la fecha y legal
             mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
-            mywindow.document.write('<div>' + prefact.resp['0'].CIU.descripcion + ', ');
-            mywindow.document.write(prefact.resp['0'].PAI.descripcion + ', ');
+            mywindow.document.write('<div>' + prefact.resp['0'].CIU.nombre + ' (' + prefact.resp['0'].DPTO.descripcion + ')' + ' - ');
+            mywindow.document.write(prefact.resp['0'].PAI.nombre + ', ');
             mywindow.document.write(fechaActual + '</div>');
             mywindow.document.write('<div>' + prefact.resp['0'].EM.texto1 + '</div>');
             
@@ -341,8 +341,8 @@ var imprimirDocumentoEquivalente = function() {
 
             // FECHA Y LUGAR
             mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
-            mywindow.document.write('<div>' + prefact.resp['0'].CIU.descripcion + ', ');
-            mywindow.document.write(prefact.resp['0'].PAI.descripcion + ', ');
+            mywindow.document.write('<div>' + prefact.resp['0'].CIU.nombre + ' (' + prefact.resp['0'].DPTO.descripcion + ')' + ' - ');
+            mywindow.document.write(prefact.resp['0'].PAI.nombre + ', ');
             mywindow.document.write(fechaActual + '</div>');
             
             // DATOS DEL CLIENTE (Lógica original conservada, estilos mejorados)

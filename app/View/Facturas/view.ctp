@@ -47,7 +47,7 @@
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b></div>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __("NIT: " . $infoRemision['Relacionempresa']['nit']); ?></b></div>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['direccion']); ?></b></div>
-            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion']); ?></b></div>
+            <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre']); ?></b></div>
             <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoRemision['Relacionempresa']['telefono1']); ?></b></div>
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoEmpresa['Empresa']['nombre']); ?></b></div>
@@ -60,7 +60,7 @@
                 Vigencia Desde: <?php echo h($infoResolucion['Resolucionfactura']['fechainicio'] . " Hasta: " . $infoResolucion['Resolucionfactura']['fechafin'])?>
             </div>
             <div>REPRESENTACIÓN GRÁFICA DE FACTURA ELECTRÓNICA</div>
-            <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudade']['descripcion'] . " - " . $arrUbicacion['0']['P']['descripcion'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
+            <div><?php echo h($infoEmpresa['Empresa']['direccion'] . " - " . $arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre'] . " - " . $infoEmpresa['Empresa']['telefono1']);?></div>
             <div>E-mail: <?php echo h($infoEmpresa['Empresa']['email']);?></div>
         </div>
 
@@ -69,13 +69,13 @@
         <?php if($infoFact['Factura']['factura']){ ?>
         <div style="width:100%; float:left; margin:0px; margin-top:10px;" align="center">
             <div><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div> 
-            <div> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
+            <div> <?php echo __($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre'] . ", " . $fechaActual); ?> Emitido a la DIAN </div>
         </div>
         <input id="tipoVenta" type="hidden" value="1">
         <?php }else{?>
         <div style="width:100%; float:left; margin:0px" align="center"><b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b></div>  
         <div style="width:100%; float:left; margin:0px" align="center"><?php echo __($infoEmpresa['Empresa']['texto1']); ?></div>
-        <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual); ?></div>  
+        <div style="width:100%; float:left; margin:0px" align="center"> <?php echo __($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre'] . ", " . $fechaActual); ?></div>  
         <input id="tipoVenta" type="hidden" value="2">
         <?php }?>
         
@@ -402,11 +402,14 @@
         <div id="dvNota" align="center" style="margin-top:10px;">
 
             <?php if($infoFact['Factura']['diancufe']) { ?>
-                <div align="center">
-                    <small>
-                    <div><?php echo('CUFE ' . $infoFact['Factura']['diancufe']); ?></div>
-                    </small>
-                </div>
+            <div align="center">
+                <small>
+                    <div style="word-wrap: break-word; width: 100%; max-width: 250px; margin: 0 auto;">
+                        <strong>CUFE:</strong><br>
+                        <?php echo($infoFact['Factura']['diancufe']); ?>
+                    </div>
+                </small>
+            </div>
 
                 <div style="margin-top:10px;" align="center" class="qr_imp"></div>
             <?php } ?>
@@ -521,7 +524,7 @@
         
         <div style="width:100%; float:left; margin-top: 5px;">
             <?php
-            echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion'] . ", " . $fechaActual);
+            echo __($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre'] . ", " . $fechaActual);
             ?>
         </div>                                
         
@@ -694,7 +697,7 @@
             <b><?php echo __($infoRemision['Relacionempresa']['representantelegal']); ?></b><br>
             <b>NIT: <?php echo h($infoRemision['Relacionempresa']['nit']); ?></b><br>
             <?php echo h($infoRemision['Relacionempresa']['direccion']); ?><br>
-            <?php echo h($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $arrUbicacion['0']['P']['descripcion']); ?><br>
+            <?php echo h($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . " - " . $arrUbicacion['0']['P']['nombre']); ?><br>
             <?php echo h($infoRemision['Relacionempresa']['telefono1']); ?>
         <?php } else { ?>
             <b><?php echo h($infoEmpresa['Empresa']['nombre']); ?></b><br>
@@ -713,7 +716,7 @@
 
     <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 5px 0; text-align:center;">
         <b><?php echo __($infoResolucion['Resolucionfactura']['nombredocumento'] . ' ' . $infoFact['Factura']['prefijo'] . ' ' . $consecutivoFact) ?></b><br>
-        <span style="font-size: 10px;"><?php echo __($arrUbicacion['0']['Ciudade']['descripcion'] . ", " . $fechaActual); ?></span>
+        <span style="font-size: 10px;"><?php echo __($arrUbicacion['0']['Ciudadesmiggo']['nombre'] . " (" . $arrUbicacion['0']['D']['descripcion'] . ")" . ", " . $fechaActual); ?></span>
         <?php if($infoFact['Factura']['factura']){ echo "<br>Emitido a la DIAN"; } ?>
     </div>
 

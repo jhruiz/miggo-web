@@ -28,7 +28,7 @@ class DepositosController extends AppController {
         $usuariosController->registraractividad($usuarioAct);
             
         $this->loadModel('Usuario');
-        $this->loadModel('Ciudade');
+        $this->loadModel('Paisesmiggo');
         
         if(isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != ""){
             $paginate['LOWER(Deposito.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre']) . '%';
@@ -48,17 +48,15 @@ class DepositosController extends AppController {
         $usuarios = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
         
         //se obtiene el listado de ciudades
-        $ciudades = $this->Ciudade->obtenerListaCiudades();
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
         
         $nombre = $this->passedArgs['nombre'];
         $ciudad = $this->passedArgs['ciudad'];
         $encargado = $this->passedArgs['encargado'];
-
-
         $paginate['Deposito.empresa_id'] = $empresaId;
         $this->Deposito->recursive = 0;
         $this->set('depositos', $this->Paginator->paginate('Deposito',$paginate));
-        $this->set(compact('usuarios', 'ciudades','nombre','ciudad','encargado'));
+        $this->set(compact('usuarios', 'paises','nombre','ciudad','encargado'));
 	}
 
 /**
@@ -126,10 +124,12 @@ class DepositosController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+        $this->loadModel('Paisesmiggo');
+
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Deposito->exists($id)) {
 			throw new NotFoundException(__('La bodega no existe.'));
@@ -146,17 +146,18 @@ class DepositosController extends AppController {
 			$this->request->data = $this->Deposito->find('first', $options);
 		}
                 
-                /*Se obtiene la empresa del usuario logueado*/
-                $arrEmpresa = $this->Auth->user('Empresa');
-                $empresaId = $arrEmpresa['id'];
+        /*Se obtiene la empresa del usuario logueado*/
+        $arrEmpresa = $this->Auth->user('Empresa');
+        $empresaId = $arrEmpresa['id'];
                 
-		$ciudades = $this->Deposito->Ciudade->find('list');
+        //se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
 		$estados = $this->Deposito->Estado->find('list');
 		$usuarios = $this->Deposito->Usuario->obtenerUsuarioEmpresa($empresaId);
 		$tipodepositos = $this->Deposito->Tipodeposito->obtenerDepositoEmpresa($empresaId);
 		$regimenes = $this->Deposito->Regimene->find('list');
 		$clientes = $this->Deposito->Cliente->find('list');
-		$this->set(compact('empresaId', 'ciudades', 'estados', 'usuarios', 'tipodepositos', 'regimenes', 'clientes'));
+		$this->set(compact('empresaId', 'paises', 'estados', 'usuarios', 'tipodepositos', 'regimenes', 'clientes'));
 	}
 
 /**

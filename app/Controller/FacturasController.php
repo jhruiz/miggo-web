@@ -144,8 +144,7 @@ class FacturasController extends AppController
         $this->loadModel('Vehiculo');
         $this->loadModel('Tipovehiculo');
         $this->loadModel('Marcavehiculo');
-        $this->loadModel('Paise');
-        $this->loadModel('Ciudade');
+        $this->loadModel('Ciudadesmiggo');
         $this->loadModel('FacturaCuentaValore');
         $this->loadModel('Abonofactura');
         $this->loadModel('Deposito');
@@ -249,11 +248,8 @@ class FacturasController extends AppController
         //se obtiene la fecha actual
         $fechaActual = $this->formatoFecha($infoFact['Factura']['created']);
 
-        //se obtiene el pais segun la ciudad
-        $arrPais = $this->Paise->obtenerListaPaises();
-
         //se obtiene la ciudad y el pais
-        $arrUbicacion = $this->Ciudade->obtenerCiudadPais($infoEmpresa['Empresa']['ciudade_id']);
+        $arrUbicacion = $this->Ciudadesmiggo->obtenerUbicacion($infoEmpresa['Empresa']['ciudade_id']);
 
         $arrInfoOrd = array();
         /*Se valida si existe una orden de trabajo relacionada*/

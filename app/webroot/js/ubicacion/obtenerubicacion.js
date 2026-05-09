@@ -1,13 +1,13 @@
 var obtenerDptos = function() {
 
-    var pais = $('#DepositoPaisId').val();
+    var pais = $('.selectPais').val();
     $.ajax({
         type: 'POST',
         url: $('#url-proyecto').val() + 'departamentos/obtenerdepartamentos',
         data: {pais: pais},
         success: function(data) {
             var respuesta = JSON.parse(data);
-            var $select = $('#DepositoDepartamentoId'); // O el ID que genere CakePHP (normalmente CamelCase)
+            var $select = $('.selectDpto'); // O el ID que genere CakePHP (normalmente CamelCase)
 
             // 1. Limpiar el select actual y dejar la opción vacía
             $select.find('option').remove();
@@ -29,14 +29,14 @@ var obtenerDptos = function() {
 }
 
 var obtenerCiudades = function() {
-    var dpto = $('#DepositoDepartamentoId').val();
+    var dpto = $('.selectDpto').val();
     $.ajax({
         type: 'POST',
         url: $('#url-proyecto').val() + 'ciudadesmiggos/obtenerciudades',
         data: {dpto: dpto},
         success: function(data) {
             var respuesta = JSON.parse(data);
-            var $select = $('#DepositoCiudadeId'); // O el ID que genere CakePHP (normalmente CamelCase)
+            var $select = $('.selectCiudad'); // O el ID que genere CakePHP (normalmente CamelCase)
 
             // 1. Limpiar el select actual y dejar la opción vacía
             $select.find('option').remove();

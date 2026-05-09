@@ -105,8 +105,8 @@ class Deposito extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Ciudade' => array(
-			'className' => 'Ciudade',
+		'Ciudadesmiggo' => array(
+			'className' => 'Ciudadesmiggo',
 			'foreignKey' => 'ciudade_id',
 			'conditions' => '',
 			'fields' => '',

@@ -23,7 +23,8 @@ class ProveedoresController extends AppController {
  */
 	public function index() {
 		$this->loadModel('Regimene');
-
+		$this->loadModel('Paisesmiggo');
+		
 		/*se reagistra la actividad del uso de la aplicacion*/
 		$usuariosController = new UsuariosController();
 		$usuarioAct = $this->Auth->user('id');
@@ -44,8 +45,8 @@ class ProveedoresController extends AppController {
 			$paginate['Proveedore.ciudade_id'] = $this->passedArgs['ciudad'];
 		}            
 		
-		//Se obtiene el listado de ciudades
-		$ciudades = $this->Ciudade->obtenerListaCiudades();
+        //se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
 		
 		$paginate['Proveedore.empresa_id'] = $empresaId;
 		$this->Proveedore->recursive = 0;  
@@ -57,7 +58,7 @@ class ProveedoresController extends AppController {
 
 		$this->set(compact('nombre','nit', 'ciudad', 'regimen'));
 		$this->set('proveedores', $this->Paginator->paginate('Proveedore',$paginate));
-		$this->set(compact('ciudades'));
+		$this->set(compact('paises'));
 	}
 
 /**
@@ -86,6 +87,7 @@ class ProveedoresController extends AppController {
  * @return void
  */
 	public function add() {
+		$this->loadModel('Paisesmiggo');
 		$this->loadModel('Regimene');
 		/*se reagistra la actividad del uso de la aplicacion*/
 		$usuariosController = new UsuariosController();
@@ -104,13 +106,14 @@ class ProveedoresController extends AppController {
 				$this->Session->setFlash(__('El proveedor no pudo ser guardado. Por favor, inténtelo de nuevo.'));
 			}
 		}
+		//se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
 		$empresaId = $this->Auth->user('empresa_id');
-		$usuarioId = $this->Auth->user('id');                        
-		$ciudades = $this->Proveedore->Ciudade->find('list');		
+		$usuarioId = $this->Auth->user('id');                        	
 		$estados = $this->Proveedore->Estado->find('list');
 		$regimen = $this->Regimene->obtenerListaRegimen();
 
-		$this->set(compact('ciudades', 'usuarioId', 'estados', 'empresaId', 'regimen'));
+		$this->set(compact('paises', 'usuarioId', 'estados', 'empresaId', 'regimen'));
 	}
 
 /**
@@ -122,6 +125,7 @@ class ProveedoresController extends AppController {
  */
 	public function edit($id = null) {
 		$this->loadModel('Regimene');
+		$this->loadModel('Paisesmiggo');
 
 		/*se reagistra la actividad del uso de la aplicacion*/
 		$usuariosController = new UsuariosController();
@@ -144,11 +148,12 @@ class ProveedoresController extends AppController {
 			$options = array('conditions' => array('Proveedore.' . $this->Proveedore->primaryKey => $id));
 			$this->request->data = $this->Proveedore->find('first', $options);
 		}
-        $usuarioId = $this->Auth->user('id');  
-		$ciudades = $this->Proveedore->Ciudade->find('list');                
+		//se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
+        $usuarioId = $this->Auth->user('id');                 
 		$estados = $this->Proveedore->Estado->find('list');
 		$regimen = $this->Regimene->obtenerListaRegimen();
-		$this->set(compact('ciudades', 'usuarioId', 'estados', 'regimen'));
+		$this->set(compact('paises', 'usuarioId', 'estados', 'regimen'));
 	}
 
 /**

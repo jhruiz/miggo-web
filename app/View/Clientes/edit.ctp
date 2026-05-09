@@ -1,129 +1,185 @@
+<?php $this->layout = 'inicio'; ?>
 <?php echo ($this->Html->script('bandeja/gestionBandejas')); ?>
 <?php echo ($this->Html->script('clientes/clientes.js')); ?>
-<?php $this->layout = 'inicio';?>
+<?php echo ($this->Html->script('ubicacion/obtenerubicacion')); ?>
 
-<?php echo $this->Form->create('Cliente', array('type' => 'post')); ?>
+<div class="clientes form container-fluid" style="padding: 20px;">
+    <?php echo $this->Form->create('Cliente', array('type' => 'post', 'class' => 'form-horizontal')); ?>
+    
+    <?php echo $this->Form->input('id'); ?>
+    <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '14', 'id' => 'menuvert')) ?>
+    <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
+    <?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $usuarioId)); ?>
+    <?php echo $this->Form->input('estado_id', array('type' => 'hidden', 'value' => '1')); ?>
 
-		<legend><h2><b><?php echo __('Editar Cliente'); ?></b></h2></legend>
-		<?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '14', 'id' => 'menuvert')) ?>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h3 class="card-title mb-0"><b><i class="fa fa-user-edit"></i> <?php echo __('Editar Cliente'); ?></b></h3>
+        </div>
+        
+        <div class="card-body bg-light-gray">
+            <fieldset>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Tipo Identificación</label>
+                            <?php echo $this->Form->input("tipoidentificacione_id", array(
+                                'label' => false,
+                                'type' => 'select',
+                                'options' => $tipoIdent,
+                                'class' => 'form-control select2'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Nit / Identificación</label>
+                            <?php echo $this->Form->input('nit', array('label' => false, 'class' => 'form-control', 'placeholder' => 'Nit del Cliente')); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Nombre Completo</label>
+                            <?php echo $this->Form->input('nombre', array('label' => false, 'class' => 'form-control', 'type' => 'text', 'placeholder' => 'Nombre del Cliente')); ?>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">País</label>
+                            <?php echo $this->Form->input('pais_id', array(
+                                'label' => false, 
+                                'class' => 'form-control select2 selectPais', 
+                                'empty' => 'Seleccione País', 
+                                'options' => $paises, 
+                                'onchange' => 'obtenerDptos();'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Departamento</label>
+                            <?php echo $this->Form->input('departamento_id', array(
+                                'label' => false, 
+                                'class' => 'form-control select2 selectDpto', 
+                                'empty' => 'Seleccione Departamento', 
+                                'onchange' => 'obtenerCiudades();'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Ciudad</label>
+                            <?php echo $this->Form->input('ciudadesmiggo_id', array(
+                                'label' => false, 
+                                'class' => 'form-control select2 selectCiudad', 
+                                'empty' => 'Seleccione Ciudad'
+                            )); ?>
+                        </div>
+                    </div>
+                </div>
 
-            <?php echo $this->Form->input('id'); ?>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Dirección</label>
+                            <?php echo $this->Form->input('direccion', array('label' => false, 'type' => 'text', 'class' => 'form-control', 'placeholder' => 'Dirección del Cliente')); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Teléfono</label>
+                            <div class="input-group">
+                                <?php echo $this->Form->input('telefono', array('label' => false, 'class' => 'form-control', 'placeholder' => 'Teléfono')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Celular</label>
+                            <div class="input-group">
+                                <?php echo $this->Form->input('celular', array('label' => false, 'class' => 'form-control', 'placeholder' => 'Celular')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Email</label>
+                            <?php echo $this->Form->input('email', array('label' => false, 'class' => 'form-control', 'placeholder' => 'E-mail del Cliente')); ?>
+                        </div>
+                    </div>
+                </div>
 
-<div class="row">
-    <div class="form-group col-md-3">
-        <label for="ClienteNit">Nit</label>
-        <?php echo $this->Form->input('nit', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Nit del Cliente')); ?>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Bodega / Depósito</label>
+                            <?php echo $this->Form->input('deposito_id', array('label' => false, 'class' => 'form-control select2')); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Clasificación</label>
+                            <?php echo $this->Form->input("clasificacioncliente_id", array(
+                                'label' => false,
+                                'type' => 'select',
+                                'options' => $clasificacion,
+                                'class' => 'form-control select2',
+                                'empty' => 'Seleccione...'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Límite de crédito</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <?php echo $this->Form->input('limitecredito', array('label' => false, 'class' => 'form-control numericPrice', 'placeholder' => 'Límite')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Días Crédito</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <?php echo $this->Form->input('diascredito', array('label' => false, 'class' => 'form-control number', 'placeholder' => 'Días')); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Cumpleaños</label>
+                            <input name="data[Cliente][cumpleanios]" class="date form-control" placeholder="YYYY-MM-DD" id="cumpleanios" value="<?php echo isset($this->request->data['Cliente']['cumpleanios']) ? $this->request->data['Cliente']['cumpleanios'] : ''; ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Página Web</label>
+                            <?php echo $this->Form->input('paginaweb', array('label' => false, 'type' => 'text', 'class' => 'form-control', 'placeholder' => 'www.ejemplo.com')); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">Observaciones</label>
+                            <?php echo $this->Form->input('observaciones', array('label' => false, 'class' => 'form-control', 'placeholder' => 'Notas sobre el cliente')); ?>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+        
+        <div class="card-footer bg-white text-right py-3">
+            <?php echo $this->Html->link(__('Cancelar'), array('action' => 'index'), array('class' => 'btn btn-outline-secondary mr-2')); ?>
+            <?php echo $this->Form->submit('Actualizar Cliente', array('class' => 'btn btn-primary btn-lg px-5 shadow-sm', 'div' => false)); ?>
+        </div>
     </div>
-    <div class="form-group col-md-3">
-        <label for="ClienteNombre">Nombre</label>
-        <?php echo $this->Form->input('nombre', array('label' => '', 'class' => 'form-control', 'type' => 'text', 'placeholder' => 'Nombre del Cliente')); ?>
-    </div>
+    <?php echo $this->Form->end(); ?>
 </div>
-
-<div class="row">
-    <div class="form-group col-md-3">
-        <label for="ClienteTelefono">Teléfono</label>
-        <?php echo $this->Form->input('telefono', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Teléfono del Cliente')); ?>
-    </div>
-    <div class="form-group col-md-3">
-        <label for="ClienteDireccion">Dirección</label>
-        <?php echo $this->Form->input('direccion', array('label' => '', 'type' => 'text', 'class' => 'form-control', 'placeholder' => 'Dirección del Cliente')); ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="form-group col-md-3">
-        <label for="ClienteEmail">Email</label>
-        <?php echo $this->Form->input('email', array('label' => '', 'class' => 'form-control', 'placeholder' => 'E-mail del Cliente')); ?>
-    </div>
-    <div class="form-group col-md-3">
-
-    <label for="cumpleanios">Cumpleaños</label><br><br>
-        <input name="data[Cliente][cumpleanios]" class="date form-control" placeholder="Cumpleaños Cliente" id="cumpleanios">
-
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="form-group col-md-3">
-        <label for="ClienteCelular">Celular</label>
-        <?php echo $this->Form->input('celular', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Celular del Cliente')); ?>
-    </div>
-    <div class="form-group col-md-3">
-
-    <label for="ClientePaginaweb">Página Web</label>
-        <?php echo $this->Form->input('paginaweb', array('label' => '', 'type' => 'text', 'class' => 'form-control', 'placeholder' => 'Página Web del Cliente')); ?>
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="form-group col-md-3">
-    <label for="ClienteLimitecredito">Límite Crédito</label>
-        <?php echo $this->Form->input('limitecredito', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Límite de Crédito Sugerido')); ?>
-
-    </div>
-    <div class="form-group col-md-3">
-        <label for="ClienteDiascredito">Días de Crédito</label>
-        <?php echo $this->Form->input('diascredito', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Días de Crédito Sugeridos')); ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="form-group col-md-6">
-        <label for="ClienteCiudadeId">Ciudad</label>
-        <?php echo $this->Form->input('ciudade_id', array('label' => '', 'class' => 'form-control')); ?>
-    </div>
-</div>
-<div class="row">
-
-<div class="form-group col-md-3">
-        <label for="ClienteDepositoId">Bodega</label>
-         <?php echo $this->Form->input('deposito_id', array('label' => '', 'class' => 'form-control')); ?>
-    </div>
-    <div class="form-group col-md-3">
-        <label for="ClienteClasificacionclienteId">Clasificación</label>
-        <?php echo $this->Form->input("clasificacioncliente_id",
-    array(
-        'name' => "data[Cliente][clasificacioncliente_id]",
-        'label' => "",
-        'type' => 'select',
-        'options' => $clasificacion,
-        'class' => 'form-control',
-    )
-);
-?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="form-group col-md-6">
-        <label for="TipoIdentificacionId">Tipo Identificación</label>
-        <?php echo $this->Form->input("tipoidentificacione_id",
-            array(
-                'name' => "data[Cliente][tipoidentificacione_id]",
-                'label' => "",
-                'type' => 'select',
-                'options' => $tipoIdent,
-                'class' => 'form-control',
-            )
-        );
-        ?>
-    </div>
-</div>
-
-<div class="row">
-
-<div class="form-group col-md-6">
-<label for="ClienteObservaciones">Observaciones</label><br>
-                <?php echo $this->Form->input('observaciones', array('label' => '', 'class' => 'form-control', 'placeholder' => 'Observaciones sobre el Cliente')); ?>
-    </div>
-    </div>
-</div>
-            <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
-            <?php echo $this->Form->input('usuario_id', array('type' => 'hidden', 'value' => $usuarioId)); ?>
-            <?php echo $this->Form->input('estado_id', array('type' => 'hidden', 'value' => '1')); ?>
-
-<?php echo $this->Form->submit('Guardar', array('class' => 'btn btn-primary ')); ?>

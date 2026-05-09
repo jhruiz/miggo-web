@@ -69,6 +69,7 @@ class EmpresasController extends AppController {
             $urlImagen = $this->Configuraciondato->obtenerValorDatoConfig($confDato);                
             
             $options = array('conditions' => array('Empresa.' . $this->Empresa->primaryKey => $id));
+
             $this->set('empresa', $this->Empresa->find('first', $options));
             $this->set(compact('urlImagen'));
 	}
@@ -119,10 +120,12 @@ class EmpresasController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+        $this->loadModel('Paisesmiggo');
+        
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             		
 		if (!$this->Empresa->exists($id)) {
 			throw new NotFoundException(__('La empresa no existe.'));
@@ -143,10 +146,12 @@ class EmpresasController extends AppController {
                         
                         $confDato = "dirImgEmpresa";
                         $nombreImg = "imgEmp_" . $posData['Empresa']['nit'];
-                        $this->request->data['Empresa']['imagen'] = $nombreImg . "." . $arrExt['1'];                                             
+                        $this->request->data['Empresa']['imagen'] = $nombreImg . "." . $arrExt['1'];                                      
                     }else{
                         unset($this->request->data['Empresa']['imagen']);
                     }
+
+                    $this->request->data['Empresa']['municipio_id'] = $this->request->data['Empresa']['ciudade_id']; 
 
                     if ($this->Empresa->save($this->request->data)) {
                         if(!empty($posData['Empresa']['imagen']['name'])){
@@ -166,8 +171,9 @@ class EmpresasController extends AppController {
                     $options = array('conditions' => array('Empresa.' . $this->Empresa->primaryKey => $id));
                     $this->request->data = $this->Empresa->find('first', $options);
 		}
-		$ciudades = $this->Empresa->Ciudade->find('list');
-		$this->set(compact('ciudades'));
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
+		
+		$this->set(compact('paises'));
 	}
 
 /**

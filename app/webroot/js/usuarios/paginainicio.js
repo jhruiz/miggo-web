@@ -17,13 +17,22 @@ function obtenerDatosGraficos(){
     success: function(data) {
       var respuesta = JSON.parse(data);     
 
-      for(const prop in respuesta.resp){
+      for(const prop in respuesta.barras){
         
-        if(respuesta.resp[prop].legend_data.length > 0){
-          var divTorta = generarDiv(respuesta.resp[prop].titulo);
+        if(respuesta.barras[prop].legend_data.length > 0){
+          var divTorta = generarDiv(respuesta.barras[prop].titulo);
           $('#graficos').append(divTorta);
-          generarGraficoTorta(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
-          // generarGraficoBarras(respuesta.resp[prop].titulo, respuesta.resp[prop].legend_data, respuesta.resp[prop].series_data);
+          generarGraficoBarras(respuesta.barras[prop].titulo, respuesta.barras[prop].legend_data, respuesta.barras[prop].series_data);
+        }
+
+      }
+
+      for(const prop in respuesta.tortas){
+        
+        if(respuesta.tortas[prop].legend_data.length > 0){
+          var divTorta = generarDiv(respuesta.tortas[prop].titulo);
+          $('#graficos').append(divTorta);
+          generarGraficoTorta(respuesta.tortas[prop].titulo, respuesta.tortas[prop].legend_data, respuesta.tortas[prop].series_data);
         }
 
       }

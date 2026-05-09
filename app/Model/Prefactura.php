@@ -373,7 +373,7 @@ class Prefactura extends AppModel {
             ));            
             
             array_push($arr_join, array(
-                'table' => 'ciudades',
+                'table' => 'ciudadesmiggos',
                 'alias' => 'CIU',
                 'type' => 'INNER',
                 'conditions' => array(
@@ -391,11 +391,20 @@ class Prefactura extends AppModel {
             ));            
             
             array_push($arr_join, array(
-                'table' => 'paises',
+                'table' => 'departamentos',
+                'alias' => 'DPTO',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'DPTO.id=CIU.departamento_id'
+                )
+            ));            
+            
+            array_push($arr_join, array(
+                'table' => 'paisesmiggos',
                 'alias' => 'PAI',
                 'type' => 'INNER',
                 'conditions' => array(
-                    'PAI.id=CIU.paise_id'
+                    'PAI.id=DPTO.paisemiggos_id'
                 )
             ));            
             
@@ -447,6 +456,7 @@ class Prefactura extends AppModel {
                     'OT.*',
                     'V.*',
                     'CIU.*',
+                    'DPTO.*',
                     'PAI.*',
                     'RE.*',
                     'Prefactura.*',

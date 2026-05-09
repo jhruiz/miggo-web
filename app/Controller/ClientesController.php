@@ -84,6 +84,7 @@ class ClientesController extends AppController
     {
         $this->loadModel('Clasificacioncliente');
         $this->loadModel('Tipoidentificacione');
+        $this->loadModel('Paisesmiggo');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -98,14 +99,15 @@ class ClientesController extends AppController
                 $this->Session->setFlash(__('El cliente no pudo ser guardado. Por favor, inténtelo de nuevo.'));
             }
         }
-        $ciudades = $this->Cliente->Ciudade->find('list');
+        //se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
         $estados = $this->Cliente->Estado->find('list');
         $empresaId = $this->Auth->user('empresa_id');
         $depositos = $this->Cliente->Deposito->obtenerDepositoEmpresa($empresaId);
         $usuarioId = $this->Auth->user('id');
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
-        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
+        $this->set(compact('paises', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
     }
 
 /**
@@ -119,6 +121,7 @@ class ClientesController extends AppController
     {
         $this->loadModel('Clasificacioncliente');
         $this->loadModel('Tipoidentificacione');
+        $this->loadModel('Paisesmiggo');
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -139,14 +142,15 @@ class ClientesController extends AppController
             $options = array('conditions' => array('Cliente.' . $this->Cliente->primaryKey => $id));
             $this->request->data = $this->Cliente->find('first', $options);
         }
-        $ciudades = $this->Cliente->Ciudade->find('list');
+        //se obtiene el listado de paises
+        $paises = $this->Paisesmiggo->obtenerListaPaises();
         $estados = $this->Cliente->Estado->find('list');
         $empresaId = $this->Auth->user('empresa_id');
         $depositos = $this->Cliente->Deposito->obtenerDepositoEmpresa($empresaId);
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
         $usuarioId = $this->Auth->user('id');
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
-        $this->set(compact('ciudades', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
+        $this->set(compact('paises', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
     }
 
 /**

@@ -62,8 +62,8 @@ class Proveedore extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Ciudade' => array(
-			'className' => 'Ciudade',
+		'Ciudadesmiggo' => array(
+			'className' => 'Ciudadesmiggo',
 			'foreignKey' => 'ciudade_id',
 			'conditions' => '',
 			'fields' => '',

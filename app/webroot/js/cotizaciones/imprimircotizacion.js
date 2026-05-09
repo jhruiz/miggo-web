@@ -89,8 +89,8 @@ var imprimirCotizacionConIva = function() {
                 
                 // Información de la fecha y legal
                 mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
-                mywindow.document.write('<div>' + cotizacion.resp['0'].CIU.descripcion + ', ');
-                mywindow.document.write(cotizacion.resp['0'].PAI.descripcion + ', ');
+                mywindow.document.write('<div>' + cotizacion.resp['0'].CIU.nombre + ' (' + cotizacion.resp['0'].DPTO.descripcion + ')' + ' - ');
+                mywindow.document.write(cotizacion.resp['0'].PAI.nombre + ', ');
                 mywindow.document.write(fechaActual + '</div>');
                 mywindow.document.write('<div>' + cotizacion.resp['0'].EM.texto1 ?? '' + '</div>');
                 
@@ -323,8 +323,8 @@ var imprimirCotizacionSinIva = function() {
                 
                 // Información de la fecha y legal
                 mywindow.document.write('<div style="width:100%; float:left; margin-top:20px; margin-bottom:5px";>');
-                mywindow.document.write('<div>' + cotizacion.resp['0'].CIU.descripcion + ', ');
-                mywindow.document.write(cotizacion.resp['0'].PAI.descripcion + ', ');
+                mywindow.document.write('<div>' + cotizacion.resp['0'].CIU.nombre + ' (' + cotizacion.resp['0'].DPTO.descripcion + ')' + ' - ');
+                mywindow.document.write(cotizacion.resp['0'].PAI.nombre + ', ');
                 mywindow.document.write(fechaActual + '</div>');
                 mywindow.document.write('<div>' + cotizacion.resp['0'].EM.texto1 ?? '' + '</div>');
                 
