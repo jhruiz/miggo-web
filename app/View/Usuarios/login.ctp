@@ -67,6 +67,37 @@
         margin-top: 10px;
         cursor: pointer;
     }
+
+    /* Estilos para los mensajes de error/notificación */
+    #flashMessage, .message {
+        background: #e74c3c;
+        color: white;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 14px;
+        border-left: 5px solid #c0392b;
+        animation: shake 0.5s; /* Efecto de vibración para captar atención */
+    }
+
+    /* Animación opcional para el error */
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+
+    .auth-message { /* Para el flash('auth') */
+        background: #f39c12;
+        color: #fff;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        text-align: center;
+    }
 </style>
 
 <div class="miggo-login-container">
@@ -76,6 +107,10 @@
         </div>
 
         <?php echo $this->Session->flash('auth'); ?>
+
+        <div class="miggo-alerts">
+            <?php echo $this->Session->flash(); ?>
+        </div>
 
         <?php echo $this->Form->create('Usuario', array('action' => 'login')); ?>
             <div class="form-group-miggo">
