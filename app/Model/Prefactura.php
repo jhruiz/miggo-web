@@ -679,4 +679,42 @@ class Prefactura extends AppModel {
             
             return $alertasOrdenes;            
         }
+
+        public function obtenerPrefacturasEcommerce($empresaId){
+
+            $arr_join = array(); 
+
+            array_push($arr_join, array(
+                'table' => 'usuarios',
+                'alias' => 'U',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'U.id=Prefactura.usuario_id'
+                )
+            ));
+
+            array_push($arr_join, array(
+                'table' => 'empresas',
+                'alias' => 'E',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'E.id=U.empresa_id'
+                )
+            ));
+            
+            $prefacturasEcommerce = $this->find('all', array(
+                'joins' => $arr_join,                  
+                'recursive' => '0',
+                'conditions' => array(
+                    'E.id' => $empresaId,
+                    'Prefactura.eliminar' => '0',
+                    'Prefactura.estadopedido_id is not null'
+                ),
+                'fields' => array(
+                    'count(Prefactura.id) as contador'
+                )
+            )); 
+
+            return $prefacturasEcommerce;
+        }
 }

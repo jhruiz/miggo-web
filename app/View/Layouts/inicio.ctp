@@ -185,6 +185,10 @@
                         <span class="count_top"><?php echo $this->Html->link(__('PRODS. POR AGOTARSE'), array('controller' => 'cargueinventarios', 'action' => 'index')); ?></span>
                         <div><b><?php echo (number_format($productosBajos['0']['0']['contador'], 0)); ?></b></div>
                     </div>
+                    <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count <?php if ($prefactEccomerce['0']['0']['contador'] > 0) echo 'alert-warning-miggo'; ?>">
+                        <span class="count_top"><?php echo $this->Html->link(__('PREFACTURA ECOMMERCE'), array('controller' => 'prefacturas', 'action' => 'index')); ?></span>
+                        <div><b><?php echo (number_format($prefactEccomerce['0']['0']['contador'], 0)); ?></b></div>
+                    </div>
                     <?php if($infoEmp['Empresa']['vercuentasdb'] == '1') { ?>
                         <div class="animated flipInY col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top">

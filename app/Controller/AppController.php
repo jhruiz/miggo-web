@@ -80,11 +80,13 @@ class AppController extends Controller
         $this->loadModel('Cuentascliente');
         $this->loadModel('Cuentaspendiente');
         $this->loadModel('Empresa');
+        $this->loadModel('Prefactura');
 
         $empresaId = $this->Auth->user('empresa_id');
         $ordenTrabajos = $this->Ordentrabajo->obtenerEstadistacasOrdenes($empresaId);
         $productosBajos = $this->Cargueinventario->obtenerBajoStock($empresaId);
         $listCuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+        $prefactEccomerce = $this->Prefactura->obtenerPrefacturasEcommerce($empresaId);
 
         //alertas pendientes por gestionar
         $filtros = array(
@@ -110,6 +112,7 @@ class AppController extends Controller
 
         $arrColMd = $this->contador(count($ordenTrabajos), 6);
 
+
         Security::setHash('md5');
         $this->set('logged_in', $this->Auth->loggedIn());
         $this->set('current_user', $this->Auth->user());
@@ -122,6 +125,7 @@ class AppController extends Controller
         $this->set('ctasXCobrar', $ctasXCobrar);
         $this->set('ctasXPagar', $ctasXPagar);
         $this->set('infoEmp', $infoEmp);
+        $this->set('prefactEccomerce', $prefactEccomerce);
 
     }
 
