@@ -716,7 +716,7 @@ class ReportesController extends AppController
             'Codigo',
             'Cantidad',
             'Precio unitario',
-            'Total antes de imp.'
+            'Total antes de imp.',
             'Porcentaje desc',
             'Descuento',
             'Porcentaje IVA',
