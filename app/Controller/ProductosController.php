@@ -40,7 +40,8 @@ class ProductosController extends AppController {
         }
 
         if (isset($this->passedArgs['nombre']) && $this->passedArgs['nombre'] != "") {
-            $paginate['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($this->passedArgs['nombre'] . '%');
+            $searchProd = str_replace(" ", "%", $this->passedArgs['nombre']);
+            $paginate['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($searchProd . '%');
         }
 
         if (isset($this->passedArgs['categorias']) && $this->passedArgs['categorias'] != "") {

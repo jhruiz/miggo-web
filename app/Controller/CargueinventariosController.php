@@ -42,13 +42,15 @@ class CargueinventariosController extends AppController {
             $deposito = "";
             
             $data = array();
+
             if(isset($this->passedArgs['producto']) && $this->passedArgs['producto'] != ""){
-                $data['Producto.descripcion LIKE '] = '' . $this->passedArgs['producto'] . '%';
+                $searchProd = str_replace(" ", "%", $this->passedArgs['producto']);
+                $data['Producto.descripcion LIKE '] = '%' . $searchProd . '%';
                 $producto = $this->passedArgs['producto'];
             }
 
             if(isset($this->passedArgs['codigo']) && $this->passedArgs['codigo'] != ""){
-                $data['Producto.codigo LIKE '] = '' . $this->passedArgs['codigo'] . '%';
+                $data['Producto.codigo LIKE '] = '%' . $this->passedArgs['codigo'] . '%';
                 $producto = $this->passedArgs['codigo'];
             }
             
