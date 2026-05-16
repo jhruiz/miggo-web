@@ -688,7 +688,7 @@ class ReportesController extends AppController
                 'codigo' => $f['PR']['codigo'],
                 'cantidad' => $f['FD']['cantidad'],
                 'precioUnitario' => number_format(($objValoresBase['valorBaseUnitario']+$objValoresBase['descuento'])/$f['FD']['cantidad'], 2, ',', ''),
-                'sumPrecioTotal' => number_format($objValoresBase['valorBaseUnitario'])
+                'sumPrecioTotal' => number_format($objValoresBase['valorBaseUnitario']),
                 'prcDescuento' => number_format($f['FD']['porcentaje'], 2, ',', ''),
                 'descuento' => number_format($objValoresBase['descuento'], 2, ',', ''),
                 'prcIVA' => number_format($f['FD']['impuesto'], 2, ',', ''),
