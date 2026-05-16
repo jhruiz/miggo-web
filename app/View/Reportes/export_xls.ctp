@@ -151,6 +151,7 @@ if (isset($ciudades)) {
             <td class="tableTdContent" ><?php echo h($fact['codigo']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['cantidad']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['precioUnitario']); ?></td>
+            <td class="tableTdContent" ><?php echo h($fact['sumPrecioTotal']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['prcDescuento']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['descuento']); ?></td>
             <td class="tableTdContent" ><?php echo h($fact['prcIVA']); ?></td>
