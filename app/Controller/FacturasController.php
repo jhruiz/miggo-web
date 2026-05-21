@@ -599,7 +599,7 @@ class FacturasController extends AppController
                 $arrCrgInv['Cargueinventario']['producto_id'], $detallePrefactura['Prefacturasdetalle']['cantidad'],
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $costoTotalProd, $detallePrefactura['Prefacturasdetalle']['descuento'],
                 $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto, $detallePrefactura['Prefacturasdetalle']['impoconsumo'],
-                $detallePrefactura['Prefacturasdetalle']['incbolsa'])) {
+                $detallePrefactura['Prefacturasdetalle']['incbolsa'], $detallePrefactura['Prefacturasdetalle']['complementonombre'])) {
                 /*se elimina el registro de prefacturadetalle*/
                 // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
             }

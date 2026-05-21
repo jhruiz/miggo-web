@@ -2,6 +2,7 @@ var poblarTablaCotizacion = function ( valoresTabla ) {
 
     $('#dvTCot').append('<tr id="tr_' + valoresTabla.idReg + '">' + 
         '<td>' + valoresTabla.descProd + '</td>' + 
+        '<td><input type="text" name="nomcomp_' + valoresTabla.idReg + '" class="form-control" id="nomcomp_' + valoresTabla.idReg + '" value="' + valoresTabla.nombreComp + '" onblur="actualizarNombreComplemento(this);">&nbsp;</td>' +
         '<td>' + valoresTabla.codProd + '</td>' +                         
         '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="cant_' + valoresTabla.idReg + '" value="' + valoresTabla.cantProd + '" onblur="actCantPrdCot(this);">&nbsp;</td>' +
         '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="unitfalt_' + valoresTabla.idReg + '" value="' + valoresTabla.unidadesFaltantes + '" disabled>&nbsp;</td>' + 
@@ -331,6 +332,29 @@ var actualizarValorPorcentajeDttoCot = function( inputId ){
     
 };
 
+/**
+ * Actualiza nombre complementario
+ * @param {type} data
+ * @returns {undefined}
+ */
+var actualizarNombreComplemento = function(data) {
+    var arrData = data.id.split("_");
+    var nombreComp = $('#' + data.id).val();
+
+    $.ajax({
+        url: $('#url-proyecto').val() + 'cotizacionesdetalles/ajaxActualizarNombreComplementario',
+        data: { cotDetId: arrData['1'], nombreComp: nombreComp },
+        type: "POST",
+        success: function(response) {
+            var resp = JSON.parse(response);
+            if (resp.resp != '1') {
+                bootbox.alert('No fue posible agregar el nombre complementario.');
+            }
+        }
+    });
+
+};
+
 var actualizarPorcentajeDttoCot = function(data){
     var arrId = (data.id).split("_");
         
@@ -403,6 +427,7 @@ var seleccionarProductoCotizacion = function(data) {
                         idReg: resp.resp,
                         cantProd: '1',
                         descProd: resp.prod.Producto.descripcion,
+                        nombreComp: '',
                         codProd: resp.prod.Producto.codigo,
                         precioventa: valoresTablaBC.precioUnitarioFinal,
                         valAntesImp: valoresTablaBC.valorBaseUnitario,
@@ -456,10 +481,14 @@ var obtenerDetalleCotizacion = function(id) {
                         
                         unidadesFaltantes = element.Cotizacionesdetalle.cantidad - element.CI.existenciaactual;
 
+
+                        console.log(element);
+
                         var valoresTabla = {
                             idReg: element.Cotizacionesdetalle.id,
                             cantProd: element.Cotizacionesdetalle.cantidad,
                             descProd: element.P.descripcion,
+                            nombreComp: element.Cotizacionesdetalle.complementonombre != null ? element.Cotizacionesdetalle.complementonombre : '',
                             codProd: element.P.codigo,
                             precioventa: element.Cotizacionesdetalle.costoventa,
                             valAntesImp: valoresTablaBC.valorBaseUnitario,

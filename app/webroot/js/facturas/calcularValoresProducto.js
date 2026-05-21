@@ -303,6 +303,26 @@ function actualizarPrecioPrefact(dato){
     }
 }
 
+function actualizarNombreComplemento(dato) {
+    var arrName = dato.name.split('_');
+    var nombreComp = $('#' + dato.name).val();
+    
+    $.ajax({
+        url: $('#url-proyecto').val() + 'prefacturasdetalles/actualizarnombrecomplementario',
+        data: {nombreComp: nombreComp, id: arrName['1']},
+        type: "POST",
+        success: function(data) { 
+            var respuesta = JSON.parse(data);
+            if(!respuesta.resp){
+
+                bootbox.alert('No fue posible agregar el nombre complementario.');
+
+            }
+        }
+    }); 
+
+}
+
 /**
  * Actualiza el valor del descuento basado en el porcentaje
  * @param {type} data

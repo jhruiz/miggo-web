@@ -89,7 +89,7 @@ class Facturasdetalle extends AppModel {
 	);
         
         
-        public function guardarDetalleFactura($facturaId,$depositoId,$productoId,$cantidad,$costoventa,$costototal,$descuento,$porcentaje,$impuesto,$inc,$incbolsa){
+        public function guardarDetalleFactura($facturaId,$depositoId,$productoId,$cantidad,$costoventa,$costototal,$descuento,$porcentaje,$impuesto,$inc,$incbolsa,$factDet){
 
             $data = array();
             $detalleFactura = new Facturasdetalle();
@@ -97,6 +97,7 @@ class Facturasdetalle extends AppModel {
             $data['factura_id'] = $facturaId;
             $data['deposito_id'] = $depositoId;
             $data['producto_id'] = $productoId;
+            $data['complementonombre'] = $factDet;
             $data['cantidad'] = $cantidad;
             $data['costoventa'] = $costoventa;
             $data['costototal'] = $costototal;

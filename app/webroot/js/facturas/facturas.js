@@ -41,6 +41,7 @@ var poblarTablaFactura = function ( valoresTabla ) {
 
     $('#productosFacturas').append('<tr id="tr_' + valoresTabla.idReg + '">' + 
         '<td>' + valoresTabla.descProd + '</td>' + 
+        '<td><input type="text" name="nomcomp_' + valoresTabla.idReg + '" class="form-control" id="nomcomp_' + valoresTabla.idReg + '" value="" onblur="actualizarNombreComplemento(this);">&nbsp;</td>' +
         '<td>' + valoresTabla.codProd + '</td>' +                         
         '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="cant_' + valoresTabla.idReg + '" value="' + valoresTabla.cantProd + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
         '<td><input type="text" name="precio_' + valoresTabla.idReg + '" class="form-control numericPrice ttalUnit" id="precio_' + valoresTabla.idReg + '" value="' + valoresTabla.precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +

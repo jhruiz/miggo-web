@@ -246,7 +246,7 @@
 
                     <tr>
                         <td><?php echo h( $contador ); ?></td>
-                        <td><?php echo h( $DetFact['P']['descripcion'] ); ?></td>   
+                        <td><?php echo h( $DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre'] ); ?></td>   
                         <td><?php echo h( $DetFact['P']['codigo'] ); ?></td>                        
                         <td><?php echo h( ( $DetFact['Facturasdetalle']['cantidad'] ) ); ?></td>
                         <td  align="right"><?php echo (number_format( ($DetFact['valoresBase']['valorBaseUnitario'] + $DetFact['valoresBase']['descuento']) / $DetFact['Facturasdetalle']['cantidad'], 2 )); ?></td>
@@ -349,7 +349,7 @@
 
                     <tr>
                         <td><?php echo h( $contador ); ?></td>
-                        <td><?php echo h( $DetFact['P']['descripcion'] ); ?></td>   
+                        <td><?php echo h( $DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre']); ?></td>   
                         <td><?php echo h( $DetFact['P']['codigo'] ); ?></td>                        
                         <td><?php echo h( ( $DetFact['Facturasdetalle']['cantidad'] ) ); ?></td>
                         <td  align="right"><?php echo (number_format( ($DetFact['valoresBase']['valorBaseUnitario'] + $DetFact['valoresBase']['descuento']) / $DetFact['Facturasdetalle']['cantidad'], 2 )); ?></td>

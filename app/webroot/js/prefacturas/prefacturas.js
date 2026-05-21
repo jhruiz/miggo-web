@@ -41,6 +41,7 @@ var poblarTablaFactura = function ( valoresTabla ) {
 
     $('#productosPrefacturas').append('<tr id="tr_' + valoresTabla.idReg + '">' + 
         '<td>' + valoresTabla.descProd + '</td>' + 
+        '<td><input type="text" name="nomcomp_' + valoresTabla.idReg + '" class="form-control" id="nomcomp_' + valoresTabla.idReg + '" value="' + valoresTabla.descCompl + '" onblur="actualizarNombreComplemento(this);">&nbsp;</td>' +
         '<td>' + valoresTabla.codProd + '</td>' +                         
         '<td><input type="text" name="cant_' + valoresTabla.idReg + '" class="form-control" id="cant_' + valoresTabla.idReg + '" value="' + valoresTabla.cantProd + '" onblur="actualizarCantidadPrefact(this);">&nbsp;</td>' +
         '<td><input type="text" name="precio_' + valoresTabla.idReg + '" class="form-control numericPrice ttalUnit" id="precio_' + valoresTabla.idReg + '" value="' + valoresTabla.precioventa + '" onblur="actualizarPrecioPrefact(this);">&nbsp;</td>' +
@@ -189,6 +190,7 @@ function validarProductosPrefacturados(){
                         idReg: prefact.producto['0'].Prefacturasdetalle.id,
                         cantProd: prefact.producto['0'].Prefacturasdetalle.cantidad,
                         descProd: prefact.producto['0'].Cargueinventario.descprod,
+                        descCompl: prefact.producto['0'].Prefacturasdetalle.complementonombre != null ? prefact.producto['0'].Prefacturasdetalle.complementonombre : '',
                         codProd: prefact.producto['0'].Cargueinventario.codprod,
                         precioventa: prefact.producto['0'].Prefacturasdetalle.costoventa,
                         valAntesImp: valoresTablaBC.valorBaseUnitario,
@@ -261,6 +263,7 @@ function fnObtenerDatosProducto(e){
                             idReg: prefactura.resp,
                             cantProd: '1',
                             descProd: prefactura.producto[0].Producto.descripcion,
+                            descCompl: '',
                             codProd: prefactura.producto[0].Producto.codigo,
                             precioventa: valoresTablaBC.precioUnitarioFinal,
                             valAntesImp: valoresTablaBC.valorBaseUnitario,
@@ -696,6 +699,7 @@ function fnObtenerDatosProductoVentaRapida(e){
                         idReg: prefactura.resp,
                         cantProd: '1',
                         descProd: prefactura.producto[0].Producto.descripcion,
+                        descCompl: '',
                         codProd: prefactura.producto[0].Producto.codigo,
                         precioventa: valoresTablaBC.precioUnitarioFinal,
                         valAntesImp: valoresTablaBC.valorBaseUnitario,
@@ -836,6 +840,7 @@ function agregarProductoFactura(){
                     idReg: prefactura.resp,
                     cantProd: $('#cantidadventa').val(),
                     descProd: $('#nombreProducto').val(),
+                    descCompl: '',
                     codProd: $('#codigoProducto').val(),
                     precioventa: precioventa,
                     valAntesImp: $('#precioventaCI').val(),

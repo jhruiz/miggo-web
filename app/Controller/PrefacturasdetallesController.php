@@ -209,7 +209,27 @@ class PrefacturasdetallesController extends AppController {
             }
            
             echo json_encode(array('resp' => $resp, 'precioventa' => $precioAutorizado));                                 
-        }       
+        }    
+        
+        public function actualizarnombrecomplementario() {
+            $this->loadModel('Cargueinventario');
+            $this->autoRender = false;            
+            $data = array();
+            $posData = $this->request->data;
+            $nombreComp = $posData['nombreComp'];
+            $id = $posData['id'];
+            
+            $data['id'] = $id;
+            $data['complementonombre'] = $nombreComp;            
+
+            if($this->Prefacturasdetalle->save($data)){
+                $resp = true;
+            }else{
+                $resp = false;
+            }                 
+        
+            echo json_encode(array('resp' => $resp));  
+        }
         
         public function obtenerPrefacturasDetalles(){
             $this->loadModel('Producto');

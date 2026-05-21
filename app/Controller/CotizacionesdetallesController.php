@@ -185,6 +185,26 @@ class CotizacionesdetallesController extends AppController {
         }          
     }
     
+    public function ajaxActualizarNombreComplementario() {
+        $this->autoRender = false;
+        $this->loadModel('Cotizacionesdetalle');
+        
+        $posData = $this->request->data;
+    
+        $data = array();
+        
+        $data['id'] = $posData['cotDetId'];
+        $data['complementonombre'] = $posData['nombreComp'];
+
+        $resp = $this->Cotizacionesdetalle->crearDetalleCotizacion($data);
+
+        if($resp){
+            echo json_encode(array('resp' => '1'));
+        }else{
+            echo json_encode(array('resp' => '0'));
+        }          
+    }
+    
     /**
      * Actualiza el valor unitario y total de un producto de una cotizacion
      */
@@ -297,7 +317,8 @@ class CotizacionesdetallesController extends AppController {
                                                                     $arrCotDet[$i]['Cotizacionesdetalle']['porcentaje'], 
                                                                     $arrCotDet[$i]['Cotizacionesdetalle']['impuesto'], 
                                                                     $arrCotDet[$i]['Cotizacionesdetalle']['impoconsumo'], 
-                                                                    $arrCotDet[$i]['Cotizacionesdetalle']['incbolsa']);
+                                                                    $arrCotDet[$i]['Cotizacionesdetalle']['incbolsa'],
+                                                                    $arrCotDet[$i]['Cotizacionesdetalle']['complementonombre']);
 
                 if($idOT){
                     /**Crea el suministro para la OT */

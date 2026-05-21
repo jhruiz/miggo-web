@@ -176,10 +176,11 @@ var imprimirCotizacionConIva = function() {
                         const precioUnitario = (valBaseUnitario + valDescuento) / cantidad;
                         const bolsaUnitario = cantidad > 0 ? (valBolsaTotal / cantidad) : 0;
                         const totalLinea = (precioUnitario * cantidad) - valDescuento + valIVA + valINC;    
+                        const nombreComplemento = val.Cotizacionesdetalle.complementonombre != null ? val.Cotizacionesdetalle.complementonombre : '';
 
                         mywindow.document.write('<tr>');
                         mywindow.document.write('<td class="align-left">' + contador + '</td>');
-                        mywindow.document.write('<td class="align-left">' + val.P.descripcion + '</td>');
+                        mywindow.document.write('<td class="align-left">' + val.P.descripcion + ' ' + nombreComplemento + '</td>');
                         mywindow.document.write('<td class="align-left">' + val.P.codigo + '</td>');
                         mywindow.document.write('<td class="align-right">' + (cantidad) + '</td>');
                         mywindow.document.write('<td class="align-right">' + formato.format(precioUnitario) + '</td>');
@@ -406,11 +407,12 @@ var imprimirCotizacionSinIva = function() {
 
                         const precioUnitario = (valBaseUnitario + valDescuento) / cantidad;
                         const bolsaUnitario = cantidad > 0 ? (valBolsaTotal / cantidad) : 0;
-                        const totalLinea = (precioUnitario * cantidad) - valDescuento + valIVA + valINC;    
+                        const totalLinea = (precioUnitario * cantidad) - valDescuento + valIVA + valINC;   
+                        const nombreComplemento = val.Cotizacionesdetalle.complementonombre != null ? val.Cotizacionesdetalle.complementonombre : ''; 
 
                         mywindow.document.write('<tr>');
                         mywindow.document.write('<td class="align-left">' + contador + '</td>');
-                        mywindow.document.write('<td class="align-left">' + val.P.descripcion + '</td>');
+                        mywindow.document.write('<td class="align-left">' + val.P.descripcion + ' ' + nombreComplemento + '</td>');
                         mywindow.document.write('<td class="align-left">' + val.P.codigo + '</td>');
                         mywindow.document.write('<td class="align-right">' + (cantidad) + '</td>');
                         mywindow.document.write('<td class="align-right">' + formato.format(precioUnitario) + '</td>');
