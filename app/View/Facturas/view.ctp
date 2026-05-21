@@ -768,7 +768,7 @@
             ?>
             <?php foreach ($infoDetFact as $DetFact): ?>
                 <tr>
-                    <td colspan="3" style="padding-top: 5px;"><?php echo h($DetFact['P']['descripcion']); ?></td>
+                    <td colspan="3" style="padding-top: 5px;"><?php echo h($DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre']); ?></td>
                 </tr>
                 <tr style="border-bottom: 1px dotted #eee;">
                     <td><?php echo h($DetFact['P']['codigo']); ?></td>

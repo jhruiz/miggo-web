@@ -176,11 +176,13 @@ var imprimirFactura = function() {
                     const bolsaUnitario = cantidad > 0 ? (valBolsaTotal / cantidad) : 0;
 
                     // Total Línea: (Unitario * Cantidad) - Descuento + Impuestos
-                    const totalLinea = (precioUnitario * cantidad) - valDescuento + valIVA + valINC;    
+                    const totalLinea = (precioUnitario * cantidad) - valDescuento + valIVA + valINC;
+
+                    const nombreComplemento = val.PFD.complementonombre != null ? val.PFD.complementonombre : '';    
 
                     mywindow.document.write('<tr>');
                     mywindow.document.write('<td class="align-left">' + contador + '</td>');
-                    mywindow.document.write('<td class="align-left">' + val.P.descripcion + '</td>');
+                    mywindow.document.write('<td class="align-left">' + val.P.descripcion + ' ' + nombreComplemento + '</td>');
                     mywindow.document.write('<td class="align-left">' + val.P.codigo + '</td>');
                     mywindow.document.write('<td class="align-right">' + (cantidad) + '</td>');
                     mywindow.document.write('<td class="align-right">' + formato.format(precioUnitario) + '</td>');
@@ -432,9 +434,11 @@ var imprimirDocumentoEquivalente = function() {
                     ttalDcto += (valBase * cantidad) * (pctDesc / 100);
                     ttalBases += valBase * cantidad;
 
+                    const nombreComplemento = val.PFD.complementonombre != null ? val.PFD.complementonombre : ''; 
+
                     mywindow.document.write('<tr>');
                     mywindow.document.write('<td class="align-left">' + contador + '</td>');
-                    mywindow.document.write('<td class="align-left">' + val.P.descripcion + '</td>');
+                    mywindow.document.write('<td class="align-left">' + val.P.descripcion + ' ' + nombreComplemento + '</td>');
                     mywindow.document.write('<td class="align-left">' + val.P.codigo  + '</td>');
                     mywindow.document.write('<td class="align-left">' + formato.format(cantidad) + '</td>');
                     mywindow.document.write('<td class="align-right">' + formato.format(valBase) + '</td>');
