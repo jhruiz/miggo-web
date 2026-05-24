@@ -321,6 +321,10 @@
                                 <div class="col-md-2">
                                     <a href="#" class="btn btn-primary active btn-block" role="button" id="imprimirCot">Imprimir</a>
                                 </div>
+
+                                <div class="col-md-2">
+                                    <a href="#" class="btn btn-primary active btn-block" role="button" id="imprimirTicket">Imprimir Ticket</a>
+                                </div>
                                 
                                 <div class="col-md-2"> 
                                     <button type="button" id="butImprimirFact" class="btn btn-primary btn-block hidden-print" onclick="generarAlertaPreFactura();">Generar Alerta</button>
