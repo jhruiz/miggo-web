@@ -594,7 +594,7 @@ var imprimirEnTicket = function() {
 };
 
 // ==========================================
-// PREFACTURA FACTURA (CON IVA) EN TICKET 80MM - DISEÑO MEJORADO
+// PREFACTURA FACTURA (CON IVA) EN TICKET 80MM - TOTALMENTE CORREGIDO
 // ==========================================
 var imprimirPrefacturaFacturaTicket = function() {
     var prefactId = $('#prefactId').val();
@@ -621,7 +621,14 @@ var imprimirPrefacturaFacturaTicket = function() {
             mywindow.document.write('</style></head><body>');
 
             mywindow.document.write('<div style="width: 100%;">');
-            mywindow.document.write($('#dv_img_emp').html());
+            
+            // Tratamiento del contenedor de imagen para mitigar errores de carga o rutas rotas
+            var rawImgHtml = $('#dv_img_emp').html() || "";
+            if (rawImgHtml.trim() !== "") {
+                // Inyectamos dinámicamente el controlador onerror para ocultar el recuadro si falla la imagen
+                var fixedImgHtml = rawImgHtml.replace('<img', '<img onerror="this.style.display=\'none\';"');
+                mywindow.document.write('<div>' + fixedImgHtml + '</div>');
+            }
             
             mywindow.document.write('<div class="text-center" style="font-size:12px;"><b>' + prefact.resp['0'].EM.nombre + '</b></div>');
             mywindow.document.write('<div class="text-center" style="font-size:11px;"><b>PREFACTURA No. ' + zfill(prefactId, 6) + '</b></div>');
@@ -663,7 +670,6 @@ var imprimirPrefacturaFacturaTicket = function() {
                 mywindow.document.write('<div><b>Línea:</b> ' + prefact.resp['0'].V.linea + '</div>');
             }
             
-            // Reajuste de anchos de columna para evitar saltos de línea en montos con decimales
             mywindow.document.write('<table><thead>');
             mywindow.document.write('<tr><th style="width:10%;">CANT</th><th style="width:38%;">DESCRIPCIÓN</th><th class="text-right" style="width:26%;">VLR. UNIT</th><th class="text-right" style="width:26%;">TOTAL</th></tr>');
             mywindow.document.write('</thead><tbody>');
@@ -745,7 +751,7 @@ var imprimirPrefacturaFacturaTicket = function() {
 };
 
 // ==========================================
-// PREFACTURA SIN IVA (DOC EQUIVALENTE) EN TICKET 80MM - DISEÑO MEJORADO
+// PREFACTURA SIN IVA (DOC EQUIVALENTE) EN TICKET 80MM - CORREGIDO IMAGEN
 // ==========================================
 var imprimirPrefacturaDocumentoEquivalenteTicket = function() {
     var prefactId = $('#prefactId').val();
@@ -772,7 +778,13 @@ var imprimirPrefacturaDocumentoEquivalenteTicket = function() {
             mywindow.document.write('</style></head><body>');
 
             mywindow.document.write('<div style="width: 100%;">');
-            mywindow.document.write($('#dv_img_emp').html());
+            
+            // Tratamiento del contenedor de imagen para mitigar errores de carga o rutas rotas
+            var rawImgHtml = $('#dv_img_emp').html() || "";
+            if (rawImgHtml.trim() !== "") {
+                var fixedImgHtml = rawImgHtml.replace('<img', '<img onerror="this.style.display=\'none\';"');
+                mywindow.document.write('<div>' + fixedImgHtml + '</div>');
+            }
             
             var repNombre = prefact.resp['0'].RE && prefact.resp['0'].RE.nombre ? prefact.resp['0'].RE.nombre : "";
             var repLegal = prefact.resp['0'].RE && prefact.resp['0'].RE.representantelegal ? prefact.resp['0'].RE.representantelegal : "";
