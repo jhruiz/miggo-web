@@ -97,7 +97,3 @@ function realizarAbono(){
         alert("No ha ingresado un valor para el abono.");
     }    
 } 
-
-$(function(){
-    $('#btn_abonos').click(abonosPrefactura);
-});

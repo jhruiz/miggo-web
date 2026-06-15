@@ -61,7 +61,7 @@ var poblarTablaFactura = function ( valoresTabla ) {
 };
 
 var fnObtenerDatosCliente = function(){
-    
+
     activarFiltroProducto();
     $('.nuevo').val("");
     $('.rapida').val("");
@@ -903,6 +903,7 @@ var sumarTotales = function (){
                 propina=parseFloat($('.propina').val());
             }
         }       
+
         $('.propina').val(formatNumber(propina));
         $('.thTTotal').html(formatNumber(ttalTotal+propina));
         //se suman todos los valores de descuento
@@ -941,10 +942,38 @@ var sumarTotales = function (){
         $('#inp_imp_bolsa').val(ttalXIncBolsa);
     
         $('.thTFCIVA').html(formatNumber(parseFloat(ttalesConIva)+parseFloat(propina)+parseFloat(ttalXIncBolsa)));
+
+        // código para la venta rápida
+        $('.thTTotalVR').html(formatNumber(parseFloat(ttalesConIva)+parseFloat(propina)+parseFloat(ttalXIncBolsa)-parseFloat(ttalesIva)-parseFloat(ttalesIca)));
+        const cantidad = document.querySelectorAll('.ttalUnit').length;
+        $('.thCantidadArticulos').text(cantidad);
+        $('.thBolsa').html(formatNumber(ttalXIncBolsa));
+
+        if( ttalValDtto > 0 || ttalValDtto != '') {
+            $('.dv_descuento').show();
+        }else {
+            $('.dv_descuento').hide();
+        }
+        
+        if( ttalesIva > 0 || ttalesIva != '') {
+            $('.dv_imp_iva').show();
+        }else {
+            $('.dv_imp_iva').hide();
+        }
+        
+        if( ttalesIca > 0 || ttalesIca != '') {
+            $('.dv_imp_ica').show();
+        }else {
+            $('.dv_imp_ica').hide();
+        }
+        
+        if( ttalXIncBolsa > 0 || ttalXIncBolsa != '') {
+            $('.dv_imp_bolsa').show();
+        }else {
+            $('.dv_imp_bolsa').hide();
+        }
     }
 };
-
-
 
 /**
  * Separadores de miles para los valores de la cotizacion que se van a imprimir

@@ -330,6 +330,29 @@ class FacturasController extends AppController
     }
 
 /**
+ * add method
+ *
+ * @return void
+ */
+    public function addfast($esFactura = '0')
+    {
+        $this->loadModel('Producto');
+        $this->loadModel('Tipopago');
+        $this->loadModel('Empresa');
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $usuarioId = $this->Auth->user('id');
+        $tipoPago = $this->Tipopago->find('list');
+        $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($empresaId);
+        $lstTipPagos = $this->Tipopago->obtenerListaTiposPagos($empresaId);
+
+        // Se obtienen los 5 productos mas vendidos
+        $topSales = $this->Producto->obtenerTopProductosDia($empresaId);
+
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'topSales', 'facturaElectonica', 'infoEmpresa', 'lstTipPagos'));
+    }
+
+/**
  * edit method
  *
  * @throws NotFoundException
@@ -466,6 +489,7 @@ class FacturasController extends AppController
 
         $this->autoRender = false;
         $posData = $this->request->data;
+
         $datFact = $posData['Factura'];
         $datCliNuevo = $posData['Nuevo'];
         $datVentaRapida = $posData['Rapida'];
@@ -518,11 +542,14 @@ class FacturasController extends AppController
             $esFactura = $posData['Prefactura']['esFacturaDV'] == '1' ? '1' : '0';
         }
 
-
         $ordenTrabajo = isset($datFact['ordentrabajo']) && !empty($datFact['ordentrabajo']) ? $datFact['ordentrabajo'] : "";
+
+        // obtiene el vendedor o agrega el usuario en sesion por defecto
+        $vendedor = isset($datFact['vendedor']) && !empty($datFact['vendedor']) ? $datFact['vendedor'] : $userId;
+
         /*Se crea la factura*/
-        $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $datFact['vendedor'], $fechaVence,
-            null, $datFact['pagocontado'], $datFact['pagocredito'], $documentoId, $datFact['empresaRelacionada'],
+        $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $vendedor, $fechaVence,
+            null, '0', '0', $documentoId, $datFact['empresaRelacionada'],
             $ordenTrabajo, $esFactura, null, $datFact['observacion'], $datFact['canalventa'], $datFact['f_ref_or'], $datFact['n_ref_or']);
 
         /*Se actualiza el codigo de la factura con el id de la factura ya que MySql solo acepta un autoincrement*/
@@ -537,25 +564,11 @@ class FacturasController extends AppController
             $this->FacturasNotafactura->guardarNotaFactura($facturaId, $datFact['notafactura'], $datFact['vendedor']);
         }
 
-        /*Se obtiene el depósito del usuario*/
-        $arrDptos = $this->DepositosUsuario->obtenerDepositosUsuario($datFact['usuario']);
-        $arrDatDpto = $this->Deposito->obtenerInfoDepositoPorId($arrDptos['0']['DepositosUsuario']['deposito_id']);
-
-        //si en la factuacion se selecciona que no es factura, se asigna regimen simplificado
-        if ($esFactura == '0') {
-            $arrDatDpto['Deposito']['regimene_id'] = '2';
-        } else {
-            $arrDatDpto['Deposito']['regimen_id'] = '1';
-        }
-
         /*Se valida si la venta se realiza con una empresa relacionada*/
         if ($datFact['empresaRelacionada'] != "" && $datFact['empresaRelacionada'] != null) {
             $consFact = null;
         } else {
-            /*si el regimen es simplificado, se toma como consecutivo el autoincrement de la tabla factura*/
-            /*si el regimen es comun, se obtiene el consecutivo del deposito y se actualiza*/
-            /*id 1 = comun     id 2 = simplificado*/
-            $consFact = $this->obtenerConsecutivoFactura($arrDatDpto, $facturaId);
+            $consFact = $this->obtenerConsecutivoFactura($esFactura, $facturaId);
         }
         
         /* se valida si la fecha de vencimiento es diferente de null,
@@ -659,7 +672,7 @@ class FacturasController extends AppController
     /**
      * obtiene el consecutivo de la resolucion para el documento
      */
-    public function obtenerConsecutivoFactura($arrDatDpto, $facturaId)
+    public function obtenerConsecutivoFactura($esFactura, $facturaId)
     {
         $this->loadModel('Resolucionfactura');
         
@@ -670,7 +683,7 @@ class FacturasController extends AppController
             'consecutivo' => ''
         ];
 
-        $tipoDocumento = $arrDatDpto['Deposito']['regimene_id'] == '1' ? '1' : '2';
+        $tipoDocumento = $esFactura == '1' ? '1' : '2';
 
         $infoResolucion = $this->Resolucionfactura->obtenerResolucion( $empresaId, $tipoDocumento );
 
@@ -2102,6 +2115,9 @@ class FacturasController extends AppController
         // 1. Determinar si es una línea gratuita
         $esGratuito = $objValoresBase['valorBaseUnitario'] > 0 ? false : true;
 
+        // Agregamos el nombre complementario si existe
+        $nombreLinea = !empty($val['Facturasdetalle']['complementonombre']) ? $val['P']['descripcion'] . ' ' . $val['Facturasdetalle']['complementonombre'] : $val['P']['descripcion'];
+
         // 2. Inicializa el array de productos con los valores proporcionados
         $arrProductos = [
             'unit_measure_id' => '70',
@@ -2109,7 +2125,7 @@ class FacturasController extends AppController
             'line_extension_amount' => $objValoresBase['valorBaseUnitario'],
             'free_of_charge_indicator' => $esGratuito,
             'tax_totals' => $arrImpuestos,
-            'description' => $val['P']['descripcion'],
+            'description' => $nombreLinea,
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
             'price_amount' => ($objValoresBase['precioUnitarioFinal'] / $val['Facturasdetalle']['cantidad']),

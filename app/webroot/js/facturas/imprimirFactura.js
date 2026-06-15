@@ -536,8 +536,6 @@ var obtenerFechaActual = function() {
 var enviarPrefactura = function() {
     var cliente = $('.id_cliente').val();
 
-    console.log(cliente);
-
     if (cliente != '') {
         $.ajax({
             url: $('#url-proyecto').val() + 'clientes/ajaxObtenerInfoCliente',

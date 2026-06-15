@@ -156,9 +156,19 @@ class Cargueinventario extends AppModel {
                     'P.id=Cargueinventario.producto_id'                   
                     )                
             ));
+
+            array_push($arr_join, array(
+                'table' => 'imagenesitems', 
+                'alias' => 'II', 
+                'type' => 'LEFT',
+                'conditions' => array(
+                    'P.id=II.producto_id',
+                    'II.posicion=0'             
+                    )                
+            ));
             
             $infoInventario = $this->find('all', array(
-                'joins' => $arr_join,                  
+                'joins' => $arr_join,                 
                 'conditions' => array(
                     'Cargueinventario.deposito_id' => $depositosIdx,
                     'Producto.estado' => '1',
@@ -167,7 +177,17 @@ class Cargueinventario extends AppModel {
                         'P.codigo LIKE' => '%'. $descripcionProd . '%',
                         'P.referencia LIKE' => '%'. $descripcionProd . '%'
                     ),                     
-                    ),
+                ),
+                'fields' => array(
+                    'Cargueinventario.*',
+                    'Deposito.*',
+                    'Estado.*',
+                    'Producto.*',
+                    'Proveedore.*',
+                    'Tipopago.*',
+                    'Usuario.*',
+                    'II.*'
+                ),
                 'recursive' => '0'                
                 ));                    
             

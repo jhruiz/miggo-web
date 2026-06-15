@@ -129,8 +129,9 @@ class Factura extends AppModel
         ),
     );
 
-    public function guardarfactura($clienteId, $empresaId, $usuarioId, $fechaVence, $tipoPagoId, $pagoContado, $pagoCredito,
+    public function guardarfactura($clienteId, $empresaId, $usuarioId, $fechaVence, $tipoPagoId, $pagoContado = 0, $pagoCredito = 0,
         $documentoId, $empRelacionada, $ordentrabajo, $esFactura, $cuenta_id, $observacion, $canalventa, $fechaOrden, $numeroOrden) {
+
         $data = array();
         $factura = new Factura();
 

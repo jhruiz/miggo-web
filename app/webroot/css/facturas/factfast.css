@@ -1,0 +1,500 @@
+/* ==========================================================================
+   MIGGO POS SYSTEM - MODO RÁFAGA INDUSTRIAL
+   ========================================================================== */
+
+.miggo-pos-container {
+    background-color: #f4f7f9;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif, Arial;
+    color: #1a2530;
+}
+
+/* Encabezado */
+.pos-top-bar {
+    background-color: #1a3a4b; /* Azul oscuro corporativo elegante */
+    padding: 14px 24px;
+    border-bottom: 3px solid #112733;
+}
+.miggo-brand {
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 24px;
+    letter-spacing: 0.8px;
+}
+.badge-pos-mode {
+    background-color: #ffcc00;
+    color: #112733;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 11px;
+}
+
+/* Maquetación del POS */
+.pos-main-layout {
+    display: flex;
+    padding: 16px;
+    gap: 16px;
+}
+.pos-left-panel {
+    flex: 0 0 74%;
+    max-width: 74%;
+}
+.pos-right-panel {
+    flex: 0 0 26%;
+    max-width: 26%;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #cbdbe4;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+/* Fila de Tarjetas Superiores */
+.pos-top-cards-row {
+    display: flex;
+    gap: 10px;
+}
+.pos-mini-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #cbdbe4;
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.pos-mini-card:hover {
+    border-color: #1a3a4b;
+    background-color: #fafbfc;
+}
+.mini-card-icon {
+    background: #e6f0f5;
+    color: #1a3a4b;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-right: 10px;
+}
+.mini-card-title { font-size: 13px; font-weight: 700; }
+.mini-card-meta { font-size: 11px; color: #28a745; font-weight: 700; }
+
+/* Barra unificada de busquedas */
+.pos-search-grid {
+    background: #ffffff;
+    padding: 14px;
+    border-radius: 6px;
+    border: 1px solid #cbdbe4;
+}
+.search-wrapper-pos input {
+    width: 100%;
+    height: 46px;
+    padding-left: 40px;
+    padding-right: 12px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    font-weight: 600;
+}
+.search-icon-inside {
+    position: absolute;
+    left: 14px;
+    top: 15px;
+    font-size: 16px;
+}
+.stock-indicator-badge {
+    background-color: #e6f0f5;
+    padding: 11px 16px;
+    font-size: 13px;
+    border-radius: 4px;
+    border: 1px solid #cbdbe4;
+    display: inline-block;
+    font-weight: 700;
+}
+
+/* Grilla de productos (Maximizado total) */
+.pos-grid-products-wrapper {
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #cbdbe4;
+    min-height: 380px; /* Mayor altura aprovechando el espacio limpio */
+}
+.table-pos-grid {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-pos-grid th {
+    background: #e6f0f5;
+    color: #1a3a4b;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 14px 18px;
+    border-bottom: 2px solid #cbdbe4;
+}
+.table-pos-grid td {
+    padding: 16px 18px;
+    font-size: 15px; /* Números grandes y legibles en grilla */
+    font-weight: 700;
+    border-bottom: 1px solid #edf2f5;
+}
+
+/* Docks inferiores de control de pago */
+.pos-bottom-dock {
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #cbdbe4;
+    padding: 16px;
+}
+.border-right-dock { border-right: 2px dashed #cbdbe4; }
+.dock-section-title { font-size: 12px; font-weight: 800; color: #1a3a4b; text-transform: uppercase; }
+.btn-miggo-add-pay {
+    background-color: #1a3a4b;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+}
+.recaudo-summary-box .rec-line { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; font-weight: 600; }
+.btn-miggo-dock-sub { background: #f1f6f9; border: 1px solid #ced4da; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 4px; }
+.btn-miggo-dock-sub.active { background: #1a3a4b; color: #fff; }
+
+/* Panel derecho financiero de totales masivos */
+.pos-right-label-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #495057; }
+.custom-radio-pos label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
+.financial-panel { background: #f8fafc; border: 2px dashed #cbdbe4; border-radius: 6px; padding: 16px; }
+.fin-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; }
+.fin-label { font-size: 13px; color: #495057; }
+.fin-label-grand { font-size: 14px; font-weight: 800; color: #1a3a4b; }
+.fin-value { font-size: 15px; font-weight: 700; }
+.fin-value-large {
+    font-size: 38px; /* NUMEROS MASIVOS PARA EL TOTAL FINANCIERO */
+    font-weight: 900;
+    color: #000000;
+    letter-spacing: -1px;
+}
+
+/* Botonería de Cierre de Ventas */
+.btn-miggo-action-success {
+    background-color: #28a745;
+    color: #ffffff;
+    font-weight: 800;
+    height: 58px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.btn-miggo-action-secondary {
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    height: 44px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Caja Desplegable Predictiva para la Búsqueda de Clientes (POS Real) */
+.pos-predictive-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 15px; /* Alineado perfecto con el padding del grid bootstrap */
+    z-index: 9999;
+    background: #ffffff;
+    border: 2px solid #0b4c73;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-height: 280px;
+    overflow-y: auto;
+    display: none;
+    margin-top: -2px;
+}
+
+/* Ítems del Autocompletar Predictivo */
+.pos-predictive-dropdown .list-group-item-info {
+    background-color: #ffffff !important;
+    color: #1a2530 !important;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    border: none;
+    border-bottom: 1px solid #edf2f5;
+    display: block;
+    text-decoration: none;
+    transition: background 0.1s ease;
+}
+
+.pos-predictive-dropdown .list-group-item-info:last-child {
+    border-bottom: none;
+}
+
+/* Efecto hover estilo Apple POS */
+.pos-predictive-dropdown .list-group-item-info:hover {
+    background-color: #e6f0f5 !important;
+    color: #0b4c73 !important;
+}
+
+/* Caja Desplegable Predictiva para la Búsqueda de Productos */
+#datosProducto.pos-predictive-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    right: 8px;
+    z-index: 9999;
+    background: #ffffff;
+    border: 2px solid #28a745; /* Contorno verde asociado a productos */
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-height: 280px;
+    overflow-y: auto;
+    display: none;
+    margin-top: -2px;
+}
+
+/* Contenedor de la foto dentro del card superior */
+.mini-card-photo-wrapper {
+    background: #ffffff;
+    width: 50px;       /* Tamaño uniforme y robusto */
+    height: 50px;
+    border-radius: 6px;
+    border: 1px solid #ccdbe4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    overflow: hidden;  /* Recorta cualquier excedente de la imagen */
+    flex-shrink: 0;    /* Evita que el contenedor se deforme si el texto de la derecha es muy largo */
+}
+
+/* Comportamiento de la imagen del producto */
+.mini-card-img-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Centra y encuadra la imagen sin deformar las proporciones */
+    display: block;
+}
+
+/* Contenedor controlado de la imagen en la celda de la tabla */
+.pos-table-img-wrapper {
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border: 1px solid #ccdbe4;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Propiedades del elemento de la imagen */
+.pos-table-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botón X Roja para eliminar ítems en el POS */
+.btn-pos-delete {
+    background: transparent;
+    border: none;
+    color: #dc3545; /* Rojo estándar POS / Bootstrap */
+    font-size: 18px; /* Tamaño grande y fácil de cliquear */
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: color 0.1s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efecto al pasar el mouse */
+.btn-pos-delete:hover {
+    color: #a71d2a; /* Rojo más oscuro */
+    transform: scale(1.15); /* Crece un poco para dar feedback visual */
+}
+
+/* Efecto al hacer clic */
+.btn-pos-delete:active {
+    transform: scale(0.95);
+}
+
+/* Contenedor con Scroll Vertical Fijo */
+.pos-grid-products-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 2px solid #ccdbe4;
+    max-height: 380px;        /* Altura límite para evitar que la pantalla se estire */
+    overflow-y: auto;         /* Activa el scroll vertical solo cuando es necesario */
+    overflow-x: hidden;       /* Bloquea desplazamientos horizontales extraños */
+    position: relative;
+}
+
+/* Forzar Cabecera Siempre Fija (Sticky Header) */
+.table-pos-grid thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #e6f0f5;      /* Color exacto de tu diseño */
+    color: #1a3a4b;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 14px 18px;
+    border-bottom: 2px solid #cbdbe4;
+    box-shadow: inset 0 -1px 0 #cbdbe4; /* Evita que el borde se borre al hacer scroll */
+}
+
+/* Personalización Estética de la Barra de Scroll (Opcional, estilo POS limpio) */
+.pos-grid-products-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+.pos-grid-products-wrapper::-webkit-scrollbar-track {
+    background: #f1f6f9;
+    border-radius: 0 8px 8px 0;
+}
+.pos-grid-products-wrapper::-webkit-scrollbar-thumb {
+    background: #b8c9d4;
+    border-radius: 4px;
+}
+.pos-grid-products-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #1a3a4b;
+}
+
+/* Fila contenedora de los medios de pago individuales */
+.dv_tip_val_pago {
+    background-color: #f8fafc;
+    border: 1px solid #ccdbe4;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px !important;
+}
+
+/* Títulos de las etiquetas dentro del módulo de pago */
+.pos-pay-label {
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    color: #0b4c73 !important;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* Botón de la Papelera de Reciclaje de Pagos */
+.btn-pos-pay-delete {
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    color: #e53e3e;
+    height: 52px; /* Alineado exacto a la altura de tus inputs pos-input */
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+}
+.btn-pos-pay-delete:hover {
+    background: #e53e3e;
+    color: #ffffff;
+    border-color: #c53030;
+}
+
+CSS
+/* Color verde de éxito para el vuelto en la liquidación */
+.text-success {
+    color: #28a745 !important;
+}
+/* Color rojo de alerta para el dinero faltante */
+.text-danger {
+    color: #dc3545 !important;
+}
+
+/* ==========================================================================
+   MIGGO POS SYSTEM - COMPONENTES OPERATIVOS COMPLETOS
+   ========================================================================== */
+
+/* Distribución horizontal de la fila superior */
+.pos-operational-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+}
+
+/* Forzamos flexibilidad en las tarjetas del Top 5 */
+.pos-top-cards-row {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+/* Alineador del botón de pantalla completa */
+.pos-global-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo premium del botón de pantalla completa */
+.btn-pos-fullscreen {
+    background: #ffffff;
+    border: 2px solid #cbdbe4;
+    color: #0b4c73;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.15s ease;
+}
+
+.btn-pos-fullscreen:hover {
+    background: #0b4c73;
+    color: #ffffff;
+    border-color: #0b4c73;
+    transform: scale(1.05);
+}
+
+.btn-pos-fullscreen.active-fullscreen {
+    background: #ffcc00;
+    color: #1c2d3d;
+    border-color: #e6b800;
+}
+
+/* Control del contenedor bajo Fullscreen Nativo */
+.miggo-pos-container:fullscreen {
+    overflow-y: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 16px !important;
+    background-color: #f4f7f9 !important;
+}
+
+@media print {
+    /* Elimina márgenes extraños del navegador, ideal para tirillas de 80mm */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    /* Oculta los encabezados y pies de página automáticos de Chrome/Edge (Fecha, Título, URL) */
+    @page {
+        margin: 0;
+    }
+}

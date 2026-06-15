@@ -174,19 +174,25 @@ function obtenerFacturaDian(elemento, facturaId, redirectTo) {
 
                 if (redirectTo == 1) {
                     window.location.href = $('#url-proyecto').val() + 'facturas/view/' + facturaId;
+                } else if (redirectTo == 2) {
+                    // no ejecuta ninguna acción
+                } else {
+                    alert('No fue posible sincronizar la factura. Por favor, inténtelo nuevamente.');
                 }
-                alert('No fue posible sincronizar la factura. Por favor, inténtelo nuevamente.');
             }
         },
         error: function(xhr, status, error) {
 
             if (redirectTo == 1) {
                 window.location.href = $('#url-proyecto').val() + 'facturas/view/' + facturaId;
+            } else if(redirectTo == 2) {
+                //No ejecuta nada
+            } else {
+                i_syncData(facturaId, '2');
+                $('#checksync_' + facturaId).removeClass('fa-check text-success').addClass('fa-times text-danger');
+                alert('Hubo un error al sincronizar la factura. Por favor, inténtelo nuevamente.');
             }
             
-            i_syncData(facturaId, '2');
-            $('#checksync_' + facturaId).removeClass('fa-check text-success').addClass('fa-times text-danger');
-            alert('Hubo un error al sincronizar la factura. Por favor, inténtelo nuevamente.');
         }
     });
     
