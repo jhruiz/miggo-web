@@ -321,7 +321,10 @@ var facturarMediosPagos = function() {
     // Enviamos el arreglo limpio a tu función nativa de almacenamiento
     guardarMetodosValoresFFast(arrPayMeth);
 
-    imprimirEnTicketFacturaRapida();
+    // Retrasamos la ejecución 2 segundos para dar tiempo a que los AJAX finalicen
+    setTimeout(function() {
+        imprimirEnTicketFacturaRapida();
+    }, 2000);
 
 };
 

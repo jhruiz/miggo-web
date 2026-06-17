@@ -339,6 +339,7 @@ class FacturasController extends AppController
         $this->loadModel('Producto');
         $this->loadModel('Tipopago');
         $this->loadModel('Empresa');
+        $this->loadModel('Configuraciondato');
 
         $empresaId = $this->Auth->user('empresa_id');
         $usuarioId = $this->Auth->user('id');
@@ -349,7 +350,67 @@ class FacturasController extends AppController
         // Se obtienen los 5 productos mas vendidos
         $topSales = $this->Producto->obtenerTopProductosDia($empresaId);
 
-        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'topSales', 'facturaElectonica', 'infoEmpresa', 'lstTipPagos'));
+        //se obtiene la ruta de la imagen de la empresa
+        $strDato = "urlImgEmpresa";
+        $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'topSales', 'facturaElectonica', 'infoEmpresa', 'lstTipPagos', 'urlImg'));
+    }
+
+    /**
+     * Obtiene la información completa de la factura para la
+     * facturación rápida
+     */
+    public function obtenerFacturaFacturaFast()
+    {
+        $this->loadModel('FacturaCuentaValore');  
+        $this->loadModel('Facturasdetalle');  
+        $this->loadModel('Prefacturas');  
+
+        $this->autoRender = false;
+        $posData = $this->request->data;
+
+        //consulta información de pagos para obtener el id de la factura
+        $fcv = $this->FacturaCuentaValore->obtenerInfoTipoPagoPrefactId($posData['prefactId']);
+
+        $facturaId = 0;
+
+        if( !empty($fcv) ) {
+
+            $facturaId = $fcv['FacturaCuentaValore']['factura_id'];
+            
+        } else {
+            $prefactura = $this->Prefactura->obtenerPrefacturaPorId($posData['prefactId']);
+            $factura = $this->Factura->obtenerUltimaFacturaCliente( $prefactura['Prefactura']['cliente_id'], $prefactura['Prefactura']['usuario_id'] );
+            $facturaId = $factura['Factura']['id'];
+        }
+
+        //Obtiene la información de la factura para realizar la impresión rápida
+        $infoGeneralFactura = $this->Factura->obtenerInfoFacturaImpresionRapida( $facturaId );
+
+        //Obtiene la info de los tipos de pagos
+        $tiposPagos = $this->FacturaCuentaValore->obtenerInfoTipoPagoEfectivo( $facturaId );
+        
+        //Obtiene detalle de las lineas de la factura
+        $infoDetFact = $this->Facturasdetalle->obtenerFacturaDetalleFactId( $facturaId );
+
+        for ($i = 0; $i < count($infoDetFact); $i++) {
+
+            $arrInfoProds = [
+                'unidadesProd' => (float)($infoDetFact[$i]['Facturasdetalle']['cantidad']),
+                'precioVenta' => (float)($infoDetFact[$i]['Facturasdetalle']['costoventa']),
+                'porcentajeDesc' => (float)($infoDetFact[$i]['Facturasdetalle']['porcentaje']),
+                'prcIVA' => (float)($infoDetFact[$i]['Facturasdetalle']['impuesto'] / 100),
+                'prcINC' => (float)($infoDetFact[$i]['Facturasdetalle']['impoconsumo'] / 100),
+                'valBolsa' => (float)($infoDetFact[$i]['Facturasdetalle']['incbolsa'])
+            ];
+
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
+
+            $infoDetFact[$i]['valoresBase'] = $objValoresBase;
+        }  
+
+        echo json_encode(array('resp' => true, 'infoGeneralFactura' => $infoGeneralFactura, 'tiposPagos' => $tiposPagos, 'infoDetFact' => $infoDetFact));
     }
 
 /**

@@ -175,4 +175,15 @@ class FacturaCuentaValore extends AppModel
         return $data;
     }
 
+    /**
+     * Obtiene la información de pagos con el id de la prefactura
+     */
+    public function obtenerInfoTipoPagoPrefactId( $prefacturaId ) {
+        return $this->find('first', array(
+            'conditions' => array(
+                'FacturaCuentaValore.prefactura_id' => $prefacturaId
+            ), 
+            'recursive' => '-1'));
+    }
+
 }

@@ -867,6 +867,87 @@ class Factura extends AppModel
 
     }
 
+    /**
+     * Obtiene la información de la factura para impresion rápida
+     */
+    public function obtenerInfoFacturaImpresionRapida( $facturaId ) {
+        $arr_join = array(); 
+       
+        array_push($arr_join, array(
+            'table' => 'empresas', 
+            'alias' => 'E', 
+            'type' => 'INNER',
+            'conditions' => array('Factura.empresa_id=E.id')                
+        ));
+       
+        array_push($arr_join, array(
+            'table' => 'resolucionfacturas', 
+            'alias' => 'RF', 
+            'type' => 'INNER',
+            'conditions' => array('E.id=RF.empresa_id')                
+        ));
+       
+        array_push($arr_join, array(
+            'table' => 'ciudadesmiggos', 
+            'alias' => 'CIUM', 
+            'type' => 'INNER',
+            'conditions' => array('E.ciudade_id=CIUM.id')                
+        ));
+       
+        array_push($arr_join, array(
+            'table' => 'departamentosmiggos', 
+            'alias' => 'DEPM', 
+            'type' => 'INNER',
+            'conditions' => array('CIUM.departamento_id=DEPM.id')                
+        ));
+       
+        array_push($arr_join, array(
+            'table' => 'clientes', 
+            'alias' => 'CL', 
+            'type' => 'LEFT',
+            'conditions' => array('Factura.cliente_id=CL.id')                
+        ));
+       
+        array_push($arr_join, array(
+            'table' => 'usuarios', 
+            'alias' => 'U', 
+            'type' => 'INNER',
+            'conditions' => array('Factura.usuario_id=U.id')                
+        ));
+
+        $infoGeneralFactura = $this->find('all', array(                
+            'joins' => $arr_join, 
+            'fields' => array(
+                'E.*',
+                'RF.*',
+                'CIUM.*',
+                'DEPM.*',
+                'CL.*',
+                'U.*',
+            ),                             
+            'conditions' => array('Factura.id' => $facturaId, 'RF.tipodocumentoventa_id' => '1'),
+            'recursive' => '-1', 
+            ));            
+        
+        return $infoGeneralFactura;
+    }
+
+    /**
+     * Obtiene la última factura de un cliente
+     */
+    public function obtenerUltimaFacturaCliente( $clienteId, $usuarioId ) {
+
+        return $this->find('first', array(
+            'conditions' => array(
+                'Factura.cliente_id' => $clienteId,
+                'Factura.usuario_id' => $usuarioId
+            ),
+            'recursive' => '-1',
+            'order' => 'Factura.id desc',
+        ));
+
+    }
+
 
 
 }

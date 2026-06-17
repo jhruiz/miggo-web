@@ -232,3 +232,9 @@
 <div id="div_producto" style="display:none;"></div>
 <div id="div_facturar" style="display:none;"></div>
 <div id="div_abono" style="display:none;"></div>
+<div id="dv_img_emp" style="display:none;">
+    <div style="float:center;" align="center">
+        <img src="<?php echo $urlImg . $infoEmpresa['Empresa']['id'] . '/' . $infoEmpresa['Empresa']['imagen'];?>" 
+        class="img-responsive img-thumbnail center-block" width="200">  
+    </div>
+</div>  
