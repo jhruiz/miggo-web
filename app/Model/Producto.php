@@ -319,24 +319,24 @@ public function obtenerTopProductosDia($empresaId) {
     $db = $FacturaModel->getDataSource();
     
     // Al pasar hoy como parámetro manual de PHP, evitamos cualquier conflicto de zonas horarias
-    $fechaHoy = date('Y-m-09');
+    $fechaHoy = date('Y-m-d');
 
-$sql = "SELECT 
-                p.id AS producto_id,
-                p.codigo AS producto_codigo,
-                p.descripcion AS producto_descripcion,
-                img.url AS producto_imagen,
-                SUM(fd.cantidad) AS total_vendido
-            FROM facturasdetalles fd
-            INNER JOIN facturas f ON fd.factura_id = f.id
-            INNER JOIN productos p ON fd.producto_id = p.id
-            LEFT JOIN imagenesitems img ON img.producto_id = p.id AND img.posicion = 0
-            WHERE f.eliminar = 0 
-              AND DATE(f.created) = '{$fechaHoy}'
-              AND f.empresa_id = {$empresaId}
-            GROUP BY p.id, p.codigo, p.descripcion, img.url
-            ORDER BY total_vendido DESC
-            LIMIT 5;";
+    $sql = "SELECT 
+        p.id AS producto_id,
+        p.codigo AS producto_codigo,
+        p.descripcion AS producto_descripcion,
+        img.url AS producto_imagen,
+        SUM(fd.cantidad) AS total_vendido
+    FROM facturasdetalles fd
+    INNER JOIN facturas f ON fd.factura_id = f.id
+    INNER JOIN productos p ON fd.producto_id = p.id
+    LEFT JOIN imagenesitems img ON img.producto_id = p.id AND img.posicion = 0
+    WHERE f.eliminar = 0 
+        AND DATE(f.created) = '{$fechaHoy}'
+        AND f.empresa_id = {$empresaId}
+    GROUP BY p.id, p.codigo, p.descripcion, img.url
+    ORDER BY total_vendido DESC
+    LIMIT 5;";
 
     // Ejecución directa de la consulta
     $resultados = $db->fetchAll($sql);
