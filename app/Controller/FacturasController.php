@@ -692,7 +692,7 @@ class FacturasController extends AppController
 
 
             $cantidadVta = (float)($arrInfoProds['unidadesProd']);
-            $precioUnitario = ($objValoresBase['valorBaseUnitario']-$objValoresBase['descuento'])/$cantidadVta;
+            $precioUnitario = ($objValoresBase['valorBaseUnitario'])/$cantidadVta;
             $utilidadBruta = (float)($precioUnitario-$arrCrgInv['Cargueinventario']['costoproducto']);
             $utilidadPorcentual = (float)(($utilidadBruta/$precioUnitario)*100);
 

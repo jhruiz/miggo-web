@@ -74,16 +74,6 @@ var imprimirFacturaFacturaRapidaTicket = function() {
             iframe.style.height = '0px';
             iframe.style.border = 'none';
 
-
-            //             // Abrir ventana limpia de impresión nativa
-            // var mywindow = window.open('', 'PRINT', 'height=600,width=400');
-            // mywindow.document.write('<html><head><title>' + cliente.nombre + ' - Documento de Venta</title>');
-            
-            // document.body.appendChild(iframe);
-            
-            // var mywindow = iframe.contentWindow || iframe.contentDocument;
-            // if (mywindow.document) { mywindow = mywindow.document; }
-
             var mywindow = window.open('', 'PRINT', 'height=600,width=400');
             mywindow.document.write('<html><head><title>' + cliente.nombre + ' - Factura Electronica</title>');
             mywindow.document.write('<style>');
@@ -214,15 +204,6 @@ var imprimirFacturaFacturaRapidaTicket = function() {
                 location.reload();
             }, 250);
             
-            // setTimeout(function() {
-            //     iframe.contentWindow.focus();
-            //     iframe.contentWindow.print();
-                
-            //     setTimeout(function() {
-            //         $('#' + iframeId).remove(); 
-            //         location.reload();
-            //     }, 400);
-            // }, 300);
         },
         error: function(xhr, status, error) {
             console.error("Error al recuperar los datos de la factura: ", error);
