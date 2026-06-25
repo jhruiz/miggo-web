@@ -80,7 +80,7 @@ var imprimirFacturaFacturaRapidaTicket = function() {
             if (mywindow.document) { mywindow = mywindow.document; }
             
             mywindow.open();
-            mywindow.write('<html><head><title>FACTURA ' + resolucion.prefijo + ' ' + facturaF.consecutivodian + '</title>');
+            mywindow.write('<html><head><title>' + cliente.nombre + ' - Factura Electronica</title>');
             mywindow.write('<style>');
             mywindow.write('body { margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 11px; width: 80mm; color: #000; line-height: 1.3; }');
             mywindow.write('@page { size: 80mm auto; margin: 0mm; }');
@@ -261,7 +261,7 @@ var imprimirFacturaDocumentoEquivalenteTicket = function() {
 
             // Abrir ventana limpia de impresión nativa
             var mywindow = window.open('', 'PRINT', 'height=600,width=400');
-            mywindow.document.write('<html><head><title>DOCUMENTO DE VENTA DV</title>');
+            mywindow.document.write('<html><head><title>' + cliente.nombre + ' - Documento de Venta</title>');
             
             // Estilos del ticket adaptados al Documento de Venta
             mywindow.document.write('<style>');
