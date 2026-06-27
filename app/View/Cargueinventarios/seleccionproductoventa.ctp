@@ -10,8 +10,8 @@ echo ($this->Html->script('seleccionproductoventa/seleccionproductoventa.js'));
             <legend><h4><b><?php echo $arrProducto['Producto']['descripcion'] . " - " . $arrProducto['Producto']['codigo']; ?></b></h4></legend>
             Existencia Actual: <?php echo $arrProducto['Cargueinventario']['existenciaactual']; ?> <br>
             Precio de Venta: $ <?php echo number_format($arrProducto['Cargueinventario']['precioventa'],2); ?> <br>
-            Precio Máximo: $ <?php echo number_format($arrProducto['Cargueinventario']['preciomaximo'],2); ?> <br>
-            Precio Mínimo: $ <?php echo number_format($arrProducto['Cargueinventario']['preciominimo'],2); ?>            
+            Precio Máximo: $ <?php echo (!empty(number_format($arrProducto['Cargueinventario']['preciomaximo'])) ? number_format($arrProducto['Cargueinventario']['preciomaximo'],2) : number_format(0)); ?> <br>
+            Precio Mínimo: $ <?php echo (!empty(number_format($arrProducto['Cargueinventario']['preciominimo'])) ? number_format($arrProducto['Cargueinventario']['preciominimo'],2) : number_format(0)); ?>        
         </div>                
         </div>
 

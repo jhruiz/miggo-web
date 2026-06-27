@@ -78,7 +78,7 @@ class Utilidade extends AppModel {
             $data['cantidad'] = $cantidad;
             $data['precioventa'] = $valorVenta;
             $data['utilidadbruta'] = $utilidadBruta;
-            $data['utilidadporcentual'] = $utilidadBruta < 0 ? 0 : $utilidadPorcentual;
+            $data['utilidadporcentual'] = $utilidadBruta <= 0 ? 0 : $utilidadPorcentual;
             $data['empresa_id'] = $empresaId;
             $data['factura_id'] = $facturaId;
             $data['costo_producto'] = $costoProd;

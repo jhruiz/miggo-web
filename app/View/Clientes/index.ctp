@@ -77,7 +77,7 @@
                             <td><?php echo h($cliente['Cliente']['telefono']); ?></td>
                             <td><?php echo h($cliente['Ciudadesmiggo']['nombre']); ?></td>
                             <td><?php echo h($cliente['Cliente']['celular']); ?></td>
-                            <td><?php echo '$' . number_format($cliente['Cliente']['limitecredito'], 0); ?></td>
+                            <td><?php echo h(!empty($cliente['Cliente']['limitecredito']) ? '$' . number_format($cliente['Cliente']['limitecredito'], 0) : number_format(0)); ?></td>
                             <td>
                                 <span class="badge badge-info">
                                     <?php echo h($cliente['Estado']['descripcion']); ?>

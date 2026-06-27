@@ -191,7 +191,7 @@ class Cotizacionesdetalle extends AppModel {
             'alias' => 'CI',
             'type' => 'INNER',
             'conditions' => array(
-                'Ci.id=Cotizacionesdetalle.cargueinventario_id'
+                'CI.id=Cotizacionesdetalle.cargueinventario_id'
             )
         ));  
 
