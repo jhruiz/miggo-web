@@ -147,7 +147,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <button id="btn_abonos" class="btn btn-miggo-add-pay w-100" type="button">
+                            <button id="btn_abonos_fast" class="btn btn-miggo-add-pay w-100" type="button">
                                 <i class="fa fa-plus-circle"></i> Agregar otro método de pago
                             </button>
                         </div>

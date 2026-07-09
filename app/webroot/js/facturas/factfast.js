@@ -398,7 +398,7 @@ $(document).ready(function() {
     $('.valueFact').change(calcularLiquidacionCaja(this));
 
     // Vinculamos el evento clic de tu botón al método de duplicación pro
-    $('#btn_abonos').on('click', duplicarMediosPago);
+    $('#btn_abonos_fast').on('click', duplicarMediosPago);
 
     // Vinculamos el evento clic del botón de pago exacto a la gestión del pago exacto sin digitar
     $('#btn_pago_exacto').on('click', gestionarPagoExacto);

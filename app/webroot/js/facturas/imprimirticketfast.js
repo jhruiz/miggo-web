@@ -139,6 +139,12 @@ var imprimirFacturaFacturaRapidaTicket = function() {
                 totalFacturaAcumulado += valorPago;
                 mywindow.document.write('<div> - ' + pago.T.descripcion + ': $' + valorPago.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</div>');
             });
+
+            $.each(data.tiposPagosCredito, function(i, pagocred) {
+                var valorPago = parseFloat(pagocred.Cuentascliente.total) || 0;
+                totalFacturaAcumulado += valorPago;
+                mywindow.document.write('<div> - ' + pagocred.TP.descripcion + ': $' + valorPago.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</div>');
+            });
             
             // --- TABLA DE DETALLES ---
             mywindow.document.write('<table><thead>');
@@ -224,7 +230,6 @@ var imprimirFacturaDocumentoEquivalenteTicket = function() {
         success: function(response) {
             // Validar si la respuesta viene codificada como String o ya es Objeto
             var data = typeof response === 'string' ? JSON.parse(response) : response;
-            console.log(data);
 
             if (!data.resp || !data.infoGeneralFactura || data.infoGeneralFactura.length === 0) {
                 console.error("Estructura de JSON inválida o vacía");
@@ -240,6 +245,9 @@ var imprimirFacturaDocumentoEquivalenteTicket = function() {
             var cliente = infoFactura.CL;
             var detalles = data.infoDetFact;
             var pagos = data.tiposPagos;
+            var pagoscred = data.tiposPagosCredito;
+
+            console.log(data);
 
             // Formatear Fecha: Medellín (Antioquia), Junio 13, 2026 02:14:27
             var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -320,6 +328,16 @@ var imprimirFacturaDocumentoEquivalenteTicket = function() {
                 $.each(pagos, function(i, p) {
                     var valorPago = parseFloat(p.FacturaCuentaValore.valor) || 0;
                     mywindow.document.write(' - ' + p.T.descripcion + ': $' + valorPago.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '<br>');
+                });
+                mywindow.document.write('</div>');
+            }
+
+            // Métodos de Pago dinámicos mapeados del array tiposPagos
+            if (pagoscred && pagoscred.length > 0) {
+                mywindow.document.write('<div style="margin-top: 4px;"><b>Método(s) de Pago Crédito:</b><br>');
+                $.each(pagoscred, function(i, pc) {
+                    var valorPago = parseFloat(pc.Cuentascliente.total) || 0;
+                    mywindow.document.write(' - ' + pc.TP.descripcion + ': $' + valorPago.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '<br>');
                 });
                 mywindow.document.write('</div>');
             }

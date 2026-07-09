@@ -366,6 +366,7 @@ class FacturasController extends AppController
         $this->loadModel('FacturaCuentaValore');  
         $this->loadModel('Facturasdetalle');  
         $this->loadModel('Prefacturas');  
+        $this->loadModel('Cuentascliente');  
 
         $this->autoRender = false;
         $posData = $this->request->data;
@@ -390,6 +391,9 @@ class FacturasController extends AppController
 
         //Obtiene la info de los tipos de pagos
         $tiposPagos = $this->FacturaCuentaValore->obtenerInfoTipoPagoEfectivo( $facturaId );
+
+        //Obtiene la info de los tipos de pagos a crédito
+        $tiposPagosCredito = $this->Cuentascliente->obtenerCuentaPendienteFact( $facturaId );
         
         //Obtiene detalle de las lineas de la factura
         $infoDetFact = $this->Facturasdetalle->obtenerFacturaDetalleFactId( $facturaId );
@@ -410,7 +414,7 @@ class FacturasController extends AppController
             $infoDetFact[$i]['valoresBase'] = $objValoresBase;
         }  
 
-        echo json_encode(array('resp' => true, 'infoGeneralFactura' => $infoGeneralFactura, 'tiposPagos' => $tiposPagos, 'infoDetFact' => $infoDetFact));
+        echo json_encode(array('resp' => true, 'infoGeneralFactura' => $infoGeneralFactura, 'tiposPagos' => $tiposPagos, 'infoDetFact' => $infoDetFact, 'tiposPagosCredito' => $tiposPagosCredito));
     }
 
 /**
