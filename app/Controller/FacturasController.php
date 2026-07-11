@@ -2176,9 +2176,6 @@ class FacturasController extends AppController
      * Genera la información de las lineas de la factura
      */
     public function obtenerDetalleLineas($val, $arrImpuestos, $objValoresBase) {
-        
-        // 1. Determinar si es una línea gratuita
-        $esGratuito = $objValoresBase['valorBaseUnitario'] > 0 ? false : true;
 
         // Agregamos el nombre complementario si existe
         $nombreLinea = !empty($val['Facturasdetalle']['complementonombre']) ? $val['P']['descripcion'] . ' ' . $val['Facturasdetalle']['complementonombre'] : $val['P']['descripcion'];
@@ -2188,20 +2185,14 @@ class FacturasController extends AppController
             'unit_measure_id' => '70',
             'invoiced_quantity' => $val['Facturasdetalle']['cantidad'],
             'line_extension_amount' => $objValoresBase['valorBaseUnitario'],
-            'free_of_charge_indicator' => $esGratuito,
+            'free_of_charge_indicator' => false,
             'tax_totals' => $arrImpuestos,
             'description' => $nombreLinea,
             'code' => $val['P']['codigo'],
             'type_item_identification_id' => 4,
-            'price_amount' => ($objValoresBase['precioUnitarioFinal'] / $val['Facturasdetalle']['cantidad']),
+            'price_amount' => number_format(($objValoresBase['valorBaseUnitario'] + $val['Facturasdetalle']['descuento']), 2, '.', '')
             'base_quantity' => $val['Facturasdetalle']['cantidad']
         ];
-
-        // 3. AGREGAR CAMPO OBLIGATORIO PARA REGALOS / MUESTRAS GRATIS
-        // Si es gratuito, el estándar exige reference_price_id (3 = Valor Comercial)
-        if ($esGratuito) {
-            $arrProductos['reference_price_id'] = '3';
-        }
 
         // 4. Verifica si hay descuento y lo añade al array
         if ($val['Facturasdetalle']['descuento'] > 0) {
