@@ -505,10 +505,12 @@ class PrefacturasController extends AppController {
             $this->loadModel('Cargueinventario');
             $this->loadModel('Prefactura');
             $this->loadModel('Producto');
-            
+            $this->loadModel('Ordenestado');
+            $this->loadModel('Ordentrabajo');
+
             /*se obtiene el detalle de la prefactura que se va eliminar*/
             $prefactDet = $this->Prefacturasdetalle->obtenerProductosPrefacturaPrefactId($id);
-        
+
             /*se recorren los detalles de la factura para actualizar el stock y eliminar el registro*/
             for( $i = 0; $i < count($prefactDet); $i++){ 
 
@@ -527,6 +529,17 @@ class PrefacturasController extends AppController {
 
                 /*una vez actualizado el inventario, se elimina el registro del detalle de la factura*/
                 $this->Prefacturasdetalle->delete($prefactDet[$i]['Prefacturasdetalle']['id']);
+            }
+
+            //Si tiene orden de trabajo asociada, se cambia el estado a inicial
+            if( $prefactDet['0']['Prefactura']['ordentrabajo_id'] > 0 ) {
+                //se obtiene el estado inicial
+                $estadoOrden = $this->Ordenestado->obtenerEstadoInicial();
+
+                //se actualiza el estado de la orden de trabajo
+                $data['id'] = $prefactDet['0']['Prefactura']['ordentrabajo_id'];
+                $data['ordenestado_id'] = $estadoOrden['Ordenestado']['id'];
+                $ordenId = $this->Ordentrabajo->crearActualizarOrdenTrabajo($data);
             }
             
             $this->Prefactura->id = $id;

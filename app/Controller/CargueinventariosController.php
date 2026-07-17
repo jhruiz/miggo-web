@@ -79,10 +79,15 @@ class CargueinventariosController extends AppController {
                 /** se obtiene la cantidad del producto en prefacturas */
                 $cantPreFact = $this->Prefacturasdetalle->obtenerProductosEnPrefacturas($cargueinventariosP[$i]['Cargueinventario']['id']);
                 $cargueinventariosP[$i]['Cargueinventario']['prefacturas'] = $cantPreFact['0']['0']['cantprefact'] != '' ? $cantPreFact['0']['0']['cantprefact'] : 0;
-                
-                /** se obtiene la cantidad del producto en ordenes de trabajo */
-                $cantProdOT = $this->OrdentrabajosSuministro->obtenerProductosEnOrdenes($cargueinventariosP[$i]['Cargueinventario']['id']);
-                $cargueinventariosP[$i]['Cargueinventario']['ordeninsumos'] = $cantProdOT['0']['0']['cantordent'] != '' ? $cantProdOT['0']['0']['cantordent'] : 0;
+            
+                if( $cantPreFact['0']['0']['cantprefact'] <= 0 ) {
+                    /** se obtiene la cantidad del producto en ordenes de trabajo */
+                    $cantProdOT = $this->OrdentrabajosSuministro->obtenerProductosEnOrdenes($cargueinventariosP[$i]['Cargueinventario']['id']);
+                    $cargueinventariosP[$i]['Cargueinventario']['ordeninsumos'] = $cantProdOT['0']['0']['cantordent'] != '' ? $cantProdOT['0']['0']['cantordent'] : 0;
+                } else {
+                    
+                    $cargueinventariosP[$i]['Cargueinventario']['ordeninsumos'] = 0;
+                }
 
                 /*se valida si la existencia del producto está por debajo del mínimo*/
                 if($cargueinventariosP[$i]['Cargueinventario']['existenciaactual'] < $cargueinventariosP[$i]['Producto']['existenciaminima']){
@@ -97,7 +102,7 @@ class CargueinventariosController extends AppController {
                 }
 
             }
-            
+
             /*Se obtienen las cuentas pendientes que tiene la empresa*/
             $cuentasPendientes = $this->Cuentaspendiente->obtenerCuentasPendientesEmpresa($empresaId);
             

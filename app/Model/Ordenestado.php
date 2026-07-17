@@ -37,7 +37,22 @@ class Ordenestado extends AppModel {
      * Se obtienen los estados catalogados como fin
      */
     public function obtenerEstadosFin(){
-        $estados = $this->find('list', array('conditions' => array('Ordenestado.ordenfinal' => true)));
+        $estados = $this->find('list', array('conditions' => array('Ordenestado.ordenfinal' => false)));
+        return $estados;
+    }
+    
+    /**
+     * Se obtiene el estado catalogado como inicial
+     */
+    public function obtenerEstadoInicial(){
+        $estados = $this->find('first', array(
+            'conditions' => array(
+                'Ordenestado.ordenfinal' => false
+                ),
+            'recursive' => '-1',
+            'order' => 'Ordenestado.id'
+            )
+        );
         return $estados;
     }
 

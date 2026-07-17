@@ -120,7 +120,6 @@ class Prefacturasdetalle extends AppModel {
                 ),
                 'conditions' => array(                    
                     'Prefacturasdetalle.cargueinventario_id' => $ciId,
-                    'P.ordentrabajo_id is NULL',
                     'P.eliminar' => 0
                     )
             ));
