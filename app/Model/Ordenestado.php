@@ -64,4 +64,24 @@ class Ordenestado extends AppModel {
         return $estado;
     }
 
+    /**
+     * Se obtiene el estado final relacionado al estado actual
+     */
+    public function obtenerEstadosFinRelacionada( $ordenestadoId ) {
+        //se obtiene la información del estado para obtener la relacion
+        $estadosRelacionados = $this->find('first', array('conditions' => array('Ordenestado.id' => $ordenestadoId), 'recursive' => '-1'));
+
+        //se obtiene el estado relacionado diferente al estado actual
+        $estadoFinal = $this->find('first', array(
+            'conditions' => array(
+                'Ordenestado.relacionestados' => $estadosRelacionados['Ordenestado']['relacionestados'],
+                'Ordenestado.id <>' => $ordenestadoId
+            ),
+            'recursive' => '-1'
+        ));
+
+        return $estadoFinal;
+
+    }
+
 }

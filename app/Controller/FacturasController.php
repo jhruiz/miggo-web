@@ -551,6 +551,8 @@ class FacturasController extends AppController
         $this->loadModel('Relacionempresa');
         $this->loadModel('Abonofactura');
         $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Ordenestado');
+        $this->loadModel('Ordentrabajo');
 
         $this->autoRender = false;
         $posData = $this->request->data;
@@ -720,7 +722,22 @@ class FacturasController extends AppController
         $this->Abonofactura->asignarFacturaAbonos($prefacturaId, $facturaId);
 
         $this->Cuentascliente->actualizarCuentaClienteFactura($documentoId, $clienteId, $facturaId, $prefacturaId);
-        
+
+        //actualiza el estado de la orden de trabajo si la tiene
+        $infoPrefactura = $this->Prefactura->obtenerPrefacturaPorId($datFact['prefacturado']);
+        if($infoPrefactura['Prefactura']['ordentrabajo_id'] != null && $infoPrefactura['Prefactura']['ordentrabajo_id'] > 0) {
+
+            //se obtiene la información de la orden del trabajo
+            $ordenTrabajo = $this->Ordentrabajo->obtenerOrdenPorId( $infoPrefactura['Prefactura']['ordentrabajo_id'] );
+
+            //se obtiene el estado inicial
+            $estadoOrden = $this->Ordenestado->obtenerEstadosFinRelacionada( $ordenTrabajo['Ordentrabajo']['ordenestado_id'] );
+
+            //se actualiza el estado de la orden de trabajo
+            $data['id'] = $infoPrefactura['Prefactura']['ordentrabajo_id'];
+            $data['ordenestado_id'] = $estadoOrden['Ordenestado']['id'];
+            $ordenId = $this->Ordentrabajo->crearActualizarOrdenTrabajo($data);
+        }
 
         echo json_encode(array('resp' => $facturaId));
     }
