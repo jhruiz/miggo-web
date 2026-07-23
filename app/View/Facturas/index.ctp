@@ -149,7 +149,7 @@
                 <?php foreach ($facturas as $factura): ?>
 
                     <?php
-                         $faType = $factura['Factura']['diancufe'] != '' ? 'fa-check text-success' : 'fa-times text-danger';
+                         $faType = $factura['Factura']['dianstatuscode'] != '99' ? 'fa-check text-success' : 'fa-times text-danger';
                     ?>
                 <tr>
                         <td>
