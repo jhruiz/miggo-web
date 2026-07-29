@@ -925,7 +925,7 @@ class Factura extends AppModel
                 'CL.*',
                 'U.*',
             ),                             
-            'conditions' => array('Factura.id' => $facturaId, 'RF.tipodocumentoventa_id' => '1'),
+            'conditions' => array('Factura.id' => $facturaId),
             'recursive' => '-1', 
             ));            
         
