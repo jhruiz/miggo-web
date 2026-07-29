@@ -167,7 +167,7 @@ class FacturasController extends AppController
 
         /** Se obtiene la información de la resolución para la factura o documento de venta */
         $infoResolucion = $this->Resolucionfactura->obtenerResolucion($infoFact['Factura']['empresa_id'], $tipoDocumentoVenta);
-        
+
         /*Se obtiene la información del vendedor*/
         $infoVendedor = $this->Usuario->obtenerUsuarioPorId($infoFact['Factura']['usuario_id']);
 
@@ -286,6 +286,189 @@ class FacturasController extends AppController
         $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
         $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
+        $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'nombreDocumento'));
+    }
+
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+    public function viewnc($id = null)
+    {
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
+
+        $this->loadModel('Empresa');
+        $this->loadModel('Ventarapida');
+        $this->loadModel('Usuario');
+        $this->loadModel('Facturasdetalle');
+        $this->loadModel('Configuraciondato');
+        $this->loadModel('Tipopago');
+        $this->loadModel('Regimene');
+        $this->loadModel('Relacionempresa');
+        $this->loadModel('FacturasNotafactura');
+        $this->loadModel('Cuentascliente');
+        $this->loadModel('Ordentrabajo');
+        $this->loadModel('OrdentrabajosPartevehiculo');
+        $this->loadModel('Estadoparte');
+        $this->loadModel('OrdentrabajosSuministro');
+        $this->loadModel('Vehiculo');
+        $this->loadModel('Tipovehiculo');
+        $this->loadModel('Marcavehiculo');
+        $this->loadModel('Ciudadesmiggo');
+        $this->loadModel('FacturaCuentaValore');
+        $this->loadModel('Abonofactura');
+        $this->loadModel('Deposito');
+        $this->loadModel('Resolucionfactura');
+
+        /*se obtiene la información de la factura por el id*/
+        $infoFact = $this->Factura->obtenerInfoFacturaPorId($id);
+
+        //se obtiene la factura cuenta valor
+        $factCV = $this->FacturaCuentaValore->obtenerPagosFactura($id);
+
+        //se obtiene la informacion de los abonos
+        $factAbonos = $this->Abonofactura->obtenerAbonosFactura($id); 
+        
+        // obtiene el pago a credito asociado al cliente
+        $factCredit = $this->Cuentascliente->obtenerCuentaPendienteFact($id);
+
+        $tipoDocumentoVenta = $infoFact['Factura']['factura'] == '1' ? '1' : '2';
+        $infoEmpresa = $this->Empresa->obtenerEmpresaPorId($infoFact['Factura']['empresa_id']);
+
+        /** Se obtiene la información de la resolución para la factura o documento de venta */
+        $infoResolucion = $this->Resolucionfactura->obtenerResolucion($infoFact['Factura']['empresa_id'], $tipoDocumentoVenta);
+
+        /** Se obtiene la información de la resolución para la nota crédito*/
+        $tipoDocumentoVenta = 4;
+        $infoResolucionNC = $this->Resolucionfactura->obtenerResolucion($infoFact['Factura']['empresa_id'], $tipoDocumentoVenta);
+        
+        /*Se obtiene la información del vendedor*/
+        $infoVendedor = $this->Usuario->obtenerUsuarioPorId($infoFact['Factura']['usuario_id']);
+
+        /*Se obtiene el detalle de la factura*/
+        $infoDetFact = $this->Facturasdetalle->obtenerFacturaDetalleFactId($id);
+
+        /*Se recorre el detalle para obtener el total de la venta y el total de productos*/
+        $ttalUnid = '0';
+
+        $ttalServ = 0;
+        $ttalRep = 0;
+
+        for ($i = 0; $i < count($infoDetFact); $i++) {
+
+            $arrInfoProds = [
+                'unidadesProd' => (float)($infoDetFact[$i]['Facturasdetalle']['cantidad']),
+                'precioVenta' => (float)($infoDetFact[$i]['Facturasdetalle']['costoventa']),
+                'porcentajeDesc' => (float)($infoDetFact[$i]['Facturasdetalle']['porcentaje']),
+                'prcIVA' => (float)($infoDetFact[$i]['Facturasdetalle']['impuesto'] / 100),
+                'prcINC' => (float)($infoDetFact[$i]['Facturasdetalle']['impoconsumo'] / 100),
+                'valBolsa' => (float)($infoDetFact[$i]['Facturasdetalle']['incbolsa'])
+            ];
+
+            $objValoresBase = $this->Factura->obtenerValorBaseProducto( $arrInfoProds );
+
+            $infoDetFact[$i]['valoresBase'] = $objValoresBase;
+
+        }     
+
+        $impuestos = '0';
+
+        $iva = $impuestos;
+
+        /*se obtiene el consecutivo de la factura*/
+        $consecutivoFact = !empty($infoFact['Factura']['consecutivodian']) ? $infoFact['Factura']['consecutivodian'] : $consecutivoFact = $infoFact['Factura']['consecutivodv'];
+
+        /*se obtiene el consecutivo de la note crédito*/
+        $consecutivoNC = $infoFact['Factura']['consecutivonc'];
+
+        /*se valida si fue una venta rapida*/
+        $infoVentaRapida = $this->Ventarapida->obtenerInfoVentaFactId($id);
+
+        /*Se obtiene el nombre para el total de manos de obra*/
+        $strDato = "service";
+        $serviceName = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        /*Se obtiene el nombre para el total de repuestos*/
+        $strDato = "product";
+        $productName = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        /*Se obtiene la url de las imagenes de las empresas*/
+        $strDato = "urlImgEmpresa";
+        $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        //se obtiene la url de la imagend e whatsapp
+        $strDato = "ulrImgWP";
+        $urlImgWP = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
+
+        /*se obtiene el tipo de pago de la transacción*/
+        $infoTipoPago = $this->Tipopago->obtenerTipoPagoPorId($infoFact['Factura']['tipopago_id']);
+
+        /*se obtiene el regimen del deposito*/
+        if (count($infoDetFact) > 0) {
+            $regimen = $this->Regimene->obtenerRegimenPorId($infoDetFact['0']['Deposito']['regimene_id']);
+        }
+
+        /*se obtiene la cartera del cliente*/
+        $totalCartera = '0';
+        if (isset($infoFact['Cliente']['id']) && $infoFact['Cliente']['id'] != "") {
+            $arrCartera = $this->Cuentascliente->obtenerCarteraCliente($infoFact['Cliente']['id']);
+            if (count($arrCartera) > '0') {
+                for ($j = 0; $j < count($arrCartera); $j++) {
+                    $totalCartera += $arrCartera[$j]['Cuentascliente']['totalobligacion'];
+                }
+            }
+        }
+
+        /*Se obtiene la nota de la factura*/
+        $notaFactura = $this->FacturasNotafactura->obtenerNotaFactura($id);
+
+        //se obtiene la fecha actual
+        $fechaActual = $this->formatoFecha($infoFact['Factura']['created']);
+
+        //se obtiene la ciudad y el pais
+        $arrUbicacion = $this->Ciudadesmiggo->obtenerUbicacion($infoEmpresa['Empresa']['ciudade_id']);
+
+        $arrInfoOrd = array();
+        /*Se valida si existe una orden de trabajo relacionada*/
+        if (!empty($infoFact['Factura']['ordentrabajo_id'])) {
+            //se obtiene la informacion de la orden de trabajo
+            $arrFilter['Ordentrabajo.id'] = $infoFact['Factura']['ordentrabajo_id'];
+            $arrInfoOrd = $this->Ordentrabajo->obtenerOrdenesTrabajo($arrFilter);
+
+            //se obtienen las partes del vehiculo relacionadas a la orden de trabajo
+            $partesV = $this->OrdentrabajosPartevehiculo->obtenerEstadosPartesOrden($infoFact['Factura']['ordentrabajo_id']);
+
+            //se obtienen los estados de las partes de los vehiculos
+            $pEstados = $this->Estadoparte->obtenerListaEstados();
+
+            //se obtienen los suministros de la orden
+            $arrSums = $this->OrdentrabajosSuministro->obtenerSuministrosProductos($infoFact['Factura']['ordentrabajo_id']);
+
+            //se obtiene la informacion del vehiculo relacionado en la orden de trabajo
+            $arrVeh = $this->Vehiculo->obtenerVehiculoPorId($arrInfoOrd['0']['Ordentrabajo']['vehiculo_id']);
+
+            //se obtiene la lista de las marcas de vehiculos
+            $arrMarca = $this->Marcavehiculo->obtenerListaMarcavehiculos();
+
+        }
+
+        $empresaId = $this->Auth->user('empresa_id');
+
+        //si es una remision, se obtiene la información de una empresa relacionada
+        $infoRemision = [];
+        if (empty($infoFact['Factura']['factura'])) {
+            $infoRemision = $this->Relacionempresa->obtenerDatosEmpresaRemision($empresaId);
+        }
+
+        $this->set(compact('infoFact', 'infoEmpresa', 'infoVendedor', 'infoVentaRapida', 'infoDetFact', 'consecutivoFact', 'urlImg', 'infoTipoPago'));
+        $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit', 'infoResolucionNC'));
+        $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP', 'consecutivoNC'));
         $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'nombreDocumento'));
     }
 

@@ -53,7 +53,7 @@
                                         
                                         echo $this->Html->image( $nombreImagen, array(
                                             'class' => 'img-responsive mini-card-img-thumb',
-                                            'onerror' => "this.src='" . $this->webroot . "img/productos/default.png';"
+                                            'onerror' => "this.src='" . $this->webroot . "img/productos/no-image-placeholder.jpg';"
                                         )); 
                                     ?>
                                 </div>

@@ -254,7 +254,6 @@ class Usuario extends AppModel {
      //funcion que registra la ultima actividad del usuario en el sistema
      public function actualizarActividadUsuario($usuarioId,$fechaActual){
          $data = array();         
-         
          $usuario = new Usuario();
          
          $data['id'] = $usuarioId;

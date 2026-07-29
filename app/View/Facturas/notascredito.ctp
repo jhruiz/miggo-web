@@ -111,21 +111,35 @@
             <div class="container">
             <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
                 <tr>
+                    <th><?php echo ('Dian'); ?></th>
                     <th><?php echo $this->Paginator->sort('codigo'); ?></th>
                     <th><?php echo $this->Paginator->sort('consecutivodian', 'Consecutivo'); ?></th>
                     <th><?php echo $this->Paginator->sort('cliente_id'); ?></th>
                     <th><?php echo $this->Paginator->sort('usuario_id', 'Vendedor'); ?></th>
                     <th><?php echo $this->Paginator->sort('created', 'Fecha Factura'); ?></th>
                     <th><?php echo $this->Paginator->sort('factura', 'Tipo'); ?></th>
+                    <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($facturas as $factura): ?>
+                    <?php
+                         $faType = $factura['Factura']['dianstatuscode'] != '99' ? 'fa-check text-success' : 'fa-times text-danger';
+                    ?>
                 <tr>
+                        <td>
+                            <?php if ($factura['Factura']['consecutivodian'] > 0) { ?>
+                                <i class="fa fa-spinner fa-pulse fa-lg fa-fw text-primary" style="display: none;" id="spinner_<?php echo($factura['Factura']['id']); ?>"></i>
+                                <i class="fa <?php echo($faType);?> fa-lg syncdian" title="Reenviar Factura" style="cursor: pointer;" data-id="<?php echo($factura['Factura']['id']); ?>" id="checksync_<?php echo($factura['Factura']['id']); ?>"></i> 
+                            <?php } ?>
+                        </td>
                         <td><?php echo h($factura['Factura']['consecutivodv']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['consecutivodian']); ?>&nbsp;</td>
                         <td><?php echo h(!empty($factura['C']['nombre']) ? $factura['C']['nombre'] : "Anonimo"); ?>&nbsp;</td>
                         <td><?php echo h($factura['U']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['created']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['factura'] ? "F" : "R"); ?>&nbsp;</td>
+                        <td class="actions">
+                            <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver nota crédito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'viewnc', $factura['Factura']['id']))); ?>
+                        </td>
                 </tr>
     <?php endforeach;?>
             </table>
