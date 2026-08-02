@@ -49,11 +49,11 @@ var  guardarNCInfoDian = function( response, facturaId, resp ) {
             // Manejar la respuesta exitosa
             if (response) {
                 bootbox.alert('Nota crédito generada exitosamente.', function() {
-                    // location.reload();
+                    location.reload();
                 });
             } else {
                 bootbox.alert('No fue posible sincronizar la nota crédito en la Dian. Por favor, realice el debido proceso en el portal de la DIAN.', function() {
-                    // location.reload();
+                    location.reload();
                 });
             }
         },
