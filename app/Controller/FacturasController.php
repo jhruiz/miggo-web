@@ -2447,9 +2447,17 @@ class FacturasController extends AppController
         $this->loadModel('Factura');
         $this->loadModel('Resolucionfactura');
 
+        $errorMessage = $this->request->data['errorMessage']['string'] ?? '';
+
+        // Validamos si el texto específico existe dentro del mensaje de error
+        if (strpos($errorMessage, 'Regla: 90, Rechazo: Documento procesado anteriormente.') !== false) {
+            $statusCode = '00';
+        } else {
+            $statusCode = $this->request->data['statusCode'];
+        }
+
         $empresaId = $this->Auth->user('empresa_id');
         $facturaId = $this->request->data['facturaId'];
-        $statusCode = $this->request->data['statusCode'];
         $cude = $this->request->data['cude'];
         $NCQR = $this->request->data['QR'];
         $consecutivo = $this->request->data['consecutivoNC'];
@@ -2471,10 +2479,15 @@ class FacturasController extends AppController
      */
     public function generarFacturaReferencia($factura) {
         $this->loadModel('Deposito');
+        $this->loadModel('Resolucionfactura');
+
+        //Obtiene la información del deposito con la configuración de la resolución
+        $documentoId = '1';
+        $infoFact = $this->Resolucionfactura->obtenerResolucion($factura['Factura']['empresa_id'], $documentoId);
 
         return [
             "billing_reference" => [
-              "number" => $factura['Factura']['prefijo'] . $factura['Factura']['consecutivodian'],
+              "number" => $infoFact['Resolucionfactura']['prefijo'] . $factura['Factura']['consecutivodian'],
               "uuid" => $factura['Factura']['diancufe'],
               "issue_date" => date('Y-m-d')
             ]
@@ -2484,7 +2497,8 @@ class FacturasController extends AppController
     /**
      * genera la información general para la nota credito
      */
-    public function generarInformacionGeneral($factura) {
+    public function generarInformacionGeneral($factura, $consRes) {
+
         $this->loadModel('Resolucionfactura');
 
         //Obtiene la información del deposito con la configuración de la resolución
@@ -2502,7 +2516,7 @@ class FacturasController extends AppController
             "discrepancyresponsedescription" => $descNotaCredito,
             "notes" => $descNotaCredito,
             "prefix" => $infoNC['Resolucionfactura']['prefijo'],
-            "number" => $infoNC['Resolucionfactura']['consecutivoactual'],
+            "number" => $consRes != "" ? $consRes : $infoNC['Resolucionfactura']['consecutivoactual'],
             "type_document_id" => $infoNC['Resolucionfactura']['tipodocumentoventa_id'],
             "date" =>  date('Y-m-d'),
             "time" =>  date('H:i:s'),
@@ -2530,8 +2544,8 @@ class FacturasController extends AppController
         $billingReference = $this->generarFacturaReferencia($factura);
 
         //Generar datos generales de la nota crédito
-        $generalInfo = $this->generarInformacionGeneral($factura);
-        
+        $generalInfo = $this->generarInformacionGeneral($factura, $factura['Factura']['consecutivonc']);
+
         //Obtiene la información del cliente de la factura
         $infoCliente = $this->generarInfoCliente( $factura );
 

@@ -184,6 +184,10 @@ var generarAlertaFactura = function() {
 }
 
 var generarQRDian = function() {
+
+    const matchLink = $("#dianQRStr").val().match(/https:\/\/[^\s]+/);
+    const link = matchLink ? matchLink[0] : "";
+
     $('.qr_imp').qrcode({
         render: 'image',
         minVersion: 1,
@@ -194,7 +198,7 @@ var generarQRDian = function() {
         size: 100,
         fill: '#000',
         background: null,
-        text: $("#dianQRStr").val(),
+        text: link,
         radius: 0,
         quiet: 0,
         mode: 0,
