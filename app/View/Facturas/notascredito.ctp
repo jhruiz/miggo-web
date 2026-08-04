@@ -117,10 +117,23 @@
                     <th><?php echo $this->Paginator->sort('cliente_id'); ?></th>
                     <th><?php echo $this->Paginator->sort('usuario_id', 'Vendedor'); ?></th>
                     <th><?php echo $this->Paginator->sort('created', 'Fecha Factura'); ?></th>
+                    <th><?php echo $this->Paginator->sort('created', 'Fecha Nota Crédito'); ?></th>
                     <th><?php echo $this->Paginator->sort('factura', 'Tipo'); ?></th>
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                     </tr>
                     <?php foreach ($facturas as $factura): ?>
+
+                        <?php 
+                            $fechaFecCr = '';
+                            
+                            // 2. Buscamos "FecCr:" seguido de la fecha usando una expresión regular
+                            if (!empty($factura['Factura']['dianNCQRStr'])) {
+                                if (preg_match('/FecCr:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/', $factura['Factura']['dianNCQRStr'], $coincidencias)) {
+                                    $fechaFecCr = $coincidencias[1]; // Esto te devolverá exactamente "2026-08-02"
+                                }
+                            }
+                        ?>
+
                         <?php
                             $faType = $factura['Factura']['dianstatuscode'] != '99' ? 'fa-check text-success' : 'fa-times text-danger';
                         ?>
@@ -136,6 +149,7 @@
                     <td><?php echo h(!empty($factura['C']['nombre']) ? $factura['C']['nombre'] : "Anonimo"); ?>&nbsp;</td>
                     <td><?php echo h($factura['U']['nombre']); ?>&nbsp;</td>
                     <td><?php echo h($factura['Factura']['created']); ?>&nbsp;</td>
+                    <td><?php echo h($fechaFecCr); ?>&nbsp;</td>
                     <td><?php echo h($factura['Factura']['factura'] ? "F" : "R"); ?>&nbsp;</td>
                     <td class="actions">
                         <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver nota crédito', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'viewnc', $factura['Factura']['id']))); ?>
