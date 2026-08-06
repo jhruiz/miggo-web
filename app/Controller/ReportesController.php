@@ -1583,7 +1583,8 @@ class ReportesController extends AppController
         }
 
         if (isset($_POST['nombre']) && $_POST['nombre'] != "") {
-            $filtros['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($_POST['nombre'] . '%');
+            $searchProd = str_replace(" ", "%", $_POST['nombre']);
+            $filtros['LOWER(Producto.descripcion) LIKE'] = '%' . strtolower($searchProd . '%');
         }
 
         if (isset($_POST['categorias']) && $_POST['categorias'] != "") {

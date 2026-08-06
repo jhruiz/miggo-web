@@ -178,11 +178,13 @@ class Producto extends AppModel {
     }
     
     public function obtenerProductoCargueInventario($descripcionProd, $empresaId){
+        $desProd = str_replace(" ", "%", $descripcionProd);
+
         $arrProducto = $this->find('all', array(
             'conditions' => array(
                 'OR' => array(
-                    'LOWER(Producto.descripcion) LIKE' => '%'. strtolower($descripcionProd) . '%',
-                    'Producto.codigo LIKE' => '%'. $descripcionProd . '%',                        
+                    'LOWER(Producto.descripcion) LIKE' => '%'. strtolower($desProd) . '%',
+                    'Producto.codigo LIKE' => '%'. $desProd . '%',                        
                     ),
                 'Producto.empresa_id' => $empresaId,
                 'Producto.estado' => '1'),
@@ -202,6 +204,7 @@ class Producto extends AppModel {
     }  
     
     public function obtenerProductoDescargueInventario($descProducto,$empresaId,$depositoId){
+        $desProd = str_replace(" ", "%", $descProducto);
         $arr_join = array(); 
         array_push($arr_join, array(
             'table' => 'cargueinventarios', 
@@ -216,8 +219,8 @@ class Producto extends AppModel {
             'joins' => $arr_join,
             'conditions' => array(
                 'OR' => array(
-                    'LOWER(Producto.descripcion) LIKE' => '%'. $descProducto . '%',
-                    'LOWER(Producto.codigo) LIKE' => '%'. $descProducto . '%',
+                    'LOWER(Producto.descripcion) LIKE' => '%'. $desProd . '%',
+                    'LOWER(Producto.codigo) LIKE' => '%'. $desProd . '%',
                     ),
                 'Producto.empresa_id' => $empresaId,
                 'Producto.estado' => '1'),
