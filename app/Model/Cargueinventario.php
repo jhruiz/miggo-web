@@ -146,7 +146,8 @@ class Cargueinventario extends AppModel {
             return $infoProducto;            
         }
         
-        public function obtenerProductosStock($depositosIdx, $descripcionProd){            
+        public function obtenerProductosStock($depositosIdx, $descripcionProd){  
+            $descProd = str_replace(" ", "%", $descripcionProd);     
             $arr_join = array(); 
             array_push($arr_join, array(
                 'table' => 'productos', 
@@ -173,7 +174,7 @@ class Cargueinventario extends AppModel {
                     'Cargueinventario.deposito_id' => $depositosIdx,
                     'Producto.estado' => '1',
                     'OR' => array(
-                        'LOWER(P.descripcion) LIKE' => '%'. strtolower($descripcionProd) . '%',
+                        'LOWER(P.descripcion) LIKE' => '%'. strtolower($descProd) . '%',
                         'P.codigo LIKE' => '%'. $descripcionProd . '%',
                         'P.referencia LIKE' => '%'. $descripcionProd . '%'
                     ),                     

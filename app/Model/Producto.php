@@ -184,7 +184,7 @@ class Producto extends AppModel {
             'conditions' => array(
                 'OR' => array(
                     'LOWER(Producto.descripcion) LIKE' => '%'. strtolower($desProd) . '%',
-                    'Producto.codigo LIKE' => '%'. $desProd . '%',                        
+                    'Producto.codigo LIKE' => '%'. $descripcionProd . '%',                        
                     ),
                 'Producto.empresa_id' => $empresaId,
                 'Producto.estado' => '1'),
@@ -220,7 +220,7 @@ class Producto extends AppModel {
             'conditions' => array(
                 'OR' => array(
                     'LOWER(Producto.descripcion) LIKE' => '%'. $desProd . '%',
-                    'LOWER(Producto.codigo) LIKE' => '%'. $desProd . '%',
+                    'LOWER(Producto.codigo) LIKE' => '%'. $descProducto . '%',
                     ),
                 'Producto.empresa_id' => $empresaId,
                 'Producto.estado' => '1'),
