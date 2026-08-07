@@ -132,28 +132,38 @@
                     <div class="navbar nav_title" style="border: 0; margin-bottom: 10px;">
                         <div class="profile">
                             <img src="/img/png/miggo.jpeg" alt="..." style="width: 100%; height: 100%;">
-                        </div>
+                        </div>      
                     </div>
                     <div class="clearfix"></div>
-                    <br />
-                    <div id='menuUsr' style="margin-top: 60px;"></div>
+                    <!-- Nombre de la empresa -->
+                        <?php if (!empty($current_user['Empresa']['nombre'])): ?>
+                            <div style="text-align: center; color: #fff; font-size: 13px; margin-top: 60px; font-weight: bold; text-transform: uppercase;">
+                                <?php echo h($current_user['Empresa']['nombre']); ?>
+                            </div>
+                        <?php endif; ?>
+                    <div id='menuUsr' style="margin-top: 10px;"></div>
                 </div>
             </div>
 
-            <div class="top_nav">
-                <div class="nav_menu">
-                    <nav class="" role="navigation">
-                        <div class="nav toggle">
-                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-                        </div>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li role="presentation">
-                                <?php echo $this->Html->link("", array('controller' => 'usuarios', 'action' => 'logout'), array('class' => 'glyphicon glyphicon-off', 'style' => 'font-size:18px; padding:15px;')) ?>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+<div class="top_nav">
+    <div class="nav_menu" style="position: relative; height: 50px;">
+        <nav role="navigation">
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
             </div>
+            
+            <div style="position: absolute; right: 15px; top: 0; height: 50px; display: flex; align-items: center;">
+                <?php if (!empty($current_user['nombre'])): ?>
+                    <span style="padding-right: 15px; font-weight: 600;">
+                        Hola, <?php echo h($current_user['nombre']); ?>
+                    </span>
+                <?php endif; ?>
+
+                <?php echo $this->Html->link("", array('controller' => 'usuarios', 'action' => 'logout'), array('class' => 'glyphicon glyphicon-off', 'style' => 'font-size: 18px; text-decoration: none;', 'title' => 'Cerrar sesión')) ?>
+            </div>
+        </nav>
+    </div>
+</div>
 
             <div class="right_col" role="main">
                 
