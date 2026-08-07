@@ -87,7 +87,7 @@ class Resolucionfactura extends AppModel {
         /**Validar vecimiento por numeración */
         $diffConsecutivos = $data['Resolucionfactura']['resolucionfin'] - ($data['Resolucionfactura']['consecutivoactual'] - 1);
         if( $diffConsecutivos < 20 ) {
-            $resp['porDias'] = "Tienes $diffConsecutivos consecutivos disponibles de tu resolución, es hora de renovar tu resolución";
+            $resp['porDias'] = "Tienes $diffConsecutivos consecutivos disponibles de tu resolución, es hora de renovarla";
         }
 
         return $resp;
