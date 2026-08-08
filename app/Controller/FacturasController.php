@@ -2018,15 +2018,12 @@ class FacturasController extends AppController
      * Genera el arreglo con la información de la orden, si aplica
      */
     public function generarInfoOrden( $factura ) {
-        if( !empty($factura['Factura']['numeroorden']) ) {
+        if( !empty($factura['Factura']['numeroorden']) && !empty($factura['Factura']['fechaorden']) ) {
 
             $arrOrden = array();
 
             $arrOrden['order_reference']['id_order'] = $factura['Factura']['numeroorden'];
-
-            if( !empty($factura['Factura']['fechaorden']) ) {
-                $arrOrden['order_reference']['issue_date_order'] = $factura['Factura']['fechaorden'];
-            }
+            $arrOrden['order_reference']['issue_date_order'] = $factura['Factura']['fechaorden'];
 
             return $arrOrden;
         }
