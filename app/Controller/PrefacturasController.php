@@ -249,6 +249,7 @@ class PrefacturasController extends AppController {
             }
             
             $descripcionProd = $posData['descProducto'];
+            $cargueInvId = $posData['cargueInvId'];
             $esFactura = $posData['esFactura'];
             
             /*Se obtienen los depositos en los cuales está el usuario*/
@@ -262,7 +263,11 @@ class PrefacturasController extends AppController {
             
             //Se obtiene el producto con el codigo obtenido del lector de codigos de barras
             //que se encuentren en el stock del deposito al cual pertenece el vendedor
-            $produtoInfo = $this->Cargueinventario->obtenerProductosStock($depositosId, $descripcionProd);
+            if( $descripcionProd != '' ) {
+                $produtoInfo = $this->Cargueinventario->obtenerProductosStock($depositosId, $descripcionProd);
+            } else {
+                $produtoInfo = $this->Cargueinventario->obtenerProductosStockPorInvId($depositosId, $cargueInvId);
+            }
             
             /*valida si se encuentra el producto descrito por el codigo de barras*/
             if(count($produtoInfo) <= '0'){

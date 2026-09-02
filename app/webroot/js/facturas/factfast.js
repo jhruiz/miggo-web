@@ -81,12 +81,12 @@ function seleccionarProductoVentaRapida(data) {
     var usuarioId = $('#usuarioId').val();
     var clienteId = $('.id_cliente').val() || $('#FacturaIdcliente').val();
     const opcTipoFactura = document.querySelector('input[name="doc_selector"]:checked');
-    var esFactura = opcTipoFactura.id === 'doc-fe' ? '1' : '0';
-    var valorBuscador = $('#FacturaProducto').val();    
+    var esFactura = opcTipoFactura.id === 'doc-fe' ? '1' : '0';   
+    var cargueId = data.id; 
 
     $.ajax({
         url: $('#url-proyecto').val() + 'prefacturas/addProductoBarCode',
-        data: { usuarioId: usuarioId, descProducto: valorBuscador, clienteId: clienteId, esFactura: esFactura },
+        data: { usuarioId: usuarioId, descProducto: '', clienteId: clienteId, esFactura: esFactura, cargueInvId: cargueId },
         type: "POST",
         success: function(data) {                
             var prefactura = JSON.parse(data);
