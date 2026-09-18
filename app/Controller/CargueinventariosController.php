@@ -338,6 +338,7 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
                 $this->loadModel('Configuraciondato');
                 $this->loadModel('Cargueinventario');
                 $this->loadModel('Tipopagopago');
+                $this->loadModel('EmpresasTipoempresa');
                 
                 $producto_id = $this->request->data("producto_id");
                 $usuario_id = $this->request->data("usuario_id");
@@ -374,7 +375,10 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
                         $existenciaActual = $cargueInventario['Cargueinventario']['existenciaactual'];
                     }                    
                 }
-                
+
+                /**Se obtiene la categorización de la empresa */
+                $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresa_id );
+
                 /*Se obtiene la url de las imagenes*/
                 $datConf = "urlImgProducto";
                 $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($datConf) . '/' . $empresa_id . '/';   
@@ -383,9 +387,18 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
                 $this->set(compact('impuestos', 'proveedores', 'tipopagos'));
                 $this->set(compact('producto_id', 'usuario_id', 'empresa_id'));
                 $this->set(compact('urlImg', 'existenciaActual', 'disabled'));
-                $this->set(compact('cargueInventario'));
+                $this->set(compact('cargueInventario', 'tipoEmpresa'));
             }
         }   
+
+        public function agregarseriales() {
+
+            $cantidad = $this->request->data("cantidad");
+            $productoId = $this->request->data("productoId");
+
+            $this->set(compact('cantidad', 'productoId'));
+
+        }
         
         public function ajaxProductosVenta(){
             $this->loadModel('Cargueinventario');
@@ -1187,6 +1200,37 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
             $fechaNew->add(new DateInterval('P' . $dias . 'D'));
             $fechaFin = $fechaNew->format('Y-m-d');
             return $fechaFin;          
+        }
+
+        /**
+         * Obtiene los seriales asociados al cargue de inventario en particular
+         */
+        public function obtenerSerialesCargueInventario() {
+            $posData = $this->request->data;
+            $prefacturasdetalleId = $posData['prefacturasdetalleId'];
+            
+            /*Se obtienen los depositos en los cuales está el usuario*/
+            $seriales = $this->Cargueinventario->obtenerCargueInvantarioSeriales($prefacturasdetalleId);
+
+            $color = '';
+            $modelo = '';
+            $serialSeleccionado = '';
+            foreach( $seriales as $ser ) {
+                if( !empty($ser['SM']['color'])  && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
+                    $color = $ser['SM']['color'];
+                }
+
+                if( !empty($ser['SM']['modelo'])  && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
+                    $modelo = $ser['SM']['modelo'];
+                }
+
+                if( !empty($ser['SM']['prefacturasdetalle_id']) && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
+                    $serialSeleccionado = $ser['SM']['id'];
+                }
+            } 
+
+            $this->set(compact('seriales', 'prefacturasdetalleId', 'color', 'modelo', 'serialSeleccionado')); 
+                             
         }
         
 }

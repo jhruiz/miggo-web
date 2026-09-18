@@ -223,6 +223,31 @@ function verCargueCatalogo() {
     }
 }
 
+function verSerialesPrecargue(elemento) {
+    
+    var serialesData = $(elemento).data('seriales');
+
+    // Si viene como string, lo parseamos a objeto JSON, de lo contrario lo usamos directo
+    var seriales = (typeof serialesData === 'string') ? JSON.parse(serialesData) : serialesData;
+
+    var html = '';
+    if (seriales && seriales.length > 0) {
+        $.each(seriales, function(index, item) {
+            html += '<tr>';
+            html += '<td>' + (index + 1) + '</td>';
+            html += '<td>' + item.chasis + '</td>';
+            html += '<td>' + item.motor + '</td>';
+            html += '</tr>';
+        });
+    } else {
+        html = '<tr><td colspan="3">No hay seriales registrados</td></tr>';
+    }
+
+    // Insertar en el tbody de tu modal y abrirla (ejemplo con Bootstrap Modal)
+    $('#tbodyModalSeriales').html(html);
+    $('#miModalSeriales').modal('show');
+}
+
 $(function() {
     $('.numericPrice').number(true, 2);
 });

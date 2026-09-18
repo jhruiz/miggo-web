@@ -37,7 +37,49 @@ var opcCrediContado = {
 
 var dialogCrediContado;
 
+var opcSerialesRegistrados = {
+        autoOpen: false,
+        modal: true,
+        width: 900,
+        height: 550,
+        position: [400, 50],
+        show: {
+            duration: 400    
+        },
+        hide: function () {
+//            alert($(this).dialog());
+//            $(this).dialog('destroy').remove();
+        },
+        close: function( event, ui){
+//            $(this).dialog('destroy').remove();            
+        },
+        title: 'Selección de seriales'    
+};
+
+var dialogSerialesRegistrados;
+
+
+// Valida la tipificación de la empresa, si aplica, y así mismo agrega funcionalidades extra
+var validarTiposEmpresa = function(idReg) {
+    var extraFunctions = '';
+    var arrTiposEmpresa = $('#FacturaTipoEmpresa').val().split('-');
+
+    $.each(arrTiposEmpresa, function(idx, obj) {
+
+        if( obj == 'VM' ) {
+            extraFunctions += '<button type="button" class="btn btn-primary btn-sm" id="seriales_' + idReg + '" onclick="verSerialesCargueInventario(this)"><span class="glyphicon glyphicon-eye-open"></span></button></td>';
+        }
+
+    });
+
+    extraFunctions += '</tr>';
+
+    return extraFunctions;
+}
+
 var poblarTablaFactura = function ( valoresTabla ) {
+
+    var extraFunctions = validarTiposEmpresa( valoresTabla.idReg );
 
     $('#productosFacturas').append('<tr id="tr_' + valoresTabla.idReg + '">' + 
         '<td>' + valoresTabla.descProd + '</td>' + 
@@ -54,7 +96,9 @@ var poblarTablaFactura = function ( valoresTabla ) {
         '<td><input type="text" name="porc_ica_' + valoresTabla.idReg + '" class="form-control porc_ica numericPrice" id="porc_ica_' + valoresTabla.idReg + '" value="' + valoresTabla.prcINC + '" readonly>&nbsp;</td>' +
         '<td><input type="text" name="inc_bolsa_' + valoresTabla.idReg + '" class="form-control inc_bolsa numericPrice" id="inc_bolsa_' + valoresTabla.idReg + '" value="' + valoresTabla.varorINCBolsa + '" readonly>&nbsp;</td>' +
         '<td><input type="text" name="valor_con_iva_' + valoresTabla.idReg + '" class="form-control valor_con_iva numericPrice" id="valor_con_iva_' + valoresTabla.idReg + '" value="' + valoresTabla.valorConIva + '" readonly>&nbsp;</td>' +
-        '<td><input type="button" class="btn btn-primary" value="Eliminar" id="' + valoresTabla.idReg + '"onclick="eliminarProductoPrefactura(this)"></td></tr>' 
+        '<td><button type="button" class="btn btn-danger btn-sm" id="' + valoresTabla.idReg + '" onclick="eliminarProductoPrefactura(this)"><span class="glyphicon glyphicon-remove"></span></button>' +
+        
+        extraFunctions
     );                                               
     $('.numericPrice').number(true, 2);
         
@@ -1100,6 +1144,24 @@ var guardarNumeroOrden = function() {
         bootbox.alert('Debe seleccionar un cliente y agregar un producto para ingresar el número de orden.');
         $(this).val("");
     }
+}
+
+function verSerialesCargueInventario(data) {
+
+
+    var arrId = (data.id).split("_");
+    var prefacturasdetalleId = arrId['1'];
+    
+    $("#div_seriales_registrados").load(
+            $('#url-proyecto').val() + "cargueinventarios/obtenerSerialesCargueInventario",
+            {
+                prefacturasdetalleId: prefacturasdetalleId
+            },
+            function(){                                                            
+                dialogSerialesRegistrados=$("#div_seriales_registrados").dialog(opcSerialesRegistrados);
+                dialogSerialesRegistrados.dialog('open');
+            }
+        );  
 }
  
 $( function() {

@@ -82,7 +82,22 @@
                                             );
                                          ?> </td>
                             <td><br><input type="text" size="9" name="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" id="fact_<?php echo $datCarg['Precargueinventario']['id']; ?>" class="form-control input-sm inp-fact" value="<?php echo $datCarg['Precargueinventario']['numerofactura']; ?>" onblur="actualizarNumeroFactura(this);"></td>
-                            <td class="actions"><br>                                      
+                            <td class="actions"><br>
+                                <?php
+                                    if( isset($datCarg['Precargueinventario']['seriales']) ) {
+
+                                        echo $this->Html->image('png/list-10.png', array(
+                                            'title'         => 'Ver Seriales',
+                                            'alt'           => __('Ver Seriales'),
+                                            'width'         => '20px',
+                                            'style'         => 'cursor: pointer;',
+                                            'data-seriales' => $datCarg['Precargueinventario']['seriales'],
+                                            'onclick'       => 'verSerialesPrecargue(this)'
+                                        ));
+
+                                    }
+                                ?>                                      
+                                
                                 <?php
                                 echo $this->Form->postLink(                        
                                   $this->Html->image('png/list-2.png', array('title' => 'Eliminar Producto', 'alt' => __('Brownies'), 'width' => '20px')), //imagen
@@ -119,4 +134,43 @@
         </div>
 </div>
 <div id="div_anotacion"></div>
+
+<!-- MODAL PARA VER SERIALES -->
+<div class="modal fade" id="miModalSeriales" tabindex="-1" role="dialog" aria-labelledby="modalSerialesLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <!-- Cabecera de la Modal -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalSerialesLabel">
+                    <i class="glyphicon glyphicon-list-alt"></i> Seriales Registrados
+                </h4>
+            </div>
+            
+            <!-- Cuerpo de la Modal -->
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">#</th>
+                            <th>Chasis</th>
+                            <th>Motor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyModalSeriales">
+                        <!-- Los seriales se cargarán dinámicamente aquí con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pie de la Modal -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 

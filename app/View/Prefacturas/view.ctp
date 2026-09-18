@@ -4,7 +4,6 @@
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js')); ?>
 <?php echo ($this->Html->script('facturas/abonos.js')); ?>
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js'));  ?>
-<?php //echo ($this->Html->script('prefacturas/imprimirPrefacturas.js'));  ?>
 <?php echo ($this->Html->script('facturas/imprimirFactura')); ?>
 <?php echo ($this->Html->script('prefacturas/view.js')); ?>
 <?php echo ($this->Html->script('facturas/syncdian.js')); ?>
@@ -21,6 +20,7 @@
 
 <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '30', 'id' => 'menuvert'))?>
 <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => $ttalAbonos))?>
+<?php echo $this->Form->input('tipoEmpresa', array('type' => 'hidden', 'value' => $strTipoEmpresa))?>
             
 <div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
@@ -348,6 +348,7 @@
 <div id="div_facturar"></div>
 <div id="div_abono"></div>
 <div id="div_gestionabono"></div>
+<div id="div_seriales_registrados"></div>
 <div id="dv_emp">
     <div id="dv_img_emp">
         <div style="float:center;" align="center">

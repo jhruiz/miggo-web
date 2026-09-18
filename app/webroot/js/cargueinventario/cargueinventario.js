@@ -1,20 +1,20 @@
-    var opcDialogCargueInventario = {
-        autoOpen: false,
-        modal: true,
-        width: 900,
-        height: 750,
-        position: [400, 50],
-        show: {
-            duration: 400    
-        },
-        hide: function () {
+var opcDialogCargueInventario = {
+    autoOpen: false,
+    modal: true,
+    width: 900,
+    height: 850,
+    position: [400, 50],
+    show: {
+        duration: 400    
+    },
+    hide: function () {
 //            alert($(this).dialog());
 //            $(this).dialog('destroy').remove();
-        },
-        close: function( event, ui){
+    },
+    close: function( event, ui){
 //            $(this).dialog('destroy').remove();            
-        },
-        title: 'Cargar Producto al Inventario'    
+    },
+    title: 'Cargar Producto al Inventario'    
 };
 
 var dialogCargarInventario;
@@ -39,6 +39,25 @@ var opcDialogProductoNuevo = {
 };
 
 var dialogProductoNuevo;
+
+var opcDialogSeriales = {
+    autoOpen: false,
+    modal: true,
+    width: 500,
+    height: 500,
+    position: [400, 50],
+    show: {
+        duration: 400    
+    },
+    hide: function () {
+    },
+    close: function( event, ui){
+        // $(this).dialog('destroy').remove();  
+    },
+    title: 'Cargar Producto al Inventario'    
+};
+
+var dialogSeriales;
 
 
 
@@ -107,6 +126,27 @@ function cargarProductoInventario(productoId){
                 dialogCargarInventario.dialog('open');
             }
         );    
+}
+
+/*Se crea la modal para agregar los seriales*/
+function agregarSerialesProductos(){    
+    var cantidad = $('#CargueinventarioCantidad').val();
+    var productoId = $('#producto_id').val();
+    
+    if( cantidad <= 0 || cantidad == '' ) {
+        bootbox.alert('El campo cantidad no puede estar vacio o ser menor a cero.');
+    } else {
+        $("#div_seriales").load(
+            $('#url-proyecto').val() + "cargueinventarios/agregarseriales",
+            {
+                cantidad: cantidad, productoId: productoId
+            },
+            function(){                                                            
+                dialogSeriales=$("#div_seriales").dialog(opcDialogSeriales);
+                dialogSeriales.dialog('open');
+            }
+        );    
+    }
 }
 
 
@@ -283,6 +323,63 @@ function fnObtenerDatosProducto(e){
             }); 
     }
 }
+
+function agregarSerialesProducto() {
+    var productoId = $('#productoSerialId').val();
+    var seriales = [];
+    var esValido = true;
+
+    // Iterar sobre todos los campos de chasis presentes en el formulario
+    $('[id^="serial_chasis_"]').each(function(index) {
+        var i = index + 1;
+        var $inputChasis = $('#serial_chasis_' + i);
+        var $inputMotor = $('#serial_motor_' + i);
+
+        var chasisVal = $.trim($inputChasis.val());
+        var motorVal = $.trim($inputMotor.val());
+
+        // Validación de campo Chasis
+        if (chasisVal === '') {
+            bootbox.alert('Por favor complete el campo Chasis en el Serial #' + i);
+            $inputChasis.focus();
+            esValido = false;
+            return false; // Detiene el bucle $.each
+        }
+
+        // Validación de campo Motor
+        if (motorVal === '') {
+            bootbox.alert('Por favor complete el campo Motor en el Serial #' + i);
+            $inputMotor.focus();
+            esValido = false;
+            return false; // Detiene el bucle $.each
+        }
+
+        // Guardar el ítem ordenado
+        seriales.push({
+            item: i,
+            chasis: chasisVal,
+            motor: motorVal
+        });
+    });
+
+    // Si algún campo no pasó la validación, frena la ejecución
+    if (!esValido) {
+        return false;
+    }
+
+    // Declara el objeto local
+    var inventarioSeriales = {};
+    inventarioSeriales[productoId] = seriales;
+
+    // Asigna el objeto convertido a JSON String en el input
+    $('#serialesChMt').val(JSON.stringify(inventarioSeriales));
+
+    bootbox.alert('Seriales validados y guardados correctamente.');
+    dialogSeriales.dialog('close');
+    console.log('Estructura global actual:', window.inventarioSeriales);
+}
+
+
 
 function seleccionarProducto(dato){
     var productoId = dato.name;

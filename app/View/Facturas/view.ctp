@@ -244,9 +244,19 @@
 
                 <?php foreach ($infoDetFact as $DetFact): ?>
 
+                    <?php
+                        $descProducto = h($DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre']);
+                        if (!empty($DetFact['SM']['chasis'])) {
+                            $descProducto .= '<br><b>Número de Chasis:</b> ' . h($DetFact['SM']['chasis']);
+                            $descProducto .= '<br><b>Número de Motor:</b> ' . h($DetFact['SM']['motor']);
+                            $descProducto .= '<br><b>Color:</b> ' . h($DetFact['SM']['color']);
+                            $descProducto .= '<br><b>Modelo:</b> ' . h($DetFact['SM']['modelo']);
+                        }
+                    ?>
+
                     <tr>
                         <td><?php echo h( $contador ); ?></td>
-                        <td><?php echo h( $DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre'] ); ?></td>   
+                        <td><?php echo $descProducto; ?></td>  
                         <td><?php echo h( $DetFact['P']['codigo'] ); ?></td>                        
                         <td><?php echo h( ( $DetFact['Facturasdetalle']['cantidad'] ) ); ?></td>
                         <td  align="right"><?php echo (number_format( ($DetFact['valoresBase']['valorBaseUnitario'] + $DetFact['valoresBase']['descuento']) / $DetFact['Facturasdetalle']['cantidad'], 2 )); ?></td>
@@ -574,7 +584,7 @@
         <!--kilometraje-->
         <div style="width:100%; float:left; margin-top: 10px;"><b>Kilometraje </b>
             <?php
-            echo __(number_format($arrInfoOrd['0']['Ordentrabajo']['kilometraje'], 4, '.', ','));
+            echo __(number_format($arrInfoOrd['0']['Ordentrabajo']['kilometraje'], 0, '.', ','));
             ?>
         </div>
         
@@ -649,11 +659,11 @@
         </div>
         
         <div style="width:90%; float:left; margin: 10px; font-family:sans-serif; font-size:15px;">
-            <div style="margin: 5px;"><u><b>OBSERVACIONES CLIENTE</b></u></div>
+            <div style="margin: 5px;"><u><b>OBSERVACIONES MECÁNICO</b></u></div>
             <div><small><?php echo __($arrInfoOrd['0']['Ordentrabajo']['observaciones_usuario']);?></small></div>
         </div>        
         <div style="width:90%; float:left; margin: 10px;">
-            <div style="margin: 5px;"><u><b>OBSERVACIONES MECÁNICO</b></u></div>
+            <div style="margin: 5px;"><u><b>OBSERVACIONES CLIENTE</b></u></div>
             <div><small><?php echo __($arrInfoOrd['0']['Ordentrabajo']['observaciones_cliente']);?></small></div>
         </div>   
         

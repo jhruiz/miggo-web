@@ -193,6 +193,7 @@ class DocumentosController extends AppController {
             $this->loadModel('Cuentaspendiente');
             $this->loadModel('Proveedore');
             $this->loadModel('Configuraciondato');
+            $this->loadModel('Serialesmoto');
             $this->autoRender = false;                 
             
             $posData = $this->request->data;
@@ -310,6 +311,11 @@ class DocumentosController extends AppController {
                             $fechaPago, $idCXP);
                 }
 
+
+                /**Se gestiona la actualización de la información de los seriales */
+                $infoProductoSeriales = $this->Cargueinventario->obtenerProductoPorIdDeposito($infP['Producto']['id'],$infP['Deposito']['id']);
+                $this->Serialesmoto->asignarCargueInventarioSerial($infoProductoSeriales['Cargueinventario']['id'], $infP['Precargueinventario']['id']);
+                
                 //se guarda la informacion de compras
                 $idCompra = $this->gestionarCompra($infP['Precargueinventario']['proveedore_id'], $usuarioId, $infP['Precargueinventario']['numerofactura']);
 

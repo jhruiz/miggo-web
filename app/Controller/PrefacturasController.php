@@ -106,6 +106,7 @@ class PrefacturasController extends AppController {
             $this->loadModel('Estadopedido');
             $this->loadModel('Empresa');
             $this->loadModel('Canalventa');
+            $this->loadModel('EmpresasTipoempresa');
             
             if (!$this->Prefactura->exists($id)) {
                     throw new NotFoundException(__('La orden de compra no existe.'));
@@ -154,13 +155,22 @@ class PrefacturasController extends AppController {
             $numOrden = $prefactura['Prefactura']['numeroorden'];
             $fechaOrden = $prefactura['Prefactura']['fechaorden'];
 
+            // Se obtiene el tipo de empresa
+            $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresaId );
+            $strTipoEmpresa = '';
+            if( !empty($tipoEmpresa) ) {
+                foreach($tipoEmpresa as $te) {
+                    $strTipoEmpresa == '' ? $strTipoEmpresa .= $te['TE']['codigo'] : $strTipoEmpresa .= '-' . $te['TE']['codigo'];
+                }
+            }
+
             $ttalAbonos = 0;
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
 
             $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg', 'numOrden', 'fechaOrden', 'estadosPedido'));
-            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas')); 
+            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas', 'strTipoEmpresa')); 
 	}
 
 /**
@@ -692,6 +702,20 @@ class PrefacturasController extends AppController {
             $prefacturaId = $this->request->data['prefact'];
 
             $resp = $this->Prefactura->guardarNumOrdenPrefact($prefacturaId, $numOrden);
+
+            echo json_encode(array('resp' => $resp));
+        }
+
+        public function asignarserialprefacturaid() {
+            $this->loadModel('Serialesmoto');
+            $this->autoRender = false;
+
+            $color = $this->request->data['color'];
+            $modelo = $this->request->data['modelo'];
+            $serialId = $this->request->data['serialId'];
+            $prefactDetalleId = $this->request->data['prefactDetalleId'];
+
+            $resp = $this->Serialesmoto->asociarPrefacturaSeriales( $color, $modelo, $serialId, $prefactDetalleId );
 
             echo json_encode(array('resp' => $resp));
         }

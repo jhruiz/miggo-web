@@ -233,14 +233,18 @@ class PrefacturasdetallesController extends AppController {
         
         public function obtenerPrefacturasDetalles(){
             $this->loadModel('Producto');
+
             $this->autoRender = false;
             $posData = $this->request->data;
             $prefacturaId = $posData['prefacId'];
             
             /*se obtienen todos los productos relacionados a la prefactura*/
             $arrDetFact = $this->Prefacturasdetalle->obtenerProductosPrefacturaPrefactId($prefacturaId);
+            
             for($i = 0; $i < count($arrDetFact); $i++){
                 $productoId = $arrDetFact[$i]['Cargueinventario']['producto_id'];
+
+                //se obtiene la información del producto
                 $arrProducto = $this->Producto->obtenerInformacionProductoId($productoId);
                 $nombreProd = $arrProducto['Producto']['descripcion'];
                 $codigoProd = $arrProducto['Producto']['codigo'];

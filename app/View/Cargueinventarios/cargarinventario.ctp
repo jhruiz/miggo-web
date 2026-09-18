@@ -203,8 +203,23 @@
                         echo $this->Form->input("empresa_id",array('id' => "empresa_id",'type' => 'hidden','value'=>$empresa_id));
                         echo $this->Form->input("usuario_id",array('id' => "usuario_id",'type' => 'hidden','value'=>$usuario_id));                            
                         echo $this->Form->input("inventario",array('id' => "inventario",'type' => 'hidden','value'=>$producto['Producto']['inventario']));                            
-
+                        echo $this->Form->input("seriales",array('id' => "serialesChMt",'type' => 'hidden','value'=>''));                            
                     ?>
+
+            <div class="container-fluid" style="padding:10px;">
+                <div class="text-center">
+                    <div class="btn-group">
+                        <?php foreach( $tipoEmpresa as $key => $val ) { ?>
+
+                            <?php if( $val['TE']['codigo'] == 'VM' ) { ?>
+                                <button  id="btn_guardarEst" class="btn btn-primary" onclick="agregarSerialesProductos()">Agregar Seriales</button>
+                            <?php } ?>
+                            
+                        <?php } ?>
+                    </div>                    
+                </div>
+            </div>
+
             <div class="container-fluid">
                 <div class="text-center">
                     <div class="btn-group">
@@ -212,7 +227,7 @@
                         <button  id="btn_guardarEst" class="btn btn-primary" onclick="cancelarCargueProducto()">Cancelar</button>
                     </div>                    
                 </div>
-
             </div>
         </form>
         </div>
+        <div id="div_seriales"></div>

@@ -18,6 +18,7 @@
             <?php echo $this->Form->input('menuvert', array('type' => 'hidden', 'value' => '31', 'id' => 'menuvert')) ?>
             <?php echo $this->Form->input('ttalAbonos', array('type' => 'hidden', 'value' => '31', 'class' => 'ttalAbonos', 'value' => 0)) ?>
             <?php echo $this->Form->input('esFacturaDV', array('type' => 'hidden', 'value' => $esFactura, 'id' => 'esFacturaDV')) ?>
+            <?php echo $this->Form->input('FacturaTipoEmpresa', array('type' => 'hidden', 'value' => $strTipoEmpresa, 'id' => 'FacturaTipoEmpresa')) ?>
             
             <div role="tabpanel">
                 <ul class="nav nav-tabs" role="tablist">
@@ -246,6 +247,7 @@
 <div id="div_producto"></div>
 <div id="div_facturar"></div>
 <div id="div_abono"></div>
+<div id="div_seriales_registrados"></div>
 <div id="dv_emp">
     <div id="dv_img_emp">
         <div style="float:center;" align="center">

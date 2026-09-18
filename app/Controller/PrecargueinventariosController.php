@@ -21,53 +21,78 @@ class PrecargueinventariosController extends AppController {
  *
  * @return void
  */
-	public function index() {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            	
-            $this->loadModel('Deposito');              
-            $this->loadModel('Proveedore');
-            $this->loadModel('Tipopago');
-            $this->loadModel('Tipopagopago');
+public function index() {
+
+    /*se reagistra la actividad del uso de la aplicacion*/
+    $usuariosController = new UsuariosController();
+    $usuarioAct = $this->Auth->user('id');
+    $usuariosController->registraractividad($usuarioAct);
+        
+    $this->loadModel('Deposito');              
+    $this->loadModel('Proveedore');
+    $this->loadModel('Tipopago');
+    $this->loadModel('Tipopagopago');
+    $this->loadModel('EmpresasTipoempresa');    
+    $this->loadModel('Serialesmoto');    
+    
+    /*Se obtiene la empresa del usuario en sesion*/
+    $arrEmpresa = $this->Auth->user('Empresa');
+    
+    /*Se obtiene el usuario que se encuentra gestionando el inventario para mostrar s��lo sus productos*/
+    $usuarioId = $this->Auth->user('id');
+    $arrInfoPreCargue = $this->Precargueinventario->obtenerPrecargueUsuario($usuarioId);
+    $costoProducto = 0;
+    $totalProductos = 0;
+    $ttalPrecioMax = 0;
+    $ttalPrecioMin = 0;
+    $ttalPrecioVenta = 0;
+    $costoTotal = 0;
+    for($i = 0; $i < count($arrInfoPreCargue); $i++){
+
+        //se obtienen los seriales si aplica
+        $seriales = $this->Serialesmoto->obtenerSerialesPrecargue( $arrInfoPreCargue[$i]['Precargueinventario']['id'] );
+
+        
+        if (!empty($seriales)) {
+            $serialesTemp = array();
             
-            /*Se obtiene la empresa del usuario en sesion*/
-            $arrEmpresa = $this->Auth->user('Empresa');
-            
-            /*Se obtiene el usuario que se encuentra gestionando el inventario para mostrar s��lo sus productos*/
-            $usuarioId = $this->Auth->user('id');
-            $arrInfoPreCargue = $this->Precargueinventario->obtenerPrecargueUsuario($usuarioId);
-            $costoProducto = 0;
-            $totalProductos = 0;
-            $ttalPrecioMax = 0;
-            $ttalPrecioMin = 0;
-            $ttalPrecioVenta = 0;
-            $costoTotal = 0;
-            for($i = 0; $i < count($arrInfoPreCargue); $i++){
-                $arrInfoPreCargue[$i]['Precargueinventario']['costototal'] = $arrInfoPreCargue[$i]['Precargueinventario']['cantidad'] * $arrInfoPreCargue[$i]['Precargueinventario']['costoproducto'];                
-                $costoProducto +=  $arrInfoPreCargue[$i]['Precargueinventario']['costoproducto'];
-                $totalProductos +=  $arrInfoPreCargue[$i]['Precargueinventario']['cantidad'];
-                $ttalPrecioMax +=  $arrInfoPreCargue[$i]['Precargueinventario']['preciomaximo'];
-                $ttalPrecioMin +=  $arrInfoPreCargue[$i]['Precargueinventario']['preciominimo'];
-                $ttalPrecioVenta +=  $arrInfoPreCargue[$i]['Precargueinventario']['precioventa'];
-                $costoTotal +=  $arrInfoPreCargue[$i]['Precargueinventario']['costototal'];                
+            foreach ($seriales as $item) {
+                $serialesTemp[] = array(
+                    'chasis' => $item['Serialesmoto']['chasis'],
+                    'motor'  => $item['Serialesmoto']['motor']
+                );
             }
-            /*Cantidad de items*/
-            $cantItems = $i;
-            
-            /*Se obtiene el listado de dep��sitos*/
-            $listDepositos = $this->Deposito->obtenerListaDepositosUsuario($usuarioId);
-            
-            /*Se obtiene el listado de proveedores de la empresa*/
-            $listProveedores = $this->Proveedore->obtenerProveedoresEmpresa($arrEmpresa['id']);
-            
-            /*Se obtiene el listado de los tipos de pago*/
-            $listTipoPago = $this->Tipopagopago->obtenerListaTiposPagos();
-            
-            $this->set(compact('arrInfoPreCargue', 'costoProducto', 'totalProductos', 'ttalPrecioMax', 'ttalPrecioMin', 'ttalPrecioVenta', 'costoTotal'));            
-            $this->set(compact('listDepositos', 'listProveedores', 'listTipoPago', 'cantItems'));
-	}
+
+            $arrInfoPreCargue[$i]['Precargueinventario']['seriales'] = json_encode($serialesTemp);
+        }
+
+        $arrInfoPreCargue[$i]['Precargueinventario']['costototal'] = $arrInfoPreCargue[$i]['Precargueinventario']['cantidad'] * $arrInfoPreCargue[$i]['Precargueinventario']['costoproducto'];                
+        $costoProducto +=  $arrInfoPreCargue[$i]['Precargueinventario']['costoproducto'];
+        $totalProductos +=  $arrInfoPreCargue[$i]['Precargueinventario']['cantidad'];
+        $ttalPrecioMax +=  $arrInfoPreCargue[$i]['Precargueinventario']['preciomaximo'];
+        $ttalPrecioMin +=  $arrInfoPreCargue[$i]['Precargueinventario']['preciominimo'];
+        $ttalPrecioVenta +=  $arrInfoPreCargue[$i]['Precargueinventario']['precioventa'];
+        $costoTotal +=  $arrInfoPreCargue[$i]['Precargueinventario']['costototal'];                
+    }
+
+    /*Cantidad de items*/
+    $cantItems = $i;
+    
+    /*Se obtiene el listado de dep��sitos*/
+    $listDepositos = $this->Deposito->obtenerListaDepositosUsuario($usuarioId);
+    
+    /*Se obtiene el listado de proveedores de la empresa*/
+    $listProveedores = $this->Proveedore->obtenerProveedoresEmpresa($arrEmpresa['id']);
+    
+    /*Se obtiene el listado de los tipos de pago*/
+    $listTipoPago = $this->Tipopagopago->obtenerListaTiposPagos();
+
+    /**Se obtiene la categorización de la empresa */
+    $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $arrEmpresa['id'] );
+    
+    $this->set(compact('arrInfoPreCargue', 'costoProducto', 'totalProductos', 'ttalPrecioMax', 'ttalPrecioMin', 'ttalPrecioVenta', 'costoTotal'));            
+    $this->set(compact('listDepositos', 'listProveedores', 'listTipoPago', 'cantItems', 'tipoEmpresa'));
+}
 
 /**
  * view method
@@ -77,15 +102,15 @@ class PrecargueinventariosController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
-            	
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
+            
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             	
 		if (!$this->Precargueinventario->exists($id)) {
 			throw new NotFoundException(__('Invalid precargueinventario'));
@@ -179,18 +204,25 @@ class PrecargueinventariosController extends AppController {
  */
 	public function delete($id = null) {
 		$this->Precargueinventario->id = $id;
-                $this->loadModel('PrecargueinventariosImpuesto');
-		if (!$this->Precargueinventario->exists()) {
+
+        $this->loadModel('PrecargueinventariosImpuesto');
+        $this->loadModel('Serialesmoto');
+		
+        if (!$this->Precargueinventario->exists()) {
 			throw new NotFoundException(__('El producto no existe.'));
 		}
-		$this->request->onlyAllow('post', 'delete');
-                $this->PrecargueinventariosImpuesto->deleteAll(array('PrecargueinventariosImpuesto.precargueinventario_id' => $id), false);
-		if ($this->Precargueinventario->delete()) {                    
+		
+        $this->request->onlyAllow('post', 'delete');
+        $this->PrecargueinventariosImpuesto->deleteAll(array('PrecargueinventariosImpuesto.precargueinventario_id' => $id), false);
+        $this->Serialesmoto->deleteAll(array('Serialesmoto.precargueinventario_id' => $id), false);
+		
+        if ($this->Precargueinventario->delete()) {                    
 			$this->Session->setFlash(__('El producto ha sido eliminado.'));
 		} else {
 			$this->Session->setFlash(__('El producto no pudo ser eliminado. Por favor, int�1�7�1�7ntelo de nuevo.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		
+        return $this->redirect(array('action' => 'index'));
 	}
         
 /**
@@ -201,8 +233,10 @@ class PrecargueinventariosController extends AppController {
  * @return void
  */        
         public function precargarinventario(){
-                    
-            $this->loadModel('PrecargueinventariosImpuesto');            
+
+            $this->loadModel('PrecargueinventariosImpuesto');
+            $this->loadModel('Serialesmoto');         
+
             $this->autoRender = false;            
             $posData = $this->request->data;  
 
@@ -212,6 +246,30 @@ class PrecargueinventariosController extends AppController {
             $posData['Cargueinventario']['precioventa'] = str_replace(",", "", $posData['Cargueinventario']['precioventa']); 
        
             $preCargueId = $this->Precargueinventario->guardarPreCargueInventario($posData);
+
+            $serialesArray = json_decode($posData['Cargueinventario']['seriales'], true);
+            $productoId = $posData['Cargueinventario']['producto_id'];
+            $usuarioId = $posData['Cargueinventario']['usuario_id'];
+
+            if (!empty( $serialesArray )) {
+
+                // Recorrer el arreglo de seriales correspondientes a este producto
+                foreach ($serialesArray[$productoId] as $serial) {
+                    $data = array(
+                        'precargueinventario_id' => $preCargueId,
+                        'producto_id' => $productoId,
+                        'chasis' => $serial['chasis'],
+                        'motor' => $serial['motor'],
+                        'usuario_id' => $usuarioId,
+                        'estado_id' => '1',
+                        'creted' => date('Y-m-d')
+                    );
+
+                    $this->Serialesmoto->guardarSerialesMotos($data);
+                    
+                }
+            
+            }
             
             if(!empty($posData['impuestos'])){
                 foreach ($posData['impuestos'] as $imp){

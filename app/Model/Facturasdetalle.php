@@ -145,6 +145,16 @@ class Facturasdetalle extends AppModel {
 				'conditions' => array('C.id=P.categoria_id')                
 			));
 
+			array_push($arr_join, array(
+				'table' => 'serialesmotos', 
+				'alias' => 'SM', 
+				'type' => 'LEFT',
+				'conditions' => array(
+					'SM.producto_id=P.id',
+					'SM.factura_id' => $facturaId
+				)                
+			));
+
             $infoDetFact = $this->find('all', array(
 				'joins' => $arr_join,
 				'fields' => array(
@@ -152,7 +162,8 @@ class Facturasdetalle extends AppModel {
 					'F.*',
 					'D.*',
 					'P.*',
-					'C.*'
+					'C.*',
+					'SM.*'
 				),
 				'conditions' => array(
 					'Facturasdetalle.factura_id' => $facturaId

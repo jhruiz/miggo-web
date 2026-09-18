@@ -440,4 +440,45 @@ class Cargueinventario extends AppModel {
             return $inventario;
 
         }
+
+        /**
+         * Obtiene los seriales relaciondos a un precargue con 
+         * 
+         */
+        public function obtenerCargueInvantarioSeriales( $prefacturasdetalleId ) {
+            $arr_join = array(); 
+
+            array_push($arr_join, array(
+                'table' => 'prefacturasdetalles',
+                'alias' => 'PD',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'PD.cargueinventario_id=Cargueinventario.id',
+                    'PD.id' => $prefacturasdetalleId
+                )
+            ));
+
+            array_push($arr_join, array(
+                'table' => 'serialesmotos',
+                'alias' => 'SM',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'SM.cargueinventario_id=Cargueinventario.id',
+                    'SM.estado_id' => 1
+                )
+            ));
+
+            $seriales = $this->find('all', array(
+                'joins' => $arr_join,
+                'fields' => array(
+                    'PD.*',
+                    'SM.*',
+                    'Cargueinventario.*'
+                ),
+                'recursive' => '-1'
+            ));
+
+            return $seriales;
+
+        }
 }

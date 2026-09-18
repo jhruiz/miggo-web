@@ -488,6 +488,7 @@ class FacturasController extends AppController
         $this->loadModel('Configuraciondato');
         $this->loadModel('Empresa');
         $this->loadModel('Canalventa');
+        $this->loadModel('EmpresasTipoempresa');
 
         $empresaId = $this->Auth->user('empresa_id');
         $usuarioId = $this->Auth->user('id');
@@ -509,7 +510,17 @@ class FacturasController extends AppController
         // Se obtiene el listado de canal de ventas
         $canalventas = $this->Canalventa->obtenerCanalVentas($empresaId);
 
+        // Se obtiene el tipo de empresa
+        $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresaId );
+        $strTipoEmpresa = '';
+        if( !empty($tipoEmpresa) ) {
+            foreach($tipoEmpresa as $te) {
+                $strTipoEmpresa == '' ? $strTipoEmpresa .= $te['TE']['codigo'] : $strTipoEmpresa .= '-' . $te['TE']['codigo'];
+            }
+        }
+
         $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas', 'esFactura'));
+        $this->set(compact('strTipoEmpresa'));
     }
 
 /**
@@ -736,6 +747,7 @@ class FacturasController extends AppController
         $this->loadModel('FacturaCuentaValore');
         $this->loadModel('Ordenestado');
         $this->loadModel('Ordentrabajo');
+        $this->loadModel('Serialesmoto');
 
         $this->autoRender = false;
         $posData = $this->request->data;
@@ -866,6 +878,8 @@ class FacturasController extends AppController
                 /*se elimina el registro de prefacturadetalle*/
                 // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
             }
+
+            $this->Serialesmoto->asociarFacturaSeriales( $detallePrefactura['Prefacturasdetalle']['id'], $facturaId );
 
             //Obtiene los valores base de los productos
             $arrInfoProds = [
@@ -2375,7 +2389,9 @@ class FacturasController extends AppController
     public function obtenerDetalleLineas($val, $arrImpuestos, $objValoresBase) {
 
         // Agregamos el nombre complementario si existe
-        $nombreLinea = !empty($val['Facturasdetalle']['complementonombre']) ? $val['P']['descripcion'] . ' ' . $val['Facturasdetalle']['complementonombre'] : $val['P']['descripcion'];
+        $seriales = $this->nombreExtendido( $val );
+        
+        $nombreLinea = !empty($val['Facturasdetalle']['complementonombre']) ? $val['P']['descripcion'] . ' ' . $val['Facturasdetalle']['complementonombre'] : $val['P']['descripcion'] . ' ' . $seriales;
 
         // 2. Inicializa el array de productos con los valores proporcionados
         $arrProductos = [
@@ -2404,6 +2420,39 @@ class FacturasController extends AppController
 
         return $arrProductos;
     }  
+
+    //Se valida si bajo la configuración de la empresa, aplica el nombre extendido de los productos
+    public function nombreExtendido( $val ){
+    
+        $this->loadModel('EmpresasTipoempresa');
+
+        $empresaId = $this->Auth->user('empresa_id');
+        $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresaId );
+
+        $nombreExt = '';
+
+        if( !empty( $tipoEmpresa ) ) {
+
+            foreach( $tipoEmpresa as $te ) {
+                            
+            
+                if( $te['TE']['codigo'] == 'VM' ) {
+
+                    if( !empty( $val['SM']['id'] ) ){
+                        $nombreExt .= 'Número de Chasis: ' . $val['SM']['chasis'] . '. ';
+                        $nombreExt .= 'Número de Motor: ' . $val['SM']['motor'] . '. ';
+                        $nombreExt .= 'Color: ' . $val['SM']['color'] . '. ';
+                        $nombreExt .= 'Modelo: ' . $val['SM']['modelo'] . '. ';
+                    }
+
+                }
+    
+            }
+        }
+
+        return $nombreExt;
+    
+    }
 
     function validateArrays(...$arrays){
         foreach ($arrays as $array) {
