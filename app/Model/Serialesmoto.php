@@ -99,7 +99,7 @@ class Serialesmoto extends AppModel {
             return false;
     }
 
-    public function asociarFacturaSeriales( $prefactDetalleId, $facturaId ) {
+    public function asociarFacturaSeriales( $prefactDetalleId, $facturaId, $facturaDetalleId ) {
         //valida si existen seriales asociados al detalle de la prefactura
         $seriales = $this->find('first', array(
             'conditions' => array(
@@ -111,6 +111,7 @@ class Serialesmoto extends AppModel {
         if( !empty($seriales) ) {
             $this->updateAll(array(
                 'Serialesmoto.factura_id' => $facturaId,
+                'Serialesmoto.facturasdetalle_id' => $facturaDetalleId,
                 'Serialesmoto.estado_id' => '0'
                 ), 
                     array(

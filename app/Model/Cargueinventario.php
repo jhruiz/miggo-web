@@ -445,13 +445,13 @@ class Cargueinventario extends AppModel {
          * Obtiene los seriales relaciondos a un precargue con 
          * 
          */
-        public function obtenerCargueInvantarioSeriales( $prefacturasdetalleId ) {
+        public function obtenerCargueInvantarioSeriales( $prefacturasdetalleId, $cargueinventarioId ) {
             $arr_join = array(); 
 
             array_push($arr_join, array(
                 'table' => 'prefacturasdetalles',
                 'alias' => 'PD',
-                'type' => 'INNER',
+                'type' => 'LEFT',
                 'conditions' => array(
                     'PD.cargueinventario_id=Cargueinventario.id',
                     'PD.id' => $prefacturasdetalleId
@@ -474,6 +474,9 @@ class Cargueinventario extends AppModel {
                     'PD.*',
                     'SM.*',
                     'Cargueinventario.*'
+                ),
+                'conditions' => array(
+                    'Cargueinventario.id' => $cargueinventarioId
                 ),
                 'recursive' => '-1'
             ));

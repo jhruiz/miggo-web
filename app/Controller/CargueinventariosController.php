@@ -1206,11 +1206,16 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
          * Obtiene los seriales asociados al cargue de inventario en particular
          */
         public function obtenerSerialesCargueInventario() {
+            $this->loadModel('Prefacturasdetalle');
+
             $posData = $this->request->data;
             $prefacturasdetalleId = $posData['prefacturasdetalleId'];
-            
-            /*Se obtienen los depositos en los cuales está el usuario*/
-            $seriales = $this->Cargueinventario->obtenerCargueInvantarioSeriales($prefacturasdetalleId);
+
+            //Obtiene la información de las prefactura detalle para obtener la información del cargue de inventario
+            $pfDetalles = $this->Prefacturasdetalle->obtenerPrefacturaDetalleId( $prefacturasdetalleId );
+
+            //Obtiene los seriales asociados a un cargue de inventario
+            $seriales = $this->Cargueinventario->obtenerCargueInvantarioSeriales( $prefacturasdetalleId, $pfDetalles['Prefacturasdetalle'][cargueinventario_id] );
 
             $color = '';
             $modelo = '';

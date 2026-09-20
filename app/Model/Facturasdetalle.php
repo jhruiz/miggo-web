@@ -106,12 +106,13 @@ class Facturasdetalle extends AppModel {
             $data['impuesto'] = $impuesto;
             $data['impoconsumo'] = $inc;
             $data['incbolsa'] = $incbolsa;
-            
-            if($detalleFactura->save($data)){
-                return true;
-            }else{
-                return false;
-            }
+
+			if($detalleFactura->save($data)){
+				return $detalleFactura->id;
+			}else{
+				return false;
+			}     
+
         }
         
         public function obtenerFacturaDetalleFactId($facturaId){
@@ -150,8 +151,7 @@ class Facturasdetalle extends AppModel {
 				'alias' => 'SM', 
 				'type' => 'LEFT',
 				'conditions' => array(
-					'SM.producto_id=P.id',
-					'SM.factura_id' => $facturaId
+					'SM.facturasdetalle_id=Facturasdetalle.id'
 				)                
 			));
 

@@ -870,16 +870,13 @@ class FacturasController extends AppController
 
             /*Se guarda el detalle de la factura*/
             $costoTotalProd = $detallePrefactura['Prefacturasdetalle']['cantidad'] * $detallePrefactura['Prefacturasdetalle']['costoventa'];
-            if ($this->Facturasdetalle->guardarDetalleFactura($facturaId, $arrCrgInv['Cargueinventario']['deposito_id'],
+            $factDetalleId = $this->Facturasdetalle->guardarDetalleFactura($facturaId, $arrCrgInv['Cargueinventario']['deposito_id'],
                 $arrCrgInv['Cargueinventario']['producto_id'], $detallePrefactura['Prefacturasdetalle']['cantidad'],
                 $detallePrefactura['Prefacturasdetalle']['costoventa'], $costoTotalProd, $detallePrefactura['Prefacturasdetalle']['descuento'],
                 $detallePrefactura['Prefacturasdetalle']['porcentaje'], $impuesto, $detallePrefactura['Prefacturasdetalle']['impoconsumo'],
-                $detallePrefactura['Prefacturasdetalle']['incbolsa'], $detallePrefactura['Prefacturasdetalle']['complementonombre'])) {
-                /*se elimina el registro de prefacturadetalle*/
-                // $this->eliminarDetallePrefactura($detallePrefactura['Prefacturasdetalle']['id']);
-            }
+                $detallePrefactura['Prefacturasdetalle']['incbolsa'], $detallePrefactura['Prefacturasdetalle']['complementonombre']);
 
-            $this->Serialesmoto->asociarFacturaSeriales( $detallePrefactura['Prefacturasdetalle']['id'], $facturaId );
+            $this->Serialesmoto->asociarFacturaSeriales( $detallePrefactura['Prefacturasdetalle']['id'], $facturaId, $factDetalleId );
 
             //Obtiene los valores base de los productos
             $arrInfoProds = [
