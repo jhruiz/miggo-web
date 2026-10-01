@@ -112,17 +112,24 @@ class ProductosController extends AppController {
  * @return void
  */
 	public function add() {            
-            /*se reagistra la actividad del uso de la aplicacion*/
-            $usuariosController = new UsuariosController();
-            $usuarioAct = $this->Auth->user('id');
-            $usuariosController->registraractividad($usuarioAct);
+        $this->loadModel('EmpresasTipoempresa');
+
+        /*se reagistra la actividad del uso de la aplicacion*/
+        $usuariosController = new UsuariosController();
+        $usuarioAct = $this->Auth->user('id');
+        $usuariosController->registraractividad($usuarioAct);
             	
 		if ($this->request->is('post')) {
             $this->guardarProducto();
 		}
         $empresaId = $this->Auth->user('empresa_id');     
-		$categorias = $this->Producto->Categoria->obtenerCategoriasEmpresa($empresaId);                               
-		$this->set(compact('categorias', 'empresaId'));
+
+		$categorias = $this->Producto->Categoria->obtenerCategoriasEmpresa($empresaId); 
+        
+        /**Se obtiene la categorización de la empresa */
+        $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresaId );
+		
+        $this->set(compact('categorias', 'empresaId', 'tipoEmpresa'));
 	}
 
 
@@ -133,6 +140,7 @@ class ProductosController extends AppController {
         $this->autoRender = false;
         $this->loadModel('Imagenesitem');
         $this->loadModel('Palabrasclave');
+        $this->loadModel('Productosmoto');
 
         $data = $this->request->data;
         $empresaId = $this->Auth->user('empresa_id'); // O la lógica que uses para la sesión
@@ -154,8 +162,8 @@ class ProductosController extends AppController {
             // 2. PROCESAR PALABRAS CLAVE
             if (!empty($data['Producto']['palabras_clave'])) {
 
-            // Borramos todas las existentes para este producto
-            $this->Palabrasclave->deleteAll(array('Palabrasclave.producto_id' => $productoId), false);
+                // Borramos todas las existentes para este producto
+                $this->Palabrasclave->deleteAll(array('Palabrasclave.producto_id' => $productoId), false);
 
                 $tags = explode(',', $data['Producto']['palabras_clave']);
                 foreach ($tags as $tag) {
@@ -207,6 +215,22 @@ class ProductosController extends AppController {
                 }
             }
 
+            // 3. PROCESAR IMÁGENES (Conversión a WebP)
+            if (!empty($data['productomoto']['linea'])) {
+
+                // Borramos todas las existentes para este producto
+                $this->Productosmoto->deleteAll(array('Productosmoto.producto_id' => $productoId), false);
+
+                $this->Productosmoto->create();
+                $this->Productosmoto->save([
+                    'producto_id' => $productoId,
+                    'linea' => $data['productomoto']['linea'],
+                    'color' => $data['productomoto']['color'],
+                    'modelo' => $data['productomoto']['modelo'],
+                    'cilindraje' => $data['productomoto']['cilindraje']
+                ]);
+            }
+
             $this->Session->setFlash('Producto creado correctamente con imágenes optimizadas.', 'default', array('class' => 'alert alert-success'));
             return $this->redirect(array('action' => 'index'));
         }
@@ -222,6 +246,8 @@ class ProductosController extends AppController {
 	public function edit($id = null) {
         $this->loadModel('Palabrasclave');
         $this->loadModel('Imagenesitem');
+        $this->loadModel('EmpresasTipoempresa');
+        $this->loadModel('Productosmoto');
 
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
@@ -247,10 +273,16 @@ class ProductosController extends AppController {
 
         // 2. Si no usas Containable, cárgalas manualmente:
         $imagenesActuales = $this->Imagenesitem->obtnenerImagenesProducto($id);
+
+        // Se obtiene el tipo de empresa
+        $tipoEmpresa = $this->EmpresasTipoempresa->obtenerTipoEmpresa( $empresaId );
+
+        // Se valida si existe información asociada a motos
+        $prodsMotos = $this->Productosmoto->obtenerProductosMoto( $id );
         
         $this->set('imagenesActuales', $imagenesActuales);
         $this->set('palabrasClavePrevias', implode(',', $palabras));
-		$this->set(compact('categorias', 'empresaId'));
+		$this->set(compact('categorias', 'empresaId', 'tipoEmpresa', 'prodsMotos'));
 	}
 
     /**

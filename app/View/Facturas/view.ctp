@@ -247,10 +247,13 @@
                     <?php
                         $descProducto = h($DetFact['P']['descripcion'] . ' ' . $DetFact['Facturasdetalle']['complementonombre']);
                         if (!empty($DetFact['SM']['chasis'])) {
-                            $descProducto .= '<br><b>Número de Chasis:</b> ' . h($DetFact['SM']['chasis']);
-                            $descProducto .= '<br><b>Número de Motor:</b> ' . h($DetFact['SM']['motor']);
+                            $descProducto .= '<br><b>Marca:</b> ' . h($DetFact['P']['marca']);
+                            $descProducto .= '<br><b>Línea:</b> ' . h($DetFact['PM']['linea']);
                             $descProducto .= '<br><b>Color:</b> ' . h($DetFact['SM']['color']);
                             $descProducto .= '<br><b>Modelo:</b> ' . h($DetFact['SM']['modelo']);
+                            $descProducto .= '<br><b>Cilindraje:</b> ' . h($DetFact['PM']['cilindraje']);
+                            $descProducto .= '<br><b>Número de Motor:</b> ' . h($DetFact['SM']['motor']);
+                            $descProducto .= '<br><b>Número de Chasis:</b> ' . h($DetFact['SM']['chasis']);
                         }
                     ?>
 

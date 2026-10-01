@@ -18,7 +18,8 @@ echo ($this->Html->script('prefacturas/seleccionSerial.js'));
                     'class'       => 'form-control', 
                     'placeholder' => __('Ej: Negro Mate'),
                     'autocomplete'=> 'off',
-                    'value' => $color
+                    'value' => $color,
+                    'disabled' => 'disabled'
                 )); ?>
             </div>
         </div>
@@ -35,7 +36,8 @@ echo ($this->Html->script('prefacturas/seleccionSerial.js'));
                     'class'       => 'form-control', 
                     'placeholder' => __('Ej: 2026'),
                     'autocomplete'=> 'off',
-                    'value' => $modelo
+                    'value' => $modelo,
+                    'disabled' => 'disabled'
                 )); ?>
             </div>
         </div>

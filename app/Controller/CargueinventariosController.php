@@ -1207,6 +1207,7 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
          */
         public function obtenerSerialesCargueInventario() {
             $this->loadModel('Prefacturasdetalle');
+            $this->loadModel('Productosmoto');
 
             $posData = $this->request->data;
             $prefacturasdetalleId = $posData['prefacturasdetalleId'];
@@ -1217,18 +1218,14 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
             //Obtiene los seriales asociados a un cargue de inventario
             $seriales = $this->Cargueinventario->obtenerCargueInvantarioSeriales( $prefacturasdetalleId, $pfDetalles['Prefacturasdetalle'][cargueinventario_id] );
 
-            $color = '';
-            $modelo = '';
+            //Obtiene la información relacionada al producto motos
+            $prodsMotos = $this->Productosmoto->obtenerProductosMoto( $pfDetalles['Cargueinventario']['producto_id'] );
+            
+            $color = !empty($prodsMotos['0']['Productosmoto']['color']) ? $prodsMotos['0']['Productosmoto']['color'] : '';
+            $modelo = !empty($prodsMotos['0']['Productosmoto']['color']) ? $prodsMotos['0']['Productosmoto']['modelo'] : '';
+
             $serialSeleccionado = '';
             foreach( $seriales as $ser ) {
-                if( !empty($ser['SM']['color'])  && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
-                    $color = $ser['SM']['color'];
-                }
-
-                if( !empty($ser['SM']['modelo'])  && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
-                    $modelo = $ser['SM']['modelo'];
-                }
-
                 if( !empty($ser['SM']['prefacturasdetalle_id']) && $prefacturasdetalleId == $ser['SM']['prefacturasdetalle_id'] ) {
                     $serialSeleccionado = $ser['SM']['id'];
                 }

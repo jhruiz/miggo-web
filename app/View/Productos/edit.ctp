@@ -39,6 +39,44 @@
                     </div>
                 </div>
 
+                <!-- Se vailda el tipo de empresa y se agregan los inputs adicionales -->
+                <?php foreach($tipoEmpresa as $tipoEmp) { ?>
+
+                    <?php if( $tipoEmp['TE']['codigo'] == 'VM' ) {?>
+                        
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="font-weight-bold">Línea</label>
+                                <?php echo $this->Form->input('productomoto.linea', array('label' => false, 'class' => 'form-control form-control-lg', 'value' => $prodsMotos['0']['Productosmoto']['linea'], 'placeholder' => 'Línea')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="font-weight-bold">Color</label>
+                                <?php echo $this->Form->input('productomoto.color', array('label' => false, 'class' => 'form-control form-control-lg', 'value' => $prodsMotos['0']['Productosmoto']['color'], 'placeholder' => 'Color')); ?>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="font-weight-bold">Modelo</label>
+                                <?php echo $this->Form->input('productomoto.modelo', array('label' => false, 'class' => 'form-control form-control-lg', 'value' => $prodsMotos['0']['Productosmoto']['modelo'], 'placeholder' => 'Modelo')); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="font-weight-bold">Cilindraje</label>
+                                <?php echo $this->Form->input('productomoto.cilindraje', array('label' => false, 'class' => 'form-control form-control-lg', 'value' => $prodsMotos['0']['Productosmoto']['cilindraje'], 'placeholder' => 'Cilindraje')); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php }?>
+                <?php } ?>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" style="margin-right: 5px;">
