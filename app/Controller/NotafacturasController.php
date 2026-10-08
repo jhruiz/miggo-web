@@ -109,8 +109,6 @@ class NotafacturasController extends AppController {
 			$options = array('conditions' => array('Notafactura.' . $this->Notafactura->primaryKey => $id));
 			$this->request->data = $this->Notafactura->find('first', $options);
 		}
-		$empresas = $this->Notafactura->Empresa->find('list');
-		$facturas = $this->Notafactura->Factura->find('list');
 		$this->set(compact('empresas', 'facturas'));
 	}
 

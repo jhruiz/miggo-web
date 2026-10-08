@@ -65,6 +65,8 @@ var setearEditarAbono = function(elemento) {
     $('#valorAbonoHidden').val($(elemento).data('valor'));
     $('#idAbono').val(elemento.id);
     $("#cuenta").val($(elemento).data('cuenta'));
+    // Guardar el recibocaja_id para reenviarlo al ajustar (si aplica)
+    $('#reciboCajaAbono').val($(elemento).data('recibocaja') || '');
 
     verOcultarFormEditarAbono(2);
 
@@ -88,18 +90,20 @@ function recalcularTotal(abonoElim) {
  */
 function eliminarAbono(elemento) {
     // Obtener el ID del abono
-    var idAbono = elemento.getAttribute('id');
-    var valor = $(elemento).data('valor');
-    var cuenta = $(elemento).data('cuenta');
+    var idAbono    = elemento.getAttribute('id');
+    var valor      = $(elemento).data('valor');
+    var cuenta     = $(elemento).data('cuenta');
     var prefactura = $(elemento).data('prefactura');
-    var factura = $(elemento).data('factura');
+    var factura    = $(elemento).data('factura');
+    // Nuevo: id del recibo de caja (vacío si es abono manual)
+    var recibocaja = $(elemento).data('recibocaja') || '';
 
     // Confirmar si el usuario realmente quiere eliminar el registro
     if (confirm('¿Estás seguro de que deseas eliminar este abono?')) {
 
             $.ajax({
                 url: $('#url-proyecto').val() + 'abonofacturas/eliminarabono',
-                data: {idAbono: idAbono, valor: valor, cuenta: cuenta, prefactura: prefactura, factura: factura},
+                data: {idAbono: idAbono, valor: valor, cuenta: cuenta, prefactura: prefactura, factura: factura, recibocaja: recibocaja},
                 type: "POST",
                 async: false,
                 success: function(data) {
@@ -149,14 +153,15 @@ var actualizarMontoAbono = function() {
         alert('El ajuste del abono debe ser mayor a cero ($0).')
     }else {
 
-        var idAbono = $('#idAbono').val(); 
-        var cuenta = $('#cuenta').val();
+        var idAbono    = $('#idAbono').val(); 
+        var cuenta     = $('#cuenta').val();
         var prefactura = $('#idPrefactura').val();
-        var factura = $('#idFactura').val();
+        var factura    = $('#idFactura').val();
+        var recibocaja = $('#reciboCajaAbono').val() || '';
 
         $.ajax({
             url: $('#url-proyecto').val() + 'abonofacturas/ajustarabono',
-            data: {idAbono: idAbono, valorIni: valorIni, valorFin: valorFin, cuenta: cuenta, prefactura: prefactura, factura: factura},
+            data: {idAbono: idAbono, valorIni: valorIni, valorFin: valorFin, cuenta: cuenta, prefactura: prefactura, factura: factura, recibocaja: recibocaja},
             type: "POST",
             async: false,
             success: function(data) {

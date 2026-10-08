@@ -1072,6 +1072,7 @@ class FacturasController extends AppController
         $this->loadModel('Observacionescierre');
         $this->loadModel('Cuentascliente');
         $this->loadModel('Cuentaspendiente');
+        $this->loadModel('Reciboscaja');
 
         $flgCierre = true;
         $cuenta = "";
@@ -1219,6 +1220,53 @@ class FacturasController extends AppController
             }
         }
 
+        // Se obtienen los recibos de caja
+        $conditions = array( 
+            'Reciboscaja.estado <>' => 'anulado', 
+            'Reciboscaja.empresa_id' => $empresaId, 
+            'Reciboscaja.created BETWEEN ? AND ?' => array(
+                $fechaCierre . ' 00:00:00', $fechaCierre . ' 23:59:59'
+                ) 
+            );
+
+        $recibosCaja = $this->Reciboscaja->recibosCajaAbonos($conditions);
+        if( !empty( $recibosCaja ) ) {
+
+            $arrRecibosCaja = array();
+            foreach( $recibosCaja as $reciboCaja ) {
+
+                $abonos = '';
+                if( !empty( $reciboCaja['FC']['id'] ) ) {
+                    $abonos .= 'Factura ' . $reciboCaja['FC']['prefijo'] . '-'; 
+                    $abonos .= !empty( $reciboCaja['FC']['consecutivodian'] ) ? $reciboCaja['FC']['consecutivodian'] : $reciboCaja['FC']['consecutivodv'];
+                } else {
+                    $abonos .= 'Prefactura ' . $reciboCaja['PF']['id']; 
+                }
+                $abonos .= ' ' . number_format($reciboCaja['AF']['valor'],2);
+
+                if( !isset( $arrRecibosCaja[$reciboCaja['Reciboscaja']['id']] ) ) {
+
+                    $arrRecibosCaja[$reciboCaja['Reciboscaja']['id']] = [
+                        'fecha' => $reciboCaja['Reciboscaja']['created'],
+                        'consecutivo' => $reciboCaja['Reciboscaja']['consecutivo'],
+                        'valor' => $reciboCaja['Reciboscaja']['valor'],
+                        'saldo' => $reciboCaja['Reciboscaja']['saldo'],
+                        'estado' => $reciboCaja['Reciboscaja']['estado'],
+                        'cliente' => $reciboCaja['CL']['nombre'],
+                        'cuenta' => $reciboCaja['CU']['descripcion'],
+                        'tipopago' => $reciboCaja['TP']['descripcion'],
+                        'abonos' => $abonos
+                    ];
+
+                } else {
+                    $arrRecibosCaja[$reciboCaja['Reciboscaja']['id']]['abonos'] .= '<br>' . $abonos;
+                }
+
+                $estadoCuentas[$reciboCaja['Reciboscaja']['cuenta_id']]['recibos_caja'] += $reciboCaja['Reciboscaja']['saldo'];
+            }
+
+        }
+
         //se obtiene el estado actual de las cuentas
         $ctasEstAct = $this->Cuenta->obtenerInfoCuentas($empresaId);
         if (!empty($ctasEstAct)) {
@@ -1247,7 +1295,7 @@ class FacturasController extends AppController
 
         $ctasPendientes = $this->Cuentaspendiente->obtenerComprasCredito($empresaId, $fechaCierre);
 
-        $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados'));
+        $this->set(compact('ventasFactura', 'listCuenta', 'fechaCierre', 'rpfechacierre', 'infoTraslados', 'arrRecibosCaja'));
         $this->set(compact('infoGastos', 'arrAbonos', 'flgCierre', 'rpcuenta', 'estadoCuentas', 'listTipoPago'));
         $this->set(compact('cierreDiario', 'anotDay', 'obsCierre', 'ctasClientes', 'ctasPendientes', 'cantFacturas', 'cantNotasCred'));
     }
@@ -1521,6 +1569,7 @@ class FacturasController extends AppController
         $this->loadModel('Prefactura');
         $this->loadModel('Tipopago');
         $this->loadModel('Cierrecaja');
+        $this->loadModel('Reciboscaja');
 
         $fechaCierre = date('Y-m-d');
 
@@ -1600,6 +1649,23 @@ class FacturasController extends AppController
             }
         }
 
+        // Se obtienen los recibos de caja
+        $conditions = array( 
+            'Reciboscaja.estado <>' => 'anulado', 
+            'Reciboscaja.empresa_id' => $empresaId, 
+            'Reciboscaja.created BETWEEN ? AND ?' => array(
+                $fechaCierre . ' 00:00:00', $fechaCierre . ' 23:59:59'
+                ) 
+            );
+
+        $recibosCaja = $this->Reciboscaja->recibosCajaAbonos($conditions);
+        if( !empty($recibosCaja) ) {
+            foreach( $recibosCaja as $recCaja ) {
+                //se guardan los gastos por cuenta
+                $estadoCuentas[$recCaja['Reciboscaja']['cuenta_id']]['recibosCaja'] += $recCaja['Reciboscaja']['saldo'];
+            }
+        }
+
         //se obtiene el estado actual de las cuentas
         $ctasEstAct = $this->Cuenta->obtenerInfoCuentas($empresaId);
         if (!empty($ctasEstAct)) {
@@ -1624,6 +1690,7 @@ class FacturasController extends AppController
             $saldoInicial -= isset($cta['ing_traslados']) ? $cta['ing_traslados'] : 0;
             $saldoInicial += isset($cta['gasto_traslados']) ? $cta['gasto_traslados'] : 0;
             $saldoInicial -= isset($cta['abono_prefact']) ? $cta['abono_prefact'] : 0;
+            $saldoInicial -= isset($cta['recibosCaja']) ? $cta['recibosCaja'] : 0;
 
             $data = [];
             $data['usuario_id'] = $usuarioId;
@@ -1635,6 +1702,7 @@ class FacturasController extends AppController
             $data['traslados_ing'] = abs(isset($cta['ing_traslados']) ? $cta['ing_traslados'] : 0);
             $data['traslados_gas'] = abs(isset($cta['gasto_traslados']) ? $cta['gasto_traslados'] : 0);
             $data['abonos'] = abs(isset($cta['abono_prefact']) ? $cta['abono_prefact'] : 0);
+            $data['reciboscajas'] = abs(isset($cta['recibosCaja']) ? $cta['recibosCaja'] : 0);
             $resp = $this->Cierrecaja->guardarCierreCaja($data);
         }
 

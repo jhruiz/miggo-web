@@ -155,18 +155,21 @@ class AbonofacturasController extends AppController {
         }
 
         /**
-         * Elimina un abono en particular y crea el gasto para el mismo
+         * Elimina un abono en particular y crea el gasto para el mismo.
+         * Si el abono estaba asociado a un recibo de caja, devuelve el saldo al recibo.
          */
         public function eliminarabono() {
             $this->autoRender = false;
             $resp = false;
 
             $posData = $this->request->data;
-            $idAbono = $posData['idAbono'];
-            $valor = $posData['valor'];
-            $cuenta = $posData['cuenta'];
+            $idAbono    = $posData['idAbono'];
+            $valor      = $posData['valor'];
+            $cuenta     = $posData['cuenta'];
             $prefactura = $posData['prefactura'];
-            $factura = $posData['factura'];
+            $factura    = $posData['factura'];
+            // Nuevo: id del recibo de caja asociado al abono (vacío si es abono manual)
+            $reciboCajaId = !empty($posData['recibocaja']) ? $posData['recibocaja'] : null;
 
             $empresaId = $this->Auth->user('empresa_id');
 
@@ -179,6 +182,12 @@ class AbonofacturasController extends AppController {
                     $this->ajustarSaldoCXC($factura, $valor);
                 }
 
+                // Si el abono venía de un recibo de caja, devolver el saldo al recibo
+                if( !empty($reciboCajaId) ) {
+                    $this->loadModel('Reciboscaja');
+                    $this->Reciboscaja->devolverSaldo($reciboCajaId, $valor);
+                }
+
                 $resp = true;
             }
 
@@ -187,19 +196,22 @@ class AbonofacturasController extends AppController {
         }
 
         /**
-         * Ajusta el valor de un abono de una prefactura/factura específica
+         * Ajusta el valor de un abono de una prefactura/factura específica.
+         * Si el abono venía de un recibo de caja, devuelve la diferencia al recibo.
          */
         public function ajustarabono() {
             $this->autoRender = false;
             $resp = false;
 
             $posData = $this->request->data;
-            $idAbono = $posData['idAbono'];
-            $valorIni = $posData['valorIni'];
-            $valorFin = $posData['valorFin'];
-            $cuenta = $posData['cuenta'];
+            $idAbono    = $posData['idAbono'];
+            $valorIni   = $posData['valorIni'];
+            $valorFin   = $posData['valorFin'];
+            $cuenta     = $posData['cuenta'];
             $prefactura = $posData['prefactura'];
-            $factura = $posData['factura'];
+            $factura    = $posData['factura'];
+            // Nuevo: id del recibo de caja asociado (vacío si es abono manual)
+            $reciboCajaId = !empty($posData['recibocaja']) ? $posData['recibocaja'] : null;
 
             if ( $this->Abonofactura->ajustarAbono($idAbono, $valorFin))  {
                 //Registrar el gasto
@@ -211,6 +223,12 @@ class AbonofacturasController extends AppController {
                 if( $factura != '' ) {
                     //ajustar el saldo de la cuenta por cobrar
                     $this->ajustarSaldoCXC($factura, $valor);
+                }
+
+                // Si el abono venía de un recibo, devolver la diferencia al recibo
+                if( !empty($reciboCajaId) ) {
+                    $this->loadModel('Reciboscaja');
+                    $this->Reciboscaja->devolverSaldo($reciboCajaId, $valor);
                 }
 
                 $resp = true;

@@ -6,6 +6,7 @@
 <?php echo ($this->Html->script('facturas/calcularValoresProducto.js')); ?>
 <?php echo ($this->Html->script('facturas/syncdian.js')); ?>
 <?php echo ($this->Html->script('abonos/gestionabonos.js')); ?>
+<?php echo ($this->Html->script('reciboscajas/aplicarRecibo.js')); ?>
 <?php echo $this->Form->create('Factura'); ?>
 <div class="container body">
 <div class="main_container">
@@ -235,6 +236,7 @@
 
         <div class="container-fluid">
             <div class="col-md-3"><button id="btn_abonos" class="btn btn-primary" type="button">Abonar</button></div>
+            <div class="col-md-3"><button id="btn_aplicar_recibo" class="btn btn-success" type="button"><i class="fa fa-money"></i> Recibo de Caja</button></div>
             <div class="col-md-3"><button id="btn_facturar" class="btn btn-primary" type="button" onclick="facturarProductos();">Facturar</button></div>
             <div class="col-md-3"><a href="#" class="btn btn-primary active" role="button" aria-pressed="true" id="imprimirCot">Imprimir</a></div>
             <div class="col-md-3">
@@ -248,6 +250,65 @@
 <div id="div_facturar"></div>
 <div id="div_abono"></div>
 <div id="div_seriales_registrados"></div>
+
+<!-- ── Modal Aplicar Recibo de Caja ── -->
+<div id="div_recibo" style="display:none;">
+    <div style="padding:10px;">
+
+        <div id="divCargandoRecibos" style="text-align:center; padding:20px;">
+            <i class="fa fa-spinner fa-spin fa-2x"></i><br>
+            <small>Consultando recibos disponibles...</small>
+        </div>
+
+        <div id="panelSinRecibos" style="display:none;">
+            <div class="alert alert-warning" style="margin:10px 0;">
+                <i class="fa fa-exclamation-triangle"></i>
+                Este cliente no tiene recibos de caja con saldo disponible.
+                <a href="<?php echo $this->request->base; ?>/reciboscajas/add" target="_blank">
+                    Crear nuevo recibo
+                </a>
+            </div>
+        </div>
+
+        <div id="panelListaRecibos" style="display:none;">
+            <div class="form-group">
+                <label class="font-weight-bold">Recibo de Caja disponible</label>
+                <select id="selectRecibo" class="form-control">
+                    <option value="">-- Seleccione un recibo --</option>
+                </select>
+            </div>
+
+            <div id="panelSaldoRecibo" style="display:none; margin-top:10px;">
+                <div class="alert alert-info" style="padding:10px 14px; margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <small>Saldo del recibo</small><br>
+                            <b id="lblSaldoRecibo" style="font-size:16px;">$0</b>
+                        </div>
+                        <div class="col-xs-6">
+                            <small>Pendiente prefactura</small><br>
+                            <b id="lblSaldoPendientePF" style="font-size:16px;">$0</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold">Valor a aplicar</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="text" id="inputValorAplicar" class="form-control numericPrice" placeholder="0" min="1">
+                    </div>
+                </div>
+                <button type="button" id="btnAplicarRecibo" class="btn btn-success btn-block">
+                    <i class="fa fa-check"></i> Aplicar
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Campos ocultos auxiliares para el recibo -->
+<input type="hidden" id="reciboSaldoPendiente" value="0">
+<input type="hidden" id="facturaIdAbonoRecibo" value="">
 <div id="dv_emp">
     <div id="dv_img_emp">
         <div style="float:center;" align="center">

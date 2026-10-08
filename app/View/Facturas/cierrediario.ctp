@@ -164,7 +164,7 @@
             </div>
         </div> 
         
-	<legend><h2><b><?php echo __('Detalle Abonos: ' . $fechaCierre); ?></b></h2></legend>        
+	    <legend><h2><b><?php echo __('Detalle Abonos: ' . $fechaCierre); ?></b></h2></legend>        
         <div class="table-responsive">
             <div class="container">        
                 <table cellpadding="0" cellspacing="0" class="table table-striped table-hover table-condensed">
@@ -194,6 +194,47 @@
                 <tr>
                     <th colspan="6" align="right">TOTAL</th>
                     <th align="right"><?php echo h('$' . number_format($ttalAbonos,2)); ?>&nbsp;</th>
+                </tr>                  
+                </table>
+            </div>
+        </div>
+        
+	    <legend><h2><b><?php echo __('Detalle Recibos de Caja: ' . $fechaCierre); ?></b></h2></legend>        
+        <div class="table-responsive">
+            <div class="container">        
+                <table cellpadding="1" cellspacing="1" class="table table-striped table-hover table-condensed">
+                <tr>
+                    <th><?php echo ('Fecha'); ?></th>
+                    <th><?php echo ('Consecutivo'); ?></th>
+                    <th><?php echo ('Cliente'); ?></th>
+                    <th><?php echo ('Tipo Pago'); ?></th>
+                    <th><?php echo ('Cuenta'); ?></th>
+                    <th><?php echo ('Estado'); ?></th>
+                    <th><?php echo ('Abonos'); ?></th>
+                    <th class="text-right"><?php echo ('Valor'); ?></th>
+                    <th class="text-right"><?php echo ('Saldo'); ?></th>  
+                </tr>
+                <?php $ttalRecibosCaja = 0; ?> 
+
+                <?php foreach ($arrRecibosCaja as $rcc): ?> 
+                <tr>
+                    <td><?php echo h($rcc['fecha']); ?>&nbsp;</td>
+                    <td><?php echo h($rcc['consecutivo']); ?>&nbsp;</td>
+                    <td><?php echo h($rcc['cliente']); ?>&nbsp;</td>
+                    <td><?php echo h($rcc['tipopago']); ?>&nbsp;</td>
+                    <td><?php echo h($rcc['cuenta']); ?>&nbsp;</td>                    
+                    <td><?php echo h($rcc['estado']); ?>&nbsp;</td>                    
+                    <td><?php echo $rcc['abonos']; ?>&nbsp;</td>                  
+                    <td align="right"><?php echo h('$' . number_format($rcc['valor'], 2)); ?>&nbsp;</td>                    
+                    <td align="right"><?php echo h('$' . number_format($rcc['saldo'], 2)); ?>&nbsp;</td>                    
+                </tr>
+                <?php 
+                    $ttalRecibosCaja += $rcc['saldo']; 
+                ?>
+                <?php endforeach; ?>
+                <tr>
+                    <th colspan="8" align="right">TOTAL</th>
+                    <th align="right"><?php echo h('$' . number_format($ttalRecibosCaja,2)); ?>&nbsp;</th>
                 </tr>                  
                 </table>
             </div>
@@ -262,7 +303,7 @@
                 </tr>                  
                 </table>
             </div>
-        </div> <br><br>                
+        </div> <br>      
         
         <legend><h2><b><?php echo __('Detalle de Estado por Caja: ' . $fechaCierre); ?></b></h2></legend>  
         
@@ -279,6 +320,7 @@
                         <th>Ing. Traslados</th>
                         <th>Gas. Traslados</th>
                         <th>Abonos Prefacturas</th>
+                        <th>Recibos de Caja</th>
                         <th>Abonos Facturas</th>
                         <th>Total</th>
                     </tr>                     
@@ -293,6 +335,7 @@
                         $saldoInicial += isset($val['gasto_traslados']) ? $val['gasto_traslados'] : 0;
                         $saldoInicial -= isset($val['abono_prefact']) ? $val['abono_prefact'] : 0;
                         $saldoInicial -= isset($val['abono_fact']) ? $val['abono_fact'] : 0;
+                        $saldoInicial -= isset($val['recibos_caja']) ? $val['recibos_caja'] : 0; 
                     ?>
                                     
                     <tr>
@@ -303,6 +346,7 @@
                         <td align="right"><?php echo h('$' . number_format((isset($val['ing_traslados']) ? $val['ing_traslados'] : 0),2)); ?>&nbsp;</td>                    
                         <td align="right"><?php echo h('$' . number_format((isset($val['gasto_traslados']) ? $val['gasto_traslados'] : 0),2)); ?>&nbsp;</td>                    
                         <td align="right"><?php echo h('$' . number_format((isset($val['abono_prefact']) ? $val['abono_prefact'] : 0),2)); ?>&nbsp;</td>                    
+                        <td align="right"><?php echo h('$' . number_format((isset($val['recibos_caja']) ? $val['recibos_caja'] : 0),2)); ?>&nbsp;</td>                    
                         <td align="right"><?php echo h('$' . number_format((isset($val['abono_fact']) ? $val['abono_fact'] : 0),2)); ?>&nbsp;</td>                    
                         <td align="right"><?php echo h('$' . number_format((isset($val['estado_actual']) ? $val['estado_actual'] : 0),2)); ?>&nbsp;</td>                    
                     </tr>

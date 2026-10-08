@@ -75,7 +75,16 @@ class Abonofactura extends AppModel {
             'conditions' => array(
                 'CU.id=Abonofactura.cuenta_id'
                 )                
-        )); 
+        ));
+
+        array_push($arr_join, array(
+            'table' => 'reciboscajas',
+            'alias' => 'RC',
+            'type'  => 'LEFT',
+            'conditions' => array(
+                'RC.id=Abonofactura.recibocaja_id'
+            )
+        ));
 
         $abonos = $this->find('all', array(
             'joins' => $arr_join,
@@ -86,6 +95,8 @@ class Abonofactura extends AppModel {
                 'CU.id',
                 'CU.descripcion',
                 'Abonofactura.*',
+                'RC.id',
+                'RC.consecutivo',
             ), 
             'conditions' => array(
                 'Abonofactura.prefactura_id' => $prefacturaId
@@ -616,5 +627,62 @@ class Abonofactura extends AppModel {
         }else{
             return false;
         }
+    }
+
+    /**
+     * Obtiene todos los abonos que fueron aplicados desde un recibo de caja específico.
+     * Incluye datos de la prefactura o factura asociada.
+     *
+     * @param  int $reciboCajaId
+     * @return array
+     */
+    public function obtenerAbonosPorRecibo($reciboCajaId) {
+        $arr_join = array();
+
+        array_push($arr_join, array(
+            'table'      => 'prefacturas',
+            'alias'      => 'PF',
+            'type'       => 'LEFT',
+            'conditions' => array('PF.id = Abonofactura.prefactura_id'),
+        ));
+
+        array_push($arr_join, array(
+            'table'      => 'facturas',
+            'alias'      => 'F',
+            'type'       => 'LEFT',
+            'conditions' => array('F.id = Abonofactura.factura_id'),
+        ));
+
+        array_push($arr_join, array(
+            'table'      => 'clientes',
+            'alias'      => 'CL',
+            'type'       => 'LEFT',
+            'conditions' => array('CL.id = COALESCE(PF.cliente_id, F.cliente_id)'),
+        ));
+
+        array_push($arr_join, array(
+            'table'      => 'usuarios',
+            'alias'      => 'U',
+            'type'       => 'INNER',
+            'conditions' => array('U.id = Abonofactura.usuario_id'),
+        ));
+
+        return $this->find('all', array(
+            'joins'      => $arr_join,
+            'fields'     => array(
+                'Abonofactura.id',
+                'Abonofactura.valor',
+                'Abonofactura.created',
+                'Abonofactura.prefactura_id',
+                'Abonofactura.factura_id',
+                'PF.id',
+                'F.id',  'F.codigo', 'F.consecutivodian',
+                'CL.nombre', 'CL.nit',
+                'U.nombre',
+            ),
+            'conditions' => array('Abonofactura.recibocaja_id' => $reciboCajaId),
+            'order'      => 'Abonofactura.created ASC',
+            'recursive'  => -1,
+        ));
     }
 }
