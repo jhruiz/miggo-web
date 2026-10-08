@@ -19,7 +19,7 @@ class Ciudadesmiggo extends AppModel {
         
         $arr_join = array(); 
         array_push($arr_join, array(
-            'table' => 'departamentos', 
+            'table' => 'departamentosmiggos', 
             'alias' => 'D', 
             'type' => 'INNER',
             'conditions' => array(
@@ -32,7 +32,7 @@ class Ciudadesmiggo extends AppModel {
             'alias' => 'P', 
             'type' => 'INNER',
             'conditions' => array(
-                'P.id=D.paisemiggos_id'
+                'P.id=D.paisesmiggo_id'
                 )                
         ));
 

@@ -3,7 +3,7 @@ var obtenerDptos = function() {
     var pais = $('.selectPais').val();
     $.ajax({
         type: 'POST',
-        url: $('#url-proyecto').val() + 'departamentos/obtenerdepartamentos',
+        url: $('#url-proyecto').val() + 'departamentosmiggos/obtenerdepartamentos',
         data: {pais: pais},
         success: function(data) {
             var respuesta = JSON.parse(data);
