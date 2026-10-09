@@ -252,8 +252,9 @@ class ReportesController extends AppController
         $empresaId = $this->Auth->user('empresa_id');
 
         $data = array();
-        if (!empty($_POST['rpproducto'])) {
-            $data['Cargueinventario.producto_id'] = $_POST['rpproducto'];
+        if( !empty( $_POST['rpproducto'] ) ){
+            $searchProd = str_replace(" ", "%", $_POST['rpproducto']);
+            $data['Producto.descripcion LIKE '] = '%' . $searchProd . '%';
         }
 
         if (!empty($_POST['rpdeposito'])) {

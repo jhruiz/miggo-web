@@ -121,6 +121,8 @@ class EmpresasController extends AppController {
  */
 	public function edit($id = null) {
         $this->loadModel('Paisesmiggo');
+        $this->loadModel('Ciudadesmiggo');
+        $this->loadModel('Departamentosmiggo');
         
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
@@ -171,9 +173,15 @@ class EmpresasController extends AppController {
                     $options = array('conditions' => array('Empresa.' . $this->Empresa->primaryKey => $id));
                     $this->request->data = $this->Empresa->find('first', $options);
 		}
+
+        // obtiene la información de la ubicación
+        $ubicacion = $this->Ciudadesmiggo->obtenerUbicacion($this->request->data['Empresa']['municipio_id']);
         $paises = $this->Paisesmiggo->obtenerListaPaises();
+        $departamentos = $this->Departamentosmiggo->obtenerDptosPais( $ubicacion['0']['P']['id'] );
+        $ciudades = $this->Ciudadesmiggo->obtenerCiudadesDpto( $ubicacion['0']['D']['id'] );
+
 		
-		$this->set(compact('paises'));
+		$this->set(compact('paises', 'ubicacion', 'departamentos', 'ciudades'));
 	}
 
 /**

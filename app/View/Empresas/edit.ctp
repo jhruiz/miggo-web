@@ -46,6 +46,7 @@
                                 'class' => 'form-control select2 selectPais', 
                                 'empty' => 'Seleccione País', 
                                 'options' => $paises, 
+                                'default' => $ubicacion['0']['P']['id'],
                                 'onchange' => 'obtenerDptos();'
                             )); ?>
                         </div>
@@ -56,7 +57,8 @@
                             <?php echo $this->Form->input('departamento_id', array(
                                 'label' => false, 
                                 'class' => 'form-control select2 selectDpto', 
-                                'empty' => 'Seleccione Departamento', 
+                                'options' => $departamentos, 
+                                'default' => $ubicacion['0']['D']['id'],
                                 'onchange' => 'obtenerCiudades();'
                             )); ?>
                         </div>
@@ -67,7 +69,8 @@
                             <?php echo $this->Form->input('ciudade_id', array(
                                 'label' => false, 
                                 'class' => 'form-control select2 selectCiudad', 
-                                'empty' => 'Seleccione Ciudad'
+                                'options' => $ciudades, 
+                                'default' => $ubicacion['0']['Ciudadesmiggo']['id']
                             )); ?>
                         </div>
                     </div>

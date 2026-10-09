@@ -46,7 +46,9 @@ class ClientesController extends AppController
         $empresaId = $this->Auth->user('empresa_id');
         $paginate['Cliente.empresa_id'] = $empresaId;
         $this->Cliente->recursive = 0;
+        
         $this->set('clientes', $this->Paginator->paginate('Cliente', $paginate));
+        
         $nit = $this->passedArgs['nit'];
         $nombre= $this->passedArgs['nombre'];
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
@@ -122,6 +124,9 @@ class ClientesController extends AppController
         $this->loadModel('Clasificacioncliente');
         $this->loadModel('Tipoidentificacione');
         $this->loadModel('Paisesmiggo');
+        $this->loadModel('Ciudadesmiggo');
+        $this->loadModel('Departamentosmiggo');
+
         /*se reagistra la actividad del uso de la aplicacion*/
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
@@ -142,15 +147,23 @@ class ClientesController extends AppController
             $options = array('conditions' => array('Cliente.' . $this->Cliente->primaryKey => $id));
             $this->request->data = $this->Cliente->find('first', $options);
         }
-        //se obtiene el listado de paises
+
+        
+        // obtiene la información de la ubicación
+        $ubicacion = $this->Ciudadesmiggo->obtenerUbicacion($this->request->data['Cliente']['ciudadesmiggo_id']);
         $paises = $this->Paisesmiggo->obtenerListaPaises();
+        $departamentos = $this->Departamentosmiggo->obtenerDptosPais( $ubicacion['0']['P']['id'] );
+        $ciudades = $this->Ciudadesmiggo->obtenerCiudadesDpto( $ubicacion['0']['D']['id'] );
+
         $estados = $this->Cliente->Estado->find('list');
         $empresaId = $this->Auth->user('empresa_id');
         $depositos = $this->Cliente->Deposito->obtenerDepositoEmpresa($empresaId);
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
         $usuarioId = $this->Auth->user('id');
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
+
         $this->set(compact('paises', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
+        $this->set(compact('ubicacion', 'departamentos', 'ciudades'));
     }
 
 /**

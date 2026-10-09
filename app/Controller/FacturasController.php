@@ -2499,15 +2499,17 @@ class FacturasController extends AppController
         if( !empty( $tipoEmpresa ) ) {
 
             foreach( $tipoEmpresa as $te ) {
-                            
-            
+                              
                 if( $te['TE']['codigo'] == 'VM' ) {
 
                     if( !empty( $val['SM']['id'] ) ){
-                        $nombreExt .= 'Número de Chasis: ' . $val['SM']['chasis'] . '. ';
+                        $nombreExt .= 'Marca: ' . $val['P']['marca'] . '. ';
+                        $nombreExt .= 'Línea: ' . $val['PM']['linea'] . '. ';
+                        $nombreExt .= 'Color: ' . $val['PM']['color'] . '. ';
+                        $nombreExt .= 'Modelo: ' . $val['PM']['modelo'] . '. ';
+                        $nombreExt .= 'Cilindraje: ' . $val['PM']['cilindraje'] . '. ';
                         $nombreExt .= 'Número de Motor: ' . $val['SM']['motor'] . '. ';
-                        $nombreExt .= 'Color: ' . $val['SM']['color'] . '. ';
-                        $nombreExt .= 'Modelo: ' . $val['SM']['modelo'] . '. ';
+                        $nombreExt .= 'Número de Chasis: ' . $val['SM']['chasis'] . '. ';
                     }
 
                 }
