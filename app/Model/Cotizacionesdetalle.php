@@ -127,7 +127,7 @@ class Cotizacionesdetalle extends AppModel {
                 'alias' => 'PAI',
                 'type' => 'INNER',
                 'conditions' => array(
-                    'PAI.id=DPTO.paisemiggos_id'
+                    'PAI.id=DPTO.paisesmiggo_id'
                 )
             ));  
 
