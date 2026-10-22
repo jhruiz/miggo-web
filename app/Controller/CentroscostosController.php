@@ -26,11 +26,11 @@ class CentroscostosController extends AppController {
         $filtNombre = '';
 
         if (!empty($this->passedArgs['nombre'])) {
-            $filtros['Centrocosto.nombre LIKE'] = '%' . $this->passedArgs['nombre'] . '%';
+            $filtros['Centroscosto.nombre LIKE'] = '%' . $this->passedArgs['nombre'] . '%';
             $filtNombre = $this->passedArgs['nombre'];
         }
 
-        $centros = $this->Centrocosto->obtenerCentrosCosto($empresaId, $filtros);
+        $centros = $this->Centroscosto->obtenerCentrosCosto($empresaId, $filtros);
 
         $this->set(compact('centros', 'filtNombre'));
     }

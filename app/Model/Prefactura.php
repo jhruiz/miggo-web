@@ -391,7 +391,7 @@ class Prefactura extends AppModel {
             ));            
             
             array_push($arr_join, array(
-                'table' => 'departamentos',
+                'table' => 'departamentosmiggos',
                 'alias' => 'DPTO',
                 'type' => 'INNER',
                 'conditions' => array(

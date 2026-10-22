@@ -11,7 +11,7 @@ App::uses('AppModel', 'Model');
  * @property Empresa $Empresa
  * @property Usuario $Usuario
  */
-class Centrocosto extends AppModel {
+class Centroscosto extends AppModel {
 
     public $useTable = 'centroscostos';
 
@@ -63,8 +63,8 @@ class Centrocosto extends AppModel {
      */
     public function obtenerCentrosCosto($empresaId, $filtros = array()) {
         $conditions = array(
-            'Centrocosto.empresa_id' => $empresaId,
-            'Centrocosto.deleted'    => '0',
+            'Centroscosto.empresa_id' => $empresaId,
+            'Centroscosto.deleted'    => '0',
         );
 
         if (!empty($filtros)) {
@@ -73,7 +73,7 @@ class Centrocosto extends AppModel {
 
         return $this->find('all', array(
             'conditions' => $conditions,
-            'order'      => 'Centrocosto.nombre ASC',
+            'order'      => 'Centroscosto.nombre ASC',
             'recursive'  => 1, // trae Empresa + Usuario (HABTM)
         ));
     }
@@ -88,9 +88,9 @@ class Centrocosto extends AppModel {
     public function obtenerCentroCostoPorId($id, $empresaId) {
         return $this->find('first', array(
             'conditions' => array(
-                'Centrocosto.id'         => $id,
-                'Centrocosto.empresa_id' => $empresaId,
-                'Centrocosto.deleted'    => '0',
+                'Centroscosto.id'         => $id,
+                'Centroscosto.empresa_id' => $empresaId,
+                'Centroscosto.deleted'    => '0',
             ),
             'recursive' => 1, // trae Empresa + Usuario (HABTM)
         ));
@@ -105,10 +105,10 @@ class Centrocosto extends AppModel {
     public function obtenerListaCentrosCosto($empresaId) {
         return $this->find('list', array(
             'conditions' => array(
-                'Centrocosto.empresa_id' => $empresaId,
-                'Centrocosto.deleted'    => '0',
+                'Centroscosto.empresa_id' => $empresaId,
+                'Centroscosto.deleted'    => '0',
             ),
-            'order'     => 'Centrocosto.nombre ASC',
+            'order'     => 'Centroscosto.nombre ASC',
             'recursive' => -1,
         ));
     }
@@ -125,18 +125,18 @@ class Centrocosto extends AppModel {
                 'table'      => 'centroscostos_usuarios',
                 'alias'      => 'CCU',
                 'type'       => 'INNER',
-                'conditions' => array('CCU.centrocosto_id = Centrocosto.id'),
+                'conditions' => array('CCU.centroscosto_id = Centroscosto.id'),
             ),
         );
 
         return $this->find('all', array(
             'joins'      => $joins,
-            'fields'     => array('Centrocosto.*'),
+            'fields'     => array('Centroscosto.*'),
             'conditions' => array(
                 'CCU.usuario_id'      => $usuarioId,
-                'Centrocosto.deleted' => '0',
+                'Centroscosto.deleted' => '0',
             ),
-            'order'     => 'Centrocosto.nombre ASC',
+            'order'     => 'Centroscosto.nombre ASC',
             'recursive' => -1,
         ));
     }
@@ -149,7 +149,7 @@ class Centrocosto extends AppModel {
      * Guarda (crea o actualiza) un centro de costo junto con sus usuarios.
      * Usa saveAll para persistir también la relación HABTM.
      *
-     * @param  array $data       Datos del Centrocosto
+     * @param  array $data       Datos del Centroscosto
      * @param  array $usuarioIds Array de ids de usuarios a asociar
      * @return bool
      */
