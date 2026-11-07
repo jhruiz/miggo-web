@@ -1,138 +1,104 @@
 <?php $this->layout = 'inicio'; ?>
 
-<div class="centroscostos index container-fluid" style="padding: 20px;">
+<div class="centroscostos index container-fluid p-4">
 
-    <!-- ── FILTROS ── -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h3 class="card-title mb-0"><b><i class="fa fa-search"></i> Buscar Centros de Costo</b></h3>
+    <div class="miggo-index-container shadow-sm">
+
+        <!-- CABECERA DE PÁGINA Y BOTÓN NUEVO -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="miggo-title-header">
+                <i class="fa fa-cubes"></i> Centros de Costo
+            </div>
+            <div>
+                <?php echo $this->Html->link(
+                    '<i class="fa fa-plus"></i> Nuevo Centro de Costo',
+                    array('action' => 'add'),
+                    array('class' => 'btn btn-miggo-success', 'escape' => false)
+                ); ?>
+            </div>
         </div>
-        <div class="card-body">
-            <?php echo $this->Form->create('Centrocosto', array('action' => 'search', 'method' => 'post', 'class' => 'form-horizontal')); ?>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold">Nombre</label>
-                        <?php echo $this->Form->input('nombre', array('label' => false, 'class' => 'form-control', 'placeholder' => 'Nombre del centro de costo', 'value' => $filtNombre)); ?>
-                    </div>
+
+        <!-- FILTRO DE BÚSQUEDA RAPIDA -->
+        <div class="miggo-search-box">
+            <?php echo $this->Form->create('Centrocosto', array('action' => 'search', 'method' => 'post', 'class' => 'm-0')); ?>
+            <div class="row align-items-end">
+                <div class="col-md-9 mb-2 mb-md-0">
+                    <label class="miggo-label">BUSCAR POR NOMBRE</label>
+                    <?php echo $this->Form->input('nombre', array(
+                        'label'       => false,
+                        'class'       => 'form-control miggo-input',
+                        'placeholder' => 'Escriba el nombre del centro de costo a buscar...',
+                        'value'       => $filtNombre,
+                        'div'         => false
+                    )); ?>
                 </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <div class="form-group mb-3 w-100">
-                        <?php echo $this->Form->submit('Buscar', array('class' => 'btn btn-primary btn-block')); ?>
-                    </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-miggo-primary w-100">
+                        <i class="fa fa-search"></i> BUSCAR
+                    </button>
                 </div>
             </div>
             <?php echo $this->Form->end(); ?>
         </div>
-    </div>
 
-    <!-- ── ACCIONES ── -->
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <?php echo $this->Html->link(
-                '<i class="fa fa-plus"></i> Nuevo Centro de Costo',
-                array('action' => 'add'),
-                array('class' => 'btn btn-success', 'escape' => false)
-            ); ?>
-        </div>
-    </div>
+        <!-- TABLA DE RESULTADOS -->
+        <div class="table-responsive">
+            <table class="table miggo-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60%;">NOMBRE</th>
+                        <th class="text-center" style="width: 20%;">EDITABLE</th>
+                        <th class="text-center" style="width: 20%;">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($centros)): ?>
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-5">
+                            <i class="fa fa-inbox fa-3x mb-3 text-light" style="color: #cbd5e0 !important;"></i><br>
+                            <span class="font-weight-bold" style="font-size: 14px;">No se encontraron centros de costo registrados.</span>
+                        </td>
+                    </tr>
+                    <?php else: ?>
+                    <?php foreach ($centros as $centro): ?>
+                    <tr id="fila-<?php echo h($centro['Centroscosto']['id']); ?>">
+                        <td>
+                            <strong style="color: #2d3748; font-size: 13.5px;">
+                                <?php echo h($centro['Centroscosto']['nombre']); ?>
+                            </strong>
+                        </td>
+                        <td class="text-center">
+                            <?php if ($centro['Centroscosto']['editable'] == '1'): ?>
+                                <span class="badge-miggo-success"><i class="fa fa-check"></i> SÍ</span>
+                            <?php else: ?>
+                                <span class="badge-miggo-secondary"><i class="fa fa-lock"></i> NO</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-center">
+                            <!-- EDITAR -->
+                            <?php echo $this->Html->link(
+                                '<i class="fa fa-pencil action-icon"></i>',
+                                array('action' => 'edit', $centro['Centroscosto']['id']),
+                                array('escape' => false, 'class' => 'text-primary mr-2', 'title' => 'Editar Centro de Costo')
+                            ); ?>
 
-    <!-- ── TABLA ── -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h3 class="card-title mb-0"><b>Listado de Centros de Costo</b></h3>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Usuarios Asignados</th>
-                            <th class="text-center">Editable</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($centros)): ?>
-                        <tr>
-                            <td colspan="4" class="text-center text-muted" style="padding:30px;">
-                                <i class="fa fa-inbox fa-2x"></i><br>
-                                No se encontraron centros de costo.
-                            </td>
-                        </tr>
-                        <?php else: ?>
-                        <?php foreach ($centros as $centro): ?>
-                        <tr id="fila-<?php echo h($centro['Centrocosto']['id']); ?>">
-                            <td><b><?php echo h($centro['Centrocosto']['nombre']); ?></b></td>
-                            <td>
-                                <?php if (!empty($centro['Usuario'])): ?>
-                                    <?php foreach ($centro['Usuario'] as $u): ?>
-                                        <span class="badge badge-info" style="margin:2px;"><?php echo h($u['nombre']); ?></span>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <small class="text-muted">Sin usuarios asignados</small>
-                                <?php endif; ?>
-                            </td>
-                            <td class="text-center">
-                                <?php if ($centro['Centrocosto']['editable'] == '1'): ?>
-                                    <span class="badge badge-success">Sí</span>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary" style="background:#95a5a6;">No</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="text-center" style="min-width:90px;">
-                                <?php echo $this->Html->link(
-                                    '<i class="fa fa-pencil"></i>',
-                                    array('action' => 'edit', $centro['Centrocosto']['id']),
-                                    array('escape' => false, 'class' => 'text-primary', 'style' => 'margin-right:8px;', 'title' => 'Editar')
-                                ); ?>
-                                <?php if ($centro['Centrocosto']['editable'] == '1'): ?>
+                            <!-- ELIMINAR -->
+                            <?php if ($centro['Centroscosto']['editable'] == '1'): ?>
                                 <a href="javascript:void(0);"
-                                   onclick="eliminarCentroCosto(<?php echo $centro['Centrocosto']['id']; ?>, '<?php echo h(addslashes($centro['Centrocosto']['nombre'])); ?>')"
-                                   class="text-danger" title="Eliminar">
-                                    <i class="fa fa-trash-o"></i>
+                                   onclick="eliminarCentroCosto(<?php echo $centro['Centroscosto']['id']; ?>, '<?php echo h(addslashes($centro['Centroscosto']['nombre'])); ?>')"
+                                   class="text-danger" title="Eliminar Centro de Costo">
+                                    <i class="fa fa-trash-o action-icon"></i>
                                 </a>
-                                <?php else: ?>
-                                <i class="fa fa-lock text-muted" title="No editable"></i>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            <?php else: ?>
+                                <i class="fa fa-lock text-muted action-icon" style="opacity: 0.5;" title="Registro bloqueado de fábrica"></i>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
+
     </div>
 </div>
-
-<input type="hidden" id="baseUrl" value="<?php echo $this->request->base; ?>">
-
-<script>
-function eliminarCentroCosto(id, nombre) {
-    bootbox.confirm({
-        message: '¿Está seguro que desea eliminar el centro de costo <b>' + nombre + '</b>?',
-        buttons: {
-            confirm: { label: 'Eliminar', className: 'btn-danger' },
-            cancel:  { label: 'Cancelar', className: 'btn-default' }
-        },
-        callback: function(result) {
-            if (!result) return;
-            $.ajax({
-                type: 'POST',
-                url:  $('#baseUrl').val() + '/centroscostos/delete',
-                data: { id: id },
-                success: function(data) {
-                    var resp = JSON.parse(data);
-                    if (resp.resp) {
-                        $('#fila-' + id).fadeOut(300, function() { $(this).remove(); });
-                    } else {
-                        bootbox.alert(resp.msg);
-                    }
-                }
-            });
-        }
-    });
-}
-</script>

@@ -7,6 +7,7 @@ var guardarMetodosValores = function(arrPayMeth){
     $('.icon-container').show();
     $('#btn_facturar_m').css('display', 'none');
     $('#btn_agregar').css('display', 'none');
+    var vendedor = $('#FacturaVendedor').val();
     
     //se obtiene el id de la prefactura para realizar el abono
     var prefactId = "";
@@ -19,7 +20,7 @@ var guardarMetodosValores = function(arrPayMeth){
     $.ajax({        
         url: $('#url-proyecto').val() + 'facturaCuentaValores/guardarFacturaCuentasValores', 
         async : false,
-        data: {arrPayMeth: arrPayMeth, prefactId: prefactId},
+        data: {arrPayMeth: arrPayMeth, prefactId: prefactId, vendedor: vendedor},
         type: "POST",
         success: function(data) {
              var resp = JSON.parse(data);

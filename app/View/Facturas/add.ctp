@@ -8,6 +8,7 @@
 <?php echo ($this->Html->script('abonos/gestionabonos.js')); ?>
 <?php echo ($this->Html->script('reciboscajas/aplicarRecibo.js')); ?>
 <?php echo $this->Form->create('Factura'); ?>
+<?php echo $this->element('Facturacion/modal_sede'); ?>
 <div class="container body">
 <div class="main_container">
 
@@ -203,7 +204,15 @@
                         <div class="form-group col-md-2">
                             <?php echo $this->Form->input('canalventa', array('label' => 'Canal de ventas', 'type' => 'select', 'options' => $canalventas, 'class' => 'form-control',   'empty' => 'Seleccione una...')); ?>
                         </div>
-                        
+
+                        <?php // El centro de costo activo se fija vía el modal de inicio (o auto). Viaja como hidden. ?>
+                        <?php echo $this->Form->input('centrocosto', array(
+                            'type'  => 'hidden',
+                            'value' => $centrocostoActivo,
+                            'name'  => 'data[Factura][centrocosto]',
+                            'id'    => 'FacturaCentrocosto',
+                        )); ?>
+
                         <div class="form-group col-md-2">
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...')); ?>
                         </div>

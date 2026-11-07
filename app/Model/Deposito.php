@@ -285,6 +285,28 @@ class Deposito extends AppModel {
             $listDeposito = $this->find('list', array('conditions' => array('Deposito.empresa_id' => $empresaId), 'recursive' => '-1', 'order' => 'Deposito.descripcion'));
             return $listDeposito;
         }
+
+        /**
+         * Devuelve solo los IDs de los depósitos de una empresa.
+         * Usado en facturación para resolver el inventario por la sede activa
+         * (centro de costo) en lugar de por los depósitos del usuario logueado.
+         *
+         * @param  int $empresaId
+         * @return array  Lista de ids (enteros)
+         */
+        public function obtenerDepositosEmpresaIds($empresaId){
+            $rows = $this->find('all', array(
+                'conditions' => array('Deposito.empresa_id' => (int) $empresaId),
+                'fields'     => array('Deposito.id'),
+                'recursive'  => '-1',
+            ));
+
+            $ids = array();
+            foreach ($rows as $row) {
+                $ids[] = (int) $row['Deposito']['id'];
+            }
+            return $ids;
+        }
         
         //se obtiene toda la informacion de los depositos de una empresa
         public function obtenerInfoDepositosEmpresa($empresaId){

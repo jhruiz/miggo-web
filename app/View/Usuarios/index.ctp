@@ -1,4 +1,5 @@
 <?php $this->layout = 'inicio';?>
+<?php echo $this->Html->script('usuarios/centroscostos.js'); ?>
 <div class="usuarios index">
 
     <?php echo $this->Form->create('Usuarios', array('action' => 'search', 'method' => 'post')); ?>
@@ -82,6 +83,10 @@
                     <td class="actions">
                         <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Usuario', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $usuario['Usuario']['id']))); ?>
                         <?php echo $this->Html->image('png/list-12.png', array('title' => 'Editar Usuario', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'edit', $usuario['Usuario']['id']))); ?>
+                        <a href="javascript:void(0);" title="Asignar Centros de Costo"
+                           onclick="abrirModalCentros(<?php echo $usuario['Usuario']['id']; ?>)">
+                            <i class="fa fa-sitemap" style="font-size:18px; color:#2A3F54; vertical-align:middle; cursor:pointer;"></i>
+                        </a>
                     </td>
                 </tr>
                 <?php endforeach;?>
@@ -99,5 +104,33 @@ echo $this->Paginator->counter(array(
         <?php echo $this->Paginator->numbers(array('separator' => ' || ')); ?>
         <?php echo $this->Paginator->next(__(' Siguiente') . ' >', array(), null, array('class' => 'next disabled')); ?>
 
+    </div>
+</div>
+
+<input type="hidden" id="baseUrl" value="<?php echo $this->request->base; ?>">
+
+<!-- ── Modal: Asignar Centros de Costo ── -->
+<div class="modal fade" id="modalCentrosCosto" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    <i class="fa fa-sitemap"></i> Centros de Costo de <b id="ccNombreUsuario"></b>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ccUsuarioId" value="">
+                <div id="ccListaCentros">
+                    <!-- Se llena por AJAX -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="ccBtnGuardar">
+                    <i class="fa fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
     </div>
 </div>

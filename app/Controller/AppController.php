@@ -143,4 +143,63 @@ class AppController extends Controller
 
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // EMPRESA ACTIVA DE FACTURACIÓN (centro de costo)
+    //
+    // Cuando un usuario factura "en nombre de" una sede (centro de costo), la
+    // empresa destino se guarda en sesión y es la fuente de verdad para
+    // inventario, clientes, resolución y guardado durante esa operación.
+    //
+    // Si no hay empresa activa fijada, se cae a la empresa del usuario logueado.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const SESSION_EMPRESA_ACTIVA    = 'Facturacion.empresaActiva';
+    const SESSION_CENTROCOSTO_ACTIVO = 'Facturacion.centrocostoActivo';
+
+    /**
+     * Fija la empresa activa de facturación y el centro de costo que la originó.
+     *
+     * @param int $empresaId
+     * @param int $centrocostoId
+     */
+    protected function fijarEmpresaActiva($empresaId, $centrocostoId)
+    {
+        $this->Session->write(self::SESSION_EMPRESA_ACTIVA, (int) $empresaId);
+        $this->Session->write(self::SESSION_CENTROCOSTO_ACTIVO, (int) $centrocostoId);
+    }
+
+    /**
+     * Devuelve la empresa activa de facturación.
+     * Si no hay ninguna fijada, devuelve la empresa del usuario logueado.
+     *
+     * @return int
+     */
+    protected function empresaActiva()
+    {
+        $empresa = $this->Session->read(self::SESSION_EMPRESA_ACTIVA);
+        return !empty($empresa) ? (int) $empresa : (int) $this->Auth->user('empresa_id');
+    }
+
+    /**
+     * Devuelve el centro de costo activo de facturación (o null si no hay).
+     *
+     * @return int|null
+     */
+    protected function centrocostoActivo()
+    {
+        $cc = $this->Session->read(self::SESSION_CENTROCOSTO_ACTIVO);
+        return !empty($cc) ? (int) $cc : null;
+    }
+
+    /**
+     * Limpia la empresa activa de facturación.
+     * Se llama al terminar o abandonar el flujo de facturación para no
+     * "arrastrar" la sede a otra operación.
+     */
+    protected function limpiarEmpresaActiva()
+    {
+        $this->Session->delete(self::SESSION_EMPRESA_ACTIVA);
+        $this->Session->delete(self::SESSION_CENTROCOSTO_ACTIVO);
+    }
+
 }

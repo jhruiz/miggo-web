@@ -408,15 +408,11 @@ public function obtenerInfoImpuestos(array $arrProducto, array $arrImpuestos, st
             $posData = $this->request->data;
             $usuarioId = $posData['usuarioId'];
             $descProducto = $posData['descProducto'];
-            
-            /*Se obtienen los depositos en los cuales está el usuario*/
-            $arrDepositos = $this->Deposito->obtenerDepositoUsuario($usuarioId);
-                        
-            /*Se obtiene el id del deposito*/
-            $depositosId = array();
-            foreach ($arrDepositos as $dpIdx){
-                $depositosId[] = $dpIdx['Deposito']['id'];
-            }
+
+            /*Se obtienen los depositos de la SEDE ACTIVA (centro de costo).
+              Si no hay sede activa en sesión, empresaActiva() cae a la empresa
+              del usuario logueado (comportamiento original).*/
+            $depositosId = $this->Deposito->obtenerDepositosEmpresaIds($this->empresaActiva());
 
             /*Se obtienen los productos por deposito*/            
             $arrProductos = $this->Cargueinventario->obtenerProductosStock($depositosId,$descProducto);

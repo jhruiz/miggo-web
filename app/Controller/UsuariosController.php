@@ -255,6 +255,95 @@ class UsuariosController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
+    /**
+     * AJAX: devuelve los centros de costo disponibles de la empresa del usuario
+     * junto con los que ya tiene asignados, para poblar el modal de asignación.
+     *
+     * POST: usuarioId
+     */
+    public function ajaxObtenerCentrosUsuario() {
+        $this->autoRender = false;
+        $this->loadModel('Centroscosto');
+        $this->loadModel('EmpresasTipoempresa');
+
+        $posData   = $this->request->data;
+        $usuarioId = isset($posData['usuarioId']) ? (int) $posData['usuarioId'] : 0;
+
+        if ($usuarioId <= 0) {
+            echo json_encode(array('resp' => false, 'msg' => 'Usuario no válido.'));
+            return;
+        }
+
+        // Empresa del usuario cuyo centro se va a asignar
+        $usuario = $this->Usuario->obtenerUsuarioPorId($usuarioId);
+        if (empty($usuario)) {
+            echo json_encode(array('resp' => false, 'msg' => 'El usuario no existe.'));
+            return;
+        }
+        $empresaId = $usuario['Usuario']['empresa_id'];
+
+        // Si la empresa es Multifactura (código MF), se omite el filtro por empresa
+        // y se muestran los centros de costo de todas las empresas.
+        $esMultifactura = $this->EmpresasTipoempresa->empresaTieneTipo($empresaId, 'MF');
+
+        if ($esMultifactura) {
+            $disponibles = $this->Centroscosto->obtenerListaTodosCentrosCosto();
+        } else {
+            $disponibles = $this->Centroscosto->obtenerListaCentrosCosto($empresaId);
+        }
+
+        // IDs ya asignados al usuario
+        $asignados = $this->Centroscosto->obtenerIdsCentrosPorUsuario($usuarioId);
+
+        // Normalizar a arreglo de objetos para el front
+        $centros = array();
+        foreach ($disponibles as $id => $nombre) {
+            $centros[] = array(
+                'id'       => (int) $id,
+                'nombre'   => $nombre,
+                'asignado' => in_array((int) $id, $asignados),
+            );
+        }
+
+        echo json_encode(array(
+            'resp'    => true,
+            'centros' => $centros,
+            'usuario' => array(
+                'id'     => (int) $usuario['Usuario']['id'],
+                'nombre' => $usuario['Usuario']['nombre'],
+            ),
+        ));
+    }
+
+    /**
+     * AJAX: guarda la asignación de centros de costo de un usuario.
+     * Reemplaza por completo las asignaciones previas.
+     *
+     * POST: usuarioId, centros (array de ids)
+     */
+    public function ajaxGuardarCentrosUsuario() {
+        $this->autoRender = false;
+        $this->loadModel('Centroscosto');
+
+        $posData   = $this->request->data;
+        $usuarioId = isset($posData['usuarioId']) ? (int) $posData['usuarioId'] : 0;
+        $centroIds = isset($posData['centros']) && is_array($posData['centros'])
+            ? $posData['centros']
+            : array();
+
+        if ($usuarioId <= 0) {
+            echo json_encode(array('resp' => false, 'msg' => 'Usuario no válido.'));
+            return;
+        }
+
+        $ok = $this->Centroscosto->asignarCentrosAUsuario($usuarioId, $centroIds);
+
+        echo json_encode(array(
+            'resp' => $ok,
+            'msg'  => $ok ? 'Centros de costo actualizados correctamente.' : 'No se pudo guardar la asignación.',
+        ));
+    }
+
     public function inactivar($id = null) {
         $this->loadModel('Auditoria');
         $this->Usuario->id = $id;

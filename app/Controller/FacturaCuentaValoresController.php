@@ -23,8 +23,8 @@ class FacturaCuentaValoresController extends AppController
 
         $payMeths = $this->request->data['arrPayMeth'];
         $prefactId = $this->request->data['prefactId'];
-        $empresaId = $this->Auth->user('empresa_id');
-        $userId = $this->Auth->user('id');
+        $empresaId = !empty($this->empresaActiva()) ? $this->empresaActiva() : $this->Auth->user('empresa_id');
+        $userId = !empty($this->request->data['vendedor']) ? $this->request->data['vendedor'] : $this->Auth->user('id');
 
         $resp = false;
 

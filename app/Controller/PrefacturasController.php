@@ -164,13 +164,76 @@ class PrefacturasController extends AppController {
                 }
             }
 
+            // ── FASE 3: selección de sede (centro de costo) ANTES de facturar ──
+            $this->loadModel('Centroscosto');
+
+            // Garantiza que el usuario tenga al menos un centro de costo.
+            $this->Centroscosto->garantizarCentroUsuario(
+                $usuarioId,
+                $empresaId,
+                $arrEmprea['Empresa']['nombre']
+            );
+
+            // Centros de costo del usuario (cada uno = una empresa/sede)
+            $centrosUsuario = $this->Centroscosto->obtenerCentrosPorUsuario($usuarioId);
+            $centrosSede = array();
+            foreach ($centrosUsuario as $cc) {
+                $centrosSede[] = array(
+                    'id'         => (int) $cc['Centroscosto']['id'],
+                    'nombre'     => $cc['Centroscosto']['nombre'],
+                    'empresa_id' => (int) $cc['Centroscosto']['empresa_id'],
+                );
+            }
+
+            // Regla: 1 sede → autoselecciona; 2+ → modal bloqueante.
+            // Al entrar se limpia la sede activa (salvo recarga tras confirmar en el
+            // modal), para que el usuario pueda corregir si eligió mal.
+            $requiereSeleccionSede = false;
+            if (count($centrosSede) === 1) {
+                $this->fijarEmpresaActiva($centrosSede[0]['empresa_id'], $centrosSede[0]['id']);
+            } elseif (count($centrosSede) === 0) {
+                $this->fijarEmpresaActiva($empresaId, 0);
+            } else {
+                if ($this->Session->read('Facturacion.sedeRecienConfirmada')) {
+                    $this->Session->delete('Facturacion.sedeRecienConfirmada');
+                } else {
+                    $this->limpiarEmpresaActiva();
+                }
+                if (!$this->centrocostoActivo()) {
+                    $requiereSeleccionSede = true;
+                }
+            }
+
+            // Centro de costo a usar en el hidden del formulario:
+            //   - el activo recién elegido/autoseleccionado, o
+            //   - el ya guardado en la prefactura (al reabrir una existente)
+            $centrocostoActivo = $this->centrocostoActivo();
+            $centrocostoPrefactura = $centrocostoActivo
+                ? $centrocostoActivo
+                : (!empty($prefactura['Prefactura']['centrocosto_id']) ? $prefactura['Prefactura']['centrocosto_id'] : '');
+
+            // ── Recargar los datos de apoyo con la EMPRESA ACTIVA (sede) ──
+            // Los combos de vendedor, canal, notas, cuentas, tipos de pago y los
+            // datos de empresa deben corresponder a la sede sobre la que se factura.
+            $empresaFacturacion = $this->empresaActiva();
+            if ($empresaFacturacion != $empresaId) {
+                $empresaId       = $empresaFacturacion;
+                $notaFactura     = $this->Notafactura->obtenerNotasFacturasEmpresa($empresaId);
+                $vendedor        = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
+                $relacionEmpresa = $this->Relacionempresa->obtenerListaEmpresasRelacion($empresaId);
+                $arrEmprea       = $this->Empresa->obtenerEmpresaPorId($empresaId);
+                $cuentas         = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
+                $canalventas     = $this->Canalventa->obtenerCanalVentas($empresaId);
+            }
+
             $ttalAbonos = 0;
             foreach ($abonos as $abn){
                 $ttalAbonos += $abn['Abonofactura']['valor'];
             }
 
             $this->set(compact('prefactura', 'arrOrdenT', 'ttalAbonos', 'id', 'estados', 'arrEmprea', 'urlImg', 'numOrden', 'fechaOrden', 'estadosPedido'));
-            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas', 'strTipoEmpresa')); 
+            $this->set(compact('usuarioId','empresaId','tipoPago','notaFactura','vendedor','relacionEmpresa', 'cuentas', 'urlImgWP', 'canalventas', 'strTipoEmpresa'));
+            $this->set(compact('centrosSede', 'requiereSeleccionSede', 'centrocostoActivo', 'centrocostoPrefactura')); 
 	}
 
 /**
@@ -261,18 +324,13 @@ class PrefacturasController extends AppController {
             $descripcionProd = $posData['descProducto'];
             $cargueInvId = $posData['cargueInvId'];
             $esFactura = $posData['esFactura'];
-            
-            /*Se obtienen los depositos en los cuales está el usuario*/
-            $arrDepositos = $this->Deposito->obtenerDepositoUsuario($usuarioId);
 
-            /*Se obtiene el id del deposito*/
-            $depositosId = array();
-            foreach ($arrDepositos as $dpIdx){
-                $depositosId[] = $dpIdx['Deposito']['id'];
-            }            
+            /*Se obtienen los depositos de la SEDE ACTIVA (centro de costo).
+              empresaActiva() cae a la empresa del usuario si no hay sede fijada.*/
+            $depositosId = $this->Deposito->obtenerDepositosEmpresaIds($this->empresaActiva());
             
             //Se obtiene el producto con el codigo obtenido del lector de codigos de barras
-            //que se encuentren en el stock del deposito al cual pertenece el vendedor
+            //que se encuentren en el stock del deposito de la sede activa
             if( $descripcionProd != '' ) {
                 $produtoInfo = $this->Cargueinventario->obtenerProductosStock($depositosId, $descripcionProd);
             } else {
@@ -375,18 +433,13 @@ class PrefacturasController extends AppController {
             $prefacturaId = $posData['prefacturaId'];                       
             $descripcionProd = $posData['descProducto'];
             $esFactura = $posData['esFactura'];
-            
-            /*Se obtienen los depositos en los cuales está el usuario*/
-            $arrDepositos = $this->Deposito->obtenerDepositoUsuario($usuarioId);
 
-            /*Se obtiene el id del deposito*/
-            $depositosId = array();
-            foreach ($arrDepositos as $dpIdx){
-                $depositosId[] = $dpIdx['Deposito']['id'];
-            }            
+            /*Se obtienen los depositos de la SEDE ACTIVA (centro de costo).
+              empresaActiva() cae a la empresa del usuario si no hay sede fijada.*/
+            $depositosId = $this->Deposito->obtenerDepositosEmpresaIds($this->empresaActiva());
             
             //Se obtiene el producto con el codigo obtenido del lector de codigos de barras
-            //que se encuentren en el stock del deposito al cual pertenece el vendedor
+            //que se encuentren en el stock del deposito de la sede activa
             $produtoInfo = $this->Cargueinventario->obtenerProductosStock($depositosId, $descripcionProd);
             
             /*valida si se encuentra el producto descrito por el codigo de barras*/
@@ -609,12 +662,22 @@ class PrefacturasController extends AppController {
         public function ajaxObtenerDetallesPrefactura(){
             $this->loadModel('Prefacturasdetalle');
             $this->loadModel('Configuraciondato');
+            $this->loadModel('Empresa');
+            $this->loadModel('Relacionempresa');
 
             $this->autoRender = false;
             $prefactId = $this->request->data['prefactId'];
 
             //se obtiene el detalle de la prefactura
             $arrPrefactDet = $this->Prefactura->obtenerPrefacturaDetalle($prefactId);
+
+            $empresaId = !empty($this->empresaActiva()) ? $this->empresaActiva() : $this->Auth->user('empresa_id');
+
+            //se obtiene la información de la empresa relacionada
+            $infoRelEmpresa = $this->Relacionempresa->obtenerEmpresaRelacionadaPorId( $empresaId );
+            
+            $arrPrefactDet['0']['EM'] = $infoRelEmpresa['Empresa']; 
+            $arrPrefactDet['0']['RE'] = $infoRelEmpresa['Relacionempresa']; 
 
             //se obtiene la ruta de la imagen de la empresa
             $strDato = "urlImgEmpresa";

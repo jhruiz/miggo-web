@@ -178,6 +178,26 @@ class Factura extends AppModel
         return $infoFact;
     }
 
+    /**
+     * Asigna el centro de costo (sede) a una factura ya creada.
+     *
+     * @param  int $facturaId
+     * @param  int $centrocostoId
+     * @return bool
+     */
+    public function asignarCentroCosto($facturaId, $centrocostoId)
+    {
+        if (empty($centrocostoId)) {
+            return false;
+        }
+        $factura = new Factura();
+        $data = array(
+            'id'             => $facturaId,
+            'centrocosto_id' => (int) $centrocostoId,
+        );
+        return (bool) $factura->save($data);
+    }
+
     public function actualizarConsecutivoDianFactura($facturaId, $consFact, $tipoDocumento)
     {
         $data = array();

@@ -24,14 +24,16 @@ var abonosPrefactura = function(){
     var ttales = 0;
     $(".valor_con_iva").each(function() {
         ttales = (parseFloat(ttales) + parseFloat($(this).val()));
-    });       
+    });  
+    
+    var empresaId = $('#empresaId').val();
     
     ttales = (parseFloat(ttales) + parseFloat($('#inp_imp_bolsa').val())) - parseFloat($('.ttalAbonos').val());
 
     // if(parseFloat(ttales) > 0){
         $("#div_abono").load(
             $('#url-proyecto').val() + "abonofacturas/abonofactura",
-            {ttales: ttales},
+            {ttales: ttales, empresaId: empresaId},
             function(){                                                            
                 dialogAbonos=$("#div_abono").dialog(opcAbonos);
                 dialogAbonos.dialog('open');

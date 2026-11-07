@@ -56,9 +56,11 @@ var abrirModalRecibo = function() {
 
     $('#divCargandoRecibos').show();
 
+    var empresaId = $('#empresaId').val();
+
     $.ajax({
         url  : baseUrl + 'reciboscajas/ajaxObtenerRecibosCliente',
-        data : { clienteId: clienteId },
+        data : { clienteId: clienteId, empresaId: empresaId },
         type : 'POST',
         success: function(data) {
             var resp = JSON.parse(data);

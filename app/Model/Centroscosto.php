@@ -61,9 +61,8 @@ class Centroscosto extends AppModel {
      * @param  array $filtros
      * @return array
      */
-    public function obtenerCentrosCosto($empresaId, $filtros = array()) {
+    public function obtenerCentrosCosto($filtros = array()) {
         $conditions = array(
-            'Centroscosto.empresa_id' => $empresaId,
             'Centroscosto.deleted'    => '0',
         );
 
@@ -114,6 +113,22 @@ class Centroscosto extends AppModel {
     }
 
     /**
+     * Listado 'list' de TODOS los centros de costo (de todas las empresas).
+     * Usado para empresas tipo Multifactura (MF), que ven centros de cualquier empresa.
+     *
+     * @return array
+     */
+    public function obtenerListaTodosCentrosCosto() {
+        return $this->find('list', array(
+            'conditions' => array(
+                'Centroscosto.deleted' => '0',
+            ),
+            'order'     => 'Centroscosto.nombre ASC',
+            'recursive' => -1,
+        ));
+    }
+
+    /**
      * Centros de costo a los que pertenece un usuario (de cualquier empresa).
      *
      * @param  int $usuarioId
@@ -125,7 +140,7 @@ class Centroscosto extends AppModel {
                 'table'      => 'centroscostos_usuarios',
                 'alias'      => 'CCU',
                 'type'       => 'INNER',
-                'conditions' => array('CCU.centroscosto_id = Centroscosto.id'),
+                'conditions' => array('CCU.centrocosto_id = Centroscosto.id'),
             ),
         );
 
@@ -141,31 +156,183 @@ class Centroscosto extends AppModel {
         ));
     }
 
-    // ─────────────────────────────────────────────
-    // ESCRITURA
-    // ─────────────────────────────────────────────
-
     /**
-     * Guarda (crea o actualiza) un centro de costo junto con sus usuarios.
-     * Usa saveAll para persistir también la relación HABTM.
+     * Valida que un centro de costo esté asignado a un usuario y, de estarlo,
+     * devuelve su empresa_id. Previene que un usuario fije como empresa activa
+     * una sede que no le corresponde.
      *
-     * @param  array $data       Datos del Centroscosto
-     * @param  array $usuarioIds Array de ids de usuarios a asociar
-     * @return bool
+     * @param  int $centroId
+     * @param  int $usuarioId
+     * @return int|false  empresa_id del centro si es válido, false si no
      */
-    public function guardarCentroCosto($data, $usuarioIds = array()) {
-        $save = array(
-            'Centrocosto' => $data,
-            'Usuario'     => array('Usuario' => $usuarioIds),
+    public function obtenerEmpresaCentroUsuario($centroId, $usuarioId) {
+        $joins = array(
+            array(
+                'table'      => 'centroscostos_usuarios',
+                'alias'      => 'CCU',
+                'type'       => 'INNER',
+                'conditions' => array('CCU.centrocosto_id = Centroscosto.id'),
+            ),
         );
 
-        if (empty($data['id'])) {
-            $this->create();
-            $save['Centrocosto']['created'] = date('Y-m-d H:i:s');
-        }
-        $save['Centrocosto']['modified'] = date('Y-m-d H:i:s');
+        $centro = $this->find('first', array(
+            'joins'      => $joins,
+            'fields'     => array('Centroscosto.id', 'Centroscosto.empresa_id'),
+            'conditions' => array(
+                'Centroscosto.id'      => (int) $centroId,
+                'CCU.usuario_id'       => (int) $usuarioId,
+                'Centroscosto.deleted' => '0',
+            ),
+            'recursive' => -1,
+        ));
 
-        return (bool) $this->saveAll($save);
+        return !empty($centro) ? (int) $centro['Centroscosto']['empresa_id'] : false;
+    }
+
+    /**
+     * Devuelve solo los IDs de los centros de costo asignados a un usuario.
+     * Útil para pre-seleccionar opciones en el modal de asignación.
+     *
+     * @param  int $usuarioId
+     * @return array  Lista de ids (enteros)
+     */
+    public function obtenerIdsCentrosPorUsuario($usuarioId) {
+        $joins = array(
+            array(
+                'table'      => 'centroscostos_usuarios',
+                'alias'      => 'CCU',
+                'type'       => 'INNER',
+                'conditions' => array('CCU.centrocosto_id = Centroscosto.id'),
+            ),
+        );
+
+        $rows = $this->find('all', array(
+            'joins'      => $joins,
+            'fields'     => array('Centroscosto.id'),
+            'conditions' => array(
+                'CCU.usuario_id'       => $usuarioId,
+                'Centroscosto.deleted' => '0',
+            ),
+            'recursive' => -1,
+        ));
+
+        $ids = array();
+        foreach ($rows as $row) {
+            $ids[] = (int) $row['Centroscosto']['id'];
+        }
+        return $ids;
+    }
+
+    /**
+     * Garantiza que un usuario tenga al menos un centro de costo para facturar.
+     *
+     * Orden de resolución:
+     *   1. Si el usuario ya tiene centros asignados → no hace nada, devuelve el primero.
+     *   2. Si no tiene, busca si la empresa ya tiene un centro de costo creado.
+     *      - Si existe → se lo asigna al usuario.
+     *      - Si no existe → crea un centro con el nombre de la empresa (editable=0)
+     *        y se lo asigna.
+     *
+     * Pensado para llamarse al cargar la pantalla de facturación, de modo que
+     * toda factura pueda llevar un centro de costo (incluso empresas no-MF).
+     *
+     * @param  int    $usuarioId
+     * @param  int    $empresaId
+     * @param  string $nombreEmpresa  Nombre a usar si hay que crear el centro
+     * @return int|false  ID de un centro de costo asignado al usuario, o false si falla
+     */
+    public function garantizarCentroUsuario($usuarioId, $empresaId, $nombreEmpresa) {
+        $usuarioId = (int) $usuarioId;
+        $empresaId = (int) $empresaId;
+
+        if ($usuarioId <= 0 || $empresaId <= 0) {
+            return false;
+        }
+
+        // 1. ¿El usuario ya tiene centros? → usar el primero
+        $idsUsuario = $this->obtenerIdsCentrosPorUsuario($usuarioId);
+        if (!empty($idsUsuario)) {
+            return $idsUsuario[0];
+        }
+
+        // 2. ¿La empresa ya tiene un centro de costo? (evita duplicados)
+        $centroEmpresa = $this->find('first', array(
+            'conditions' => array(
+                'Centroscosto.empresa_id' => $empresaId,
+                'Centroscosto.deleted'    => '0',
+            ),
+            'order'     => 'Centroscosto.id ASC',
+            'recursive' => -1,
+        ));
+
+        if (!empty($centroEmpresa)) {
+            $centroId = (int) $centroEmpresa['Centroscosto']['id'];
+        } else {
+            // 3. No existe → crear el centro con el nombre de la empresa
+            $this->create();
+            $ok = $this->save(array(
+                'Centroscosto' => array(
+                    'nombre'     => $nombreEmpresa,
+                    'empresa_id' => $empresaId,
+                    'editable'   => '0', // centro autogenerado, no editable desde el CRUD
+                    'deleted'    => '0',
+                    'created'    => date('Y-m-d H:i:s'),
+                    'modified'   => date('Y-m-d H:i:s'),
+                ),
+            ));
+
+            if (!$ok) {
+                return false;
+            }
+            $centroId = (int) $this->id;
+        }
+
+        // 4. Asignar el centro al usuario en la tabla pivote
+        //    (INSERT IGNORE por el UNIQUE centrocosto_id+usuario_id, evita duplicados)
+        $this->query(
+            'INSERT IGNORE INTO centroscostos_usuarios (centrocosto_id, usuario_id, created) '
+            . "VALUES ($centroId, $usuarioId, '" . date('Y-m-d H:i:s') . "')"
+        );
+
+        return $centroId;
+    }
+
+    /**
+     * Reemplaza las asignaciones de centros de costo de un usuario.
+     * Borra las relaciones previas y crea las nuevas en la tabla pivote.
+     *
+     * @param  int   $usuarioId
+     * @param  array $centroIds  Lista de ids de centros de costo a asignar
+     * @return bool
+     */
+    public function asignarCentrosAUsuario($usuarioId, $centroIds = array()) {
+        $usuarioId = (int) $usuarioId;
+        if ($usuarioId <= 0) {
+            return false;
+        }
+
+        // 1. Limpiar asignaciones previas del usuario
+        $this->query('DELETE FROM centroscostos_usuarios WHERE usuario_id = ' . $usuarioId);
+
+        // 2. Insertar las nuevas (si hay)
+        if (!empty($centroIds)) {
+            $ahora  = date('Y-m-d H:i:s');
+            $values = array();
+            foreach ($centroIds as $cid) {
+                $cid = (int) $cid;
+                if ($cid > 0) {
+                    $values[] = "($cid, $usuarioId, '$ahora')";
+                }
+            }
+
+            if (!empty($values)) {
+                $sql = 'INSERT INTO centroscostos_usuarios (centrocosto_id, usuario_id, created) VALUES '
+                     . implode(', ', $values);
+                $this->query($sql);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -177,13 +344,11 @@ class Centroscosto extends AppModel {
      * @return bool
      */
     public function eliminarCentroCosto($id, $empresaId) {
-        $centro = new Centrocosto();
-
-        $ok = $centro->updateAll(
-            array('Centrocosto.deleted' => '1'),
+        $ok = $this->updateAll(
+            array('Centroscosto.deleted' => '1'),
             array(
-                'Centrocosto.id'         => $id,
-                'Centrocosto.empresa_id' => $empresaId,
+                'Centroscosto.id'         => $id,
+                'Centroscosto.empresa_id' => $empresaId,
             )
         );
 

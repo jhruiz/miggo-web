@@ -213,7 +213,7 @@ class ReciboscajasController extends AppController {
 
         $posData   = $this->request->data;
         $clienteId = $posData['clienteId'];
-        $empresaId = $this->Auth->user('empresa_id');
+        $empresaId = isset($posData['empresaId']) && !empty($posData['empresaId']) ? $posData['empresaId'] : $this->Auth->user('empresa_id');
 
         $recibos = $this->Reciboscaja->obtenerRecibosActivosCliente($clienteId, $empresaId);
 
@@ -247,7 +247,7 @@ class ReciboscajasController extends AppController {
         $valor        = floatval(str_replace(',', '', $posData['valor']));
         $prefacturaId = !empty($posData['prefacturaId']) ? $posData['prefacturaId'] : null;
         $facturaId    = !empty($posData['facturaId'])    ? $posData['facturaId']    : null;
-        $empresaId    = $this->Auth->user('empresa_id');
+        $empresaId    = !empty($this->empresaActiva()) ? $this->empresaActiva() : $this->Auth->user('empresa_id');
         $usuarioId    = $this->Auth->user('id');
 
         // Verificar que el recibo pertenece a la empresa y tiene saldo suficiente

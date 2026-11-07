@@ -22,6 +22,7 @@ CREATE TABLE `retenciones` (
   `cuentaventa_id`         INT NOT NULL COMMENT 'FK → cuentas (contrapartida en ventas)',
   `cuentacompra_id`        INT NOT NULL COMMENT 'FK → cuentas (contrapartida en compras)',
   `tipotarifa_id`          INT NOT NULL COMMENT 'Tipo de tarifa (porcentaje, valor fijo)',
+  `base_minima_uvt`        DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'Tope mínimo en UVT a partir del cual aplica la retención; 0 = sin mínimo',
   `deleted`                TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Soft delete: 1 = eliminada',
   `created`                DATETIME DEFAULT NULL,
   `modified`               DATETIME DEFAULT NULL,
@@ -30,3 +31,22 @@ CREATE TABLE `retenciones` (
   KEY `idx_activo`    (`activo`),
   KEY `idx_deleted`   (`deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Retenciones configuradas por empresa';
+
+-- =====================================================
+-- Comportamiento de cada categoría de retención (referencia)
+-- Esto NO se guarda como columnas: el modelo Retencione lo deriva
+-- de categoriaretencion_id mediante su mapa estático $comportamiento.
+--
+--   categoriaretencion_id | base_calculo | unidad_tarifa
+--   ----------------------|--------------|---------------
+--   1  Retención fuente   | subtotal     | porcentaje
+--   2  ReteIVA            | iva          | porcentaje
+--   3  ReteICA            | subtotal     | pormil
+-- =====================================================
+
+-- =====================================================
+-- UVT vigente (se almacena en la tabla genérica configuraciondatos).
+-- Actualizar este valor cada año. Ejemplo con la UVT 2025.
+-- =====================================================
+INSERT INTO `configuraciondatos` (`nombre`, `valor`)
+VALUES ('uvt_vigente', '49799');

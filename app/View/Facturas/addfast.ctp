@@ -17,6 +17,7 @@
 <?php echo $this->Form->input('idcliente', array('type' => 'hidden', 'class' => 'id_cliente')); ?>
 <?php echo $this->Form->input('empresa', array('type' => 'hidden', 'value' => $empresaId, 'id' => 'empresaId')); ?>
 <?php echo $this->Form->input('usuario', array('type' => 'hidden', 'value' => $usuarioId, 'id' => 'usuarioId')); ?>
+<?php echo $this->Form->input('centrocosto', array('type' => 'hidden', 'value' => $centrocostoDefault, 'id' => 'centrocostoId')); ?>
 <?php echo $this->Form->input('tipoFactura', array('type' => 'hidden', 'value' => $infoEmpresa['Empresa']['syncdian'], 'id' => 'tipoFactura')); ?>
 <?php echo $this->Form->input('syncdian', array('type' => 'hidden', 'value' => $infoEmpresa['Empresa']['syncdian'], 'id' => 'syncdian')); ?>
 <?php echo $this->Form->input('prefacturaId', array('label' => '', 'value' => '', 'type' => 'hidden', 'id' => 'prefacturaId')); ?>

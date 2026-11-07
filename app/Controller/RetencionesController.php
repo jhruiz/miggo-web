@@ -171,6 +171,7 @@ class RetencionesController extends AppController {
             'cuentaventa_id'        => $posData['cuentaventa_id'],
             'cuentacompra_id'       => $posData['cuentacompra_id'],
             'tipotarifa_id'         => $posData['tipotarifa_id'],
+            'base_minima_uvt'       => !empty($posData['base_minima_uvt']) ? floatval(str_replace(',', '', $posData['base_minima_uvt'])) : 0,
         );
     }
 

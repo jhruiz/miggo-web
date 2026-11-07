@@ -15,9 +15,9 @@
             )); ?>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="form-group mb-3">
-            <label class="font-weight-bold">Porcentaje <span class="text-danger">*</span></label>
+            <label class="font-weight-bold">Tarifa <span class="text-danger">*</span></label>
             <div class="input-group">
                 <?php echo $this->Form->input('porcentaje', array(
                     'label'       => false,
@@ -25,11 +25,25 @@
                     'placeholder' => '0.000',
                     'type'        => 'text',
                 )); ?>
-                <span class="input-group-addon">%</span>
+                <span class="input-group-addon" id="addonUnidadTarifa">%</span>
             </div>
+            <small class="text-muted">% para fuente/IVA, x1000 para ICA</small>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <div class="form-group mb-3">
+            <label class="font-weight-bold">Base mínima (UVT)</label>
+            <?php echo $this->Form->input('base_minima_uvt', array(
+                'label'       => false,
+                'class'       => 'form-control',
+                'placeholder' => '0',
+                'type'        => 'text',
+                'default'     => '0',
+            )); ?>
+            <small class="text-muted">0 = sin mínimo</small>
+        </div>
+    </div>
+    <div class="col-md-2">
         <div class="form-group mb-3">
             <label class="font-weight-bold">Estado</label>
             <div style="padding-top:8px;">
@@ -101,3 +115,16 @@
 </div>
 
 <?php echo $this->Form->input('empresa_id', array('type' => 'hidden', 'value' => $empresaId)); ?>
+
+<script>
+$(document).ready(function() {
+    // Actualiza el indicador de unidad de la tarifa (% o x1000) según la categoría.
+    // Categoría 3 = ReteICA → se expresa en x1000; las demás en %.
+    function actualizarUnidadTarifa() {
+        var categoria = $('#RetencioneCategoriaretencionId').val();
+        $('#addonUnidadTarifa').text(categoria == '3' ? 'x1000' : '%');
+    }
+    $('#RetencioneCategoriaretencionId').on('change', actualizarUnidadTarifa);
+    actualizarUnidadTarifa();
+});
+</script>

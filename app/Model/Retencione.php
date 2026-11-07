@@ -59,6 +59,35 @@ class Retencione extends AppModel {
         ),
     );
 
+    /**
+     * Comportamiento de cálculo derivado de la categoría de retención.
+     * La categoría determina sin ambigüedad sobre qué base se calcula
+     * y en qué unidad está expresada la tarifa.
+     *
+     *   base   → 'subtotal' (valor antes de IVA) | 'iva' (valor del IVA)
+     *   unidad → 'porcentaje' (%) | 'pormil' (x1000)
+     *
+     * Para agregar una nueva categoría, basta con añadir una línea aquí.
+     */
+    public static $comportamiento = array(
+        1 => array('base' => 'subtotal', 'unidad' => 'porcentaje'), // Retención en la fuente
+        2 => array('base' => 'iva',      'unidad' => 'porcentaje'), // ReteIVA
+        3 => array('base' => 'subtotal', 'unidad' => 'pormil'),     // ReteICA
+    );
+
+    /**
+     * Devuelve el comportamiento (base y unidad) de una categoría.
+     * Si la categoría no está mapeada, cae a subtotal + porcentaje.
+     *
+     * @param  int $categoriaId
+     * @return array  ['base' => ..., 'unidad' => ...]
+     */
+    public static function obtenerComportamiento($categoriaId) {
+        return isset(self::$comportamiento[$categoriaId])
+            ? self::$comportamiento[$categoriaId]
+            : array('base' => 'subtotal', 'unidad' => 'porcentaje');
+    }
+
     // ─────────────────────────────────────────────
     // LECTURA
     // ─────────────────────────────────────────────
@@ -187,5 +216,57 @@ class Retencione extends AppModel {
                 'Retencione.empresa_id' => $empresaId,
             )
         );
+    }
+
+    // ─────────────────────────────────────────────
+    // CÁLCULO (listo para conectar en facturas/compras)
+    // ─────────────────────────────────────────────
+
+    /**
+     * Calcula el valor a retener de una retención sobre una operación.
+     *
+     * La base (subtotal o IVA) y la unidad (% o x1000) se derivan de la
+     * categoría de la retención mediante el mapa $comportamiento, por lo
+     * que no dependen de columnas adicionales en la tabla.
+     *
+     * Ejemplos:
+     *   Retefuente 2.5% sobre subtotal 1.000.000 → 25.000
+     *   ReteIVA 15% sobre IVA 190.000            → 28.500
+     *   ReteICA 6.9x1000 sobre subtotal 1.000.000 → 6.900
+     *
+     * @param  array $retencion  Registro de la retención (debe incluir la clave 'Retencione')
+     * @param  float $subtotal   Valor de la operación antes de IVA
+     * @param  float $valorIva   Valor del IVA de la operación
+     * @param  float $uvt        UVT vigente (para validar la base mínima). 0 = no validar mínimo
+     * @return float             Valor a retener; 0 si no aplica por no superar la base mínima
+     */
+    public function calcularRetencion($retencion, $subtotal, $valorIva, $uvt = 0) {
+        $r = $retencion['Retencione'];
+
+        $comportamiento = self::obtenerComportamiento($r['categoriaretencion_id']);
+
+        // 1. Base sobre la que se calcula
+        $base = ($comportamiento['base'] === 'iva')
+            ? floatval($valorIva)
+            : floatval($subtotal);
+
+        // 2. Validar base mínima en UVT (si está configurada y hay UVT)
+        $baseMinimaUvt = isset($r['base_minima_uvt']) ? floatval($r['base_minima_uvt']) : 0;
+        if ($baseMinimaUvt > 0 && $uvt > 0) {
+            $minimoPesos = $baseMinimaUvt * floatval($uvt);
+            if ($base < $minimoPesos) {
+                return 0; // la operación no supera el tope mínimo: no se retiene
+            }
+        }
+
+        // 3. Aplicar la tarifa según su unidad
+        $tarifa = floatval($r['porcentaje']);
+        if ($comportamiento['unidad'] === 'pormil') {
+            $valor = $base * ($tarifa / 1000);
+        } else {
+            $valor = $base * ($tarifa / 100);
+        }
+
+        return round($valor, 2);
     }
 }

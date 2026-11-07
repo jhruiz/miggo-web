@@ -10,6 +10,7 @@
 <?php echo ($this->Html->script('abonos/gestionabonos.js')); ?>
 <?php echo ($this->Html->script('reciboscajas/aplicarRecibo.js')); ?>
 <?php echo $this->Form->create('Prefactura'); ?>
+<?php echo $this->element('Facturacion/modal_sede'); ?>
 <input type="hidden" id="prefacturaId" value="<?php echo $prefactura['Prefactura']['id'];?>">
 <div class="container body">
 <div class="main_container">
@@ -268,7 +269,16 @@
 
                         <div class="form-group col-md-2">
                             <?php echo $this->Form->input('canalventa', array('label' => 'Canal de ventas', 'type' => 'select', 'options' => $canalventas, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][canalventa]'));?><br>
-                        </div>                
+                        </div>
+
+                        <?php // La sede (centro de costo) se elige en el modal de inicio. Viaja como hidden. ?>
+                        <?php echo $this->Form->input('centrocosto', array(
+                            'type'  => 'hidden',
+                            'value' => $centrocostoPrefactura,
+                            'name'  => 'data[Factura][centrocosto]',
+                            'id'    => 'FacturaCentrocosto',
+                        )); ?>
+                
 
                         <div class="form-group col-md-2">    
                             <?php echo $this->Form->input('notafactura', array('label' => 'Nota Factura', 'type' => 'select', 'options' => $notaFactura, 'class' => 'form-control', 'empty' => 'Seleccione una...', 'name' => 'data[Factura][notafactura]'));?><br>

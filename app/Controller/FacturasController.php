@@ -275,8 +275,7 @@ class FacturasController extends AppController
 
         }
 
-        $empresaId = $this->Auth->user('empresa_id');
-
+        $empresaId = $infoEmpresa['Empresa']['id'];
         //si es una remision, se obtiene la información de una empresa relacionada
         $infoRemision = [];
         if (empty($infoFact['Factura']['factura'])) {
@@ -490,8 +489,61 @@ class FacturasController extends AppController
         $this->loadModel('Canalventa');
         $this->loadModel('EmpresasTipoempresa');
 
-        $empresaId = $this->Auth->user('empresa_id');
+        $this->loadModel('Centroscosto');
+
         $usuarioId = $this->Auth->user('id');
+        $empresaUsuario = $this->Auth->user('empresa_id');
+
+        // ── Resolver la SEDE/empresa activa ANTES de cargar los datos de apoyo ──
+        // Garantiza que el usuario tenga al menos un centro de costo.
+        $arrEmpreaUsuario = $this->Empresa->obtenerEmpresaPorId($empresaUsuario);
+        $this->Centroscosto->garantizarCentroUsuario(
+            $usuarioId,
+            $empresaUsuario,
+            $arrEmpreaUsuario['Empresa']['nombre']
+        );
+
+        // Centros de costo del usuario (cada uno = una empresa/sede)
+        $centrosUsuario = $this->Centroscosto->obtenerCentrosPorUsuario($usuarioId);
+        $centrosSede = array();
+        foreach ($centrosUsuario as $cc) {
+            $centrosSede[] = array(
+                'id'         => (int) $cc['Centroscosto']['id'],
+                'nombre'     => $cc['Centroscosto']['nombre'],
+                'empresa_id' => (int) $cc['Centroscosto']['empresa_id'],
+            );
+        }
+
+        // Regla: 1 sede → autoselecciona; 2+ → modal bloqueante
+        $requiereSeleccionSede = false;
+        if (count($centrosSede) === 1) {
+            $this->fijarEmpresaActiva($centrosSede[0]['empresa_id'], $centrosSede[0]['id']);
+        } elseif (count($centrosSede) === 0) {
+            $this->fijarEmpresaActiva($empresaUsuario, 0);
+        } else {
+            // Hay 2+ sedes: el usuario debe elegir en el modal al entrar.
+            //
+            // Al ENTRAR a la pantalla se limpia la sede activa para que, si el
+            // usuario se equivocó de sede y recarga, vuelva a poder elegir.
+            // La única excepción es la recarga que hace el JS justo después de
+            // confirmar la sede en el modal: ahí 'sedeRecienConfirmada' está en
+            // sesión y se respeta la elección (y se consume la marca).
+            if ($this->Session->read('Facturacion.sedeRecienConfirmada')) {
+                $this->Session->delete('Facturacion.sedeRecienConfirmada');
+            } else {
+                $this->limpiarEmpresaActiva();
+            }
+
+            if (!$this->centrocostoActivo()) {
+                $requiereSeleccionSede = true;
+            }
+        }
+
+        // Empresa ACTIVA = la del centro elegido (o la del usuario si hay una sola)
+        $empresaId         = $this->empresaActiva();
+        $centrocostoActivo = $this->centrocostoActivo();
+
+        // ── A partir de aquí, TODO usa $empresaId (la sede activa) ──
         $tipoPago = $this->Tipopago->find('list');
         $notaFactura = $this->Notafactura->obtenerNotasFacturasEmpresa($empresaId);
         $vendedor = $this->Usuario->obtenerUsuarioEmpresa($empresaId);
@@ -520,7 +572,44 @@ class FacturasController extends AppController
         }
 
         $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'notaFactura', 'vendedor', 'relacionEmpresa', 'cuentas', 'urlImgWP', 'arrEmprea', 'urlImg', 'canalventas', 'esFactura'));
-        $this->set(compact('strTipoEmpresa'));
+        $this->set(compact('strTipoEmpresa', 'centrosSede', 'requiereSeleccionSede', 'centrocostoActivo'));
+    }
+
+    /**
+     * AJAX: fija la sede (centro de costo) activa para facturar.
+     * Valida que el centro pertenezca al usuario antes de guardarlo en sesión.
+     *
+     * POST: centrocostoId
+     */
+    public function ajaxFijarSede()
+    {
+        $this->autoRender = false;
+        $this->loadModel('Centroscosto');
+
+        $posData   = $this->request->data;
+        $centroId  = isset($posData['centrocostoId']) ? (int) $posData['centrocostoId'] : 0;
+        $usuarioId = $this->Auth->user('id');
+
+        if ($centroId <= 0) {
+            echo json_encode(array('resp' => false, 'msg' => 'Centro de costo no válido.'));
+            return;
+        }
+
+        // Validar que el centro esté asignado al usuario y obtener su empresa
+        $empresaCentro = $this->Centroscosto->obtenerEmpresaCentroUsuario($centroId, $usuarioId);
+
+        if ($empresaCentro === false) {
+            echo json_encode(array('resp' => false, 'msg' => 'La sede seleccionada no está disponible para este usuario.'));
+            return;
+        }
+
+        $this->fijarEmpresaActiva($empresaCentro, $centroId);
+
+        // Marca de un solo uso: el reload que hará el JS tras confirmar no debe
+        // limpiar la sede recién elegida. add() consume esta marca.
+        $this->Session->write('Facturacion.sedeRecienConfirmada', true);
+
+        echo json_encode(array('resp' => true, 'empresaId' => $empresaCentro, 'centrocostoId' => $centroId));
     }
 
 /**
@@ -534,6 +623,7 @@ class FacturasController extends AppController
         $this->loadModel('Tipopago');
         $this->loadModel('Empresa');
         $this->loadModel('Configuraciondato');
+        $this->loadModel('Centroscosto');
 
         $empresaId = $this->Auth->user('empresa_id');
         $usuarioId = $this->Auth->user('id');
@@ -548,7 +638,16 @@ class FacturasController extends AppController
         $strDato = "urlImgEmpresa";
         $urlImg = $this->Configuraciondato->obtenerValorDatoConfig($strDato);
 
-        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'topSales', 'facturaElectonica', 'infoEmpresa', 'lstTipPagos', 'urlImg'));
+        // ── FASE 2: auto-provisionamiento de centro de costo (sin selector) ──
+        // Garantiza que el usuario tenga centro para facturar. En facturación
+        // rápida no hay selector: se usa el centro por defecto del usuario.
+        $centrocostoDefault = $this->Centroscosto->garantizarCentroUsuario(
+            $usuarioId,
+            $empresaId,
+            $infoEmpresa['Empresa']['nombre']
+        );
+
+        $this->set(compact('empresaId', 'usuarioId', 'tipoPago', 'topSales', 'facturaElectonica', 'infoEmpresa', 'lstTipPagos', 'urlImg', 'centrocostoDefault'));
     }
 
     /**
@@ -715,8 +814,9 @@ class FacturasController extends AppController
     {
         $this->loadModel('Tipopago');
         $this->loadModel('Empresa');
-        //se obtiene el listado de tipos de pago
-        $empresaId = $this->Auth->user('empresa_id');
+        //se obtiene el listado de tipos de pago de la SEDE ACTIVA (centro de costo)
+        //para que las cuentas donde ingresa el dinero sean las de la sede correcta
+        $empresaId = $this->empresaActiva();
         $listTipPag = $this->Tipopago->obtenerListaTiposPagos($empresaId);
         $empresa = $this->Empresa->obtenerEmpresaPorId($empresaId);
 
@@ -755,7 +855,9 @@ class FacturasController extends AppController
         $datFact = $posData['Factura'];
         $datCliNuevo = $posData['Nuevo'];
         $datVentaRapida = $posData['Rapida'];
-        $userId = $this->Auth->user('id');
+
+        // obtiene el vendedor o agrega el usuario en sesion por defecto
+        $vendedor = isset($datFact['vendedor']) && !empty($datFact['vendedor']) ? $datFact['vendedor'] : $this->Auth->user('id');
 
         /*Se obtienen los datos de la empresa para obtener la ciudad de la misma y asignarla al cliente*/
         $arrEmpresa = $this->Empresa->obtenerEmpresaPorId($datFact['empresa']);
@@ -806,9 +908,6 @@ class FacturasController extends AppController
 
         $ordenTrabajo = isset($datFact['ordentrabajo']) && !empty($datFact['ordentrabajo']) ? $datFact['ordentrabajo'] : "";
 
-        // obtiene el vendedor o agrega el usuario en sesion por defecto
-        $vendedor = isset($datFact['vendedor']) && !empty($datFact['vendedor']) ? $datFact['vendedor'] : $userId;
-
         /*Se crea la factura*/
         $facturaId = $this->Factura->guardarfactura($clienteId, $datFact['empresa'], $vendedor, $fechaVence,
             null, '0', '0', $documentoId, $datFact['empresaRelacionada'],
@@ -816,6 +915,11 @@ class FacturasController extends AppController
 
         /*Se actualiza el codigo de la factura con el id de la factura ya que MySql solo acepta un autoincrement*/
         $this->Factura->actualizarCodigoFactura($facturaId);
+
+        /*Se asigna el centro de costo (sede) a la factura, si viene en el formulario*/
+        if (isset($datFact['centrocosto']) && !empty($datFact['centrocosto'])) {
+            $this->Factura->asignarCentroCosto($facturaId, $datFact['centrocosto']);
+        }
 
         if ($clienteId == "" || $clienteId == null) {
             $this->Ventarapida->guardarInfoClienteVentaRapida($facturaId, $datVentaRapida['rapidanombre'], $datVentaRapida['rapidanit'], $datVentaRapida['rapidatelefono'], $datVentaRapida['rapidadireccion']);
@@ -905,7 +1009,7 @@ class FacturasController extends AppController
         $this->Factura->actualizarValorVentaTotal($facturaId, $ttalVenta);
 
         //se actualiza la factura cuenta valor
-        $this->FacturaCuentaValore->actualizarIdFacturaCuentaValor($facturaId, $userId);
+        $this->FacturaCuentaValore->actualizarIdFacturaCuentaValor($facturaId, $vendedor);
 
         /*se valida si la prefactura contien ordenes de compra*/
         $detallePrefact = $this->Prefacturasdetalle->obtenerDetallesPrefacturaPrefactId($prefacturaId);
@@ -951,8 +1055,10 @@ class FacturasController extends AppController
     public function obtenerConsecutivoFactura($esFactura, $facturaId)
     {
         $this->loadModel('Resolucionfactura');
-        
-        $empresaId = $this->Auth->user('empresa_id');
+
+        // La resolución (y su consecutivo DIAN) corresponde a la SEDE ACTIVA,
+        // no al usuario logueado. Cada sede AKT tiene su propia resolución.
+        $empresaId = $this->empresaActiva();
 
         $arrconsecutivo = [
             'prefijo' => '',

@@ -155,4 +155,11 @@ class Empresa extends AppModel {
             return $datosEmpresa;
         }
 
+		/**
+		 * Obtiene el listado completo de emrpesas
+		 */
+		public function obtenerListadoEmpresas() {
+			return $this->find('list');
+		}
+
 }

@@ -84,7 +84,7 @@ class AbonofacturasController extends AppController {
             
             $posData = $this->request->data;
             $ttales = $posData['ttales'];
-            $empresaId = $this->Auth->user('empresa_id');
+            $empresaId = isset($posData['empresaId']) && !empty($posData['empresaId']) ? $posData['empresaId'] : $this->Auth->user('empresa_id');
             
             //se obtienen las cuentas de la empresa
             $arrTiposPago = $this->Tipopago->obtenerListaTiposPagos($empresaId);

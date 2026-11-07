@@ -20,8 +20,6 @@ class CentroscostosController extends AppController {
         $usuariosController = new UsuariosController();
         $usuariosController->registraractividad($this->Auth->user('id'));
 
-        $empresaId = $this->Auth->user('empresa_id');
-
         $filtros    = array();
         $filtNombre = '';
 
@@ -30,7 +28,7 @@ class CentroscostosController extends AppController {
             $filtNombre = $this->passedArgs['nombre'];
         }
 
-        $centros = $this->Centroscosto->obtenerCentrosCosto($empresaId, $filtros);
+        $centros = $this->Centroscosto->obtenerCentrosCosto($filtros);
 
         $this->set(compact('centros', 'filtNombre'));
     }
@@ -44,23 +42,28 @@ class CentroscostosController extends AppController {
         $usuariosController->registraractividad($this->Auth->user('id'));
 
         $this->loadModel('Usuario');
+        $this->loadModel('Empresa');
 
-        $empresaId = $this->Auth->user('empresa_id');
+        $empresas = $this->Empresa->obtenerListadoEmpresas();
 
         if ($this->request->is('post')) {
-            $data = $this->_prepararDatos($this->request->data['Centrocosto'], $empresaId);
-            $usuarioIds = !empty($this->request->data['Centrocosto']['usuarios'])
-                ? $this->request->data['Centrocosto']['usuarios']
-                : array();
 
-            if ($this->Centrocosto->guardarCentroCosto($data, $usuarioIds)) {
+            //se reciben y se preparan los datos
+            $centroCostos = $this->request->data;
+            $data['Centroscosto']['nombre'] = $centroCostos['Centroscosto']['nombre'];
+            $data['Centroscosto']['empresa_id'] = $centroCostos['Centroscosto']['empresas'];
+            $data['Centroscosto']['editable'] = $centroCostos['Centroscosto']['editable'];
+
+			$this->Centroscosto->create();
+			if ($this->Centroscosto->save($data)) {
                 $this->Session->setFlash('El centro de costo ha sido creado correctamente.');
                 return $this->redirect(array('action' => 'index'));
-            }
-            $this->Session->setFlash('No se pudo guardar el centro de costo. Intente de nuevo.');
+			} else {
+                $this->Session->setFlash('No se pudo guardar el centro de costo. Intente de nuevo.');
+			}
         }
 
-        $this->_setFormVars($empresaId);
+        $this->set(compact('empresas'));
     }
 
     // ─────────────────────────────────────────────────────────────────────────
