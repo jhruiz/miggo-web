@@ -109,6 +109,12 @@ function eliminarAbono(elemento) {
                 success: function(data) {
                     var resp = JSON.parse(data);
 
+                        // El servidor rechazó la eliminación con un motivo (por ejemplo, abono con retenciones)
+                        if(resp && resp.resp === false && resp.msg) {
+                            alert(resp.msg);
+                            return;
+                        }
+
                         if(resp) {
                             // Eliminar la fila de la tabla
                             var fila = document.getElementById('fila-' + idAbono);

@@ -88,6 +88,7 @@
                             <th><?php echo ('Fecha Factura'); ?></th>
                             <th><?php echo ('Cant. Facts'); ?></th>
                             <th><?php echo ('Val. Ttal Facts'); ?></th>
+                            <th><?php echo ('Retenciones'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,6 +104,7 @@
                                 <td><?php echo h($fc['Factura']['created']); ?></td>
                                 <td><?php echo h($fc['0']['conteo']); ?></td>
                                 <td><?php echo h(number_format($fc['0']['valor'], 2, ',', '.')); ?></td>
+                                <td><?php echo h(number_format(isset($fc['Factura']['total_retenciones']) ? (float) $fc['Factura']['total_retenciones'] : 0, 2, ',', '.')); ?></td>
                             </tr>
                             <?php endforeach;?>
                         <?php }?>
@@ -118,12 +120,14 @@
                         <dl>
                             <dt class="text-left text-success"><?php echo h("Valor Total: "); ?></dt>
                             <dt class="text-left text-success"><?php echo h("Total # Facturas: "); ?></dt>
+                            <dt class="text-left text-success"><?php echo h("Total Retenciones: "); ?></dt>
                         </dl>
                     </div>
                     <div class="col-md-2">
                         <dl>
                             <dt class="text-right text-success"><?php echo h("$" . number_format($totalValor, 2)) ?></dt>
                             <dt class="text-right text-success"><?php echo h(number_format($totalFactura)) ?></dt>
+                            <dt class="text-right text-success"><?php echo h("$" . number_format($totalRetenciones, 2)) ?></dt>
 
                         </dl>
                     </div>

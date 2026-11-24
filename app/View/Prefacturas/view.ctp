@@ -206,6 +206,7 @@
                             </table>
                         </div>
                     </div> 
+                    <?php echo $this->element('Facturas/retenciones_informativas'); ?>
 
                 </div> <!--Termina col -->
             </div><!-- temina x_panel-->

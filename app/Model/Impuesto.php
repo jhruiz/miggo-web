@@ -64,7 +64,8 @@ class Impuesto extends AppModel {
  * return $arrImpuestos
  */        
         public function obtenerImpuestosEmpresa($empresaId){
-            $arrImpuestos = $this->find('list', array('conditions' => array('Impuesto.empresa_id' => $empresaId)));
+            // Solo impuestos (las filas de clase RETENCION se gestionan aparte)
+            $arrImpuestos = $this->find('list', array('conditions' => array('Impuesto.empresa_id' => $empresaId, 'Impuesto.clase' => 'IMPUESTO')));
             return $arrImpuestos;
         }
         
@@ -76,7 +77,8 @@ class Impuesto extends AppModel {
  * return $arrImpuestos
  */            
         public function obtenerImpuestosInfo($empresaId){
-            $arrImpuestos = $this->find('all', array('conditions' => array('Impuesto.empresa_id' => $empresaId)));
+            // Solo impuestos (las filas de clase RETENCION se gestionan aparte)
+            $arrImpuestos = $this->find('all', array('conditions' => array('Impuesto.empresa_id' => $empresaId, 'Impuesto.clase' => 'IMPUESTO')));
             return $arrImpuestos;           
         }
         

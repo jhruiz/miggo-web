@@ -71,7 +71,17 @@ class EmpresasController extends AppController {
             $options = array('conditions' => array('Empresa.' . $this->Empresa->primaryKey => $id));
 
             $this->set('empresa', $this->Empresa->find('first', $options));
-            $this->set(compact('urlImagen'));
+
+            // Responsabilidades fiscales del RUT para el bloque de perfil tributario
+            $this->loadModel('Tiposresponsabilidade');
+            $todas = $this->Tiposresponsabilidade->obtenerListadoParaFormulario();
+            $responsabilidadesEmpresa = array();
+            foreach ($this->Empresa->obtenerResponsabilidadesIds($id) as $respId) {
+                if (isset($todas[$respId])) {
+                    $responsabilidadesEmpresa[] = $todas[$respId];
+                }
+            }
+            $this->set(compact('urlImagen', 'responsabilidadesEmpresa'));
 	}
 
 /**
@@ -132,6 +142,11 @@ class EmpresasController extends AppController {
 		if (!$this->Empresa->exists($id)) {
 			throw new NotFoundException(__('La empresa no existe.'));
 		}
+
+		// Perfil tributario: responsabilidades fiscales del RUT (relación muchos a muchos)
+		$this->loadModel('Tiposresponsabilidade');
+		$this->Empresa->vincularResponsabilidades();
+
 		if ($this->request->is(array('post', 'put'))) {
 
                     $posData = $this->request->data;
@@ -181,7 +196,17 @@ class EmpresasController extends AppController {
         $ciudades = $this->Ciudadesmiggo->obtenerCiudadesDpto( $ubicacion['0']['D']['id'] );
 
 		
-		$this->set(compact('paises', 'ubicacion', 'departamentos', 'ciudades'));
+		// Responsabilidades fiscales: lista completa y las marcadas (las del POST si hubo error)
+		$responsabilidades = $this->Tiposresponsabilidade->obtenerListadoParaFormulario();
+		if ($this->request->is(array('post', 'put'))) {
+			$marcadas = isset($this->request->data['Tiposresponsabilidade']['Tiposresponsabilidade'])
+				? array_map('intval', (array) $this->request->data['Tiposresponsabilidade']['Tiposresponsabilidade'])
+				: array();
+		} else {
+			$marcadas = $this->Empresa->obtenerResponsabilidadesIds($id);
+		}
+
+		$this->set(compact('paises', 'ubicacion', 'departamentos', 'ciudades', 'responsabilidades', 'marcadas'));
 	}
 
 /**

@@ -215,7 +215,7 @@ class CargueinventariosController extends AppController {
 		}
 		$productos = $this->Cargueinventario->Producto->find('list');
 		$depositos = $this->Cargueinventario->Deposito->find('list');
-		$impuestos = $this->Cargueinventario->Impuesto->find('list');
+		$impuestos = $this->Cargueinventario->Impuesto->find('list', array('conditions' => array('Impuesto.clase' => 'IMPUESTO')));
 		$usuarios = $this->Cargueinventario->Usuario->find('list');
 		$estados = $this->Cargueinventario->Estado->find('list');
 		$tipopagos = $this->Cargueinventario->Tipopago->find('list');

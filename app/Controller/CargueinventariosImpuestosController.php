@@ -56,7 +56,7 @@ class CargueinventariosImpuestosController extends AppController {
 			}
 		}
 		$cargueinventarios = $this->CargueinventariosImpuesto->Cargueinventario->find('list');
-		$impuestos = $this->CargueinventariosImpuesto->Impuesto->find('list');
+		$impuestos = $this->CargueinventariosImpuesto->Impuesto->find('list', array('conditions' => array('Impuesto.clase' => 'IMPUESTO')));
 		$this->set(compact('cargueinventarios', 'impuestos'));
 	}
 
@@ -83,7 +83,7 @@ class CargueinventariosImpuestosController extends AppController {
 			$this->request->data = $this->CargueinventariosImpuesto->find('first', $options);
 		}
 		$cargueinventarios = $this->CargueinventariosImpuesto->Cargueinventario->find('list');
-		$impuestos = $this->CargueinventariosImpuesto->Impuesto->find('list');
+		$impuestos = $this->CargueinventariosImpuesto->Impuesto->find('list', array('conditions' => array('Impuesto.clase' => 'IMPUESTO')));
 		$this->set(compact('cargueinventarios', 'impuestos'));
 	}
 

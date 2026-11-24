@@ -968,6 +968,317 @@ class Factura extends AppModel
 
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // RETENCIONES EN VENTAS (solo lectura: calcula, no guarda)
+    // ─────────────────────────────────────────────────────────────────────────
 
+    /**
+     * Calcula las retenciones que el cliente le practica a la empresa en una
+     * factura. No guarda nada: el cálculo lo hace MotorRetenciones con los datos
+     * cargados aquí.
+     *
+     * La base de cada línea sale de obtenerValorBaseProducto(), la misma función que
+     * arma las líneas de la factura electrónica: subtotal antes de IVA, después del
+     * descuento, sin INC ni bolsa.
+     *
+     * @param  int $facturaId
+     * @return array resultado de MotorRetenciones::calcular(), o con 'motivo' si
+     *               la factura no existe
+     */
+    public function calcularRetenciones($facturaId) {
+        App::uses('MotorRetenciones', 'Lib');
+        $motor = new MotorRetenciones();
+
+        $factura = $this->find('first', array(
+            'conditions' => array('Factura.id' => (int) $facturaId),
+            'fields'     => array('Factura.id', 'Factura.factura', 'Factura.cliente_id', 'Factura.empresa_id', 'Factura.created'),
+            'recursive'  => -1,
+        ));
+        if (empty($factura)) {
+            $res = $motor->calcular(array());
+            $res['motivo'] = 'La factura no existe.';
+            return $res;
+        }
+        $f = $factura['Factura'];
+        $fecha = !empty($f['created']) ? substr($f['created'], 0, 10) : null;
+
+        return $this->_ejecutarMotorRetenciones(
+            (int) $f['factura'] === 1,
+            $fecha,
+            $f['cliente_id'],
+            $f['empresa_id'],
+            $this->_lineasParaRetenciones($f['id'])
+        );
+    }
+
+    /**
+     * Total de la factura con todos los impuestos, calculado con las mismas líneas
+     * que usa el motor de retenciones (base + IVA + INC + bolsa).
+     *
+     * @param  int $facturaId
+     * @return float
+     */
+    public function totalConImpuestos($facturaId) {
+        $total = 0.0;
+        foreach ($this->_lineasParaRetenciones((int) $facturaId) as $l) {
+            $total += $l['total'];
+        }
+        return round($total, 2);
+    }
+
+    /**
+     * Calcula (sin guardar) las retenciones de una prefactura que se está armando,
+     * para mostrarlas como información antes de facturar. Usa la fecha de hoy,
+     * que será la fecha de la factura.
+     *
+     * @param  int  $prefacturaId
+     * @param  int  $clienteId     cliente seleccionado en pantalla (null si no hay)
+     * @param  int  $empresaId     empresa (sede) que factura
+     * @param  bool $esElectronica
+     * @return array resultado de MotorRetenciones::calcular()
+     */
+    public function calcularRetencionesPrefactura($prefacturaId, $clienteId, $empresaId, $esElectronica) {
+        return $this->_ejecutarMotorRetenciones(
+            (bool) $esElectronica,
+            date('Y-m-d'),
+            $clienteId,
+            $empresaId,
+            $this->_lineasPrefacturaParaRetenciones($prefacturaId)
+        );
+    }
+
+    /**
+     * Carga los datos de la empresa, del cliente, la UVT y las reglas, y llama al
+     * motor. Es el único punto que arma la entrada del motor (factura y prefactura).
+     */
+    protected function _ejecutarMotorRetenciones($esElectronica, $fecha, $clienteId, $empresaId, array $lineas) {
+        App::uses('MotorRetenciones', 'Lib');
+        $motor = new MotorRetenciones();
+
+        $totalFactura = 0.0;
+        foreach ($lineas as $l) {
+            $totalFactura += $l['total'];
+        }
+
+        $Configuraciondato = ClassRegistry::init('Configuraciondato');
+        $Retencionventa = ClassRegistry::init('Retencionventa');
+
+        return $motor->calcular(array(
+            'es_electronica' => $esElectronica,
+            'fecha'          => $fecha,
+            'total_factura'  => $totalFactura,
+            'cliente'        => $this->_clienteParaRetenciones($clienteId),
+            'empresa'        => $this->_empresaParaRetenciones($empresaId),
+            'lineas'         => $lineas,
+            'uvt'            => $fecha ? $Configuraciondato->obtenerUvtAnio((int) substr($fecha, 0, 4)) : null,
+            'filas'          => $Retencionventa->obtenerReglasParaMotor($empresaId),
+        ));
+    }
+
+    /**
+     * Una línea (de factura o de prefactura) en el formato del motor. La base sale
+     * de obtenerValorBaseProducto(), igual que en la facturación electrónica.
+     */
+    protected function _normalizarLineaRetencion(array $d, $servicio) {
+        $valores = $this->obtenerValorBaseProducto(array(
+            'unidadesProd'   => (float) $d['cantidad'],
+            'precioVenta'    => (float) $d['costoventa'],
+            'porcentajeDesc' => (float) $d['porcentaje'],
+            'prcIVA'         => (float) $d['impuesto'] / 100,
+            'prcINC'         => (float) $d['impoconsumo'] / 100,
+            'valBolsa'       => (float) $d['incbolsa'],
+        ));
+        return array(
+            'detalle_id' => (int) $d['id'],
+            'tipo'       => ((int) $servicio === 1) ? 'SERVICIO' : 'PRODUCTO',
+            'subtotal'   => $valores['valorBaseUnitario'],
+            'iva'        => $valores['valorIVA'],
+            // Total de la línea con todos los impuestos (para el neto a pagar)
+            'total'      => $valores['valorBaseUnitario'] + $valores['valorIVA'] + $valores['valorINC'] + $valores['varorINCBolsa'],
+        );
+    }
+
+    /**
+     * Líneas de la prefactura (producto vía cargueinventarios) con su tipo, subtotal e IVA.
+     */
+    protected function _lineasPrefacturaParaRetenciones($prefacturaId) {
+        $Prefacturasdetalle = ClassRegistry::init('Prefacturasdetalle');
+        $detalle = $Prefacturasdetalle->find('all', array(
+            'joins' => array(
+                array('table' => 'cargueinventarios', 'alias' => 'CI', 'type' => 'INNER', 'conditions' => array('CI.id = Prefacturasdetalle.cargueinventario_id')),
+                array('table' => 'productos', 'alias' => 'P', 'type' => 'INNER', 'conditions' => array('P.id = CI.producto_id')),
+                array('table' => 'categorias', 'alias' => 'C', 'type' => 'LEFT', 'conditions' => array('C.id = P.categoria_id')),
+            ),
+            'fields' => array(
+                'Prefacturasdetalle.id', 'Prefacturasdetalle.cantidad', 'Prefacturasdetalle.costoventa', 'Prefacturasdetalle.porcentaje',
+                'Prefacturasdetalle.impuesto', 'Prefacturasdetalle.impoconsumo', 'Prefacturasdetalle.incbolsa', 'C.servicio',
+            ),
+            'conditions' => array('Prefacturasdetalle.prefactura_id' => (int) $prefacturaId),
+            'recursive'  => -1,
+        ));
+
+        $lineas = array();
+        foreach ($detalle as $d) {
+            $lineas[] = $this->_normalizarLineaRetencion($d['Prefacturasdetalle'], $d['C']['servicio']);
+        }
+        return $lineas;
+    }
+
+    /**
+     * Calcula y guarda el snapshot de retenciones de una factura recién creada.
+     *
+     *  - Si la factura ya tiene snapshot, no hace nada: una factura emitida nunca se
+     *    recalcula.
+     *  - Si no aplican retenciones (no electrónica, sin cliente, cliente sin casillas,
+     *    sin UVT...), no escribe nada y la factura queda como hoy.
+     *  - Guarda las filas de factura_retenciones y los totales informativos de la
+     *    factura en una sola transacción.
+     *  - Nunca interrumpe la facturación: si algo falla, deshace solo el snapshot,
+     *    lo deja en el log y devuelve false. La factura queda creada sin retenciones.
+     *
+     * @param  int $facturaId
+     * @return bool true si guardó o no había nada que guardar
+     */
+    public function guardarRetenciones($facturaId) {
+        $facturaId = (int) $facturaId;
+        $FacturaRetencion = ClassRegistry::init('FacturaRetencion');
+        $ds = $this->getDataSource();
+        $enTransaccion = false;
+
+        try {
+            if ($FacturaRetencion->facturaTieneSnapshot($facturaId)) {
+                return true;
+            }
+
+            $resultado = $this->calcularRetenciones($facturaId);
+            foreach ($resultado['avisos'] as $aviso) {
+                CakeLog::write('info', 'Retenciones factura ' . $facturaId . ': ' . $aviso);
+            }
+            if (empty($resultado['retenciones'])) {
+                return true;
+            }
+
+            $ahora = date('Y-m-d H:i:s');
+            $filas = array();
+            foreach ($resultado['retenciones'] as $r) {
+                $filas[] = array('FacturaRetencion' => array(
+                    'factura_id'       => $facturaId,
+                    'impuesto_id'      => $r['impuesto_id'],
+                    'tributo_codigo'   => $r['tributo_codigo'],
+                    'nombre'           => $r['nombre'],
+                    'aplica_a'         => $r['grupo'],
+                    'ciudadesmiggo_id' => $r['ciudadesmiggo_id'],
+                    'subtotal_grupo'   => sprintf('%.2f', $r['subtotal_grupo']),
+                    'base'             => sprintf('%.2f', $r['base']),
+                    'tipo_valor'       => $r['tipo_valor'],
+                    'tarifa'           => sprintf('%.4f', $r['tarifa']),
+                    'base_minima_uvt'  => sprintf('%.2f', $r['base_minima_uvt']),
+                    'valor_uvt'        => sprintf('%.2f', $r['valor_uvt']),
+                    'valor'            => sprintf('%.2f', $r['valor']),
+                    'created'          => $ahora,
+                    'modified'         => $ahora,
+                ));
+            }
+
+            $ds->begin();
+            $enTransaccion = true;
+
+            if (!$FacturaRetencion->saveMany($filas, array('validate' => false, 'atomic' => false))) {
+                throw new Exception('No se pudieron guardar las filas de factura_retenciones.');
+            }
+            $actualizada = $this->updateAll(
+                array(
+                    'Factura.total_retenciones' => sprintf('%.2f', $resultado['total_retenciones']),
+                    'Factura.neto_a_pagar'      => sprintf('%.2f', $resultado['neto_a_pagar']),
+                ),
+                array('Factura.id' => $facturaId)
+            );
+            if (!$actualizada) {
+                throw new Exception('No se pudieron actualizar los totales de retenciones de la factura.');
+            }
+
+            $ds->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($enTransaccion) {
+                $ds->rollback();
+            }
+            CakeLog::write('error', 'Retenciones factura ' . $facturaId . ': no se guardó el snapshot. ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Líneas de la factura con su tipo (PRODUCTO / SERVICIO), subtotal e IVA.
+     * Consulta propia (sin seriales ni motos) para que cada línea aparezca una sola vez.
+     */
+    protected function _lineasParaRetenciones($facturaId) {
+        $Facturasdetalle = ClassRegistry::init('Facturasdetalle');
+        $detalle = $Facturasdetalle->find('all', array(
+            'joins' => array(
+                array('table' => 'productos', 'alias' => 'P', 'type' => 'INNER', 'conditions' => array('P.id = Facturasdetalle.producto_id')),
+                array('table' => 'categorias', 'alias' => 'C', 'type' => 'LEFT', 'conditions' => array('C.id = P.categoria_id')),
+            ),
+            'fields' => array(
+                'Facturasdetalle.id', 'Facturasdetalle.cantidad', 'Facturasdetalle.costoventa', 'Facturasdetalle.porcentaje',
+                'Facturasdetalle.impuesto', 'Facturasdetalle.impoconsumo', 'Facturasdetalle.incbolsa', 'C.servicio',
+            ),
+            'conditions' => array('Facturasdetalle.factura_id' => (int) $facturaId),
+            'recursive'  => -1,
+        ));
+
+        $lineas = array();
+        foreach ($detalle as $d) {
+            // Mismos datos de entrada que generarInfoPagoGeneral (facturación electrónica)
+            $lineas[] = $this->_normalizarLineaRetencion($d['Facturasdetalle'], $d['C']['servicio']);
+        }
+        return $lineas;
+    }
+
+    /** Datos tributarios del cliente para el motor, o null si no hay cliente */
+    protected function _clienteParaRetenciones($clienteId) {
+        if (empty($clienteId)) {
+            return null;
+        }
+        $Cliente = ClassRegistry::init('Cliente');
+        $c = $Cliente->find('first', array(
+            'conditions' => array('Cliente.id' => (int) $clienteId),
+            'fields'     => array('Cliente.practica_retefuente', 'Cliente.practica_reteiva', 'Cliente.practica_reteica',
+                'Cliente.tipo_persona', 'Cliente.ciudadesmiggo_id', 'Ciudadesmiggo.nombre'),
+            'recursive'  => 0,
+            'contain'    => false,
+        ));
+        if (empty($c)) {
+            return null;
+        }
+        return array(
+            'practica_retefuente' => (int) $c['Cliente']['practica_retefuente'],
+            'practica_reteiva'    => (int) $c['Cliente']['practica_reteiva'],
+            'practica_reteica'    => (int) $c['Cliente']['practica_reteica'],
+            'tipo_persona'        => $c['Cliente']['tipo_persona'],
+            'ciudad_id'           => $c['Cliente']['ciudadesmiggo_id'],
+            'ciudad_nombre'       => isset($c['Ciudadesmiggo']['nombre']) ? $c['Ciudadesmiggo']['nombre'] : null,
+        );
+    }
+
+    /** Perfil tributario de la empresa: declarante y códigos de responsabilidad */
+    protected function _empresaParaRetenciones($empresaId) {
+        $Empresa = ClassRegistry::init('Empresa');
+        $declarante = $Empresa->field('declarante_renta', array('Empresa.id' => (int) $empresaId));
+        $codigos = $this->query(
+            'SELECT t.codigo FROM empresas_tiposresponsabilidades et
+             INNER JOIN tiposresponsabilidades t ON t.id = et.tiposresponsabilidade_id
+             WHERE et.empresa_id = ?',
+            array((int) $empresaId)
+        );
+        $responsabilidades = array();
+        foreach ($codigos as $c) {
+            $responsabilidades[] = $c['t']['codigo'];
+        }
+        return array(
+            'declarante_renta'  => (int) $declarante === 1,
+            'responsabilidades' => $responsabilidades,
+        );
+    }
 
 }

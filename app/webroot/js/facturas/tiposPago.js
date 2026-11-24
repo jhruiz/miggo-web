@@ -1,9 +1,22 @@
 /**
+ * Retenciones que practica el cliente en la ventana de pago (retenciones_pago.js).
+ * Devuelve 0 si la ventana no tiene el bloque de retenciones (por ejemplo addfast),
+ * así el comportamiento queda igual al de siempre.
+ */
+var retencionesVentanaPago = function(){
+    return (typeof window.totalRetencionesPago === 'function') ? window.totalRetencionesPago() : 0;
+};
+
+/**
  * guarda los metodos de pago y su respectivo valor y llama la funcion para facturar
  * @param {type} arrPayMeth
  * @returns {undefined}
  */
 var guardarMetodosValores = function(arrPayMeth){ 
+    // Las retenciones viajan con la factura (data[RetencionesAplicadas]); no son un método de pago
+    if (typeof window.agregarRetencionesAlFormulario === 'function') {
+        window.agregarRetencionesAlFormulario();
+    }
     $('.icon-container').show();
     $('#btn_facturar_m').css('display', 'none');
     $('#btn_agregar').css('display', 'none');
@@ -54,11 +67,28 @@ var facturarMediosPagos = function(){
             }
         });
 
-        if(valFacturado == $('#totalVentaTipos').val()){
-            guardarMetodosValores(arrPayMeth);
+        var retenciones = retencionesVentanaPago();
+        if(retenciones == 0){
+            // Sin retenciones: misma validación de siempre
+            if(valFacturado == $('#totalVentaTipos').val()){
+                guardarMetodosValores(arrPayMeth);
+            }else{
+                bootbox.alert('El valor ingresado es menor al facturado. Cantidad faltante $' + (parseFloat($('#totalVentaTipos').val() - valFacturado)));
+            }
         }else{
-            bootbox.alert('El valor ingresado es menor al facturado. Cantidad faltante $' + (parseFloat($('#totalVentaTipos').val() - valFacturado)));
-        }      
+            // Con retenciones: métodos de pago + retenciones = total
+            var msjRet = (typeof window.validarRetencionesPago === 'function') ? window.validarRetencionesPago() : '';
+            var faltante = parseFloat($('#totalVentaTipos').val()) - retenciones - valFacturado;
+            if(msjRet != ''){
+                bootbox.alert(msjRet);
+            }else if(Math.abs(faltante) < 0.005){
+                guardarMetodosValores(arrPayMeth);
+            }else if(faltante > 0){
+                bootbox.alert('El valor ingresado más las retenciones es menor al facturado. Cantidad faltante $' + faltante.toFixed(2));
+            }else{
+                bootbox.alert('El valor ingresado más las retenciones supera el total de la factura en $' + Math.abs(faltante).toFixed(2));
+            }
+        }
     }
     
 };
@@ -121,12 +151,14 @@ var calcularRestanteFactura = function(){
                ttalFact += parseFloat($(this).val()); 
             });
 
-            if(ttalFact > parseFloat($('#totalVentaTipos').val())){
-                bootbox.alert('El valor ingresado supera el total de la factura');
+            // Las retenciones (si las hay) también cubren parte del total
+            var retenciones = retencionesVentanaPago();
+            if(ttalFact > parseFloat($('#totalVentaTipos').val()) - retenciones + 0.005){
+                bootbox.alert(retenciones > 0 ? 'El valor ingresado más las retenciones supera el total de la factura' : 'El valor ingresado supera el total de la factura');
                 $(this).val('');
                 calcularRestante();
             }else{
-                var ttalRest = ($('#totalVentaTipos').val() - ttalFact).toLocaleString();
+                var ttalRest = ($('#totalVentaTipos').val() - ttalFact - retenciones).toLocaleString();
                 $('#restante').html(ttalRest);
             }
         }else{
@@ -147,7 +179,7 @@ var calcularRestante = function(){
          ttalFact += parseFloat($(this).first().find('.valueFact').val());
    });  
    
-   var ttalRest = ($('#totalVentaTipos').val() - ttalFact).toLocaleString();
+   var ttalRest = ($('#totalVentaTipos').val() - ttalFact - retencionesVentanaPago()).toLocaleString();
    $('#restante').html(ttalRest);   
     
 };

@@ -286,6 +286,15 @@ class FacturasController extends AppController
         $this->set(compact('ttalUnid', 'subTtalVent', 'regimen', 'iva', 'notaFactura', 'totalCartera', 'arrInfoOrd', 'factCredit'));
         $this->set(compact('partesV', 'pEstados', 'arrSums', 'arrVeh', 'arrMarca', 'fechaActual', 'arrPais', 'arrUbicacion', 'urlImgWP'));
         $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos', 'ttalServ', 'ttalRep', 'serviceName', 'productName', 'nombreDocumento'));
+
+        // Retenciones informativas guardadas al facturar (snapshot, no se recalculan)
+        $this->loadModel('FacturaRetencion');
+        $retencionesFactura = $this->FacturaRetencion->obtenerResumenPorTributo($id);
+
+        // Retenciones que el cliente practicó (aplicadas al facturar o al pagar la CxC)
+        $this->loadModel('RetencionAplicada');
+        $retencionesAplicadas = $this->RetencionAplicada->totalAplicado($id);
+        $this->set(compact('retencionesFactura', 'retencionesAplicadas'));
     }
 
 /**
@@ -610,6 +619,91 @@ class FacturasController extends AppController
         $this->Session->write('Facturacion.sedeRecienConfirmada', true);
 
         echo json_encode(array('resp' => true, 'empresaId' => $empresaCentro, 'centrocostoId' => $centroId));
+    }
+
+    /**
+     * AJAX: retenciones informativas de la prefactura que se está armando.
+     * Solo calcula, no guarda nada. Las definitivas se guardan al facturar.
+     *
+     * POST: prefacturaId, clienteId, esFactura
+     */
+    public function ajaxRetencionesPrefactura()
+    {
+        $this->autoRender = false;
+        $this->loadModel('Prefactura');
+        $this->loadModel('Usuario');
+
+        $vacio = array('resp' => true, 'retenciones' => array(), 'total_retenciones' => 0, 'neto_a_pagar' => null, 'avisos' => array(), 'motivo' => null);
+
+        if (!$this->request->is('post')) {
+            echo json_encode(array('resp' => false));
+            return;
+        }
+
+        $posData      = $this->request->data;
+        $prefacturaId = isset($posData['prefacturaId']) ? (int) $posData['prefacturaId'] : 0;
+        $clienteId    = isset($posData['clienteId']) ? (int) $posData['clienteId'] : 0;
+        $esFactura    = isset($posData['esFactura']) && (string) $posData['esFactura'] === '1';
+
+        if ($prefacturaId <= 0) {
+            echo json_encode($vacio);
+            return;
+        }
+
+        // La prefactura debe ser de un usuario de la misma empresa del usuario en sesión
+        $prefactura = $this->Prefactura->find('first', array(
+            'conditions' => array('Prefactura.id' => $prefacturaId),
+            'fields'     => array('Prefactura.id', 'Prefactura.usuario_id'),
+            'recursive'  => -1,
+        ));
+        $empresaUsuarioPref = !empty($prefactura)
+            ? $this->Usuario->field('empresa_id', array('Usuario.id' => $prefactura['Prefactura']['usuario_id']))
+            : null;
+        if (empty($prefactura) || (int) $empresaUsuarioPref !== (int) $this->Auth->user('empresa_id')) {
+            echo json_encode(array('resp' => false));
+            return;
+        }
+
+        $empresaId = $this->empresaActiva() ? $this->empresaActiva() : $this->Auth->user('empresa_id');
+
+        try {
+            $res = $this->Factura->calcularRetencionesPrefactura($prefacturaId, $clienteId > 0 ? $clienteId : null, $empresaId, $esFactura);
+        } catch (Exception $e) {
+            CakeLog::write('error', 'Retenciones prefactura ' . $prefacturaId . ': ' . $e->getMessage());
+            echo json_encode($vacio);
+            return;
+        }
+
+        $retenciones = array();
+        $sumas = array();
+        foreach ($res['retenciones'] as $r) {
+            $retenciones[] = array(
+                'tributo' => $r['tributo_codigo'],
+                'nombre'  => $r['nombre'],
+                'base'    => $r['base'],
+                'valor'   => $r['valor'],
+            );
+            $sumas[$r['tributo_codigo']] = (isset($sumas[$r['tributo_codigo']]) ? $sumas[$r['tributo_codigo']] : 0) + $r['valor'];
+        }
+
+        // Agrupadas por tipo, en el orden de presentación (ventana de medios de pago)
+        $this->loadModel('FacturaRetencion');
+        $porTributo = array();
+        foreach (FacturaRetencion::$etiquetas as $codigo => $etiqueta) {
+            if (!empty($sumas[$codigo])) {
+                $porTributo[] = array('tributo' => $codigo, 'etiqueta' => $etiqueta, 'valor' => round($sumas[$codigo], 2));
+            }
+        }
+
+        echo json_encode(array(
+            'resp'              => true,
+            'retenciones'       => $retenciones,
+            'por_tributo'       => $porTributo,
+            'total_retenciones' => $res['total_retenciones'],
+            'neto_a_pagar'      => $res['neto_a_pagar'],
+            'avisos'            => $res['avisos'],
+            'motivo'            => $res['motivo'],
+        ));
     }
 
 /**
@@ -1007,6 +1101,23 @@ class FacturasController extends AppController
 
         //actualiza el valor final de venta de la factura en pagocontado
         $this->Factura->actualizarValorVentaTotal($facturaId, $ttalVenta);
+
+        // Retenciones en ventas (informativas): guarda el snapshot con el detalle ya
+        // creado. No interrumpe la facturación si falla (queda en el log).
+        $this->Factura->guardarRetenciones($facturaId);
+
+        // Retenciones que el cliente practicó en este pago (línea "Retenciones" de la
+        // ventana de medios de pago). Solo clientes configurados. No interrumpe la
+        // facturación si falla (queda en el log).
+        if (!empty($posData['RetencionesAplicadas']) && is_array($posData['RetencionesAplicadas'])) {
+            $this->loadModel('RetencionAplicada');
+            $this->RetencionAplicada->guardarDeFacturacion(
+                $facturaId,
+                $posData['RetencionesAplicadas'],
+                $this->Auth->user('id'),
+                $this->Factura->totalConImpuestos($facturaId)
+            );
+        }
 
         //se actualiza la factura cuenta valor
         $this->FacturaCuentaValore->actualizarIdFacturaCuentaValor($facturaId, $vendedor);
@@ -1961,6 +2072,11 @@ class FacturasController extends AppController
         $this->set(compact('infoFact', 'infoVentaRapida', 'infoDetFact'));
         $this->set(compact('infoRemision', 'infoResolucion', 'factCV', 'factAbonos'));
 
+        // Retenciones informativas guardadas al facturar (snapshot, no se recalculan)
+        $this->loadModel('FacturaRetencion');
+        $retencionesFactura = $this->FacturaRetencion->obtenerResumenPorTributo($id);
+        $this->set(compact('retencionesFactura'));
+
     }
 
     public function actestadopagomec()
@@ -2022,11 +2138,14 @@ class FacturasController extends AppController
         $factClientes = $this->Factura->obtenerFacturasClientes($empresaId, $filtros);
         $totalValor = 0;
         $totalFactura = 0;
+        $totalRetenciones = 0;
         for ($i = 0; $i < count($factClientes); $i++) {
             $totalValor += $factClientes[$i]['0']['valor'];
             $totalFactura += $factClientes[$i]['0']['conteo'];
+            // Retenciones informativas guardadas al facturar
+            $totalRetenciones += isset($factClientes[$i]['Factura']['total_retenciones']) ? (float) $factClientes[$i]['Factura']['total_retenciones'] : 0;
         }
-        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura', 'nitCliente', 'placa', 'fechaInicio', 'fechaFin', 'mecanico'));
+        $this->set(compact('factClientes', 'usuarios', 'totalValor', 'totalFactura', 'nitCliente', 'placa', 'fechaInicio', 'fechaFin', 'mecanico', 'totalRetenciones'));
 
     }
 
@@ -2132,12 +2251,15 @@ class FacturasController extends AppController
         //Valida que todos los resultados sean un array procesable
         if ($this->validateArrays($infoRes, $infoCliente, $infoTipoPago, $prevBalance, $infoPagoGeneral)) {
 
-            $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral));
+            //Retenciones en ventas (snapshot). Vacio si la factura no tiene: el JSON no cambia.
+            $infoRetenciones = $this->generarInfoRetencionesDian( $facturaId );
+
+            $jsonFactura = json_encode(array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral, $infoRetenciones));
 
             echo json_encode(array(
                 'token' => $factura['Empresa']['tokendian'],
                 'nitEmpresa' => $factura['Empresa']['nit'],
-                array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral)
+                array_merge($infoRes, $infoCliente, $infoOrden, $infoTipoPago, $prevBalance, $infoPagoGeneral, $infoRetenciones)
             ));
 
         } else {
@@ -2145,6 +2267,35 @@ class FacturasController extends AppController
             // $this->actualizarEstadoFactura( $val['id'], config('custom.DIAN_ESTADO_ERROR'), $conn );
             // $this->actualizarMensajeFactura( $val['id'] , config('custom.MENSAJE_ERROR'), $conn );
         }
+    }
+
+    /**
+     * Retorna ['with_holding_tax_total' => [...]] con las retenciones del snapshot
+     * de la factura, o [] si no tiene. Los ids de tributo del proveedor se leen de
+     * configuraciondatos (apidian_tax_05/06/07).
+     */
+    public function generarInfoRetencionesDian( $facturaId ) {
+        $this->loadModel('FacturaRetencion');
+        $this->loadModel('Configuraciondato');
+
+        if ( !$this->FacturaRetencion->facturaTieneSnapshot( $facturaId ) ) {
+            return [];
+        }
+
+        $mapa = [];
+        foreach ( ['05', '06', '07'] as $codigo ) {
+            // field() devuelve false si la clave no existe (obtenerValorDatoConfig fallaría)
+            $mapa[$codigo] = $this->Configuraciondato->field( 'valor', ['Configuraciondato.nombre' => 'apidian_tax_' . $codigo] );
+        }
+
+        $omitidos = [];
+        $lineas = $this->FacturaRetencion->construirParaDian( $facturaId, $mapa, $omitidos );
+
+        if ( !empty( $omitidos ) ) {
+            CakeLog::write('error', 'Retenciones DIAN: factura ' . (int)$facturaId . ' sin id apidian_tax_* para tributo(s) ' . implode(',', $omitidos) . '; no se envian.');
+        }
+
+        return empty( $lineas ) ? [] : ['with_holding_tax_total' => $lineas];
     }
 
     /**

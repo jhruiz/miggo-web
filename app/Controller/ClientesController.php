@@ -77,6 +77,29 @@ class ClientesController extends AppController
         $this->set('cliente', $this->Cliente->find('first', $options));
     }
 
+    /**
+     * Listas y valores del bloque de datos tributarios (alta y edición).
+     * $id es null en el alta.
+     */
+    private function _variablesDatosTributarios($id = null)
+    {
+        $this->loadModel('Regimene');
+        $this->loadModel('Tiposresponsabilidade');
+
+        $regimenes = $this->Regimene->find('list', array('fields' => array('Regimene.id', 'Regimene.descripcion'), 'recursive' => -1));
+        $responsabilidades = $this->Tiposresponsabilidade->obtenerListadoParaFormulario();
+
+        if ($this->request->is(array('post', 'put'))) {
+            $marcadasCliente = isset($this->request->data['Tiposresponsabilidade']['Tiposresponsabilidade'])
+                ? array_map('intval', (array) $this->request->data['Tiposresponsabilidade']['Tiposresponsabilidade'])
+                : array();
+        } else {
+            $marcadasCliente = $id ? $this->Cliente->obtenerResponsabilidadesIds($id) : array();
+        }
+
+        $this->set(compact('regimenes', 'responsabilidades', 'marcadasCliente'));
+    }
+
 /**
  * add method
  *
@@ -91,6 +114,9 @@ class ClientesController extends AppController
         $usuariosController = new UsuariosController();
         $usuarioAct = $this->Auth->user('id');
         $usuariosController->registraractividad($usuarioAct);
+
+        // Datos tributarios: responsabilidades fiscales del RUT (muchos a muchos)
+        $this->Cliente->vincularResponsabilidades();
 
         if ($this->request->is('post')) {
             $this->Cliente->create();
@@ -109,6 +135,7 @@ class ClientesController extends AppController
         $usuarioId = $this->Auth->user('id');
         $clasificacion = $this->Clasificacioncliente->obtenerListClasificacion();
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
+        $this->_variablesDatosTributarios();
         $this->set(compact('paises', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
     }
 
@@ -135,6 +162,10 @@ class ClientesController extends AppController
         if (!$this->Cliente->exists($id)) {
             throw new NotFoundException(__('El cliente no existe.'));
         }
+
+        // Datos tributarios: responsabilidades fiscales del RUT (muchos a muchos)
+        $this->Cliente->vincularResponsabilidades();
+
         if ($this->request->is(array('post', 'put'))) {
 
             if ($this->Cliente->save($this->request->data)) {
@@ -162,6 +193,7 @@ class ClientesController extends AppController
         $usuarioId = $this->Auth->user('id');
         $tipoIdent = $this->Tipoidentificacione->obtenerTipoIdentificaciones();
 
+        $this->_variablesDatosTributarios($id);
         $this->set(compact('paises', 'usuarioId', 'estados', 'depositos', 'empresaId', 'clasificacion', 'tipoIdent'));
         $this->set(compact('ubicacion', 'departamentos', 'ciudades'));
     }

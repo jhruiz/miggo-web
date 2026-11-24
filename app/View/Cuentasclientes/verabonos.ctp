@@ -54,6 +54,14 @@ echo ($this->Html->script('abonos/gestionabonos.js'));
                     <td class="text-right" id="totalesAbonos"><b><?php echo h("$" . number_format($ttalAbonos));?></b></td>
                     <td>&nbsp;</td>
                 </tr>
+                <?php if (!empty($retencionesCxc)) { ?>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td><b>Retenciones aplicadas</b></td>
+                    <td class="text-right"><b><?php echo h("$" . number_format($retencionesCxc, 2)); ?></b></td>
+                    <td><small class="text-muted">No entran a caja</small></td>
+                </tr>
+                <?php } ?>
                 </table>
             </div>
         </div>

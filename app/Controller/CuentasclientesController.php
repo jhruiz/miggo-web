@@ -233,50 +233,43 @@ class CuentasclientesController extends AppController {
 
             //se obtienen las cuentas de la empresa
             $listaTiposPagos = $this->Tipopago->obtenerListaTiposPagos($empresaId);
-            $this->set(compact('datosCuentaPendiente', 'listaTiposPagos', 'cuentaId'));
+
+            // Retenciones pendientes por aplicar de la factura (solo clientes configurados).
+            // Se sugiere solo lo que no se aplicó al facturar ni en pagos anteriores.
+            $retencionesPendientes = array();
+            if (!empty($datosCuentaPendiente['Cuentascliente']['factura_id'])) {
+                $this->loadModel('RetencionAplicada');
+                foreach ($this->RetencionAplicada->pendientesPorFactura($datosCuentaPendiente['Cuentascliente']['factura_id']) as $codigo => $p) {
+                    $retencionesPendientes[] = array('tributo' => $codigo, 'etiqueta' => $p['etiqueta'], 'pendiente' => $p['pendiente']);
+                }
+            }
+            $this->set(compact('datosCuentaPendiente', 'listaTiposPagos', 'cuentaId', 'retencionesPendientes'));
         }
         
+        /**
+         * Registra el pago de una cuenta por cobrar: dinero y, si el cliente está
+         * configurado, retenciones. Todo en una transacción
+         * (Cuentascliente::registrarPagoConRetenciones).
+         *
+         * POST: ttalPago (dinero), tipopago, cuentapendiente, retenciones[codigo] (opcional)
+         */
         public function pagarcuentacliente(){
-            $this->loadModel('Cuenta');
-            $this->loadModel('Tipopago');
-            $this->loadModel('Abonofactura');
             $this->autoRender = false;
-            $posData = $this->request->data;
-            
-            $ttalPago = $posData['ttalPago'];
-            $tipopagoId = $posData['tipopago'];
-            $cuentaPendienteId = $posData['cuentapendiente'];
-            $resp = true;
-            
-            //Se obtiene la informacion de la cuenta por cobrar
-            $datosCuentaPendiente = $this->Cuentascliente->obtenerDatosCuentaPendienteId($cuentaPendienteId);
-                        
-            //Se obtiene la informacion de la cuenta a la que se sumara el pago
-            $datosTipoPago = $this->Tipopago->obtenerTipoPagoPorId($tipopagoId);
-            
-            //se obtiene la informacion de la cuenta
-            $datosCuenta = $this->Cuenta->obtenerDatosCuentaId($datosTipoPago['Tipopago']['cuenta_id']);
-            
-            //Se resta la cantidad paga de la cuenta pendiente
-            $saldoCuentaPendiente = $datosCuentaPendiente['Cuentascliente']['totalobligacion'] - $ttalPago;
-            
-            if($this->Cuentascliente->actualizarCuentaCliente($cuentaPendienteId,$saldoCuentaPendiente)){
-                //se actualiza el valor de la cuenta
-                $nuevoSaldoCuenta = $datosCuenta['Cuenta']['saldo'] + $ttalPago;
-                $this->Cuenta->actualizarSaldoCuenta($datosTipoPago['Tipopago']['cuenta_id'], $nuevoSaldoCuenta);
-                
-                $usuarioId = $this->Auth->user('id');
-                
-                //se guarda el registro del abono
-                $this->Abonofactura->guardarAbonoFacturaCuentaCliente($datosCuentaPendiente['Cuentascliente']['factura_id'], 
-                        $usuarioId, $ttalPago, $datosCuentaPendiente['Cuentascliente']['empresa_id'], 
-                        $datosTipoPago['Tipopago']['cuenta_id'], $cuentaPendienteId,
-                        $datosCuentaPendiente['Cuentascliente']['prefactura_id'], $tipopagoId);
-                
-            }else{
-                $resp = false;
+            if (!$this->request->is('post')) {
+                echo json_encode(array('resp' => false, 'msg' => 'Solicitud no válida.'));
+                return;
             }
-            echo json_encode(array('resp' => $resp));
+            $posData = $this->request->data;
+
+            $res = $this->Cuentascliente->registrarPagoConRetenciones(
+                isset($posData['cuentapendiente']) ? $posData['cuentapendiente'] : 0,
+                isset($posData['ttalPago']) ? $posData['ttalPago'] : 0,
+                isset($posData['tipopago']) ? $posData['tipopago'] : null,
+                (isset($posData['retenciones']) && is_array($posData['retenciones'])) ? $posData['retenciones'] : array(),
+                $this->Auth->user('id')
+            );
+
+            echo json_encode(array('resp' => $res['ok'], 'msg' => $res['msg']));
         } 
         
     public function eliminarcuentacliente(){
@@ -308,7 +301,11 @@ class CuentasclientesController extends AppController {
         //se obtienen las cuentas de la empresa
         $cuentas = $this->Cuenta->obtenerCuentasEmpresa($empresaId);
 
-        $this->set(compact('abonos', 'id', 'urlImgWP', 'cuentas'));
+        // Retenciones que el cliente practicó al pagar esta cuenta por cobrar
+        $this->loadModel('RetencionAplicada');
+        $retencionesCxc = $this->RetencionAplicada->totalPorCuentaCliente($id);
+
+        $this->set(compact('abonos', 'id', 'urlImgWP', 'cuentas', 'retencionesCxc'));
     }
         
     public function ajaxobtenerabonos(){

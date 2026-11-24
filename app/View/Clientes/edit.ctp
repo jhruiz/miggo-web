@@ -177,6 +177,8 @@
                     </div>
                 </div>
 
+                <?php echo $this->element('Clientes/datos_tributarios'); ?>
+
             </fieldset>
         </div>
         

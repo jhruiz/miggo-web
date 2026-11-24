@@ -193,6 +193,9 @@
                 <?php if(count($factCredit) > 0 ){ ?>
                     <?php echo h($factCredit['0']['TP']['descripcion'] . ": $ " . number_format($factCredit['0']['Cuentascliente']['totalobligacion'], 2)); ?>&nbsp;<br>
                 <?php } ?>                                  
+                <?php if(!empty($retencionesAplicadas)){ ?>
+                    <?php echo h("Retenciones aplicadas: $ " . number_format($retencionesAplicadas, 2)); ?>&nbsp;<br>
+                <?php } ?>
             </div>                           
 
             <div style="margin: 0px; float: left; width: 50%;">
@@ -328,6 +331,12 @@
                     <td  align="right" colspan="9"><b>Total factura</b></td>
                     <td  align="right"><b><?php echo number_format($totalFactura,2); ?></b></td></td>
                 </tr>
+                <?php echo $this->element('Facturas/retenciones_resumen', array(
+                    'retenciones'  => $retencionesFactura,
+                    'totalFactura' => $totalFactura,
+                    'netoGuardado' => isset($infoFact['Factura']['neto_a_pagar']) ? $infoFact['Factura']['neto_a_pagar'] : null,
+                    'colspan'      => 9,
+                )); ?>
 
             </table>
         </div>
@@ -764,6 +773,10 @@
         <?php if(count($factCredit) > 0 ){ ?>
             - <?php echo h($factCredit['0']['TP']['descripcion'] . ": $" . number_format($factCredit['0']['Cuentascliente']['totalobligacion'], 2)); ?><br>
         <?php } ?>
+
+        <?php if(!empty($retencionesAplicadas)){ ?>
+            - <?php echo h("Retenciones aplicadas: $" . number_format($retencionesAplicadas, 2)); ?><br>
+        <?php } ?>
     </div>
 
     <table style="width:100%; margin-top: 10px; border-collapse: collapse; font-size: 11px;">
@@ -819,6 +832,12 @@
                 <td align="right"><b>TOTAL FACTURA:</b></td>
                 <td align="right"><b>$<?php echo number_format($totalFactura, 2); ?></b></td>
             </tr>
+            <?php echo $this->element('Facturas/retenciones_resumen', array(
+                'retenciones'  => $retencionesFactura,
+                'totalFactura' => $totalFactura,
+                'netoGuardado' => isset($infoFact['Factura']['neto_a_pagar']) ? $infoFact['Factura']['neto_a_pagar'] : null,
+                'ticket'       => true,
+            )); ?>
         </table>
     </div>
 

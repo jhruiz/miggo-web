@@ -144,6 +144,7 @@
                     <th><?php echo $this->Paginator->sort('usuario_id', 'Vendedor'); ?></th>
                     <th><?php echo $this->Paginator->sort('created', 'Fecha Factura'); ?></th>
                     <th><?php echo $this->Paginator->sort('factura', 'Tipo'); ?></th>
+                    <th class="text-right"><?php echo $this->Paginator->sort('total_retenciones', 'Retenciones'); ?></th>
                     <th class="actions"><?php echo __('Acciones'); ?></th>
                 </tr>
                 <?php foreach ($facturas as $factura): ?>
@@ -166,6 +167,11 @@
                         <td><?php echo h($factura['U']['nombre']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['created']); ?>&nbsp;</td>
                         <td><?php echo h($factura['Factura']['factura'] ? "F" : "R"); ?>&nbsp;</td>
+                        <td class="text-right"><?php
+                            // Retenciones informativas guardadas al facturar
+                            $retFact = isset($factura['Factura']['total_retenciones']) ? (float) $factura['Factura']['total_retenciones'] : 0;
+                            echo $retFact > 0 ? h('$ ' . number_format($retFact, 2)) : '-';
+                        ?></td>
                         <td class="actions">
                             <?php echo $this->Html->image('png/list-10.png', array('title' => 'Ver Factura', 'alt' => __('Brownies'), 'width' => '20px', 'url' => array('action' => 'view', $factura['Factura']['id']))); ?>
                             <?php echo $this->Html->image('png/list-2.png', array('title' => 'Nota crédito', 'alt' => __('Brownies'), 'width' => '20px', 'onclick' => "generarNotaCredito(" . $factura['Factura']['id'] . ")", 'class' => 'nota_credito'));?>

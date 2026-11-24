@@ -1,5 +1,6 @@
 <?php $this->layout = 'inicio';?>
 <div class="impuestos index">
+    <?php echo $this->element('Impuestos/pestanas', array('activa' => 'impuestos')); ?>
     <legend><h2><b><?php echo __('Impuestos'); ?></b></h2></legend>
     <!--Enlaces de acción -->
 		<div class="actions">

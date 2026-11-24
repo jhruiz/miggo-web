@@ -194,6 +194,7 @@
                             </table>
                         </div>
                     </div>
+                    <?php echo $this->element('Facturas/retenciones_informativas'); ?>
                     <legend>&nbsp;</legend>
 
                     <div class="row">

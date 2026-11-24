@@ -161,6 +161,129 @@ class Cuentascliente extends AppModel {
             }            
         }
         
+        /**
+         * Registra el pago de una cuenta por cobrar con dinero y retenciones, en una
+         * sola transacción (cuentasclientes, cuentas, abonofacturas y
+         * retenciones_aplicadas son InnoDB):
+         *   - el saldo de la CxC baja por dinero + retenciones;
+         *   - la caja o banco del tipo de pago sube solo por el dinero;
+         *   - el abono (abonofacturas.valor) es solo el dinero;
+         *   - las retenciones quedan en retenciones_aplicadas (origen PAGO_CXC).
+         * Si algo falla se deshace todo.
+         *
+         * @param  int    $cuentaClienteId
+         * @param  mixed  $valorDinero  valor recibido en dinero (0 si solo hay retenciones)
+         * @param  int    $tipopagoId   obligatorio si hay dinero
+         * @param  array  $retenciones  [codigo => valor] (vacío si no hay)
+         * @param  int    $usuarioId
+         * @return array  ['ok' => bool, 'msg' => string]
+         */
+        public function registrarPagoConRetenciones($cuentaClienteId, $valorDinero, $tipopagoId, $retenciones, $usuarioId){
+            $RetencionAplicada = ClassRegistry::init('RetencionAplicada');
+            $Abonofactura = ClassRegistry::init('Abonofactura');
+            $Tipopago = ClassRegistry::init('Tipopago');
+            $Cuenta = ClassRegistry::init('Cuenta');
+
+            $dinero = str_replace(array(',', ' ', '$'), '', trim((string) $valorDinero));
+            if ($dinero === '') {
+                $dinero = '0';
+            }
+            if (!is_numeric($dinero) || (float) $dinero < 0) {
+                return array('ok' => false, 'msg' => 'El valor del pago no es válido.');
+            }
+            $dinero = round((float) $dinero, 2);
+
+            $ds = $this->getDataSource();
+            $ds->begin();
+            try {
+                $cxc = $this->obtenerDatosCuentaPendienteId($cuentaClienteId);
+                if (empty($cxc)) {
+                    throw new InvalidArgumentException('La cuenta por cobrar no existe.');
+                }
+                $cxc = $cxc['Cuentascliente'];
+                $saldo = round((float) $cxc['totalobligacion'], 2);
+                $facturaId = (int) $cxc['factura_id'];
+
+                // Retenciones: solo facturas de clientes configurados (las demás se ignoran)
+                $prep = array('filas' => array(), 'total' => 0.0);
+                if ($facturaId > 0 && !empty($retenciones)) {
+                    try {
+                        $prep = $RetencionAplicada->prepararFilas($facturaId, $retenciones, RetencionAplicada::ORIGEN_PAGO_CXC, $usuarioId,
+                            array('cuentascliente_id' => (int) $cuentaClienteId));
+                    } catch (Exception $e) {
+                        throw new InvalidArgumentException($e->getMessage());
+                    }
+                }
+
+                $totalAplicado = round($dinero + $prep['total'], 2);
+                if ($totalAplicado <= 0) {
+                    throw new InvalidArgumentException('Debe ingresar un valor a pagar o una retención.');
+                }
+                if ($totalAplicado - $saldo > 0.005) {
+                    throw new InvalidArgumentException('El valor aplicado (dinero + retenciones) supera el saldo pendiente.');
+                }
+
+                // 1. Saldo de la cuenta por cobrar
+                if (!$this->actualizarCuentaCliente($cuentaClienteId, round($saldo - $totalAplicado, 2))) {
+                    throw new Exception('No se pudo actualizar el saldo de la cuenta por cobrar.');
+                }
+
+                // 2. Dinero: caja o banco y abono
+                $abonoId = null;
+                if ($dinero > 0) {
+                    $tipoPago = $Tipopago->obtenerTipoPagoPorId($tipopagoId);
+                    if (empty($tipoPago)) {
+                        throw new InvalidArgumentException('Seleccione el tipo de pago.');
+                    }
+                    $cuentaId = $tipoPago['Tipopago']['cuenta_id'];
+                    $cuenta = $Cuenta->obtenerDatosCuentaId($cuentaId);
+                    if (empty($cuenta)) {
+                        throw new Exception('La cuenta asociada al tipo de pago no existe.');
+                    }
+                    if (!$Cuenta->actualizarSaldoCuenta($cuentaId, $cuenta['Cuenta']['saldo'] + $dinero)) {
+                        throw new Exception('No se pudo actualizar el saldo de la cuenta.');
+                    }
+
+                    // Mismos campos que guardarAbonoFacturaCuentaCliente, pero se necesita el id
+                    $Abonofactura->create();
+                    $abono = $Abonofactura->save(array('Abonofactura' => array(
+                        'factura_id'       => $cxc['factura_id'],
+                        'prefactura_id'    => $cxc['prefactura_id'],
+                        'usuario_id'       => $usuarioId,
+                        'valor'            => $dinero,
+                        'empresa_id'       => $cxc['empresa_id'],
+                        'cuenta_id'        => $cuentaId,
+                        'cuentacliente_id' => $cuentaClienteId,
+                        'tipopago_id'      => $tipopagoId,
+                    )));
+                    if (!$abono) {
+                        throw new Exception('No se pudo guardar el abono.');
+                    }
+                    $abonoId = (int) $Abonofactura->id;
+                }
+
+                // 3. Retenciones aplicadas, ligadas al abono si hubo dinero
+                if (!empty($prep['filas'])) {
+                    foreach ($prep['filas'] as $i => $fila) {
+                        $prep['filas'][$i]['RetencionAplicada']['abonofactura_id'] = $abonoId;
+                    }
+                    if (!$RetencionAplicada->saveMany($prep['filas'], array('validate' => false, 'atomic' => false))) {
+                        throw new Exception('No se pudieron guardar las retenciones aplicadas.');
+                    }
+                }
+
+                $ds->commit();
+                return array('ok' => true, 'msg' => 'El pago se ha realizado correctamente.');
+            } catch (InvalidArgumentException $e) {
+                $ds->rollback();
+                return array('ok' => false, 'msg' => $e->getMessage());
+            } catch (Exception $e) {
+                $ds->rollback();
+                CakeLog::write('error', 'Pago CxC ' . $cuentaClienteId . ': ' . $e->getMessage());
+                return array('ok' => false, 'msg' => 'No se pudo realizar el pago. Por favor, inténtelo de nuevo.');
+            }
+        }
+
         public function obtenerCarteraCliente($clienteId){
             $arrCuentaCliente = $this->find('all', array('conditions' => array('Cuentascliente.cliente_id' => $clienteId), 'recursive' => '-1'));
             return $arrCuentaCliente;

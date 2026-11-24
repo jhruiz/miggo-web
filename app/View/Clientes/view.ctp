@@ -90,6 +90,25 @@
     </dl>
 </section>
 
+<section class="row">
+    <div class="col-md-12">
+        <h4><b><?php echo __('Datos tributarios'); ?></b></h4>
+        <?php
+        $tiposPersona = array('NATURAL' => 'Persona natural', 'JURIDICA' => 'Persona jurídica', 'ENTIDAD_PUBLICA' => 'Entidad pública');
+        $practica = array();
+        if (!empty($cliente['Cliente']['practica_retefuente'])) { $practica[] = 'ReteFuente'; }
+        if (!empty($cliente['Cliente']['practica_reteiva'])) { $practica[] = 'ReteIVA'; }
+        if (!empty($cliente['Cliente']['practica_reteica'])) { $practica[] = 'ReteICA'; }
+        ?>
+        <p>
+            <b>DV:</b> <?php echo isset($cliente['Cliente']['dv']) ? h($cliente['Cliente']['dv']) : '-'; ?>
+            &nbsp;|&nbsp; <b>Tipo de persona:</b> <?php echo !empty($cliente['Cliente']['tipo_persona']) ? h($tiposPersona[$cliente['Cliente']['tipo_persona']]) : 'Sin definir'; ?>
+            &nbsp;|&nbsp; <b>Practica:</b> <?php echo $practica ? h(implode(', ', $practica)) : 'Ninguna retención'; ?>
+            &nbsp;|&nbsp; <b>Revisado:</b> <?php echo !empty($cliente['Cliente']['datos_tributarios_revisados']) ? 'Sí' : 'No'; ?>
+        </p>
+    </div>
+</section>
+
 
 
 

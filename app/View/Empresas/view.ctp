@@ -69,6 +69,27 @@
                         </div>
                     </div>
 
+                    <div class="info-tec row" style="margin-bottom: 25px;">
+                        <div class="col-sm-6">
+                            <label><i class="fa fa-balance-scale text-info"></i> Tipo de persona</label>
+                            <p><?php echo ($empresa['Empresa']['tipo_persona'] === 'NATURAL') ? 'Persona natural' : 'Persona jurídica'; ?></p>
+                        </div>
+                        <div class="col-sm-6">
+                            <label><i class="fa fa-file-text-o text-info"></i> Declarante de renta</label>
+                            <p><?php echo !empty($empresa['Empresa']['declarante_renta']) ? 'Sí' : 'No'; ?></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <label><i class="fa fa-list-alt text-info"></i> Responsabilidades fiscales</label>
+                            <p>
+                                <?php if (empty($responsabilidadesEmpresa)): ?>
+                                    <span class="text-muted">Sin responsabilidades registradas</span>
+                                <?php else: ?>
+                                    <?php echo h(implode(' | ', $responsabilidadesEmpresa)); ?>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="info-tec row text-center" style="margin-bottom: 5px; background: #fafafa; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db;">
                         <div class="col-sm-12">
                             <label class="text-muted" style="text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Representante Legal</label>

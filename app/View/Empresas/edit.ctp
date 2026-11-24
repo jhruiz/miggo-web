@@ -100,6 +100,55 @@
                     </div>
                 </div>
 
+                <hr>
+                <h4 style="margin-bottom: 5px;"><b><i class="fa fa-balance-scale text-primary"></i> <?php echo __('Perfil tributario'); ?></b></h4>
+                <p class="text-muted" style="margin-bottom: 20px;">
+                    <?php echo __('Se usa para calcular las retenciones que practican los clientes en las facturas de venta.'); ?>
+                </p>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold" style="color: #555;"><?php echo __('Tipo de persona'); ?></label>
+                            <?php echo $this->Form->input('tipo_persona', array(
+                                'label' => false, 'class' => 'form-control', 'div' => false,
+                                'options' => array('JURIDICA' => 'Persona jurídica', 'NATURAL' => 'Persona natural'),
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold" style="color: #555;"><?php echo __('¿Declarante de renta?'); ?></label>
+                            <?php echo $this->Form->input('declarante_renta', array(
+                                'label' => false, 'class' => 'form-control', 'div' => false,
+                                'options' => array('1' => 'Sí, es declarante de renta', '0' => 'No es declarante de renta'),
+                            )); ?>
+                            <p class="help-block" style="margin-bottom: 0;"><?php echo __('Define la tarifa de ReteFuente que le aplican (declarante o no declarante).'); ?></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-4">
+                            <label class="font-weight-bold" style="color: #555;"><?php echo __('Responsabilidades fiscales del RUT'); ?></label>
+                            <input type="hidden" name="data[Tiposresponsabilidade][Tiposresponsabilidade]" value="">
+                            <?php foreach ($responsabilidades as $respId => $respNombre): ?>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="data[Tiposresponsabilidade][Tiposresponsabilidade][]"
+                                               value="<?php echo (int) $respId; ?>"
+                                               <?php echo in_array((int) $respId, $marcadas, true) ? 'checked' : ''; ?>>
+                                        <?php echo h($respNombre); ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group mb-0">

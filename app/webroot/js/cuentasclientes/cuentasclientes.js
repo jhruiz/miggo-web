@@ -24,17 +24,47 @@ function pagarCuenta(cuentapendienteId) {
     );
 }
 
+/**
+ * Retenciones ingresadas en la ventana de pago (0 si el cliente no está configurado).
+ * No entran a ninguna caja: solo bajan el saldo de la cuenta por cobrar.
+ */
+function totalRetencionesCxc() {
+    var total = 0;
+    $('.valueRetencionCxc').each(function() {
+        var n = parseFloat(String($(this).val()).replace(/,/g, ''));
+        total += isNaN(n) ? 0 : n;
+    });
+    return Math.round(total * 100) / 100;
+}
+
 function validarPagoCuenta() {
     var ttalCuenta = $('#totalCuenta').val();
     var ttalPago = $('#totalPago').val();
+    var retenciones = totalRetencionesCxc();
 
-    if (Number(ttalCuenta) < Number(ttalPago)) {
-        bootbox.alert('El total a pagar no puede ser mayor al total de la deuda');
-        $('#totalPago').val(ttalCuenta);
-        $('#totalRestante').val("0");
+    if (retenciones == 0) {
+        // Sin retenciones: misma validación de siempre
+        if (Number(ttalCuenta) < Number(ttalPago)) {
+            bootbox.alert('El total a pagar no puede ser mayor al total de la deuda');
+            $('#totalPago').val(ttalCuenta);
+            $('#totalRestante').val("0");
+        } else {
+            var cuentaFinal = ttalCuenta - ttalPago;
+            $('#totalRestante').val(cuentaFinal);
+        }
     } else {
-        var cuentaFinal = ttalCuenta - ttalPago;
-        $('#totalRestante').val(cuentaFinal);
+        // Con retenciones: dinero + retenciones no puede superar el saldo
+        var disponible = Math.round((Number(ttalCuenta) - retenciones) * 100) / 100;
+        if (disponible < 0) {
+            bootbox.alert('Las retenciones no pueden superar el saldo pendiente');
+            $('#totalRestante').val(Number(ttalCuenta) - Number(ttalPago || 0));
+        } else if (Number(ttalPago) > disponible + 0.005) {
+            bootbox.alert('El dinero más las retenciones no puede superar el total de la deuda');
+            $('#totalPago').val(disponible);
+            $('#totalRestante').val("0");
+        } else {
+            $('#totalRestante').val(Math.round((Number(ttalCuenta) - retenciones - Number(ttalPago || 0)) * 100) / 100);
+        }
     }
 }
 
@@ -49,17 +79,26 @@ function pagarCuentaPendiente() {
         var tipopago_id = $('#tipopagoId').val();
         var cuentapendiente = $('#cuentapendiente_id').val();
 
+        // Retenciones que practicó el cliente (solo si el bloque existe)
+        var retenciones = {};
+        $('.valueRetencionCxc').each(function() {
+            retenciones[$(this).data('tributo')] = String($(this).val()).replace(/,/g, '');
+        });
+
         $.ajax({
             type: 'POST',
             url: $('#url-proyecto').val() + 'cuentasclientes/pagarcuentacliente',
-            data: { ttalPago: ttalPago, tipopago: tipopago_id, cuentapendiente: cuentapendiente },
+            data: { ttalPago: ttalPago, tipopago: tipopago_id, cuentapendiente: cuentapendiente, retenciones: retenciones },
             success: function(data) {
                 var respuesta = JSON.parse(data);
                 if (respuesta.resp) {
-                    bootbox.alert('El pago se ha realizado correctamente.', function() {
+                    bootbox.alert(respuesta.msg || 'El pago se ha realizado correctamente.', function() {
                         dialogCuentaPorCobrar.dialog('close');
                         location.reload();
                     });
+                } else if (respuesta.msg) {
+                    // Error de validación: se deja la ventana abierta para corregir
+                    bootbox.alert(respuesta.msg);
                 } else {
                     bootbox.alert('No se pudo realizar el pago. Por favor, inténtelo de nuevo', function() {
                         dialogCuentaPorCobrar.dialog('close');

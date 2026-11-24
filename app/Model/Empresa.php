@@ -36,6 +36,19 @@ class Empresa extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		// Perfil tributario (retenciones en ventas)
+		'tipo_persona' => array(
+			'inList' => array(
+				'rule' => array('inList', array('NATURAL', 'JURIDICA')),
+				'message' => 'Seleccione si la empresa es persona natural o jurídica.',
+			),
+		),
+		'declarante_renta' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				'message' => 'Valor no válido para declarante de renta.',
+			),
+		),
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -65,7 +78,7 @@ class Empresa extends AppModel {
 			'className' => 'Impuesto',
 			'foreignKey' => 'empresa_id',
 			'dependent' => false,
-			'conditions' => '',
+			'conditions' => array('Impuesto.clase' => 'IMPUESTO'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
@@ -141,6 +154,41 @@ class Empresa extends AppModel {
 		)
 	);
         
+        /**
+         * Enlaza las responsabilidades fiscales del RUT a la empresa.
+         * Se enlaza solo donde se necesita (edición del perfil tributario) para no
+         * agregar consultas a los demás usos del modelo Empresa.
+         */
+        public function vincularResponsabilidades() {
+            $this->bindModel(array('hasAndBelongsToMany' => array(
+                'Tiposresponsabilidade' => array(
+                    'className'             => 'Tiposresponsabilidade',
+                    'joinTable'             => 'empresas_tiposresponsabilidades',
+                    'foreignKey'            => 'empresa_id',
+                    'associationForeignKey' => 'tiposresponsabilidade_id',
+                    'unique'                => 'keepExisting',
+                ),
+            )), false);
+        }
+
+        /**
+         * Ids de las responsabilidades fiscales de una empresa.
+         *
+         * @param  int $empresaId
+         * @return array
+         */
+        public function obtenerResponsabilidadesIds($empresaId) {
+            $filas = $this->query(
+                'SELECT tiposresponsabilidade_id FROM empresas_tiposresponsabilidades WHERE empresa_id = ?',
+                array((int) $empresaId)
+            );
+            $ids = array();
+            foreach ($filas as $f) {
+                $ids[] = (int) $f['empresas_tiposresponsabilidades']['tiposresponsabilidade_id'];
+            }
+            return $ids;
+        }
+
         public function obtenerEmpresaPorId($empresaId){
 
             $datosEmpresa = $this->find('first', array(

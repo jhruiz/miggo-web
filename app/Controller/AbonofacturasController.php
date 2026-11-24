@@ -173,6 +173,15 @@ class AbonofacturasController extends AppController {
 
             $empresaId = $this->Auth->user('empresa_id');
 
+            // Un abono con retenciones aplicadas no se elimina: habría que devolver
+            // también las retenciones al saldo de la cuenta por cobrar (anular pagos
+            // queda fuera de esta etapa). Su valor en dinero sí se puede ajustar.
+            $this->loadModel('RetencionAplicada');
+            if ($this->RetencionAplicada->abonoTieneRetenciones($idAbono)) {
+                echo json_encode(array('resp' => false, 'msg' => 'Este abono tiene retenciones aplicadas y no se puede eliminar. Puede ajustar su valor en dinero.'));
+                return;
+            }
+
             if( $this->Abonofactura->eliminarAbono($idAbono) ) {
                 $this->gastoPorDevAbono($prefactura, $valor, $cuenta, $idItem, $factura);
                 $this->ajustarSaldoCuenta($cuenta, $valor);

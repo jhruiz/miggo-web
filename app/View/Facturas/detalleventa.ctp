@@ -219,6 +219,7 @@
                 <td  align="right"><b>IVA</b></td>
                 <td  align="right"><b><?php echo ("$ ". number_format($ttalIVA,2));?></b></td>
             </tr>                    
+            <?php if (empty($retencionesFactura['lineas'])) { // Facturas sin retenciones guardadas: se ven como siempre ?>
             <tr>
                 <td colspan="4">&nbsp;</td>
                 <td  align="right"><b>Reteica</b></td>
@@ -229,12 +230,19 @@
                 <td  align="right"><b>Retefuente</b></td>
                 <td  align="right"><b>0%</b></td>
             </tr> 
+            <?php } ?>
             <tr>
                 <td colspan="4">&nbsp;</td>
                 <td  align="right"><b>TOTAL</b></td>
                 <?php $ttalFact = ($subTtalVenta - $ttalDtto) + $ttalIVA; ?>
                 <td  align="right"><b><?php echo ("$ ". number_format((ceil($subTtalVenta - $ttalDtto) + $ttalIVA),2));?></b></td>
             </tr>                
+            <?php echo $this->element('Facturas/retenciones_resumen', array(
+                'retenciones'  => $retencionesFactura,
+                'totalFactura' => $ttalFact,
+                'netoGuardado' => isset($infoFact['Factura']['neto_a_pagar']) ? $infoFact['Factura']['neto_a_pagar'] : null,
+                'colspan'      => 5,
+            )); ?>
             <?php }else{ ?>
             <tr>
                 <td colspan="4">&nbsp;</td>

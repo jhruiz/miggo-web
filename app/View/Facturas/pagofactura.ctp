@@ -15,6 +15,13 @@ echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'med
             <div class="col-md-6"><label>RESTANTE</label></div>
             <div class="col-md-6"><label id="restante"><?php echo h(number_format($totalFacturar, 2));?></label></div><br><br>
         </div>
+        <?php // Retenciones que practica el cliente (solo clientes configurados). Lo llena js/facturas/retenciones_pago.js ?>
+        <div id="bloqueRetencionesPago" class="col-md-12" style="display:none;">
+            <legend>&nbsp</legend>
+            <label>Retenciones que practica el cliente</label>
+            <div id="retencionesPagoFilas"></div>
+            <small class="text-muted">Valores sugeridos. Cámbielos si el cliente retuvo otro valor, o ponga 0 si no retuvo. No entran a ninguna caja ni banco.</small>
+        </div>
         <legend>&nbsp</legend>    
         <div class="contenedor_pagos">
             <div class="dv_tip_val_pago form-group form-inline col-md-12">
@@ -56,3 +63,4 @@ echo $this->Html->css('facturas/facturar.css', array('rel' => 'stylesheet', 'med
         <span class="icon-text" id="fact_status">Guardando los métodos de pago de la factura</span>
     </div>
 </div>
+<?php echo $this->Html->script('facturas/retenciones_pago'); ?>
