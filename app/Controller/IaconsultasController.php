@@ -17,7 +17,8 @@ class IaconsultasController extends AppController {
 
         $this->autoRender = false;
         $apiKey = $this->Configuraciondato->obtenerValorDatoConfig('IAApiKey'); 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
+        // $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=" . $apiKey;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
 
         // 1. Capturamos lo que envía el JS
         $input = json_decode(file_get_contents('php://input'), true);
