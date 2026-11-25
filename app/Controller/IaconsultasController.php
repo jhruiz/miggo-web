@@ -42,7 +42,10 @@ class IaconsultasController extends AppController {
             ],
             "generationConfig" => [
                 "temperature" => 0.2,
-                "maxOutputTokens" => 1000,
+                "maxOutputTokens" => 8192,
+                "thinkingConfig" => [
+                    "thinkingLevel" => "LOW"
+                ],
                 "responseMimeType" => "text/plain"
             ]
         ];
